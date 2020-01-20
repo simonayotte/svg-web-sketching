@@ -2,7 +2,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './components/app/app.component';
-import { GuideComponent } from './guide/guide.component';
+import { GuideComponent } from './components/guide/guide.component';
 
 @NgModule({
     declarations: [AppComponent, GuideComponent],

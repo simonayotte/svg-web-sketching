@@ -1,0 +1,87 @@
+.toolbar { 
+    background: lightgrey;
+    width: 20%;
+    height: 100%;
+    float: left;
+    position: fixed;
+    overflow: auto;
+}
+
+.content-table {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    border-bottom: grey 1px solid;
+    cursor: pointer;
+    color: grayscale($color: #000000);
+    width: auto;
+    min-height: 30px;
+    padding: 5px;
+}
+
+.category {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    min-height: 30px;
+    width: auto;
+    color: black;
+    cursor: pointer;
+}
+
+.category:hover {
+    color: red;
+}
+
+.category-items {
+    
+}
+
+.category-items.closed {
+    height: 0px;
+}
+
+.subject {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    min-height: 30px;
+    width: auto;
+    color: grey;
+    cursor: pointer;
+}
+
+.subject:hover {
+    color: red;
+}
+
+.header {
+    color: white;
+    height: 40px;
+    line-height: 40px;
+    font-size: 1.25rem;
+    top: 0px;
+    z-index: 10;
+    background: linear-gradient(0deg, rgb(104, 102, 129), rgb(126, 120, 172));
+    border-bottom: 1px solid rgb(48, 46, 64);
+    padding: 0px 0px 0px 1em;
+    transition: none 0s ease 0s;
+}
+
+.main-body {
+    height: auto;
+}
+
+.text-area {
+    float: right;
+    width: 70%;
+    height: 100%;
+    overflow-y: scroll hidden;
+    padding: 5%;
+}
