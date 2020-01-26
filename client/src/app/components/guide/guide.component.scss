@@ -1,3 +1,7 @@
+.active, .category:hover, .subject:hover {
+    color: red;
+}
+
 .toolbar { 
     background: lightgrey;
     width: 20%;
@@ -23,6 +27,7 @@
     width: auto;
     min-height: 30px;
     padding: 5px;
+    padding-left: 10px;
 }
 
 .category {
@@ -35,16 +40,10 @@
     cursor: pointer;
 }
 
-.category:hover {
-    color: red;
-}
-
 .category-items {
-    
-}
-
-.category-items.closed {
-    height: 0px;
+    display: none;
+    overflow: hidden;
+    margin-left: 10px;
 }
 
 .subject {
@@ -55,10 +54,6 @@
     width: auto;
     color: grey;
     cursor: pointer;
-}
-
-.subject:hover {
-    color: red;
 }
 
 .header {
