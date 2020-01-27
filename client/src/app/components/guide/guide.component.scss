@@ -2,10 +2,6 @@
     color: red;
 }
 
-.active {
-    background-color: darkgrey;
-}
-
 .toolbar { 
     background: lightgrey;
     width: 20%;
@@ -22,6 +18,7 @@
 }
 
 .item {
+    background: lightgrey;
     display: flex;
     align-items: center;
     justify-content: left;

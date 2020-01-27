@@ -11,7 +11,7 @@
             </div>
             <div class="category-items" id="category1-list">
                 <div class="item">
-                    <div class="subject">Sujet Cat1</div>
+                    <div class="subject" id="sujet2" (click)="displayTextSubject('sujet2')">Sujet 2</div>
                 </div>
                 <div class="item">
                     <div class="subject">Sujet Cat1</div>
@@ -22,9 +22,6 @@
             </div>
             <div class="item">
                 <div class="subject" (click)="displayTextSubject('sujet1')">Sujet 1</div>
-            </div>
-            <div class="item">
-                <div class="subject" (click)="displayTextSubject('sujet2')">Sujet 2</div>
             </div>
             <div class="item">
                 <div type="button" class="category" id="category2" (click)="collapse('category2')">Catégorie</div>
