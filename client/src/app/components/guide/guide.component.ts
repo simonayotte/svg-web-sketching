@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+
 @Component({
   selector: 'app-guide',
   templateUrl: './guide.component.html',
@@ -7,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class GuideComponent implements OnInit {
 
-  constructor() { }
+  
+
+  constructor() {
+    
+  }
 
   ngOnInit() {
+    this.displayTextSubject("bienvenue");
   }
+
 
   collapse(category_id:string) {
     let category = document.getElementById(category_id);
@@ -24,7 +31,14 @@ export class GuideComponent implements OnInit {
         list.style.display = "block";
       }
     }
-    
+  }
+
+  displayTextSubject(subject_id:string) {
+    for (let i = 0; i < document.getElementsByClassName("subject-text").length; i++){
+      document.getElementsByClassName("subject-text")[i].setAttribute("style","none");
+    }
+    let newText = document.getElementById("page-" + subject_id);
+    if (newText) newText.style.display="block";
   }
 
 }

@@ -1,9 +1,10 @@
+
 <div class="header">User Guide</div>
 <div class="main-body">
     <div class="toolbar">
         <div class="content-table">
             <div class="item">
-                <div class="subject">Bienvenue</div>
+                <div class="subject" (click)="displayTextSubject('bienvenue')">Bienvenue</div>
             </div>
             <div class="item">
                 <div type="button" class="category" id="category1" (click)="collapse('category1')">Catégorie</div>
@@ -20,10 +21,10 @@
                 </div>
             </div>
             <div class="item">
-                <div class="subject">Sujet</div>
+                <div class="subject" (click)="displayTextSubject('sujet1')">Sujet 1</div>
             </div>
             <div class="item">
-                <div class="subject">Sujet</div>
+                <div class="subject" (click)="displayTextSubject('sujet2')">Sujet 2</div>
             </div>
             <div class="item">
                 <div type="button" class="category" id="category2" (click)="collapse('category2')">Catégorie</div>
@@ -39,28 +40,14 @@
                     <div class="subject">Sujet Cat2</div>
                 </div>
             </div>
-            <div class="item">
-                <div type="button" class="category" id="category3" (click)="collapse('category3')">Catégorie</div>
-            </div>
-            <div class="category-items" id="category3-list">
-                <div class="item">
-                    <div class="subject">Sujet Cat3</div>
-                </div>
-                <div class="item">
-                    <div class="subject">Sujet Cat3</div>
-                </div>
-                <div class="item">
-                    <div class="subject">Sujet Cat3</div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="subject">Sujet</div>
-            </div>
         </div>
     </div>
     <div class="text-area">
-        Text area
+        <div class="subject-text" id="page-bienvenue">Bienvenue</div>
+        <div class="subject-text" id="page-sujet1">Bonjour1</div>
+        <div class="subject-text" id="page-sujet2">Bonjour2</div>
     </div>
 </div>
+
 
 
