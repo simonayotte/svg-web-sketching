@@ -4,7 +4,7 @@
     <div class="toolbar">
         <div class="content-table">
             <div class="item">
-                <div class="subject" (click)="displayTextSubject('bienvenue')">Bienvenue</div>
+                <div class="subject" id="bienvenue" (click)="displayTextSubject('bienvenue')">Bienvenue</div>
             </div>
             <div class="item">
                 <div type="button" class="category" id="category1" (click)="collapse('category1')">Catégorie</div>
@@ -43,8 +43,21 @@
         </div>
     </div>
     <div class="text-area">
-        <div class="subject-text" id="page-bienvenue">Bienvenue</div>
-        <div class="subject-text" id="page-sujet1">Bonjour1</div>
+        <div class="subject-text" id="page-bienvenue">
+            <h1>Bienvenue</h1>
+            <p>Ceci est la page de présentation</p>
+            <div class="footer">
+                <button class="button right" (click)="displayTextSubject('sujet1')"><span>Suivant</span></button>
+            </div>
+         </div>
+        <div class="subject-text" id="page-sujet1">
+            <h1>Sujet 1</h1>
+            <p>Ceci est la page du sujet 1<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Texte en bas<br /></p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('bienvenue')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('sujet1')"><span>Suivant</span></button>
+            </div>
+        </div>
         <div class="subject-text" id="page-sujet2">Bonjour2</div>
     </div>
 </div>

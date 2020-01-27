@@ -6,24 +6,22 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.scss']
 })
-export class GuideComponent implements OnInit {
+export class GuideComponent implements OnInit { 
 
-  
-
+  currentText = "bienvenue";
   constructor() {
-    
   }
 
   ngOnInit() {
-    this.displayTextSubject("bienvenue");
+    this.displayTextSubject(this.currentText);
   }
+
 
 
   collapse(category_id:string) {
     let category = document.getElementById(category_id);
     let list = document.getElementById(category_id + "-list");
     if (category != null && list != null){
-      category.classList.toggle("active");
       if (list.style.display === "block"){
         list.style.display = "none";
       }
@@ -39,6 +37,8 @@ export class GuideComponent implements OnInit {
     }
     let newText = document.getElementById("page-" + subject_id);
     if (newText) newText.style.display="block";
+    
+    
   }
 
 }
