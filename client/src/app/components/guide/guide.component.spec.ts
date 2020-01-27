@@ -24,6 +24,10 @@ describe('GuideComponent', () => {
   });
 
   it('should collapse selected category', () => {
-    expect(component).toBeTruthy();
+    const nativeEl = fixture.debugElement.nativeElement;
+    component.collapse("outils");
+    expect(nativeEl.getElementById("outils-list").style.display == "block").toBeTruthy();
+    component.collapse("outils");
+    expect(nativeEl.getElementById("outils-list").style.display == "none").toBeTruthy();
   });
 });
