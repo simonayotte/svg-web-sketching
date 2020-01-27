@@ -9,7 +9,7 @@ import { BrushService } from '../../services/brush/brush.service';
 })
 export class BrushComponent implements OnInit, OnDestroy {
     constructor(private brushService: BrushService) {
-        this.brushService.thicknessObs.subscribe(thickness => {
+        this.brushService.thicknessObs.subscribe((thickness: number) => {
             this.thickness = thickness;
         });
     }

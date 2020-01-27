@@ -8,16 +8,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class BrushService implements OnInit, OnDestroy {
     constructor(private drawStateService: DrawStateService) {
         //Get canvas reference
-        this.drawStateService.canvasRefObs.subscribe(canvasRef => {
+        this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
             if (canvasRef != null) this.canvasRef = canvasRef;
         });
-        this.drawStateService.canvasContextObs.subscribe(canvasContext => {
+        this.drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
             if (canvasContext != null) this.canvasContext = canvasContext;
         });
         //Get draw page state
-        this.drawStateService.isPanelOpenObs.subscribe(isPanelOpen => (this.isPanelOpen = isPanelOpen));
+        this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
-        this.drawStateService.currentColorObs.subscribe(color => (this.color = color));
+        this.drawStateService.currentColorObs.subscribe((color: string) => (this.color = color));
 
         //Bind this to event listeners
         this.mouseDownListener = this.startDraw.bind(this);

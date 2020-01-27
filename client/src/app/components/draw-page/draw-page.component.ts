@@ -8,19 +8,19 @@ import { DrawStateService } from 'src/app/services/draw-state/draw-state.service
 })
 export class DrawPageComponent implements OnInit, OnDestroy {
     constructor(private drawStateService: DrawStateService) {
-        this.drawStateService.isPanelOpenObs.subscribe(displayPanel => {
-            this.displayPanel = displayPanel;
+        this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => {
+            this.isPanelOpen = isPanelOpen;
         });
 
-        this.drawStateService.canvasColorObs.subscribe(canvasColor => {
+        this.drawStateService.canvasColorObs.subscribe((canvasColor: string) => {
             this.canvasColor = canvasColor;
         });
 
-        this.drawStateService.canvasWidthObs.subscribe(canvasWidth => {
+        this.drawStateService.canvasWidthObs.subscribe((canvasWidth: number) => {
             this.canvasWidth = canvasWidth;
         });
 
-        this.drawStateService.canvasHeightObs.subscribe(canvasHeight => {
+        this.drawStateService.canvasHeightObs.subscribe((canvasHeight: number) => {
             this.canvasHeight = canvasHeight;
         });
 
@@ -47,7 +47,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     private workspaceColor: string = '#00000080';
     private selectedOption: string;
 
-    private displayPanel: boolean;
+    private isPanelOpen: boolean;
 
     private keyDownListener: EventListener;
 
@@ -65,13 +65,13 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         window.removeEventListener('keydown', this.keyDownListener);
     }
 
-    selectOption(option: string, displayPanel: boolean): void {
-        if (this.selectedOption == option && displayPanel) {
-            this.drawStateService.setIsPanelOpen(this.displayPanel ? false : true);
+    selectOption(option: string, isPanelOpen: boolean): void {
+        if (this.selectedOption == option && isPanelOpen) {
+            this.drawStateService.setIsPanelOpen(this.isPanelOpen ? false : true);
             this.selectedOption = option;
             return;
         }
-        this.drawStateService.setIsPanelOpen(displayPanel);
+        this.drawStateService.setIsPanelOpen(isPanelOpen);
         this.selectedOption = option;
     }
 

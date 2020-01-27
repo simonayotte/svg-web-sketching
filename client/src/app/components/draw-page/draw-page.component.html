@@ -120,7 +120,7 @@
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
 </div>
 <!--Will contain option's customizations-->
-<div class="panel" [hidden]="!displayPanel">
+<div class="panel" [hidden]="!isPanelOpen">
     <div class="panel-title">{{ selectedOption }}</div>
     <!--Put components inside panel-content with ngswitchcase-->
     <div class="panel-content" [ngSwitch]="selectedOption">
@@ -134,4 +134,4 @@
 </div>
 
 <div class="workspace" [style.background-color]="workspaceColor"></div>
-<canvas #canvas class="canvas" [ngClass]="{ withPanel: displayPanel == true }"></canvas>
+<canvas #canvas class="canvas" [ngClass]="{ withPanel: isPanelOpen == true }"></canvas>
