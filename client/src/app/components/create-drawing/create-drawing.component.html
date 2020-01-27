@@ -1,0 +1,46 @@
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Modal Header</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="drawingForm">
+            <label>
+              Largeur(px):
+              <input type="text" formControlName="width" required min>
+            </label>
+          
+            <label>
+              Longueur(px):
+              <input type="text" formControlName="height" required min>
+            </label><br>
+    
+            <label>
+              <input formControlName="backgroundColor" required
+              [value] = 'color'
+              [style.background]="color"
+              [(cpToggle)]="toggle"
+              [cpSaveClickOutside]="false"
+              [cpOutputFormat] = "hex"
+              [(colorPicker)]="color"
+              [cpOKButton]="true"
+              [cpSaveClickOutside]="false"
+              (colorPickerChange)="updateColor($event)"/>            
+            </label>
+            <button type="submit" [disabled]="!drawingForm.valid" data-dismiss="modal" (click)="onSubmit()">Submit</button>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="resetFields()" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
