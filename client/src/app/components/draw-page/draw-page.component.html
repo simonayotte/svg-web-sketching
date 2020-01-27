@@ -22,7 +22,7 @@
         ></i>
         <i
             class="sidebar-dropdown-option fas fa-paint-brush"
-            (click)="selectOption('Pinceau',true)"
+            (click)="selectOption('Pinceau', true)"
             [ngClass]="{ active: selectedOption == 'Pinceau' }"
         ></i>
         <i
@@ -108,7 +108,7 @@
         ></i>
     </div>
 
-    <i class="sidebar-option fas fa-palette" (click)="selectOption('Applicateur', true)" [ngClass]="{ active: selectedOption == 'Applicateur' }"></i>
+    <i class="sidebar-option fas fa-palette" (click)="selectOption('Couleur', true)" [ngClass]="{ active: selectedOption == 'Couleur' }"></i>
 
     <i class="sidebar-option fas fa-font" (click)="selectOption('Texte', true)" [ngClass]="{ active: selectedOption == 'Texte' }"></i>
 
@@ -120,10 +120,12 @@
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
 </div>
 <!--Will contain option's customizations-->
-<div class="panel" *ngIf="displayPanel == true">
+<div class="panel" [hidden]="!displayPanel">
     <div class="panel-title">{{ selectedOption }}</div>
     <!--Put components inside panel-content with ngswitchcase-->
     <div class="panel-content" [ngSwitch]="selectedOption">
+        <app-brush *ngSwitchCase="'Pinceau'"></app-brush>
+
         <!--
             Exemple:
             <app-pencil-panel *ngSwitchCase="'Pencil'"></app-pencil-panel>
@@ -132,10 +134,4 @@
 </div>
 
 <div class="workspace" [style.background-color]="workspaceColor"></div>
-<canvas
-    class="canvas"
-    [ngClass]="{ withPanel: displayPanel == true }"
-    [style.background-color]="canvasColor"
-    [style.width.px]="canvasWidth"
-    [style.height.px]="canvasHeight"
-></canvas>
+<canvas #canvas class="canvas" [ngClass]="{ withPanel: displayPanel == true }"></canvas>

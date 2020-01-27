@@ -20,12 +20,13 @@
     width: 200px;
     height: 100%;
     z-index: 2;
+    padding: 10px 15px;
 }
 
 .panel-title {
     color: white;
     font-size: 20px;
-    padding: 10px 15px;
+    margin-bottom: 15px;
 }
 .sidebar::-webkit-scrollbar-track {
     border-radius: 10px;
