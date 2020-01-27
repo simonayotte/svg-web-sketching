@@ -14,7 +14,7 @@ export class BrushComponent implements OnInit, OnDestroy {
         });
     }
 
-    private thickness: number;
+    thickness: number;
 
     ngOnInit() {
         this.brushService.ngOnInit();
