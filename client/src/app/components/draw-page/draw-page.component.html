@@ -1,0 +1,141 @@
+<div class="sidebar">
+    <i
+        class="sidebar-option fas fa-mouse-pointer"
+        (click)="selectOption('Selection', false)"
+        [ngClass]="{ active: selectedOption == 'Selection' }"
+    ></i>
+
+    <div class="sidebar-option" (click)="toogleDrawOptions()">
+        <i class=" fas fa-pencil-ruler"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowDrawOptions == true }">
+        <i
+            class="sidebar-dropdown-option fas fa-pencil-alt"
+            (click)="selectOption('Crayon', true)"
+            [ngClass]="{ active: selectedOption == 'Crayon' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-feather-alt"
+            (click)="selectOption('Plume', true)"
+            [ngClass]="{ active: selectedOption == 'Plume' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-paint-brush"
+            (click)="selectOption('Pinceau',true)"
+            [ngClass]="{ active: selectedOption == 'Pinceau' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-spray-can"
+            (click)="selectOption('Aérosol', true)"
+            [ngClass]="{ active: selectedOption == 'Aérosol' }"
+        ></i>
+        <i class="sidebar-dropdown-option fas fa-fill" (click)="selectOption('Sceau', true)" [ngClass]="{ active: selectedOption == 'Sceau' }"></i>
+    </div>
+
+    <div class="sidebar-option" (click)="toggleFormOptions()">
+        <i class="fas fa-shapes"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowFormOptions == true }">
+        <i
+            class="sidebar-dropdown-option fas fa-grip-lines"
+            (click)="selectOption('Ligne', true)"
+            [ngClass]="{ active: selectedOption == 'Ligne' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-stop"
+            (click)="selectOption('Rectangle', true)"
+            [ngClass]="{ active: selectedOption == 'Rectangle' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-circle"
+            (click)="selectOption('Ellipse', true)"
+            [ngClass]="{ active: selectedOption == 'Ellipse' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-draw-polygon"
+            (click)="selectOption('Polygone', true)"
+            [ngClass]="{ active: selectedOption == 'Polygone' }"
+        ></i>
+    </div>
+
+    <div class="sidebar-option" (click)="toggleToolOptions()">
+        <i class=" fas fa-tools"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowToolOptions == true }">
+        <i class="sidebar-dropdown-option fas fa-stamp" (click)="selectOption('Étampe', true)" [ngClass]="{ active: selectedOption == 'Étampe' }"></i>
+        <i
+            class="sidebar-dropdown-option fas fa-eye-dropper"
+            (click)="selectOption('pipette')"
+            [ngClass]="{ active: selectedOption == 'pipette' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-eraser"
+            (click)="selectOption('Efface', true)"
+            [ngClass]="{ active: selectedOption == 'Efface' }"
+        ></i>
+    </div>
+
+    <div class="sidebar-option" (click)="toggleEditOptions()">
+        <i class=" fas fa-compress"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowEditOptions == true }">
+        <i
+            class="sidebar-dropdown-option fas fa-sync-alt"
+            (click)="selectOption('Rotation', true)"
+            [ngClass]="{ active: selectedOption == 'Rotation' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-crop-alt"
+            (click)="selectOption('Redimension', true)"
+            [ngClass]="{ active: selectedOption == 'Redimension' }"
+        ></i>
+        <i class="sidebar-dropdown-option fas fa-cut" (click)="selectOption('Couper', false)" [ngClass]="{ active: selectedOption == 'Couper' }"></i>
+        <i class="sidebar-dropdown-option fas fa-copy" (click)="selectOption('Copier', false)" [ngClass]="{ active: selectedOption == 'Copier' }"></i>
+        <i
+            class="sidebar-dropdown-option fas fa-clone"
+            (click)="selectOption('Dupliquer', false)"
+            [ngClass]="{ active: selectedOption == 'Dupliquer' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-trash"
+            (click)="selectOption('Supprimer', false)"
+            [ngClass]="{ active: selectedOption == 'Supprimer' }"
+        ></i>
+    </div>
+
+    <i class="sidebar-option fas fa-palette" (click)="selectOption('Applicateur', true)" [ngClass]="{ active: selectedOption == 'Applicateur' }"></i>
+
+    <i class="sidebar-option fas fa-font" (click)="selectOption('Texte', true)" [ngClass]="{ active: selectedOption == 'Texte' }"></i>
+
+    <!--Will contain actions like file saving ...-->
+    <div class="sidebar-option" (click)="toogleSettingOptions()">
+        <i class="fas fa-cog"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
+</div>
+<!--Will contain option's customizations-->
+<div class="panel" *ngIf="displayPanel == true">
+    <div class="panel-title">{{ selectedOption }}</div>
+    <!--Put components inside panel-content with ngswitchcase-->
+    <div class="panel-content" [ngSwitch]="selectedOption">
+        <!--
+            Exemple:
+            <app-pencil-panel *ngSwitchCase="'Pencil'"></app-pencil-panel>
+        -->
+    </div>
+</div>
+
+<div class="workspace" [style.background-color]="workspaceColor"></div>
+<canvas
+    class="canvas"
+    [ngClass]="{ withPanel: displayPanel == true }"
+    [style.background-color]="canvasColor"
+    [style.width.px]="canvasWidth"
+    [style.height.px]="canvasHeight"
+></canvas>
