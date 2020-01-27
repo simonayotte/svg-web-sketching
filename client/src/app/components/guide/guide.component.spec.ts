@@ -22,4 +22,8 @@ describe('GuideComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should collapse selected category', () => {
+    expect(component).toBeTruthy();
+  });
 });
