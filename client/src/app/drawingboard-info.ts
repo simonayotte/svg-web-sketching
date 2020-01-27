@@ -8,4 +8,28 @@ export class DrawingBoardInfo {
         this.height = height;
         this.backgroundColor = backgroundColor;
     }
+
+    getWidth(){
+        return this.width;
+    }
+
+    getHeight(){
+        return this.height;
+    }
+
+    getBackgroundColor(){
+        return this.backgroundColor;
+    }
+
+    setWidth(width:number){
+        this.width = width;
+    }
+
+    setHeight(height:number){
+        this.height = height;
+    }
+
+    setBackgroundColor(backgroundColor:string){
+        this.backgroundColor = backgroundColor;
+    }
 }
