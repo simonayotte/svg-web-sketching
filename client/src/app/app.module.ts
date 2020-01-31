@@ -11,9 +11,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CreateDrawingComponent } from '../app/components/create-drawing/create-drawing.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
+import { ColorComponent } from './components/color/color.component';
 
 @NgModule({
-    declarations: [AppComponent, DrawPageComponent, CreateDrawingComponent, GuideComponent, BrushComponent, HomePageComponent],
+    declarations: [AppComponent, DrawPageComponent, CreateDrawingComponent, GuideComponent, BrushComponent, HomePageComponent, ColorComponent],
     imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule],
     providers: [],
     bootstrap: [AppComponent],

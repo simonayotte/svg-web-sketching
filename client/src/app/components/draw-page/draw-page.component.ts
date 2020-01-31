@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { ColorService } from 'src/app/services/color/color.service';
 
 @Component({
     selector: 'app-draw-page',
@@ -7,12 +8,12 @@ import { DrawStateService } from 'src/app/services/draw-state/draw-state.service
     styleUrls: ['./draw-page.component.scss'],
 })
 export class DrawPageComponent implements OnInit, OnDestroy {
-    constructor(private drawStateService: DrawStateService) {
+    constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => {
             this.isPanelOpen = isPanelOpen;
         });
 
-        this.drawStateService.canvasColorObs.subscribe((canvasColor: string) => {
+        this.colorService.canvasColorObs.subscribe((canvasColor: string) => {
             this.canvasColor = canvasColor;
         });
 
@@ -58,7 +59,6 @@ export class DrawPageComponent implements OnInit, OnDestroy {
 
         this.canvasRef.nativeElement.width = this.canvasWidth;
         this.canvasRef.nativeElement.height = this.canvasHeight;
-        this.canvasRef.nativeElement.style.backgroundColor = this.canvasColor;
     }
 
     ngOnDestroy() {
@@ -75,23 +75,34 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.selectedOption = option;
     }
 
+    //Function for test
+    getIsPanelOpen(): boolean {
+        return this.isPanelOpen;
+    }
+
     toogleDrawOptions(): void {
-        this.isShowDrawOptions = this.isShowDrawOptions ? false : true;
+        this.isShowDrawOptions = !this.isShowDrawOptions;
     }
     toggleFormOptions(): void {
-        this.isShowFormOptions = this.isShowFormOptions ? false : true;
+        this.isShowFormOptions = !this.isShowFormOptions;
     }
     toggleToolOptions(): void {
-        this.isShowToolOptions = this.isShowToolOptions ? false : true;
+        this.isShowToolOptions = !this.isShowToolOptions;
     }
     toggleEditOptions(): void {
-        this.isShowEditOptions = this.isShowEditOptions ? false : true;
+        this.isShowEditOptions = !this.isShowEditOptions;
     }
 
     toogleSettingOptions(): void {
-        this.isShowSettingOptions = this.isShowSettingOptions ? false : true;
+        this.isShowSettingOptions = !this.isShowSettingOptions;
     }
 
+    setCanvasColor($event: Event) {
+        if ($event.target) {
+            let color: string = (<HTMLInputElement>$event.target).value;
+            this.colorService.setCanvasColor(color);
+        }
+    }
     keyDown(event: KeyboardEvent) {
         let key: string = event.key;
 
