@@ -28,20 +28,6 @@ export class DrawStateService {
         this.isPanelOpen.next(isPanelOpen);
     }
 
-    private canvasColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffff');
-    canvasColorObs: Observable<string> = this.canvasColor.asObservable();
-
-    setCanvasColor(canvasColor: string): void {
-        this.canvasColor.next(canvasColor);
-    }
-
-    private currentColor: BehaviorSubject<string> = new BehaviorSubject<string>('#000000');
-    currentColorObs: Observable<string> = this.currentColor.asObservable();
-
-    setCurrentColor(currentColor: string): void {
-        this.currentColor.next(currentColor);
-    }
-
     private canvasWidth: BehaviorSubject<number> = new BehaviorSubject<number>(750);
     canvasWidthObs: Observable<number> = this.canvasWidth.asObservable();
 
