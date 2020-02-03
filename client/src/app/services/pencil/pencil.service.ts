@@ -67,6 +67,7 @@ export class PencilService implements OnInit, OnDestroy {
         this.canvasContext.lineCap = 'round';
         this.canvasContext.lineWidth = this.thickness.value;
         this.canvasContext.strokeStyle = this.color;
+        this.canvasContext.fillStyle = this.color;
 
         //Write circle when click only
         this.canvasContext.beginPath();
