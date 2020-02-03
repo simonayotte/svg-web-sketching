@@ -113,18 +113,38 @@
     <i class="sidebar-option fas fa-font" (click)="selectOption('Texte', true)" [ngClass]="{ active: selectedOption == 'Texte' }"></i>
 
     <!--Will contain actions like file saving ...-->
-    <div class="sidebar-option" (click)="toogleSettingOptions()">
+    <div class="sidebar-option">
         <i class="fas fa-cog"></i>
         <i class="fas fa-sort-down"></i>
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
+
+    <div class="sidebar-option" data-toggle="modal" data-target="#userGuide">
+        <i class="far fa-question-circle"></i>
+    </div>
+
 </div>
+
+<!-- Modal -->
+<div id="userGuide" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-xl">
+  
+      <!-- Modal content-->
+      <div class="modal-content">
+        <app-guide></app-guide>
+      </div>
+  
+    </div>
+</div>
+
+
 <!--Will contain option's customizations-->
 <div class="panel" [hidden]="!isPanelOpen">
     <div class="panel-title">{{ selectedOption }}</div>
     <!--Put components inside panel-content with ngswitchcase-->
     <div class="panel-content" [ngSwitch]="selectedOption">
         <app-brush *ngSwitchCase="'Pinceau'"></app-brush>
+        <app-rectangle *ngSwitchCase="'Rectangle'"></app-rectangle>
 
         <!--
             Exemple:

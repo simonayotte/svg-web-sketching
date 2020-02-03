@@ -98,6 +98,10 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         switch (key) {
             case 'w':
                 this.selectOption('Pinceau', true);
+                break;
+            case '1':
+                this.selectOption('Rectangle', true);
+                break;
         }
     }
 }
