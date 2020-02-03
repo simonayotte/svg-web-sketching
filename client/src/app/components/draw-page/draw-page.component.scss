@@ -108,3 +108,13 @@
 .canvas.withPanel {
     margin-left: 252px;
 }
+
+.input-color {
+    outline: none;
+}
+.input-color::-webkit-color-swatch-wrapper {
+    padding: 0;
+}
+.input-color::-webkit-color-swatch {
+    border: none;
+}

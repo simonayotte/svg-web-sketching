@@ -10,4 +10,12 @@
     <div class="configuration-title">
         Texture
     </div>
+    <div class="texture-boxes">
+        <i class="fas fa-square-full texture-box" (click)="setTexture('normal')" [ngClass]="{ active: texture == 'normal' }"></i>
+        <i class="fas fa-dot-circle texture-box" (click)="setTexture('circle')" [ngClass]="{ active: texture == 'circle' }"></i>
+        <i class="fas fa-igloo texture-box" (click)="setTexture('brick')" [ngClass]="{ active: texture == 'brick' }"></i>
+        <i class="fas fa-chevron-up texture-box" (click)="setTexture('zigzag')" [ngClass]="{ active: texture == 'zigzag' }"></i>
+        <i class="fas fa-chess-board texture-box" (click)="setTexture('square')" [ngClass]="{ active: texture == 'square' }"></i>
+        <i class="fas fa-water texture-box" (click)="setTexture('wave')" [ngClass]="{ active: texture == 'wave' }"></i>
+    </div>
 </div>

@@ -4,8 +4,9 @@
 
 .toolbar { 
     background: lightgrey;
-    width: 20%;
+    width: 10%;
     height: 100%;
+    max-height: 90vh;
     float: left;
     position: fixed;
     overflow: auto;
@@ -83,7 +84,8 @@
 
 .text-area {
     float: right;
-    width: 75%;
+    width: 83%;
+    height: 90vh;
     max-height: 90vh;
     overflow: auto;
     border: none;

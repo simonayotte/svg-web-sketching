@@ -2,6 +2,18 @@
     <div id="title"> Bienvenue à Poly Dessin</div> <br>
     <button>Créer dessin</button> <br> 
     <button>Ouvrir la galerie</button><br>
-    <button>Afficher le guide d'utilisation</button><br>
+    <button type="button" data-toggle="modal" data-target="#userGuide">Afficher le guide d'utilisation</button><br>
     <button type="button" disabled>Continuer dessin</button><br>
+</div>
+
+<!-- Modal -->
+<div id="userGuide" class="modal fade" role="dialog">
+  <div class="modal-dialog modal-xl">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <app-guide></app-guide>
+    </div>
+
+  </div>
 </div>
