@@ -11,13 +11,10 @@
             </div>
             <div class="category-items" id="outils-list">
                 <div class="item">
-                    <div class="subject" id="sujet2" (click)="displayTextSubject('sujet2')">Sujet 2</div>
+                    <div class="subject" id="outils1" (click)="displayTextSubject('outils1')">Outils 1</div>
                 </div>
                 <div class="item">
-                    <div class="subject">Sujet Cat1</div>
-                </div>
-                <div class="item">
-                    <div class="subject">Sujet Cat1</div>
+                    <div class="subject" id="outils2" (click)="displayTextSubject('outils2')">Outils 2</div>
                 </div>
             </div>
             <div class="item">
@@ -44,18 +41,32 @@
             <h1>Bienvenue</h1>
             <p>Ceci est la page de présentation</p>
             <div class="footer">
-                <button class="button right" (click)="displayTextSubject('sujet1')"><span>Suivant</span></button>
+                <button class="button right" (click)="displayTextSubject('outils1')"><span>Suivant</span></button>
             </div>
          </div>
-        <div class="subject-text" id="page-sujet1">
-            <h1>Sujet 1</h1>
-            <p>Ceci est la page du sujet 1<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />Texte en bas<br /></p>
+        <div class="subject-text" id="page-outils1">
+            <h1>Outils 1</h1>
+            <p>Ceci est la page de l'outils 1</p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('bienvenue')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('outils2')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-outils2">
+            <h1>Outils 2</h1>
+            <p>Ceci est la page de l'outils 2</p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('outils1')"><span>Précédent</span></button>
                 <button class="button right" (click)="displayTextSubject('sujet1')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-sujet2">Bonjour2</div>
+        <div class="subject-text" id="page-sujet1">
+            <h1>Sujet 1</h1>
+            <p>Ceci est la page du sujet 1<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />Texte en bas<br /></p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('outils2')"><span>Précédent</span></button>
+            </div>
+        </div>
     </div>
 </div>
 
