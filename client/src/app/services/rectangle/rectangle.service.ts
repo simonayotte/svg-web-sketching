@@ -18,7 +18,7 @@ export class RectangleService implements OnInit, OnDestroy {
         //Get draw page state
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
-        this.colorService.firstColorObs.subscribe((color: string) => (this.color = color));
+        this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.color = color));
 
         //Bind this to event listeners
         this.mouseDownListener = this.startRect.bind(this);
