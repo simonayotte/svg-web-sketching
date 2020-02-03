@@ -145,6 +145,7 @@
     <!--Put components inside panel-content with ngswitchcase-->
     <div class="panel-content" [ngSwitch]="selectedOption">
         <app-brush *ngSwitchCase="'Pinceau'"></app-brush>
+        <app-pencil *ngSwitchCase="'Crayon'"></app-pencil>
         <app-rectangle *ngSwitchCase="'Rectangle'"></app-rectangle>
 
         <!--

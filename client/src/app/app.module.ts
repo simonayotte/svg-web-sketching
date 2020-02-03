@@ -11,6 +11,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { CreateDrawingComponent } from '../app/components/create-drawing/create-drawing.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
+import { PencilComponent } from './components/pencil/pencil.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
 import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -26,6 +27,7 @@ import { ColorComponent } from './components/color/color.component';
         HomePageComponent,
         ColorComponent,
         RectangleComponent,
+        PencilComponent
     ],
     imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule, MatDialogModule,BrowserAnimationsModule],
     providers: [],
