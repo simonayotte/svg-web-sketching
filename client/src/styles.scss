@@ -4,6 +4,7 @@
 .slider {
     appearance: none;
     height: 8px;
+    width:100%;
     border-radius: 5px;
     background: #d3d3d3;
     outline: none;
@@ -25,3 +26,6 @@
     background: #4caf50;
     cursor: pointer;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

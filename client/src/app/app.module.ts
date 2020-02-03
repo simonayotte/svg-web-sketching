@@ -13,7 +13,8 @@ import { CreateDrawingComponent } from '../app/components/create-drawing/create-
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { PencilComponent } from './components/pencil/pencil.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
-
+import { MatDialogModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorComponent } from './components/color/color.component';
 
 @NgModule({
@@ -28,8 +29,9 @@ import { ColorComponent } from './components/color/color.component';
         RectangleComponent,
         PencilComponent
     ],
-    imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule],
+    imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule, MatDialogModule,BrowserAnimationsModule],
     providers: [],
+    entryComponents: [CreateDrawingComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
