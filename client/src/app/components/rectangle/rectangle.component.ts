@@ -14,6 +14,7 @@ export class RectangleComponent implements OnInit, OnDestroy {
     });
 }
 
+rectangleType: string = 'outline only';
 thickness: number;
 
 ngOnInit() {
@@ -26,6 +27,17 @@ ngOnDestroy() {
 setThickness($event: Event) {
     if ($event.target) {
         this.rectangleService.setThickess(parseInt((<HTMLInputElement>$event.target).value));
+    }
+}
+
+setRectangleType(rectangleType: string) {
+    if (
+        rectangleType === 'outline only' ||
+        rectangleType === 'fill only' ||
+        rectangleType === 'outline and fill'
+    ) {
+        this.rectangleService.setRectangleType(rectangleType);
+        this.rectangleType = rectangleType;
     }
 }
 

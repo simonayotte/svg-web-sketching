@@ -57,7 +57,6 @@ export class RectangleService implements OnInit, OnDestroy {
 
     private firstColor: string;
     private secondColor: string;
-    //private lineType: string;
     private displayOutline: boolean;
     private displayFill: boolean;
 
@@ -103,20 +102,19 @@ export class RectangleService implements OnInit, OnDestroy {
         let startX = positionX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
         let startY = event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
 
-        let widthOutline = positionX - this.initialX;
-        let heightOutline = event.clientY - this.initialY;
+        let width = positionX - this.initialX;
+        let height = event.clientY - this.initialY;
 
         //Check if the rectangle is smaller than the thickness
-        if ((this.canvasContext.lineWidth >= Math.abs(widthOutline) || this.canvasContext.lineWidth >= Math.abs(heightOutline))) {
-            this.canvasContext.fillStyle = this.displayOutline ? this.secondColor : this.firstColor;1
-            this.canvasContext.fillRect(this.initialX, this.initialY, widthOutline, heightOutline);
+        if ((this.canvasContext.lineWidth >= Math.abs(width) || this.canvasContext.lineWidth >= Math.abs(height))) {
+            this.canvasContext.fillStyle = this.displayOutline ? this.secondColor : this.firstColor;
+            this.canvasContext.fillRect(this.initialX, this.initialY, width, height);
             this.canvasContext.fillStyle = this.firstColor;
-            //11this.canvasContext.stroke();
         } else {
             //If the rectangle is bigger, add offset depending on the thickness
-            widthOutline += this.canvasContext.lineWidth < widthOutline ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
-            heightOutline += this.canvasContext.lineWidth < heightOutline ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
-            this.canvasContext.rect(startX, startY, widthOutline, heightOutline);
+            width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+            height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+            this.canvasContext.rect(startX, startY, width, height);
             if (this.displayFill) this.canvasContext.fill();
             if (this.displayOutline) this.canvasContext.stroke();
         }
@@ -140,7 +138,7 @@ export class RectangleService implements OnInit, OnDestroy {
             case 'fill only':
                 this.displayOutline = false;
                 this.displayFill = true;
-                this.canvasContext.lineWidth = 0;
+                this.canvasContext.lineWidth = 1;
                 break;
             default:
                 this.displayOutline = true;
