@@ -16,6 +16,7 @@ import { RectangleComponent } from './components/rectangle/rectangle.component';
 import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ColorComponent } from './components/color/color.component';
+import { LineComponent } from './components/line/line.component';
 
 @NgModule({
     declarations: [
@@ -27,7 +28,8 @@ import { ColorComponent } from './components/color/color.component';
         HomePageComponent,
         ColorComponent,
         RectangleComponent,
-        PencilComponent
+        PencilComponent,
+        LineComponent
     ],
     imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule, MatDialogModule,BrowserAnimationsModule],
     providers: [],
