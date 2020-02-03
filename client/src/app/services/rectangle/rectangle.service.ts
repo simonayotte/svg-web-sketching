@@ -92,9 +92,18 @@ export class RectangleService implements OnInit, OnDestroy {
       this.canvasContext.putImageData(this.canvasImage,0,0);
 
       this.canvasContext.beginPath();
+
+      let startX = (positionX > this.initialX ? this.initialX + this.thickness.value/2 : this.initialX - this.thickness.value/2);
+      let startY = (event.clientY > this.initialY ? this.initialY + this.thickness.value/2 : this.initialY - this.thickness.value/2); 
+
+
       let width = positionX - this.initialX;
       let height = event.clientY - this.initialY;
-      this.canvasContext.rect(this.initialX,this.initialY,width,height);
+      width += (this.thickness.value < width ? -this.thickness.value : this.thickness.value);
+      height += (this.thickness.value < height ? -this.thickness.value : this.thickness.value);
+
+
+      this.canvasContext.rect(startX, startY, width, height);
       this.canvasContext.stroke();
   }
 
