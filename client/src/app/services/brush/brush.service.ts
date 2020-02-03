@@ -129,7 +129,6 @@ export class BrushService implements OnInit, OnDestroy {
 
     continueDraw(event: MouseEvent): void {
         let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-
         this.canvasContext.beginPath();
         this.canvasContext.moveTo(this.lastX, this.lastY);
         this.canvasContext.lineTo(positionX, event.clientY);
