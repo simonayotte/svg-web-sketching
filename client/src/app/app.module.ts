@@ -14,11 +14,22 @@ import { HomePageComponent } from './components/home-page/home-page.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
 import { MatDialogModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
- @NgModule({
-    declarations: [AppComponent, DrawPageComponent, CreateDrawingComponent, GuideComponent, BrushComponent, HomePageComponent, RectangleComponent,],
+import { ColorComponent } from './components/color/color.component';
+
+@NgModule({
+    declarations: [
+        AppComponent,
+        DrawPageComponent,
+        CreateDrawingComponent,
+        GuideComponent,
+        BrushComponent,
+        HomePageComponent,
+        ColorComponent,
+        RectangleComponent,
+    ],
     imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule, MatDialogModule,BrowserAnimationsModule],
-    entryComponents: [CreateDrawingComponent],
     providers: [],
+    entryComponents: [CreateDrawingComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
