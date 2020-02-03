@@ -1,3 +1,4 @@
+import { ColorService } from 'src/app/services/color/color.service';
 import { Injectable, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class PencilService implements OnInit, OnDestroy {
 
-  constructor(private drawStateService: DrawStateService) { 
+  constructor(private drawStateService: DrawStateService,private colorService:ColorService) { 
       //Get canvas reference
     this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
       if (canvasRef != null) this.canvasRef = canvasRef;
@@ -19,7 +20,7 @@ export class PencilService implements OnInit, OnDestroy {
     //Get draw page state
     this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
-    this.drawStateService.currentColorObs.subscribe((color: string) => (this.color = color));
+    this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.color = color));
 
     //Bind this to event listeners
     this.mouseDownListener = this.startDraw.bind(this);
