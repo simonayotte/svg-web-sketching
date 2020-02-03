@@ -96,14 +96,20 @@ export class RectangleService implements OnInit, OnDestroy {
       let startX = (positionX > this.initialX ? this.initialX + this.thickness.value/2 : this.initialX - this.thickness.value/2);
       let startY = (event.clientY > this.initialY ? this.initialY + this.thickness.value/2 : this.initialY - this.thickness.value/2); 
 
-
       let width = positionX - this.initialX;
       let height = event.clientY - this.initialY;
-      width += (this.thickness.value < width ? -this.thickness.value : this.thickness.value);
-      height += (this.thickness.value < height ? -this.thickness.value : this.thickness.value);
 
+      //Check if the rectangle is smaller than the thickness
+      if (this.thickness.value >= Math.abs(width) || this.thickness.value >= Math.abs(height)) {
+        this.canvasContext.fillRect(this.initialX, this.initialY, width, height);
+      }
+      else {
+        //If the rectangle is bigger, add offset depending on the thickness
+        width += (this.thickness.value < width ? -this.thickness.value : this.thickness.value);
+        height += (this.thickness.value < height ? -this.thickness.value : this.thickness.value);
+        this.canvasContext.rect(startX, startY, width, height);
+      }
 
-      this.canvasContext.rect(startX, startY, width, height);
       this.canvasContext.stroke();
   }
 
