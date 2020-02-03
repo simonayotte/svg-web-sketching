@@ -18,7 +18,8 @@ export class RectangleService implements OnInit, OnDestroy {
         //Get draw page state
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
-        this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.color = color));
+        this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.firstColor = color));
+        this.colorService.secondColorWithOpacityObs.subscribe((color: string) => (this.secondColor = color));
 
         //Bind this to event listeners
         this.mouseDownListener = this.startRect.bind(this);
@@ -31,6 +32,7 @@ export class RectangleService implements OnInit, OnDestroy {
         /// TODO: get canvas width and height
         this.canvasHeight = 2000;
         this.canvasWidth = 2000;
+        this.setRectangleType('fill only');
         this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
@@ -53,7 +55,12 @@ export class RectangleService implements OnInit, OnDestroy {
     private mouseMoveListener: EventListener;
     private mouseOutListener: EventListener;
 
-    private color: string;
+    private firstColor: string;
+    private secondColor: string;
+    //private lineType: string;
+    private displayOutline: boolean;
+    private displayFill: boolean;
+
     private isPanelOpen: boolean;
 
     private initialX: number;
@@ -76,8 +83,8 @@ export class RectangleService implements OnInit, OnDestroy {
 
             this.canvasContext.lineJoin = 'miter';
             this.canvasContext.lineCap = 'square';
-            this.canvasContext.lineWidth = this.thickness.value;
-            this.canvasContext.strokeStyle = this.color;
+            this.canvasContext.strokeStyle = this.secondColor;
+            this.canvasContext.fillStyle = this.firstColor;
 
             this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
             this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
@@ -93,23 +100,26 @@ export class RectangleService implements OnInit, OnDestroy {
 
         this.canvasContext.beginPath();
 
-        let startX = positionX > this.initialX ? this.initialX + this.thickness.value / 2 : this.initialX - this.thickness.value / 2;
-        let startY = event.clientY > this.initialY ? this.initialY + this.thickness.value / 2 : this.initialY - this.thickness.value / 2;
+        let startX = positionX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
+        let startY = event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
 
-        let width = positionX - this.initialX;
-        let height = event.clientY - this.initialY;
+        let widthOutline = positionX - this.initialX;
+        let heightOutline = event.clientY - this.initialY;
 
         //Check if the rectangle is smaller than the thickness
-        if (this.thickness.value >= Math.abs(width) || this.thickness.value >= Math.abs(height)) {
-            this.canvasContext.fillRect(this.initialX, this.initialY, width, height);
+        if ((this.canvasContext.lineWidth >= Math.abs(widthOutline) || this.canvasContext.lineWidth >= Math.abs(heightOutline))) {
+            this.canvasContext.fillStyle = this.displayOutline ? this.secondColor : this.firstColor;1
+            this.canvasContext.fillRect(this.initialX, this.initialY, widthOutline, heightOutline);
+            this.canvasContext.fillStyle = this.firstColor;
+            //11this.canvasContext.stroke();
         } else {
             //If the rectangle is bigger, add offset depending on the thickness
-            width += this.thickness.value < width ? -this.thickness.value : this.thickness.value;
-            height += this.thickness.value < height ? -this.thickness.value : this.thickness.value;
-            this.canvasContext.rect(startX, startY, width, height);
+            widthOutline += this.canvasContext.lineWidth < widthOutline ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+            heightOutline += this.canvasContext.lineWidth < heightOutline ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+            this.canvasContext.rect(startX, startY, widthOutline, heightOutline);
+            if (this.displayFill) this.canvasContext.fill();
+            if (this.displayOutline) this.canvasContext.stroke();
         }
-
-        this.canvasContext.stroke();
     }
 
     stopRect(): void {
@@ -118,5 +128,25 @@ export class RectangleService implements OnInit, OnDestroy {
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+    }
+
+    setRectangleType(rectangleType: string): void {
+        switch(rectangleType) {
+            case 'outline only':
+                this.displayOutline = true;
+                this.displayFill = false;
+                this.canvasContext.lineWidth = this.thickness.value;
+                break;
+            case 'fill only':
+                this.displayOutline = false;
+                this.displayFill = true;
+                this.canvasContext.lineWidth = 0;
+                break;
+            default:
+                this.displayOutline = true;
+                this.displayFill = true;
+                this.canvasContext.lineWidth = this.thickness.value;
+                break;
+        }
     }
 }
