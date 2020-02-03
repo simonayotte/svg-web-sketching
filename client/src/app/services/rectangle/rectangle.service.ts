@@ -15,6 +15,13 @@ export class RectangleService implements OnInit, OnDestroy {
         this.drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
             if (canvasContext != null) this.canvasContext = canvasContext;
         });
+        this.drawStateService.canvasHeightObs.subscribe((canvasHeight: number) => {
+            if (canvasHeight != null) this.canvasHeight = canvasHeight;
+        });
+        this.drawStateService.canvasWidthObs.subscribe((canvasWidth: number) => {
+            if (canvasWidth != null) this.canvasWidth = canvasWidth;
+        });
+
         //Get draw page state
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
@@ -29,10 +36,7 @@ export class RectangleService implements OnInit, OnDestroy {
     }
     ngOnInit() {
         this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
-        /// TODO: get canvas width and height
-        this.canvasHeight = 2000;
-        this.canvasWidth = 2000;
-        this.setRectangleType('fill only');
+        this.setRectangleType('outline only');
         this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
     }
 
