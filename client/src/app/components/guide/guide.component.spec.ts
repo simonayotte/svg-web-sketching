@@ -22,4 +22,13 @@ describe('GuideComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+   /*
+  it('should collapse selected category', () => {
+    const nativeEl = fixture.debugElement.nativeElement;
+    component.collapse("outils");
+    expect(nativeEl.getElementById("outils-list").style.display == "block").toBeTruthy();
+    component.collapse("outils");
+    expect(nativeEl.getElementById("outils-list").style.display == "none").toBeTruthy();
+  });
+  */
 });
