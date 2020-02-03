@@ -12,8 +12,20 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { CreateDrawingComponent } from '../app/components/create-drawing/create-drawing.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
+
+import { ColorComponent } from './components/color/color.component';
+
 @NgModule({
-    declarations: [AppComponent, DrawPageComponent, CreateDrawingComponent, GuideComponent, BrushComponent, HomePageComponent, RectangleComponent,],
+    declarations: [
+        AppComponent,
+        DrawPageComponent,
+        CreateDrawingComponent,
+        GuideComponent,
+        BrushComponent,
+        HomePageComponent,
+        ColorComponent,
+        RectangleComponent,
+    ],
     imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule],
     providers: [],
     bootstrap: [AppComponent],

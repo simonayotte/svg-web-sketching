@@ -21,4 +21,18 @@ describe('DrawPageComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('#selectOption should return true when parameter panelOpen is true', () => {
+        component.selectOption('', true);
+        expect(component.getIsPanelOpen()).toBe(true);
+    });
+    it('#selectOption should return false when parameter panelOpen is false', () => {
+        component.selectOption('', false);
+        expect(component.getIsPanelOpen()).toBe(false);
+    });
+    it('#selectOption should return false when same option is selected and parameter panelOpen is true', () => {
+        component.selectOption('test', true);
+        component.selectOption('test', true);
+        expect(component.getIsPanelOpen()).toBe(false);
+    });
 });
