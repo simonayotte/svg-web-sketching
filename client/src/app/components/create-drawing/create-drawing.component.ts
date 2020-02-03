@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { DrawStateService } from '../../services/draw-state/draw-state.service';
 import { MatDialogRef } from '@angular/material';
+import { ColorService } from 'src/app/services/color/color.service';
 
 @Component({
   selector: 'app-create-drawing',
@@ -17,7 +18,7 @@ private isWidthModified:boolean = false;
 private isHeightModified:boolean = false; 
 private isRGB:boolean = false;
 private isHEX:boolean = true;
-constructor(public drawStateService:DrawStateService,public dialogRef:MatDialogRef<CreateDrawingComponent>) { }
+constructor(public drawStateService:DrawStateService,private colorService:ColorService,public dialogRef:MatDialogRef<CreateDrawingComponent>) { }
   drawingForm = new FormGroup({
     width: new FormControl('width', [Validators.required,Validators.min(0)]),
     height: new FormControl('height',[Validators.required,Validators.min(0)]),
@@ -38,7 +39,7 @@ constructor(public drawStateService:DrawStateService,public dialogRef:MatDialogR
   onSubmit() {
     this.drawStateService.setCanvasWidth(this.drawingForm.controls['width'].value - 52);
     this.drawStateService.setCanvasHeight(this.drawingForm.controls['height'].value);
-    this.drawStateService.setCanvasColor(this.drawingForm.controls['backgroundColor'].value);
+    this.colorService.setCanvasColor(this.drawingForm.controls['backgroundColor'].value);
     this.closeDialog();
     this.resetFields();
   }
