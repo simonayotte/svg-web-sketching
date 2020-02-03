@@ -12,9 +12,12 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { CreateDrawingComponent } from '../app/components/create-drawing/create-drawing.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
-@NgModule({
+import { MatDialogModule } from '@angular/material';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+ @NgModule({
     declarations: [AppComponent, DrawPageComponent, CreateDrawingComponent, GuideComponent, BrushComponent, HomePageComponent, RectangleComponent,],
-    imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule],
+    imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule, MatDialogModule,BrowserAnimationsModule],
+    entryComponents: [CreateDrawingComponent],
     providers: [],
     bootstrap: [AppComponent],
 })
