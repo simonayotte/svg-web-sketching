@@ -21,14 +21,17 @@ export class LineService implements OnInit, OnDestroy {
     this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.color = color));
 
     //Bind this to event listeners
-    this.mouseDownListener = this.startLine.bind(this);
-    this.mouseMoveListener = this.updateLine.bind(this);
-    this.mouseUpListener = this.drawLine.bind(this);
-    this.mouseOutListener = this.stopDraw.bind(this);
+    this.mouseDownListener = this.drawLine.bind(this);
+    this.mouseMoveListener = this.previewLine.bind(this);
+    this.mouseUpListener = this.stopLine.bind(this);
+    this.mouseOutListener = this.stopLine.bind(this);
   }
 
   ngOnInit(){
     this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
+    this.canvasHeight = 2000;
+    this.canvasWidth = 2000;
+    this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
   }
 
   ngOnDestroy() {
@@ -38,7 +41,7 @@ export class LineService implements OnInit, OnDestroy {
   private thickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   thicknessObs: Observable<number> = this.thickness.asObservable();
 
-  setThickess(thickness: number) {
+  setThickness(thickness: number) {
       this.thickness.next(thickness);
   }
 
@@ -56,60 +59,71 @@ export class LineService implements OnInit, OnDestroy {
   private lastX: number;
   private lastY: number;
 
-  startLine(event: MouseEvent): void {
-    let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-
-    //Stroke style
-    this.canvasContext.lineJoin = 'round';
-    this.canvasContext.lineCap = 'round';
-    this.canvasContext.lineWidth = this.thickness.value;
-    this.canvasContext.strokeStyle = this.color;
-    this.canvasContext.fillStyle = this.color;
-
-    //Write circle when click only
-    this.canvasContext.beginPath();
-    this.canvasContext.arc(positionX, event.clientY, this.thickness.value / 2, 0, 2 * Math.PI);
-    this.canvasContext.closePath();
-    this.canvasContext.fill();
-    this.lastX = positionX;
-    this.lastY = event.clientY;
-
-    this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
-    this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
-    this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
-
-  }
-
-  updateLine(event: MouseEvent): void {
-    this.canvasContext.beginPath();
-    this.canvasContext.moveTo(this.lastX, this.lastY);
-    this.canvasContext.lineTo(event.clientX, event.clientY);
-    this.canvasContext.stroke();
-  }
+  private canvasWidth: number;
+  private canvasHeight: number;
+  private canvasImage: ImageData;
 
   drawLine(event: MouseEvent): void {
-    this.canvasContext.beginPath();
-    this.canvasContext.moveTo(this.lastX, this.lastY);
-    this.canvasContext.lineTo(event.clientX, event.clientY);
-    this.canvasContext.stroke();
+      //Position on event
+      let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+      let positionY = event.clientY;
+
+      //Stroke style
+      this.canvasContext.lineJoin = 'round';
+      this.canvasContext.lineCap = 'round';
+      this.canvasContext.lineWidth = this.thickness.value;
+      this.canvasContext.strokeStyle = this.color;
+      this.canvasContext.fillStyle = this.color;
+
+      //Premier point de la ligne vs point subsequent
+      if(this.lastX && this.lastY) {
+        //Logique pour connecter la ligne avec les points precedent
+        this.canvasContext.beginPath();
+        this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
+        this.canvasContext.moveTo(this.lastX, this.lastY);
+        this.canvasContext.lineTo(positionX, positionY);
+        this.canvasContext.stroke();
+        this.lastX = positionX;
+        this.lastY = positionY;
+
+      } else { //Si c'est le premier point de la sequence
+        this.canvasContext.beginPath();
+        this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
+        this.canvasContext.closePath();
+        this.canvasContext.fill();
+        this.lastX = positionX;
+        this.lastY = positionY;
+      }
+      this.canvasImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
+
+      this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
+      this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
+      this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
+    
   }
 
-  calculateLine(event: MouseEvent): void {
+  previewLine(event: MouseEvent): void {
     let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+    let positionY = event.clientY;
+    if(this.lastX && this.lastY) {
+      //save state of canvas
+      this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
+      this.canvasContext.putImageData(this.canvasImage, 0, 0,);
 
-    this.canvasContext.beginPath();
-    this.canvasContext.moveTo(this.lastX, this.lastY);
-    this.canvasContext.lineTo(positionX, event.clientY);
-    this.canvasContext.closePath();
-    this.canvasContext.stroke();
-    this.lastX = positionX;
-    this.lastY = event.clientY;
+      //Draw preview line
+      this.canvasContext.beginPath();
+      this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
+      this.canvasContext.moveTo(this.lastX, this.lastY);
+      this.canvasContext.lineTo(positionX, positionY);
+      this.canvasContext.stroke();
+    }
+    
   }
 
-
-  stopDraw(): void {
-    this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
-    this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
-    this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+  stopLine(): void {
+    //this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
+    //this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
+    //this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
   }
+
 }
