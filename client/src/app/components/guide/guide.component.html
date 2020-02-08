@@ -7,31 +7,26 @@
                 <div class="subject" id="bienvenue" (click)="displayTextSubject('bienvenue')">Bienvenue</div>
             </div>
             <div class="item">
+                <div class="subject" id="dessin" (click)="displayTextSubject('dessin')">Créer un dessin</div>
+            </div>
+            <div class="item">
+                <div class="subject" id="galerie" (click)="displayTextSubject('galerie')">Galerie</div>
+            </div>
+            <div class="item">
                 <div class="category" id="outils" (click)="collapse('outils')">Outils</div>
             </div>
             <div class="category-items" id="outils-list">
                 <div class="item">
-                    <div class="subject" id="outils1" (click)="displayTextSubject('outils1')">Outils 1</div>
+                    <div class="subject" id="crayon" (click)="displayTextSubject('crayon')">Crayon</div>
                 </div>
                 <div class="item">
-                    <div class="subject" id="outils2" (click)="displayTextSubject('outils2')">Outils 2</div>
-                </div>
-            </div>
-            <div class="item">
-                <div class="subject" (click)="displayTextSubject('sujet1')">Sujet 1</div>
-            </div>
-            <div class="item">
-                <div class="category" id="category2" (click)="collapse('category2')">Catégorie</div>
-            </div>
-            <div class="category-items" id="category2-list">
-                <div class="item">
-                    <div class="subject">Sujet Cat2</div>
+                    <div class="subject" id="pinceau" (click)="displayTextSubject('pinceau')">Pinceau</div>
                 </div>
                 <div class="item">
-                    <div class="subject">Sujet Cat2</div>
+                    <div class="subject" id="ligne" (click)="displayTextSubject('ligne')">Ligne</div>
                 </div>
                 <div class="item">
-                    <div class="subject">Sujet Cat2</div>
+                    <div class="subject" id="rectangle" (click)="displayTextSubject('rectangle')">Rectangle</div>
                 </div>
             </div>
         </div>
@@ -39,32 +34,82 @@
     <div class="text-area">
         <div class="subject-text" id="page-bienvenue">
             <h1>Bienvenue</h1>
-            <p>Ceci est la page de présentation</p>
+            <p>Ceci est la page de présentation du guide utilisateur, celui-ci a pour but de vous guider dans l'utilisation de Polydessin.
+            <br />Le guide utilisateur est accessible a partir de la page d'acceuil (bouton "Afficher le guide d'utilisation") ainsi que de la page de dessin (bouton <i class="far fa-question-circle"></i>)
+             et peut-être fermé en cliquant en dehors de la fenêtre du guide.
+            </p>
+            <h3>Sujets</h3>
+            <p>La liste des sujets abordés se situe sur le côté gauche de la fenêtre du guide, certains d'entre-eux sont rassemblés par catégorie.
+            <br />Pour afficher le contenu d'un sujet, cliquez sur le nom du sujet dans la partie gauche de la fenêtre du guide. Cliquer sur une catégorie (<b>nom en gras</b>) permet de révéler les sujets appartenant à cette catégorie.
+            <br />Il est possible de naviguer entre les sujets avec les boutons "Précédent" et "Suivant" situés au bas de la page su sujet actuel.
+            </p>
             <div class="footer">
-                <button class="button right" (click)="displayTextSubject('outils1')"><span>Suivant</span></button>
+                <button class="button right" (click)="displayTextSubject('dessin')"><span>Suivant</span></button>
             </div>
          </div>
-        <div class="subject-text" id="page-outils1">
-            <h1>Outils 1</h1>
-            <p>Ceci est la page de l'outils 1</p>
+         <div class="subject-text" id="page-dessin">
+            <h1>Créer un dessin</h1>
+            <p>Ceci est la page dessin</p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('bienvenue')"><span>Précédent</span></button>
-                <button class="button right" (click)="displayTextSubject('outils2')"><span>Suivant</span></button>
+                <button class="button right" (click)="displayTextSubject('galerie')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-outils2">
-            <h1>Outils 2</h1>
-            <p>Ceci est la page de l'outils 2</p>
+        <div class="subject-text" id="page-galerie">
+            <h1>Galerie</h1>
+            <p>La page de Galerie peut-être accédée en appuyant sur le bouton "Ouvrir la galerie" sur la page d'acceuil.<br /> La page de Galerie n'est pas encore implémentée.</p>
             <div class="footer">
-                <button class="button left" (click)="displayTextSubject('outils1')"><span>Précédent</span></button>
-                <button class="button right" (click)="displayTextSubject('sujet1')"><span>Suivant</span></button>
+                <button class="button left" (click)="displayTextSubject('dessin')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('crayon')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-sujet1">
-            <h1>Sujet 1</h1>
-            <p>Ceci est la page du sujet 1<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />a<br />Texte en bas<br /></p>
+        <div class="subject-text" id="page-crayon">
+            <h1>Crayon</h1>
+            <p>Ceci est la page du crayon</p>
             <div class="footer">
-                <button class="button left" (click)="displayTextSubject('outils2')"><span>Précédent</span></button>
+                <button class="button left" (click)="displayTextSubject('galerie')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('pinceau')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-pinceau">
+            <h1>Pinceau</h1>
+            <p>Ceci est la page du pinceau</p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('crayon')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('ligne')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-ligne">
+            <h1>Ligne</h1>
+            <p>Ceci est la page de la ligne</p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('pinceau')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('rectangle')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-rectangle">
+            <h1>Rectangle</h1>
+            <p>L'outils rectangle permet de dessiner des formes rectangulaires.
+            <br />Pour ce faire, séléctionnez l'option rectangle dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-stop"></i>) ou pesez sur la touche "1".
+            <br />Une fois l'outils séléctionné, un glisser-déposer permet de dessiner un rectangle.
+            </p>
+            <h4>Épaisseur</h4>
+            <p>L'épaisseur du contour du rectangle peut-être modifée avec la glissière "Épaisseur".</p>
+            <h4>Styles</h4>
+            <p>3 styles de rectangles sont disponibles:
+            <br />  - Contour: seul les contours du rectangle sont dessinés. ()
+            <br />  - Plein avec contour: l'intérieur et les contours du rectangle sont dessinés. ()
+            <br />  - Plein: seul l'intérieur du rectangle est dessiné. ()
+            </p>
+            <h4>Couleur</h4>
+            <p>La couleur principale définie la couleur de l'intérieur du rectangle.
+            <br />La couleur secondaire définie la couleur du contour du rectangle.
+            </p>
+            <h4>Carré</h4>
+            <p>Il est possible de dessiner un carré plutôt qu'un rectangle en maintenant enfoncée la touche "Shift".
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('ligne')"><span>Précédent</span></button>
             </div>
         </div>
     </div>
