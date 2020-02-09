@@ -21,14 +21,17 @@ export class LineService implements OnInit, OnDestroy {
     this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.color = color));
 
     //Bind this to event listeners
-    this.mouseDownListener = this.drawLine.bind(this);
+    this.mouseDownListener = this.connectLine.bind(this);
     this.mouseMoveListener = this.previewLine.bind(this);
-    this.mouseUpListener = this.stopLine.bind(this);
-    this.mouseOutListener = this.stopLine.bind(this);
+    //this.mouseUpListener = this.stopLine.bind(this);
+    //this.mouseOutListener = this.stopLine.bind(this);
+    this.mouseDoubleDownListener = this.stopLine.bind(this);
+    this.keyDownListener = this.keyDown.bind(this);
   }
 
   ngOnInit(){
     this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
+    this.canvasRef.nativeElement.addEventListener('dblclick', this.mouseDoubleDownListener);
     this.canvasHeight = 2000;
     this.canvasWidth = 2000;
     this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
@@ -52,18 +55,21 @@ export class LineService implements OnInit, OnDestroy {
   private mouseUpListener: EventListener;
   private mouseMoveListener: EventListener;
   private mouseOutListener: EventListener;
+  private mouseDoubleDownListener: EventListener;
+
+  private keyDownListener: EventListener;
 
   private color: string;
   private isPanelOpen: boolean;
 
-  private lastX: number;
-  private lastY: number;
+  private lastX?: number;
+  private lastY?: number;
 
   private canvasWidth: number;
   private canvasHeight: number;
   private canvasImage: ImageData;
 
-  drawLine(event: MouseEvent): void {
+  connectLine(event: MouseEvent): void {
       //Position on event
       let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
       let positionY = event.clientY;
@@ -78,27 +84,22 @@ export class LineService implements OnInit, OnDestroy {
       //Premier point de la ligne vs point subsequent
       if(this.lastX && this.lastY) {
         //Logique pour connecter la ligne avec les points precedent
-        this.canvasContext.beginPath();
-        this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
-        this.canvasContext.moveTo(this.lastX, this.lastY);
-        this.canvasContext.lineTo(positionX, positionY);
-        this.canvasContext.stroke();
+        this.drawLine(positionX, positionY);
         this.lastX = positionX;
         this.lastY = positionY;
 
       } else { //Si c'est le premier point de la sequence
-        this.canvasContext.beginPath();
-        this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
-        this.canvasContext.closePath();
-        this.canvasContext.fill();
+        this.drawPoint(positionX,positionY);
         this.lastX = positionX;
         this.lastY = positionY;
       }
       this.canvasImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
 
+      this.canvasRef.nativeElement.addEventListener('keydown', this.keyDownListener);
       this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
       this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
       this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
+      
     
   }
 
@@ -111,19 +112,65 @@ export class LineService implements OnInit, OnDestroy {
       this.canvasContext.putImageData(this.canvasImage, 0, 0,);
 
       //Draw preview line
-      this.canvasContext.beginPath();
-      this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
-      this.canvasContext.moveTo(this.lastX, this.lastY);
-      this.canvasContext.lineTo(positionX, positionY);
-      this.canvasContext.stroke();
+      this.drawLine(positionX, positionY);
     }
     
   }
 
-  stopLine(): void {
-    //this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
-    //this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
-    //this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+  cancelLine(event: KeyboardEvent){
+    this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
+    this.lastX = undefined;
+    this.lastY = undefined;
   }
+  
+  //Fonction pour alleger le code et eviter la duplication
+  drawLine(positionX: number, positionY: number): void {
+    this.canvasContext.beginPath();
+    //Changer le style des connections ici pour ajouter des points ou non
+    //this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
+    if(this.lastX && this.lastY){
+      this.canvasContext.moveTo(this.lastX, this.lastY);
+      this.canvasContext.lineTo(positionX, positionY);
+      this.canvasContext.stroke();
+    }
+  }
+
+  //TODO: Changer le style du point de connection
+  //Fonction pour alleger le code et eviter la duplication
+  //Draws the connection point for the lines
+  drawPoint(positionX: number, positionY:number): void {
+    this.canvasContext.beginPath();
+    this.canvasContext.ellipse(positionX, positionY, this.thickness.value/2, this.thickness.value/2, 0, 0, 2 * Math.PI);
+    // this.canvasContext.arc(positionX, positionY, this.thickness.value, 0, 2 * Math.PI);
+    // this.canvasContext.closePath();
+    // this.canvasContext.fill();
+    this.canvasContext.stroke();
+  }
+
+  //TODO: Refactor this function
+  stopLine(event: MouseEvent): void {
+    this.lastX = undefined;
+    this.lastY = undefined;
+    this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
+    this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
+    this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+  }
+
+  private keyDown(event: KeyboardEvent): void {
+    let key: string = event.key;
+
+        switch (key) {
+            case 'Escape':
+              //TODO: Ajouter function pour annuler la ligne 
+              break;
+            case 'Backspace':
+              //TODO: Ajouter function pour annuler le segment le plus recent
+              break;
+        }
+
+  }
+
+
+  
 
 }
