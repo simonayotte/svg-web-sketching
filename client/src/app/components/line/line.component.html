@@ -5,12 +5,22 @@
     <input class="slider" value="thickness" (input)="setThickness($event)" type="range" min="1" max="50" />
     <div class="configuration-value">{{ thickness }} px</div>
 </div>
+<!-- TODO: Ajouter slider pour choisir l'épaisseur de la junction -->
 
 <div class="configuration">
     <div class="configuration-title">
-        Jonction
+        Type de jonction
     </div>
-    <div class="texture-boxes">
-        <i class="far fa-dot-circle"></i>
+    <div class="lineoption-boxes">
+        <i class="fas fa-grip-lines-vertical lineoption-box" (click)="setJunctionType(false)" [ngClass]="{ active: lineHasJunction == false }"></i>
+        <i class="fas fa-vector-square lineoption-box" (click)="setJunctionType(true)" [ngClass]="{ active: lineHasJunction == true }"></i>
     </div>
+</div>
+
+<div class="configuration" *ngIf=lineHasJunction>
+    <div class="configuration-title">
+        Épaisseur du point de jonction
+    </div>
+    <input class="slider" value="junctionPointThickness" (input)="setJunctionPointThickness($event)" type="range" min="1" max="50" />
+    <div class="configuration-value">{{ junctionPointThickness }} px</div>
 </div>
