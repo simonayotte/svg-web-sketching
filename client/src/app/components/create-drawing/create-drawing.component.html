@@ -1,46 +1,54 @@
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Modal</button>
-
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
-  <div class="modal-dialog">
-
-    <!-- Modal content-->
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Modal Header</h4>
-        <button type="button" class="close" data-dismiss="modal">&times;</button>
+<h1 mat-dialog-title>Créer un dessin</h1>
+<div mat-dialog-content>
+  <form [formGroup]='drawingForm'>
+    <label>
+      Largeur(px):
+      <input type='number' (keydown) = 'toggleIsWidthChanged()' formControlName='width'>
+      <div *ngIf = 'width.errors?.required'class="alert alert-danger">
+        La largeur est requise
       </div>
-      <div class="modal-body">
-        <form [formGroup]="drawingForm">
-            <label>
-              Largeur(px):
-              <input type="text" formControlName="width" required min>
-            </label>
-          
-            <label>
-              Longueur(px):
-              <input type="text" formControlName="height" required min>
-            </label><br>
-    
-            <label>
-              <input formControlName="backgroundColor" required
-              [value] = 'color'
-              [style.background]="color"
-              [(cpToggle)]="toggle"
-              [cpSaveClickOutside]="false"
-              [cpOutputFormat] = "hex"
-              [(colorPicker)]="color"
-              [cpOKButton]="true"
-              [cpSaveClickOutside]="false"
-              (colorPickerChange)="updateColor($event)"/>            
-            </label>
-            <button type="submit" [disabled]="!drawingForm.valid" data-dismiss="modal" (click)="onSubmit()">Submit</button>
-          </form>
+      <div *ngIf = 'width.errors?.min'class="alert alert-danger">
+        La largeur doit être positive
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" (click)="resetFields()" data-dismiss="modal">Close</button>
+    </label>
+    <br>
+    <label>
+      Longueur(px):
+      <input type='number' (keydown) = 'toggleIsHeightChanged()' formControlName='height'>
+      <div *ngIf = 'height.errors?.required'class="alert alert-danger">
+        La longueur est requise
       </div>
-    </div>
+      <div *ngIf = 'height.errors?.min'class="alert alert-danger">
+        La longueur doit être positive
+      </div>
+    </label>
+    <br>
+    <label *ngIf = 'isRGB'>
+      <input type = 'text' value = "(255,255,255)" formControlName = 'rgb'>
+      <button [disabled] = 'rgb.errors?.pattern' (click)=changeColor()>OK</button>
+      <div *ngIf = 'rgb.errors?.pattern'class="alert alert-danger">
+        La couleur doit prendre le format suivant (x,x,x) avec x entre 0 et 255
+      </div>
+    </label>
 
-  </div>
+    <label *ngIf = 'isHEX'>
+      <input type = 'text' value = '#ffffff' formControlName = 'hex' pattern = '#[0-9a-fA-F]{6}'>
+      <button [disabled] = 'hex.errors?.pattern' (click)=changeColor()>OK</button>
+      <div *ngIf = 'hex.errors?.pattern'class="alert alert-danger">
+        La couleur doit prendre le format suivant #xxxxxx avec x entre 0 et 9 ou entre a et f
+      </div>
+    </label>
+
+    <label>
+      <input type = 'color' value = '#ffffff' formControlName = 'backgroundColor'>
+    </label><br>
+    <button (click)='toggleHEX()'>HEX</button>
+    <button (click)='toggleRGB()'>RGB</button><br>
+    <button type='submit' [disabled]='!drawingForm.valid' data-dismiss='modal' (click)='onSubmit()' routerLink="/draw">Soumettre</button>
+    <button (click) = 'closeDialog()'>Fermer</button>
+  </form>
 </div>
+
+
+
+

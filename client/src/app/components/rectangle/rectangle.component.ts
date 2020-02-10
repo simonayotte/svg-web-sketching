@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
 
 @Component({
@@ -14,6 +14,7 @@ export class RectangleComponent implements OnInit, OnDestroy {
     });
 }
 
+rectangleType = 'outline only';
 thickness: number;
 
 ngOnInit() {
@@ -25,7 +26,18 @@ ngOnDestroy() {
 }
 setThickness($event: Event) {
     if ($event.target) {
-        this.rectangleService.setThickess(parseInt((<HTMLInputElement>$event.target).value));
+        this.rectangleService.setThickess(parseInt(($event.target as HTMLInputElement).value, 10));
+    }
+}
+
+setRectangleType(rectangleType: string) {
+    if (
+        rectangleType === 'outline only' ||
+        rectangleType === 'fill only' ||
+        rectangleType === 'outline and fill'
+    ) {
+        this.rectangleService.setRectangleType(rectangleType);
+        this.rectangleType = rectangleType;
     }
 }
 
