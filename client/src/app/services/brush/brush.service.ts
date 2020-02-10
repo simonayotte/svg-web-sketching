@@ -18,7 +18,7 @@ export class BrushService implements OnInit, OnDestroy {
         //Get draw page state
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
-        this.colorService.firstColorWithOpacityObs.subscribe((firstColor: string) => (this.firstColor = firstColor));
+        this.colorService.firstColorObs.subscribe((firstColor: string) => (this.firstColor = firstColor));
 
         //Bind this to event listeners
         this.mouseDownListener = this.startDraw.bind(this);

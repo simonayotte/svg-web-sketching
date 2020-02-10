@@ -1,54 +1,122 @@
-.colors {
+.color {
+    width: 200px;
+    height: auto;
+    background-color: rgba(54, 54, 54, 0.6);
+    position: relative;
+    left: 255px;
+    z-index: 4;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-}
-
-.input-color {
-    border: 1px solid white;
+    align-items: center;
     border-radius: 5px;
-    height: 40px;
-    width: 40px;
-    padding: 1px;
+}
+
+.canvas-bar,
+.canvas-square {
     cursor: pointer;
-    outline: none;
-    margin-right: 5px;
 }
-.input-color::-webkit-color-swatch-wrapper {
-    padding: 0;
-}
-.input-color::-webkit-color-swatch {
-    border: none;
-}
+
 .slider {
-    width: 120px;
+    margin-bottom: 10px;
 }
 
-.fas {
+.opacity-value {
     color: white;
-    font-size: 20px;
-    transform: rotate(90deg);
-    cursor: pointer;
+    font-size: 8px;
+    margin-left: 3px;
+}
+.rgb-form {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
-.input-group {
+.input-container {
     display: flex;
     align-items: center;
-    margin: 10px 0px;
 }
 
-.colors-history {
+.input-label {
+    color: white;
+    font-size: 12px;
+}
+
+.rgb-input {
+    width: 40px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-left: 2px;
+    border: 1px solid white;
+    outline: none;
+}
+
+.hex-input {
+    width: 50px;
+    font-size: 12px;
+    border-radius: 5px;
+    margin-left: 2px;
+    border: 1px solid white;
+    outline: none;
+    margin-top: 5px;
+}
+
+.confirm-button,
+.cancel-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px 10px;
+    width: 100%;
+    transition: 0.2s ease-in-out;
+    border: 1px solid white;
+    border-radius: 5px;
+    margin-top: 10px;
+    background-color: #363636;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.cancel-button:hover {
+    background-color: #dc3545;
+}
+.confirm-button:hover {
+    background-color: #ff8c00;
+}
+
+.color-error {
+    color: #eeca2c;
+    font-size: 8px;
+}
+
+.color-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.color-sample {
+    width: 50px;
+    height: 30px;
+}
+
+.used-colors {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    width: 100%;
+    margin: 5px 0px;
 }
 
 .used-color {
     width: 20px;
     height: 20px;
-    border-radius: 5px;
     border: 1px solid white;
-    margin-left: 1px;
+    border-radius: 5px;
+    margin: 2px;
     cursor: pointer;
 }

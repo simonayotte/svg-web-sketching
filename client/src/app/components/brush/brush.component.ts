@@ -14,7 +14,7 @@ export class BrushComponent implements OnInit, OnDestroy {
             this.thickness = thickness;
         });
 
-        this.colorService.firstColorWithOpacityObs.subscribe(() => this.setTexture(this.texture)); //to load texture with different color
+        this.colorService.firstColorObs.subscribe(() => this.setTexture(this.texture)); //to load texture with different color
     }
 
     texture: string = 'normal';
