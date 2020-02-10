@@ -20,11 +20,32 @@ describe('RectangleComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should correctly call setRectangleType when cliking on a type button', () => {
-      const setRectangleTypeSpy = spyOn(component,'setRectangleType');
-      const button = fixture.debugElement.query(By.css('.far fa-square .rectangle-style-box'));
-      button.triggerEventHandler('click',{});
-      fixture.detectChanges();
-      expect(setRectangleTypeSpy).toHaveBeenCalled();
+  it('should create', () => {
+    expect(component).toBeTruthy();
   });
+  
+  it('should correctly call setRectangleType when cliking on a type button', () => {
+    const setRectangleTypeSpy = spyOn(component,'setRectangleType');
+    const button = fixture.debugElement.query(By.css('.rectangle-style-box'));
+    button.triggerEventHandler('click',{});
+    fixture.detectChanges();
+    expect(setRectangleTypeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should correctly call setRectangleType when cliking on a type button', () => {
+    const setRectangleTypeSpy = spyOn(component,'setRectangleType');
+    const button = fixture.debugElement.query(By.css('.rectangle-style-box'));
+    button.triggerEventHandler('click',{});
+    fixture.detectChanges();
+    expect(setRectangleTypeSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should correctly call setThickness when using the slider', () => {
+    const setThicknessSpy = spyOn(component,'setThickness');
+    const slider = fixture.debugElement.query(By.css('.slider'));
+    slider.triggerEventHandler('input',{});
+    fixture.detectChanges();
+    expect(setThicknessSpy).toHaveBeenCalledTimes(1);
+  });
+
 });
