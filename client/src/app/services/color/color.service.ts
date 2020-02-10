@@ -7,45 +7,21 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class ColorService {
     constructor() {}
 
-    private firstColor: BehaviorSubject<string> = new BehaviorSubject<string>('#000000');
+    private firstColor: BehaviorSubject<string> = new BehaviorSubject<string>('#000000ff');
     firstColorObs: Observable<string> = this.firstColor.asObservable();
 
     setFirstColor(firstColor: string): void {
         this.firstColor.next(firstColor);
-        this.firstColorWithOpacity.next(firstColor + this.firstColorOpacity.value);
     }
 
-    private firstColorOpacity: BehaviorSubject<string> = new BehaviorSubject<string>('ff');
-    firstColorOpacityObs: Observable<string> = this.firstColorOpacity.asObservable();
-
-    setFirstColorOpacity(firstColorOpacity: string): void {
-        this.firstColorOpacity.next(firstColorOpacity);
-        this.firstColorWithOpacity.next(this.firstColor.value + firstColorOpacity);
-    }
-
-    private secondColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffff');
+    private secondColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffffff');
     secondColorObs: Observable<string> = this.secondColor.asObservable();
 
     setSecondColor(secondColor: string): void {
         this.secondColor.next(secondColor);
-        this.secondColorWithOpacity.next(secondColor + this.secondColorOpacity.value);
     }
 
-    private secondColorOpacity: BehaviorSubject<string> = new BehaviorSubject<string>('ff');
-    secondColorOpacityObs: Observable<string> = this.secondColorOpacity.asObservable();
-
-    setSecondColorOpacity(secondColorOpacity: string): void {
-        this.secondColorOpacity.next(secondColorOpacity);
-        this.secondColorWithOpacity.next(this.secondColor.value + secondColorOpacity);
-    }
-
-    private firstColorWithOpacity: BehaviorSubject<string> = new BehaviorSubject<string>('#000000ff');
-    firstColorWithOpacityObs: Observable<string> = this.firstColorWithOpacity.asObservable();
-
-    private secondColorWithOpacity: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffffff');
-    secondColorWithOpacityObs: Observable<string> = this.secondColorWithOpacity.asObservable();
-
-    private canvasColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffff');
+    private canvasColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffffff');
     canvasColorObs: Observable<string> = this.canvasColor.asObservable();
 
     setCanvasColor(canvasColor: string): void {
@@ -77,5 +53,20 @@ export class ColorService {
         let green = this.numberToHex(g);
         let blue = this.numberToHex(b);
     return '#'+red+green+blue;
+
+    private selectedColor: BehaviorSubject<string> = new BehaviorSubject<string>('');
+    selectedColorObs: Observable<string> = this.selectedColor.asObservable();
+
+    private isColorWindowOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isColorWindowOpenObs: Observable<boolean> = this.isColorWindowOpen.asObservable();
+
+    openColorWindow(selectedColor: string): void {
+        this.isColorWindowOpen.next(true);
+        this.selectedColor.next(selectedColor);
+    }
+
+    closeColorWindow(): void {
+        this.isColorWindowOpen.next(false);
+        this.selectedColor.next('');
     }
 }

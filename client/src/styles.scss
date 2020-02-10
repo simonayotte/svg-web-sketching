@@ -1,10 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/@fortawesome/fontawesome-free/css/all.min.css';
 
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
+
 .slider {
     appearance: none;
     height: 8px;
-    width:100%;
+    width: 100%;
     border-radius: 5px;
     background: #d3d3d3;
     outline: none;
@@ -27,5 +36,6 @@
     cursor: pointer;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+i {
+    cursor: pointer;
+}
