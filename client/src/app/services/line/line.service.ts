@@ -23,7 +23,7 @@ export class LineService implements OnInit, OnDestroy {
     //Bind this to event listeners
     this.lineHasJunction = false;
     this.mouseDownListener = this.connectLineEventHandler.bind(this);
-    this.mouseMoveListener = this.previewLine.bind(this);
+    this.mouseMoveListener = this.previewLineEventHandler.bind(this);
     this.mouseOutListener = this.stopLine.bind(this);
     this.mouseDoubleDownListener = this.stopLine.bind(this);
   }
@@ -33,6 +33,7 @@ export class LineService implements OnInit, OnDestroy {
     this.canvasRef.nativeElement.addEventListener('dblclick', this.mouseDoubleDownListener);
     this.canvasHeight = 2000;
     this.canvasWidth = 2000;
+    this.lineImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
     this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
     this.coordinates = new Array<Coordinate>();
     this.setJunctionType(true);
@@ -74,6 +75,8 @@ export class LineService implements OnInit, OnDestroy {
   private canvasHeight: number;
   private canvasImage: ImageData;
 
+  private lineImage: ImageData;
+
   //TODO: Structure pour save les points pour annuler le dernier segment
   private coordinates: Array<Coordinate>;
 
@@ -103,7 +106,6 @@ export class LineService implements OnInit, OnDestroy {
         this.lastY = positionY;
 
       } else { //Si c'est le premier point de la sequence
-
         this.drawPoint(positionX,positionY);
         this.lastX = positionX;
         this.lastY = positionY;
@@ -113,13 +115,12 @@ export class LineService implements OnInit, OnDestroy {
       //Ajout à l'array des saved states
       console.log(this.coordinates);
       this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
-      //this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
       this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
       
     
   }
   //MouseMoveEvent => PreviewLine
-  previewLine(event: MouseEvent): void {
+  previewLineEventHandler(event: MouseEvent) {
     let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
     let positionY = event.clientY;
     if(this.lastX && this.lastY) {
@@ -128,11 +129,11 @@ export class LineService implements OnInit, OnDestroy {
       this.canvasContext.putImageData(this.canvasImage, 0, 0,);
       this.drawLine(positionX, positionY);
     }
-    
   }
 
-  //Backspace => cancelLine
-  cancelLine(): void {
+
+  //Backspace => cancelSegment
+  cancelSegment(): void {
     this.coordinates.pop();
     this.lastX = undefined;
     this.lastY = undefined;
@@ -142,10 +143,17 @@ export class LineService implements OnInit, OnDestroy {
     });
   }
 
-  //TODO: Function pour annuler le preview de la ligne
-  //Escape => cancelPreviewLine
-  cancelPreviewLine(): void {
-    
+  //Escape => cancelLine
+  cancelLine(): void {
+    this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
+    this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+    while(this.coordinates.length != 0){
+      this.coordinates.pop();
+    }
+    this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
+    this.canvasContext.putImageData(this.lineImage, 0, 0,);  
+    this.lastX = undefined;
+    this.lastY = undefined;  
   }
   
   drawLine(positionX: number, positionY: number): void {
@@ -159,12 +167,10 @@ export class LineService implements OnInit, OnDestroy {
     }
   }
 
-  //TODO: Changer le style du point de connection
   //Draws the connection point for the lines
   drawPoint(positionX: number, positionY:number): void {
     if (this.lineHasJunction) {
       this.canvasContext.beginPath();
-      //TODO: Changer les valeurs ici pour des diametres de junction
       this.canvasContext.ellipse(positionX, positionY, this.junctionPointThickness.value/2, this.junctionPointThickness.value/2, 0, 0, 2 * Math.PI);
       this.canvasContext.stroke();
     } else {
@@ -177,8 +183,12 @@ export class LineService implements OnInit, OnDestroy {
   stopLine(event: MouseEvent): void {
     this.lastX = undefined;
     this.lastY = undefined;
+    //Enlever tout les elements de l'array
+    while(this.coordinates.length != 0){
+      this.coordinates.pop();
+    }
+    this.lineImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
     this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
-    this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
     this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
   }
 
