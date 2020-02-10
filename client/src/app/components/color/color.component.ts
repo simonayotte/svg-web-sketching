@@ -30,7 +30,7 @@ export class ColorComponent implements OnInit {
         this.squareContext = this.squareRef.nativeElement.getContext('2d');
         this.barContext = this.barRef.nativeElement.getContext('2d');
         this.fillBar();
-        this.colorService.selectedColorObs.subscribe(selectedColor => {
+        this.colorService.selectedColorObs.subscribe((selectedColor: string) => {
             //get the right color
             this.selectedColor = selectedColor;
             if (this.selectedColor == 'first') {
