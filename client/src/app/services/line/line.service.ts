@@ -74,6 +74,9 @@ export class LineService implements OnInit, OnDestroy {
   private canvasHeight: number;
   private canvasImage: ImageData;
 
+  //Stack avec les saved states de chaque ligne
+  private canvasImages: Array<ImageData>;
+
   connectLine(event: MouseEvent): void {
       //Position on event
       let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
@@ -101,7 +104,9 @@ export class LineService implements OnInit, OnDestroy {
         this.lastX = positionX;
         this.lastY = positionY;
       }
+      //Ajouter la nouvelle ligne au saved Canvas Image
       this.canvasImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
+      //Ajout à l'array des saved states
 
       this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
       this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
@@ -117,18 +122,19 @@ export class LineService implements OnInit, OnDestroy {
       //save state of canvas
       this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
       this.canvasContext.putImageData(this.canvasImage, 0, 0,);
-      //Draw preview line
       this.drawLine(positionX, positionY);
     }
     
   }
-  //Escape => cancelLine
+
+  //TODO: Function pour annuler le segment le plus recent
+  //Backspace => cancelLine
   cancelLine(): void {
-    this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
-    this.lastX = undefined;
-    this.lastY = undefined;
+    this.canvasImage 
   }
 
+  //TODO: Function pour annuler le preview de la ligne
+  //Escape => cancelPreviewLine
   cancelPreviewLine(): void {
     
   }
