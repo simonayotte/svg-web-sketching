@@ -1,11 +1,11 @@
-import { Injectable, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from '../color/color.service';
 @Injectable({
     providedIn: 'root',
 })
-export class BrushService implements OnInit, OnDestroy {
+export class BrushService {
     constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
         //Get canvas reference
         this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
@@ -15,38 +15,23 @@ export class BrushService implements OnInit, OnDestroy {
             if (canvasContext != null) this.canvasContext = canvasContext;
         });
 
-        //Get draw page state
-        this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
-
         this.colorService.firstColorObs.subscribe((firstColor: string) => (this.firstColor = firstColor));
-
         //Bind this to event listeners
-        this.mouseDownListener = this.startDraw.bind(this);
         this.mouseMoveListener = this.continueDraw.bind(this);
         this.mouseUpListener = this.stopDraw.bind(this);
         this.mouseOutListener = this.stopDraw.bind(this);
-    }
-    ngOnInit() {
-        this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
-        this.setTexture('normal');
-    }
-
-    ngOnDestroy() {
-        this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
     }
 
     private canvasRef: ElementRef;
     private canvasContext: CanvasRenderingContext2D;
 
     private pattern: CanvasPattern | null;
-    private mouseDownListener: EventListener;
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
     private mouseOutListener: EventListener;
 
     private firstColor: string;
-    private isPanelOpen: boolean;
 
     private lastX: number;
     private lastY: number;
@@ -98,9 +83,6 @@ export class BrushService implements OnInit, OnDestroy {
     }
 
     startDraw(event: MouseEvent): void {
-        //comment tester une fonction comme celle la
-        let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-
         //Stroke style
         this.canvasContext.lineJoin = 'round';
         this.canvasContext.lineCap = 'round';
@@ -115,12 +97,12 @@ export class BrushService implements OnInit, OnDestroy {
         }
 
         this.canvasContext.beginPath();
-        this.canvasContext.arc(positionX, event.clientY, this.thickness.value / 2, 0, 2 * Math.PI);
+        this.canvasContext.arc(event.offsetX, event.offsetY, this.thickness.value / 2, 0, 2 * Math.PI);
         this.canvasContext.closePath();
         this.canvasContext.fill();
 
-        this.lastX = positionX;
-        this.lastY = event.clientY;
+        this.lastX = event.offsetX;
+        this.lastY = event.offsetY;
 
         this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
@@ -128,14 +110,13 @@ export class BrushService implements OnInit, OnDestroy {
     }
 
     continueDraw(event: MouseEvent): void {
-        let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
         this.canvasContext.beginPath();
         this.canvasContext.moveTo(this.lastX, this.lastY);
-        this.canvasContext.lineTo(positionX, event.clientY);
+        this.canvasContext.lineTo(event.offsetX, event.offsetY);
         this.canvasContext.closePath();
         this.canvasContext.stroke();
-        this.lastX = positionX;
-        this.lastY = event.clientY;
+        this.lastX = event.offsetX;
+        this.lastY = event.offsetY;
     }
 
     stopDraw(): void {

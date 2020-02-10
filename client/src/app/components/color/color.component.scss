@@ -1,9 +1,8 @@
 .color {
     width: 200px;
     height: auto;
-    background-color: rgba(54, 54, 54, 0.6);
-    position: relative;
-    left: 255px;
+    background-color: #363636;
+    position: absolute;
     z-index: 4;
     padding: 10px;
     display: flex;
@@ -19,6 +18,7 @@
 
 .slider {
     margin-bottom: 10px;
+    width: 150px;
 }
 
 .opacity-value {
