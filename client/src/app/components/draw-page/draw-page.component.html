@@ -124,6 +124,10 @@
         <i class="far fa-question-circle"></i>
     </div>
 
+    <div class="sidebar-option" (click) = 'openDialog()'>
+        <i class="fas fa-plus"></i>
+    </div>
+
 </div>
 
 <!-- Modal -->
@@ -157,4 +161,4 @@
 </div>
 
 <div class="workspace" [style.background-color]="workspaceColor"></div>
-<canvas #canvas class="canvas" [style.background-color]="canvasColor" [ngClass]="{ withPanel: isPanelOpen == true }"></canvas>
+<canvas #canvas class="canvas" [style.background-color]="canvasColor" [width] = "canvasWidth" [height] = "canvasHeight"[ngClass]="{ withPanel: isPanelOpen == true }"></canvas>

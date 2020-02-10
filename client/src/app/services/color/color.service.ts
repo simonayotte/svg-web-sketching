@@ -64,4 +64,18 @@ export class ColorService {
         if (this.lastUsedColorIndex === this.usedColors.value.length - 1) this.lastUsedColorIndex = 0;
         else this.lastUsedColorIndex++;
     }
+    
+    numberToHex(number:number){
+        let hex = number.toString(16);
+        if (hex.length < 2) {
+            hex = "0" + hex;
+        }
+        return hex;
+    }
+    convertRGBtoHEX(r:number,g:number,b:number){
+        let red = this.numberToHex(r);
+        let green = this.numberToHex(g);
+        let blue = this.numberToHex(b);
+    return '#'+red+green+blue;
+    }
 }

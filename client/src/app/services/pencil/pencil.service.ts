@@ -1,4 +1,4 @@
-import { ColorService } from 'src/app/services/color/color.service';
+import { ColorService } from '../color/color.service'
 import { Injectable, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -60,6 +60,7 @@ export class PencilService implements OnInit, OnDestroy {
     private lastY: number;
 
     startDraw(event: MouseEvent): void {
+        this.drawStateService.setIsDrawingStarted(true);
         let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
 
         //Stroke style

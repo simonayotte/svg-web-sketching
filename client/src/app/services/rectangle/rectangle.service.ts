@@ -15,6 +15,7 @@ export class RectangleService implements OnInit, OnDestroy {
         this.drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
             if (canvasContext != null) this.canvasContext = canvasContext;
         });
+        
         //Get draw page state
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
@@ -65,6 +66,7 @@ export class RectangleService implements OnInit, OnDestroy {
     private canvasWidth: number;
 
     startRect(event: MouseEvent): void {
+        this.drawStateService.setIsDrawingStarted(true);
         if (!this.isDrawing) {
             this.isDrawing = true;
             let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;

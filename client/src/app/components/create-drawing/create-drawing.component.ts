@@ -4,6 +4,8 @@ import { DrawStateService } from '../../services/draw-state/draw-state.service';
 import { MatDialogRef } from '@angular/material';
 import { ColorService } from 'src/app/services/color/color.service';
 
+const SIDEBAR_WIDTH:number = 52;
+
 @Component({
   selector: 'app-create-drawing',
   templateUrl: './create-drawing.component.html',
@@ -13,12 +15,23 @@ import { ColorService } from 'src/app/services/color/color.service';
   }
 })
 export class CreateDrawingComponent implements OnInit { 
-
 private isWidthModified:boolean = false;
 private isHeightModified:boolean = false; 
-private isRGB:boolean = false;
 private isHEX:boolean = true;
-constructor(public drawStateService:DrawStateService,private colorService:ColorService,public dialogRef:MatDialogRef<CreateDrawingComponent>) { }
+private canvasContext:CanvasRenderingContext2D;
+private canvasWidth:number;
+private canvasHeight:number;
+constructor(private drawStateService:DrawStateService,private colorService:ColorService,private dialogRef:MatDialogRef<CreateDrawingComponent>) { 
+  this.drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
+    this.canvasContext = canvasContext;
+});
+  this.drawStateService.canvasWidthObs.subscribe((canvasWidth) => {
+    this.canvasWidth = canvasWidth;
+});
+  this.drawStateService.canvasHeightObs.subscribe((canvasHeight) => {
+    this.canvasHeight = canvasHeight;
+});
+}
   drawingForm = new FormGroup({
     width: new FormControl('width', [Validators.required,Validators.min(0)]),
     height: new FormControl('height',[Validators.required,Validators.min(0)]),
@@ -37,11 +50,13 @@ constructor(public drawStateService:DrawStateService,private colorService:ColorS
     this.isHeightModified=false;
   }
   onSubmit() {
-    this.drawStateService.setCanvasWidth(this.drawingForm.controls['width'].value - 52);
+    this.drawStateService.setCanvasWidth(this.drawingForm.controls['width'].value - SIDEBAR_WIDTH);
     this.drawStateService.setCanvasHeight(this.drawingForm.controls['height'].value);
     this.colorService.setCanvasColor(this.drawingForm.controls['backgroundColor'].value);
     this.closeDialog();
     this.resetFields();
+    this.drawStateService.setIsDrawingStarted(false);
+    this.canvasContext.clearRect(0,0,this.canvasWidth,this.canvasHeight)
   }
 
   onResize(){
@@ -52,47 +67,28 @@ constructor(public drawStateService:DrawStateService,private colorService:ColorS
       this.drawingForm.patchValue({height: window.innerHeight});
     }
   }
-  //service
+
   toggleIsWidthChanged(){
     this.isWidthModified = true;
   }
-  //service
+  
   toggleIsHeightChanged(){
     this.isHeightModified = true;
   } 
-  toggleRGB(){
-    this.isHEX = false;
-    this.isRGB = true;
+  
+  toggleHEX(isHex:boolean){
+    this.isHEX = isHex;
   }
-  //service
-  toggleHEX(){
-    this.isRGB = false;
-    this.isHEX = true;
-  }
-  //service
-  numberToHex(number:number){
-    let hex = number.toString(16);
-    if (hex.length < 2) {
-         hex = "0" + hex;
-    }
-    return hex;
-  };
-  //service
-  convertRGBtoHEX(r:number,g:number,b:number){
-    let red = this.numberToHex(r);
-    let green = this.numberToHex(g);
-    let blue = this.numberToHex(b);
-  return '#'+red+green+blue;
-  }
+
   changeColor(){
     if (this.isHEX){
       this.drawingForm.patchValue({backgroundColor: this.drawingForm.controls['hex'].value})
     }
-    else if(this.isRGB){
+    else {
       let rgbString = this.drawingForm.controls['rgb'].value;
       let pattern = new RegExp('[0-9]{1,3}','g')
       let rgb:string = rgbString.match(pattern);
-      let hex = this.convertRGBtoHEX(+rgb[0],+rgb[1],+rgb[2]).toString()
+      let hex = this.colorService.convertRGBtoHEX(+rgb[0],+rgb[1],+rgb[2]).toString()
       this.drawingForm.patchValue({backgroundColor: hex})
     }
   }
