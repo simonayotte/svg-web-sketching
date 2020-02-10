@@ -11,7 +11,7 @@ describe('BrushService', () => {
     });
 
     it('#setTexture should mofidy texture correctly if the texture string is valid', () => {
-        const service: BrushService = TestBed.get(BrushService);
+        //const service: BrushService = TestBed.get(BrushService);
         //should i create getters and setters only for the purpose of testing? Or make attributes public
         //How to test mouse event functions like continue draw?
     });
