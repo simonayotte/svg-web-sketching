@@ -22,9 +22,8 @@ export class LineService implements OnInit, OnDestroy {
 
     //Bind this to event listeners
     this.lineHasJunction = false;
-    this.mouseDownListener = this.connectLine.bind(this);
+    this.mouseDownListener = this.connectLineEventHandler.bind(this);
     this.mouseMoveListener = this.previewLine.bind(this);
-    //this.mouseUpListener = this.stopLine.bind(this);
     this.mouseOutListener = this.stopLine.bind(this);
     this.mouseDoubleDownListener = this.stopLine.bind(this);
   }
@@ -35,6 +34,7 @@ export class LineService implements OnInit, OnDestroy {
     this.canvasHeight = 2000;
     this.canvasWidth = 2000;
     this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
+    this.coordinates = new Array<Coordinate>();
     this.setJunctionType(true);
   }
 
@@ -74,13 +74,17 @@ export class LineService implements OnInit, OnDestroy {
   private canvasHeight: number;
   private canvasImage: ImageData;
 
-  //Stack avec les saved states de chaque ligne
-  private canvasImages: Array<ImageData>;
+  //TODO: Structure pour save les points pour annuler le dernier segment
+  private coordinates: Array<Coordinate>;
 
-  connectLine(event: MouseEvent): void {
-      //Position on event
-      let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-      let positionY = event.clientY;
+  connectLineEventHandler(event: MouseEvent): void {
+    let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+    let positionY = event.clientY;
+    this.connectLine(positionX, positionY);
+    this.coordinates.push(new Coordinate(positionX, positionY));
+  }
+
+  connectLine(positionX: number, positionY: number): void {
 
       //Stroke style
       this.canvasContext.lineJoin = 'round';
@@ -107,15 +111,15 @@ export class LineService implements OnInit, OnDestroy {
       //Ajouter la nouvelle ligne au saved Canvas Image
       this.canvasImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
       //Ajout à l'array des saved states
-
+      console.log(this.coordinates);
       this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
-      this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
+      //this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
       this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
       
     
   }
   //MouseMoveEvent => PreviewLine
-  previewLine(event: MouseEvent, kevent: KeyboardEvent): void {
+  previewLine(event: MouseEvent): void {
     let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
     let positionY = event.clientY;
     if(this.lastX && this.lastY) {
@@ -127,10 +131,15 @@ export class LineService implements OnInit, OnDestroy {
     
   }
 
-  //TODO: Function pour annuler le segment le plus recent
   //Backspace => cancelLine
   cancelLine(): void {
-    this.canvasImage 
+    this.coordinates.pop();
+    this.lastX = undefined;
+    this.lastY = undefined;
+    this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
+    this.coordinates.forEach(element => {
+      this.connectLine(element.pointX, element.pointY);
+    });
   }
 
   //TODO: Function pour annuler le preview de la ligne
@@ -182,3 +191,14 @@ export class LineService implements OnInit, OnDestroy {
   }  
 
 }
+
+//Structure pour sauver les points
+class Coordinate {
+  pointX: number;
+  pointY: number;
+  constructor(pointX: number, pointY: number){
+    this.pointX = pointX;
+    this.pointY = pointY;
+  }
+}
+
