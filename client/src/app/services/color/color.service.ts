@@ -52,7 +52,8 @@ export class ColorService {
         let red = this.numberToHex(r);
         let green = this.numberToHex(g);
         let blue = this.numberToHex(b);
-    return '#'+red+green+blue;
+        return '#'+red+green+blue;
+    }
 
     private selectedColor: BehaviorSubject<string> = new BehaviorSubject<string>('');
     selectedColorObs: Observable<string> = this.selectedColor.asObservable();
