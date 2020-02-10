@@ -54,7 +54,7 @@ export class LineService implements OnInit, OnDestroy {
   private canvasContext: CanvasRenderingContext2D;
 
   private mouseDownListener: EventListener;
-  private mouseUpListener: EventListener;
+  //private mouseUpListener: EventListener;
   private mouseMoveListener: EventListener;
   private mouseOutListener: EventListener;
   private mouseDoubleDownListener: EventListener;
@@ -131,7 +131,7 @@ export class LineService implements OnInit, OnDestroy {
     }
   }
 
-
+  //TODO: Le premier point n'est pas supprimé
   //Backspace => cancelSegment
   cancelSegment(): void {
     this.coordinates.pop();

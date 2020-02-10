@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { LineService } from './../../services/line/line.service';
 
 @Component({
@@ -46,4 +46,17 @@ export class LineComponent implements OnInit, OnDestroy {
     this.lineService.setJunctionType(lineHasJunction);
     this.lineHasJunction = lineHasJunction;
   }
+
+  @HostListener('document:keydown.escape', ['$event'])
+    cancelLine(event: KeyboardEvent){
+      //Changement pour alignement de ligne
+      this.lineService.cancelLine();
+    }
+
+  @HostListener('document:keydown.backspace', ['$event'])
+  cancelSegment(event: KeyboardEvent){
+    //Changement pour alignement de ligne
+    this.lineService.cancelSegment();
+  }
 }
+
