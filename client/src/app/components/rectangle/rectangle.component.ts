@@ -8,50 +8,26 @@ import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
 })
 export class RectangleComponent implements OnInit, OnDestroy {
 
+  rectangleType = 'outline only';
+  thickness: number;
   constructor(private rectangleService: RectangleService) {
     this.rectangleService.thicknessObs.subscribe((thickness: number) => {
         this.thickness = thickness;
     });
 }
 @HostListener('document:keydown', ['$event'])
-  changeSquareRectangle(event: KeyboardEvent){
-    switch(event.shiftKey){
-        case true:
-        {
-        console.log("ShiftKey pressed")
-        if(!this.rectangleService.getshiftDown()){
+@HostListener('document:keyup', ['$event'])
+  changeSquareToRectangle(event: KeyboardEvent) {
+      if (event.shiftKey) {
+        if (!this.rectangleService.getshiftDown()) {
             this.rectangleService.setshiftDown(true);
-            }
-        break;
         }
-        case false:
-        {
-            if(this.rectangleService.getshiftDown()){
-                this.rectangleService.setshiftDown(false);
-                break;}
+      } else {
+        if (this.rectangleService.getshiftDown()) {
+            this.rectangleService.setshiftDown(false);
         }
-    } 
+      }
   }
-
-  @HostListener('document:keyup', ['$event'])
-  changeRectangleSquare(event: KeyboardEvent){
-    switch(event.shiftKey){
-        case true:
-        {
-        if(!this.rectangleService.getshiftDown()){
-            this.rectangleService.setshiftDown(true);
-        break;}
-        }
-        case false:
-        {
-            if(this.rectangleService.getshiftDown()){
-                this.rectangleService.setshiftDown(false);
-                break;}
-        }
-    } 
-  }
-rectangleType: string = 'outline only';
-thickness: number;
 
 ngOnInit() {
     this.rectangleService.ngOnInit();

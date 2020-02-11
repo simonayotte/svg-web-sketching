@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from '../color/color.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
 
-
 @Injectable({
     providedIn: 'root',
 })
@@ -19,7 +18,7 @@ export class RectangleService implements OnInit, OnDestroy {
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
     private mouseOutListener: EventListener;
-    // Ajout du bouton shift 
+    // Ajout du bouton shift
     private isShiftDown: boolean;
 
     private firstColor: string;
@@ -95,8 +94,6 @@ export class RectangleService implements OnInit, OnDestroy {
             this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
             this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
             this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
-            
-            addEventListener
         }
     }
 
@@ -125,18 +122,18 @@ export class RectangleService implements OnInit, OnDestroy {
             // If the rectangle is bigger, add offset depending on the thickness
             width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
             height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
-            
-            if (this.isShiftDown){
-                if(width<height){
-                    height=width;
+
+            if (this.isShiftDown) {
+                if  (width < height) {
+                    height = width;
+                } else {
+                    width = height;
                 }
-                else
-                    width=height;
             }
 
-            if(!this.isShiftDown){
+            if (!this.isShiftDown) {
                 width = positionX - this.initialX;
-                height= event.clientY - this.initialY;
+                height = event.clientY - this.initialY;
                 width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
                 height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
             }
@@ -175,11 +172,11 @@ export class RectangleService implements OnInit, OnDestroy {
         }
     }
 
-    getshiftDown(): boolean{
-        return this.isShiftDown
+    getshiftDown(): boolean {
+        return this.isShiftDown;
     }
 
-    setshiftDown(value:boolean){
+    setshiftDown(value: boolean): void {
         this.isShiftDown = value;
     }
 }
