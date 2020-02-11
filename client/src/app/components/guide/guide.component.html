@@ -15,7 +15,7 @@
             <div class="item">
                 <div class="category" id="outils" (click)="collapse('outils')">Outils</div>
             </div>
-            <div class="category-items" id="outils-list">
+            <div class="category-items" id="outils-list" [ngClass]="{ active: currentCategory = 'outils'}">
                 <div class="item">
                     <div class="subject" id="crayon" (click)="displayTextSubject('crayon')">Crayon</div>
                 </div>
@@ -31,8 +31,8 @@
             </div>
         </div>
     </div>
-    <div class="text-area">
-        <div class="subject-text" id="page-bienvenue">
+    <div class="text-area" [ngSwitch]="currentText">
+        <div class="subject-text" id="page-bienvenue" *ngSwitchCase="'bienvenue'">
             <h1>Bienvenue</h1>
             <p>Ceci est la page de présentation du guide utilisateur, celui-ci a pour but de vous guider dans l'utilisation de Polydessin.
             <br />Le guide utilisateur est accessible a partir de la page d'acceuil (bouton "Afficher le guide d'utilisation") ainsi que de la page de dessin (bouton <i class="far fa-question-circle"></i>)
@@ -47,7 +47,7 @@
                 <button class="button right" (click)="displayTextSubject('dessin')"><span>Suivant</span></button>
             </div>
          </div>
-         <div class="subject-text" id="page-dessin">
+         <div class="subject-text" id="page-dessin" *ngSwitchCase="'dessin'">
             <h1>Créer un dessin</h1>
             <p>Ceci est la page dessin</p>
             <div class="footer">
@@ -55,7 +55,7 @@
                 <button class="button right" (click)="displayTextSubject('galerie')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-galerie">
+        <div class="subject-text" id="page-galerie" *ngSwitchCase="'galerie'">
             <h1>Galerie</h1>
             <p>La page de Galerie peut-être accédée en appuyant sur le bouton "Ouvrir la galerie" sur la page d'acceuil.<br /> La page de Galerie n'est pas encore implémentée.</p>
             <div class="footer">
@@ -63,7 +63,7 @@
                 <button class="button right" (click)="displayTextSubject('crayon')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-crayon">
+        <div class="subject-text" id="page-crayon" *ngSwitchCase="'crayon'">
             <h1>Crayon</h1>
             <p>Ceci est la page du crayon</p>
             <div class="footer">
@@ -71,7 +71,7 @@
                 <button class="button right" (click)="displayTextSubject('pinceau')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-pinceau">
+        <div class="subject-text" id="page-pinceau" *ngSwitchCase="'pinceau'">
             <h1>Pinceau</h1>
             <p>Ceci est la page du pinceau</p>
             <div class="footer">
@@ -79,7 +79,7 @@
                 <button class="button right" (click)="displayTextSubject('ligne')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-ligne">
+        <div class="subject-text" id="page-ligne" *ngSwitchCase="'ligne'">
             <h1>Ligne</h1>
             <p>Ceci est la page de la ligne</p>
             <div class="footer">
@@ -87,7 +87,7 @@
                 <button class="button right" (click)="displayTextSubject('rectangle')"><span>Suivant</span></button>
             </div>
         </div>
-        <div class="subject-text" id="page-rectangle">
+        <div class="subject-text" id="page-rectangle" *ngSwitchCase="'rectangle'">
             <h1>Rectangle</h1>
             <p>L'outils rectangle permet de dessiner des formes rectangulaires.
             <br />Pour ce faire, séléctionnez l'option rectangle dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-stop"></i>) ou pesez sur la touche "1".

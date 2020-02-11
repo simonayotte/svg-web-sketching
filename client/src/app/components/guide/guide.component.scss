@@ -47,6 +47,10 @@
     margin-left: 10px;
 }
 
+.category-items.active {
+    display: block;
+}
+
 .subject {
     display: flex;
     align-items: center;
