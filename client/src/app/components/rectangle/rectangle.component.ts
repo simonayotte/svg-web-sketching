@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy,HostListener } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
 
 @Component({
@@ -62,7 +62,7 @@ ngOnDestroy() {
 }
 setThickness($event: Event) {
     if ($event.target) {
-        this.rectangleService.setThickess(parseInt((<HTMLInputElement>$event.target).value));
+        this.rectangleService.setThickess(parseInt(($event.target as HTMLInputElement).value, 10));
     }
 }
 
