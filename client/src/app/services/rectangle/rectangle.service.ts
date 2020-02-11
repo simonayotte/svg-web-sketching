@@ -1,7 +1,8 @@
-import { Injectable, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, ElementRef, OnDestroy, OnInit} from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from '../color/color.service';
+
 
 @Injectable({
     providedIn: 'root',
@@ -50,10 +51,11 @@ export class RectangleService implements OnInit, OnDestroy {
     private canvasContext: CanvasRenderingContext2D;
 
     private mouseDownListener: EventListener;
-
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
     private mouseOutListener: EventListener;
+    // Ajout du bouton shift 
+    private isShiftDown: boolean;
 
     private firstColor: string;
     private secondColor: string;
@@ -88,6 +90,8 @@ export class RectangleService implements OnInit, OnDestroy {
             this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
             this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
             this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
+            
+            addEventListener
         }
     }
 
@@ -101,10 +105,10 @@ export class RectangleService implements OnInit, OnDestroy {
 
         let startX = positionX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
         let startY = event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
-
+        
         let width = positionX - this.initialX;
         let height = event.clientY - this.initialY;
-
+       
         //Check if the rectangle is smaller than the thickness
         if ((this.canvasContext.lineWidth >= Math.abs(width) || this.canvasContext.lineWidth >= Math.abs(height))) {
             this.canvasContext.fillStyle = this.displayOutline ? this.secondColor : this.firstColor;
@@ -114,9 +118,26 @@ export class RectangleService implements OnInit, OnDestroy {
             //If the rectangle is bigger, add offset depending on the thickness
             width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
             height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+            
+            if (this.isShiftDown){
+                if(width<height){
+                    height=width;
+                }
+                else
+                    width=height;
+            }
+
+            if(!this.isShiftDown){
+                width = positionX - this.initialX;
+                height= event.clientY - this.initialY;
+                width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+                height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
+            }
+
             this.canvasContext.rect(startX, startY, width, height);
             if (this.displayFill) this.canvasContext.fill();
             if (this.displayOutline) this.canvasContext.stroke();
+
         }
     }
 
@@ -146,5 +167,13 @@ export class RectangleService implements OnInit, OnDestroy {
                 this.canvasContext.lineWidth = this.thickness.value;
                 break;
         }
+    }
+
+    getshiftDown(): boolean{
+        return this.isShiftDown
+    }
+
+    setshiftDown(value:boolean){
+        this.isShiftDown = value;
     }
 }
