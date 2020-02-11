@@ -12,11 +12,24 @@ export class GuideComponent implements OnInit {
   ngOnInit() {
   }
 
-  collapse(category: string) {
+  displayCategory(category: string) {
     this.currentCategory = category;
   }
 
   displayTextSubject(subject: string) {
     this.currentText = subject;
+    switch(this.currentText) {
+      case 'crayon':
+      case 'pinceau':
+      case 'ligne':
+      case 'rectangle': {
+        this.displayCategory('outils');
+        break;
+      }
+      default: {
+        this.displayCategory('');
+        break;
+      }
+    }
   }
 }

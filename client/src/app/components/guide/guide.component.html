@@ -4,29 +4,29 @@
     <div class="toolbar">
         <div class="content-table">
             <div class="item">
-                <div class="subject" id="bienvenue" (click)="displayTextSubject('bienvenue')">Bienvenue</div>
+                <div class="subject" id="bienvenue" (click)="displayTextSubject('bienvenue')" [ngClass]="{ active: currentText == 'bienvenue'}">Bienvenue</div>
             </div>
             <div class="item">
-                <div class="subject" id="dessin" (click)="displayTextSubject('dessin')">Créer un dessin</div>
+                <div class="subject" id="dessin" (click)="displayTextSubject('dessin')" [ngClass]="{ active: currentText == 'dessin'}">Créer un dessin</div>
             </div>
             <div class="item">
-                <div class="subject" id="galerie" (click)="displayTextSubject('galerie')">Galerie</div>
+                <div class="subject" id="galerie" (click)="displayTextSubject('galerie')" [ngClass]="{ active: currentText == 'galerie'}">Galerie</div>
             </div>
             <div class="item">
-                <div class="category" id="outils" (click)="collapse('outils')">Outils</div>
+                <div class="category" id="outils" (click)="displayCategory('outils')">Outils</div>
             </div>
-            <div class="category-items" id="outils-list" [ngClass]="{ active: currentCategory = 'outils'}">
+            <div class="category-items" id="outils-list" [ngClass]="{ active: currentCategory == 'outils'}">
                 <div class="item">
-                    <div class="subject" id="crayon" (click)="displayTextSubject('crayon')">Crayon</div>
+                    <div class="subject" id="crayon" (click)="displayTextSubject('crayon')" [ngClass]="{ active: currentText == 'crayon'}">Crayon</div>
                 </div>
                 <div class="item">
-                    <div class="subject" id="pinceau" (click)="displayTextSubject('pinceau')">Pinceau</div>
+                    <div class="subject" id="pinceau" (click)="displayTextSubject('pinceau')" [ngClass]="{ active: currentText == 'pinceau'}">Pinceau</div>
                 </div>
                 <div class="item">
-                    <div class="subject" id="ligne" (click)="displayTextSubject('ligne')">Ligne</div>
+                    <div class="subject" id="ligne" (click)="displayTextSubject('ligne')" [ngClass]="{ active: currentText == 'ligne'}">Ligne</div>
                 </div>
                 <div class="item">
-                    <div class="subject" id="rectangle" (click)="displayTextSubject('rectangle')">Rectangle</div>
+                    <div class="subject" id="rectangle" (click)="displayTextSubject('rectangle')" [ngClass]="{ active: currentText == 'rectangle'}">Rectangle</div>
                 </div>
             </div>
         </div>
