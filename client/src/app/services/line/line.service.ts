@@ -59,6 +59,9 @@ export class LineService implements OnInit, OnDestroy {
   private mouseOutListener: EventListener;
   private mouseDoubleDownListener: EventListener;
 
+  private mousePositionX: number;
+  private mousePositionY: number;
+
   private color: string;
   private isPanelOpen: boolean;
 
@@ -123,8 +126,8 @@ export class LineService implements OnInit, OnDestroy {
   }
   //MouseMoveEvent => PreviewLine
   previewLineEventHandler(event: MouseEvent) {
-    let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-    let positionY = event.clientY;
+    let positionX = this.mousePositionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+    let positionY = this.mousePositionY = event.clientY;
     if (this.getShiftKeyDown()) {
       this.previewAlignedLine(positionX, positionY);
     } else {
@@ -152,6 +155,7 @@ export class LineService implements OnInit, OnDestroy {
         this.connectLine(element.pointX, element.pointY);
       });
       //TODO: Ajouter le segment temporaire de preview
+      this.previewLine(this.mousePositionX, this.mousePositionY);
     }
   }
 
@@ -165,7 +169,7 @@ export class LineService implements OnInit, OnDestroy {
     this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
     this.canvasContext.putImageData(this.lineImage, 0, 0,);  
     this.lastX = undefined;
-    this.lastY = undefined;  
+    this.lastY = undefined;
   }
   
   drawLine(positionX: number, positionY: number): void {    
