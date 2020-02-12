@@ -49,14 +49,30 @@ export class LineComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown.escape', ['$event'])
     cancelLine(event: KeyboardEvent){
-      //Changement pour alignement de ligne
       this.lineService.cancelLine();
     }
 
   @HostListener('document:keydown.backspace', ['$event'])
-  cancelSegment(event: KeyboardEvent){
-    //Changement pour alignement de ligne
-    this.lineService.cancelSegment();
-  }
+    cancelSegment(event: KeyboardEvent){
+      this.lineService.cancelSegment();
+    }
+
+  @HostListener('document:keydown.shift', ['$event'])
+    alignLine(event: KeyboardEvent){
+      //TODO: Remove ConsoleLog after testing
+      console.log('shift keydown');
+      this.lineService.setShiftKeyDown(true);
+    }
+
+  @HostListener('document:keyup.shift', ['$event'])
+    freeLine(event: KeyboardEvent) {
+      //TODO: Remove ConsoleLog after testing
+      console.log('shift keyup');
+      this.lineService.setShiftKeyDown(false);
+    }
+
+
+
+
 }
 
