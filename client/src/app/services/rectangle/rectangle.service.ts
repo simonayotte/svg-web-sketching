@@ -17,7 +17,6 @@ export class RectangleService implements OnInit, OnDestroy {
             if (canvasContext != null) this.canvasContext = canvasContext;
         });
         //Get draw page state
-        this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
         this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.firstColor = color));
         this.colorService.secondColorWithOpacityObs.subscribe((color: string) => (this.secondColor = color));
@@ -62,7 +61,6 @@ export class RectangleService implements OnInit, OnDestroy {
     private displayOutline: boolean;
     private displayFill: boolean;
 
-    private isPanelOpen: boolean;
 
     private initialX: number;
     private initialY: number;
@@ -75,10 +73,9 @@ export class RectangleService implements OnInit, OnDestroy {
     startRect(event: MouseEvent): void {
         if (!this.isDrawing) {
             this.isDrawing = true;
-            let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
 
-            this.initialX = positionX;
-            this.initialY = event.clientY;
+            this.initialX = event.offsetX;
+            this.initialY = event.offsetY;
 
             //Stroke style
 
@@ -96,18 +93,17 @@ export class RectangleService implements OnInit, OnDestroy {
     }
 
     continueRect(event: MouseEvent): void {
-        let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
 
         this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.canvasContext.putImageData(this.canvasImage, 0, 0);
 
         this.canvasContext.beginPath();
 
-        let startX = positionX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
-        let startY = event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
+        let startX = event.offsetX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
+        let startY = event.offsetY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
         
-        let width = positionX - this.initialX;
-        let height = event.clientY - this.initialY;
+        let width = event.offsetX - this.initialX;
+        let height = event.offsetY - this.initialY;
        
         //Check if the rectangle is smaller than the thickness
         if ((this.canvasContext.lineWidth >= Math.abs(width) || this.canvasContext.lineWidth >= Math.abs(height))) {
@@ -122,14 +118,16 @@ export class RectangleService implements OnInit, OnDestroy {
             if (this.isShiftDown){
                 if(width<height){
                     height=width;
+                    console.log("height:", height, "  width: ", width);
                 }
                 else
                     width=height;
+                    console.log("height:", height, "  width: ", width);
             }
 
             if(!this.isShiftDown){
-                width = positionX - this.initialX;
-                height= event.clientY - this.initialY;
+                width = event.offsetX - this.initialX;
+                height= event.offsetY - this.initialY;
                 width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
                 height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
             }
