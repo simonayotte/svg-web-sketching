@@ -37,7 +37,8 @@ export class RectangleComponent implements OnInit, OnDestroy {
       }
   }
 
-    ngOnInit() { 
+    ngOnInit() {
+        
         if (this.canvasRef) {this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);}
     }
 

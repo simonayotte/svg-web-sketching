@@ -42,7 +42,7 @@ export class RectangleService {
         this.mouseUpListener = this.stopRect.bind(this);
         this.mouseOutListener = this.stopRect.bind(this);
     }
-    
+
     private thickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
     thicknessObs: Observable<number> = this.thickness.asObservable();
 
@@ -91,6 +91,7 @@ export class RectangleService {
             this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
             this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
             this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
+            this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
         }
     }
 
