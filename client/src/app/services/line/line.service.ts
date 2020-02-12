@@ -214,96 +214,102 @@ export class LineService implements OnInit, OnDestroy {
     return this.isShiftKeyDown;
   }
 
-  //TODO: Remove les console log after testing
   previewAlignedLine(positionX: number, positionY: number): void {
     if (this.lastX && this.lastY){
-      let adjacentLineLength = positionX - this.lastX;  
-      let oppositeLineLength = positionY - this.lastY;
-      let hypothenuseLineLength = Math.abs(Math.sqrt(Math.pow(adjacentLineLength,2) + Math.pow(oppositeLineLength,2)));
+      let adjacentLineLength = Math.abs(positionX - this.lastX);  
+      let oppositeLineLength = Math.abs(positionY - this.lastY);
+      let hypothenuseLineLength = Math.sqrt(Math.pow(adjacentLineLength,2) + Math.pow(oppositeLineLength,2));
       
       let angle = Math.atan(oppositeLineLength/adjacentLineLength);
-      //Alignement 0deg
-      if (angle > 0 && angle <= Math.PI/6){
-        console.log('0deg');
-        //Retourner point avec alignement 0deg
-        console.log('lastPoint', this.lastX, this.lastY);
-        console.log('adjacent',adjacentLineLength);
-        console.log('opposite', oppositeLineLength);
-        console.log('hypothenuse',hypothenuseLineLength);
-        let point = this.getPointHypothenuseEndPoint(0, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
+
+      //Cadran 4
+      if (positionX - this.lastX >= 0 && positionY - this.lastY >= 0) {
+        if (angle >= 0 && angle < Math.PI/6){
+          //Retourner point avec alignement 0deg
+          let point = this.getPointHypothenuseEndPoint(0, hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 45deg
+        else if (angle > Math.PI/6 && angle <= Math.PI/3){
+          let point = this.getPointHypothenuseEndPoint(Math.PI/4, hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 90deg
+        else if (angle > Math.PI/3 && angle <= Math.PI/2){
+          let point = this.getPointHypothenuseEndPoint(Math.PI/2, hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
       }
-      //Alignement 45deg
-      else if (angle > Math.PI/6 && angle <= Math.PI/3){
-        console.log('45deg');
-        let point = this.getPointHypothenuseEndPoint(Math.PI/4, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 90deg
-      else if (angle > Math.PI/3 && angle <= 2*Math.PI/3){
-        console.log('90deg');
-        let point = this.getPointHypothenuseEndPoint(Math.PI/2, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 135deg
-      else if (angle > 2*Math.PI/3 && angle <= 5*Math.PI/6){
-        console.log('135deg');
-        let point = this.getPointHypothenuseEndPoint(3*Math.PI/4, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 180deg
-      else if (angle > 5*Math.PI/6 && angle <= 7*Math.PI/6){
-        console.log('180deg');
-        let point = this.getPointHypothenuseEndPoint(Math.PI, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 225deg
-      else if (angle > 7*Math.PI/6 && angle <= 4*Math.PI/3){
-        console.log('225deg');
-        let point = this.getPointHypothenuseEndPoint(5*Math.PI/4, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 270deg
-      else if (angle > 4*Math.PI/3 && angle <= 5*Math.PI/3){
-        console.log('270deg');
-        let point = this.getPointHypothenuseEndPoint(3*Math.PI/2, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 315deg
-      else if (angle > 5*Math.PI/3 && angle <= 11*Math.PI/6){
-        console.log('315deg');
-        let point = this.getPointHypothenuseEndPoint(7*Math.PI/4, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
-      }
-      //Alignement 0deg
-      else if (angle > 11*Math.PI/6){
-        console.log('0deg');
-        let point = this.getPointHypothenuseEndPoint(2*Math.PI, hypothenuseLineLength);
-        this.previewLine(point.pointX, point.pointY);
+    
+      //Cadran 3
+      else if (positionX - this.lastX < 0 && positionY - this.lastY >= 0) {
+        if (angle >= 0 && angle < Math.PI/6){
+          let point = this.getPointHypothenuseEndPoint(0, -hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 45deg
+        else if (angle > Math.PI/6 && angle <= Math.PI/3){
+          let point = this.getPointHypothenuseEndPoint(-Math.PI/4, -hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 90deg
+        else if (angle > Math.PI/3 && angle <= Math.PI/2){
+          let point = this.getPointHypothenuseEndPoint(Math.PI/2, hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }    
       }
 
+      //Cadran 2
+      else if (positionX - this.lastX >= 0 && positionY - this.lastY < 0) {
+        if (angle >= 0 && angle < Math.PI/6){
+          let point = this.getPointHypothenuseEndPoint(0, hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 45deg
+        else if (angle > Math.PI/6 && angle <= Math.PI/3){
+          let point = this.getPointHypothenuseEndPoint(-Math.PI/4, hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 90deg
+        else if (angle > Math.PI/3 && angle <= Math.PI/2){
+          let point = this.getPointHypothenuseEndPoint(Math.PI/2, -hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }         
+      }
+
+      //Cadran 1
+      else if (positionX - this.lastX < 0 && positionY - this.lastY < 0) {
+        if (angle >= 0 && angle < Math.PI/6){
+          //Retourner point avec alignement 0deg
+          let point = this.getPointHypothenuseEndPoint(0, -hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 45deg
+        else if (angle > Math.PI/6 && angle <= Math.PI/3){
+          let point = this.getPointHypothenuseEndPoint(Math.PI/4, -hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+        //Alignement 90deg
+        else if (angle > Math.PI/3 && angle <= Math.PI/2){
+          let point = this.getPointHypothenuseEndPoint(Math.PI/2, -hypothenuseLineLength);
+          this.previewLine(point.pointX, point.pointY);
+        }
+      }
     }
-
-
   }
 
   //Trouve le point d'apogée de l'hypothenuse d'un triangle
   getPointHypothenuseEndPoint(angle: number, hypothenuse: number) {
     if (this.lastX && this.lastY){
-      let x = Math.cos(angle) * hypothenuse + this.lastX;
-      let y = Math.sin(angle) * hypothenuse + this.lastY;
-      console.log('newPoint', x, y);
+      let x = Math.cos(angle) * hypothenuse + this.lastX; //Retourne valeur entre -1 et 1
+      let y = Math.sin(angle) * hypothenuse + this.lastY; //Retourne valeur entre -1 et 1
       return new Coordinate(x , y);
     } else return new Coordinate(0,0);
   }
 
   
 
-  }
-
-
-
-
+}
 
 
 //Structure pour sauver les points
