@@ -55,13 +55,8 @@ export class RectangleService implements OnInit, OnDestroy {
                 this.canvasWidth = canvasWidth;
             }
         });
-<<<<<<< HEAD
-        
-        //Get draw page state
-=======
 
         // Get draw page state
->>>>>>> master
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
         this.colorService.firstColorObs.subscribe((color: string) => (this.firstColor = color));

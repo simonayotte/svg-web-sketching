@@ -9,7 +9,8 @@ import { CreateDrawingComponent } from '../create-drawing/create-drawing.compone
 })
 export class HomePageComponent implements OnInit {
   private isCreateDrawingOpen:boolean = false;
-  constructor(public dialog: MatDialog) { }
+  constructor(private dialog: MatDialog) { 
+  }
   
   ngOnInit() {
   }
@@ -18,7 +19,7 @@ export class HomePageComponent implements OnInit {
     this.isCreateDrawingOpen = true;
 
     dialogRef.afterClosed().subscribe(result => {
-      this.isCreateDrawingOpen = false; // Pizza!
+      this.isCreateDrawingOpen = false;
     });
   }
 

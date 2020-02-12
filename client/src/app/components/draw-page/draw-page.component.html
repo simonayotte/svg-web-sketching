@@ -168,7 +168,7 @@
         </div>
     </div>
 </div>
-<app-color *ngIf="isColorWindowOpen == true"></app-color>
+<app-color *ngIf="isPanelColorWindowOpen == true"></app-color>
 
 <div class="workspace" [style.background-color]="workspaceColor"></div>
 <canvas #canvas class="canvas" [style.background-color]="canvasColor" [width] = "canvasWidth" [height] = "canvasHeight"[ngClass]="{ withPanel: isPanelOpen == true }"></canvas>

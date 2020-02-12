@@ -33,6 +33,7 @@ export class DrawStateService {
 
     setIsPanelOpen(isPanelOpen: boolean): void {
         this.isPanelOpen.next(isPanelOpen);
+        
     }
 
     private canvasWidth: BehaviorSubject<number> = new BehaviorSubject<number>(750);

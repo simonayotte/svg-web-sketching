@@ -33,7 +33,7 @@ import { DrawingStartedDialogComponent } from './components/drawing-started-dial
     ],
     imports: [BrowserModule, HttpClientModule, RouterModule.forRoot(routes), ReactiveFormsModule, FormsModule, ColorPickerModule, MatDialogModule,BrowserAnimationsModule],
     providers: [],
-    entryComponents: [CreateDrawingComponent,DrawingStartedDialogComponent],
+    entryComponents: [CreateDrawingComponent,DrawingStartedDialogComponent,ColorComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

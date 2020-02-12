@@ -22,8 +22,8 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.drawStateService.isDrawingStartedObs.subscribe((isDrawingStarted: boolean) => {
             this.isDrawingStarted = isDrawingStarted;
         });
-        this.colorService.isColorWindowOpenObs.subscribe((isColorWindowOpen: boolean) => {
-            this.isColorWindowOpen = isColorWindowOpen;
+        this.colorService.isPanelColorWindowOpenObs.subscribe((isPanelColorWindowOpen: boolean) => {
+            this.isPanelColorWindowOpen = isPanelColorWindowOpen;
         });
 
         this.colorService.canvasColorObs.subscribe((canvasColor: string) => {
@@ -67,7 +67,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     protected canvasColor: string;
 
     private isPanelOpen: boolean;
-    protected isColorWindowOpen: boolean;
+    protected isPanelColorWindowOpen: boolean;
 
     private keyDownListener: EventListener;
 
@@ -123,7 +123,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
     keyDown(event: KeyboardEvent) {
         let key: string = event.key;
-        if (!this.isColorWindowOpen) {
+        if (!this.isPanelColorWindowOpen) {
             switch (key) {
                 case '1':
                     this.selectOption('Rectangle', true);
@@ -145,7 +145,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
 
     openColorWindow(selectedColor: string): void {
-        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openColorWindow(selectedColor);
+        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openPanelColorWindow(selectedColor);
     }
 
     swapColors(): void {
