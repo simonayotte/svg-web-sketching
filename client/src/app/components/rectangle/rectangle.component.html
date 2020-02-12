@@ -8,6 +8,11 @@
 
 <div class="configuration">
     <div class="configuration-title">
-        Texture
+        Tracé
+    </div>
+    <div class="rectangle-style-boxes">
+        <i class="far fa-square rectangle-style-box" title='Contours seulement' (click)="setRectangleType('outline only')" [ngClass]="{ active: rectangleType == 'outline only' }"></i>
+        <i class="fas fa-square rectangle-style-box" title='Contours et intérieur' (click)="setRectangleType('outline and fill')" [ngClass]="{ active: rectangleType == 'outline and fill' }"></i>
+        <i class="fas fa-fill-drip rectangle-style-box" title='Intérieur seulement' (click)="setRectangleType('fill only')" [ngClass]="{ active: rectangleType == 'fill only' }"></i>
     </div>
 </div>

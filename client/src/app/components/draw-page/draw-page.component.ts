@@ -12,6 +12,9 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => {
             this.isPanelOpen = isPanelOpen;
         });
+        this.colorService.isColorWindowOpenObs.subscribe((isColorWindowOpen: boolean) => {
+            this.isColorWindowOpen = isColorWindowOpen;
+        });
 
         this.colorService.canvasColorObs.subscribe((canvasColor: string) => {
             this.canvasColor = canvasColor;
@@ -25,11 +28,12 @@ export class DrawPageComponent implements OnInit, OnDestroy {
             this.canvasHeight = canvasHeight;
         });
 
-        if (this.canvasColor == this.workspaceColor) {
-            //if workspace default color and canvas are the same
-            this.workspaceColor = '#00000095';
-        }
-
+        this.colorService.firstColorObs.subscribe((color: string) => {
+            this.firstColor = color;
+        });
+        this.colorService.secondColorObs.subscribe((color: string) => {
+            this.secondColor = color;
+        });
         this.keyDownListener = this.keyDown.bind(this);
         window.addEventListener('keydown', this.keyDownListener);
     }
@@ -43,12 +47,16 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     private isShowSettingOptions: boolean = false;
     private canvasWidth: number;
     private canvasHeight: number;
-    private canvasColor: string;
 
-    private workspaceColor: string = '#00000080';
-    private selectedOption: string;
+    public workspaceColor: string = '#00000080';
+    public selectedOption: string;
 
-    private isPanelOpen: boolean;
+    public firstColor: string;
+    public secondColor: string;
+    public canvasColor: string;
+
+    public isPanelOpen: boolean;
+    public isColorWindowOpen: boolean;
 
     private keyDownListener: EventListener;
 
@@ -75,11 +83,6 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.selectedOption = option;
     }
 
-    //Function for test
-    getIsPanelOpen(): boolean {
-        return this.isPanelOpen;
-    }
-
     toogleDrawOptions(): void {
         this.isShowDrawOptions = !this.isShowDrawOptions;
     }
@@ -97,29 +100,33 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.isShowSettingOptions = !this.isShowSettingOptions;
     }
 
-    setCanvasColor($event: Event) {
-        if ($event.target) {
-            let color: string = (<HTMLInputElement>$event.target).value;
-            this.colorService.setCanvasColor(color);
-        }
-    }
     keyDown(event: KeyboardEvent) {
         let key: string = event.key;
-
-        switch (key) {
-            case 'w':
-                this.selectOption('Pinceau', true);
-                break;
-            case'c':
-                this.selectOption('Crayon', true);
-                break;
-            case '1':
-                this.selectOption('Rectangle', true);
-                break;
-            case 'l':
-                this.selectOption('Ligne', true);
-                break;
+        if (!this.isColorWindowOpen) {
+            switch (key) {
+                case '1':
+                    this.selectOption('Rectangle', true);
+                    break;
+                case 'c':
+                    this.selectOption('Crayon', true);
+                    break;
+                case 'w':
+                    this.selectOption('Pinceau', true);
+                    break;
+                case 'l':
+                    this.selectOption('Ligne', true);
+                    break;
+            }
         }
+    }
 
+    openColorWindow(selectedColor: string): void {
+        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openColorWindow(selectedColor);
+    }
+
+    swapColors(): void {
+        let oldFirstColor: string = this.firstColor;
+        this.colorService.setFirstColor(this.secondColor);
+        this.colorService.setSecondColor(oldFirstColor);
     }
 }

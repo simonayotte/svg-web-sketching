@@ -22,12 +22,12 @@ describe('BrushComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#setTexture should modify the value correctly', () => {
+    it('#setTexture() should set #texture ', () => {
         component.setTexture('wave');
         expect(component.texture).toBe('wave');
     });
 
-    it('#setTexture should not modify the value if the input string is not a valid texture ', () => {
+    it('#setTexture() should not set #texture if the input string is not a valid texture ', () => {
         component.setTexture('text');
         expect(component.texture).toBe('normal');
     });
