@@ -142,14 +142,12 @@
         <app-brush *ngSwitchCase="'Pinceau'"></app-brush>
         <app-pencil *ngSwitchCase="'Crayon'"></app-pencil>
         <app-rectangle *ngSwitchCase="'Rectangle'"></app-rectangle>
-<<<<<<< HEAD
         <app-line *ngSwitchCase="'Ligne'"></app-line>
         <!--
             Exemple:
             <app-pencil-panel *ngSwitchCase="'Pencil'"></app-pencil-panel>
         -->
         <app-color></app-color>
-=======
 
         <!--Add 3 color buttons that will open colorWindow-->
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -167,7 +165,6 @@
             <div class="panel-color-button-title">Canevas</div>
             <div class="panel-color-button-color" [ngStyle]="{ 'background-color': canvasColor }"></div>
         </div>
->>>>>>> color
     </div>
 </div>
 <app-color *ngIf="isColorWindowOpen == true"></app-color>
