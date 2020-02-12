@@ -68,6 +68,12 @@ export class RectangleService {
     private canvasHeight: number;
     private canvasWidth: number;
 
+    private currentStartX: number;
+    private currentStartY: number;
+    private currentHeight: number;
+    private currentWidth: number;
+
+
     setThickess(thickness: number) {
         this.thickness.next(thickness);
     }
@@ -94,19 +100,23 @@ export class RectangleService {
     }
 
     continueRect(event: MouseEvent): void {
+        this.currentStartX =
+            event.offsetX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
+            this.currentStartY =
+            event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
+
+        this.currentWidth = event.offsetX - this.initialX;
+        this.currentHeight = event.clientY - this.initialY;
+
+        this.drawRect(this.currentStartX,this.currentStartY,this.currentWidth,this.currentHeight);
+    }
+
+    drawRect(startX: number, startY: number, width: number, height: number): void {
 
         this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
         this.canvasContext.putImageData(this.canvasImage, 0, 0);
 
         this.canvasContext.beginPath();
-
-        const startX =
-            event.offsetX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
-        const startY =
-            event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
-
-        let width = event.offsetX - this.initialX;
-        let height = event.clientY - this.initialY;
 
         // Check if the rectangle is smaller than the thickness
         if (this.canvasContext.lineWidth >= Math.abs(width) || this.canvasContext.lineWidth >= Math.abs(height)) {
@@ -121,26 +131,17 @@ export class RectangleService {
 
                 if  (Math.abs(width) < Math.abs(height)) {
                     if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 1st and 3d quadrants
-                        height = -width;}
-                    else{
+                        height = -width;
+                    } else {
                         height=width;
-                    }    
-                    console.log("heightCW:", height, "  widthC: ", width);
+                        }
                 } else {
                     if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 1st and 3d quadrants
                         height = -width;
-                    }
-                    else{
+                    } else {
                     height=width;
-                    }
+                        }
                 }
-            }
-
-            if (!this.isShiftDown) {
-                width = event.offsetX - this.initialX;
-                height= event.offsetY - this.initialY;
-                width += this.canvasContext.lineWidth < width ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
-                height += this.canvasContext.lineWidth < height ? -this.canvasContext.lineWidth : this.canvasContext.lineWidth;
             }
 
             this.canvasContext.rect(startX, startY, width, height);
@@ -187,5 +188,6 @@ export class RectangleService {
 
     setshiftDown(value: boolean): void {
         this.isShiftDown = value;
+        this.drawRect(this.currentStartX,this.currentStartY,this.currentWidth,this.currentHeight);
     }
 }
