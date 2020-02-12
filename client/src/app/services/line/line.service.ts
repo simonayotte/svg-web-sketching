@@ -141,16 +141,18 @@ export class LineService implements OnInit, OnDestroy {
     }
   }
 
-  //TODO: Le premier point n'est pas supprimé
   //Backspace => cancelSegment
   cancelSegment(): void {
-    this.coordinates.pop();
-    this.lastX = undefined;
-    this.lastY = undefined;
-    this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
-    this.coordinates.forEach(element => {
-      this.connectLine(element.pointX, element.pointY);
-    });
+    if (this.coordinates.length != 1) {
+      this.coordinates.pop();
+      this.lastX = undefined;
+      this.lastY = undefined;
+      this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
+      this.coordinates.forEach(element => {
+        this.connectLine(element.pointX, element.pointY);
+      });
+      //TODO: Ajouter le segment temporaire de preview
+    }
   }
 
   //Escape => cancelLine
@@ -184,7 +186,7 @@ export class LineService implements OnInit, OnDestroy {
 
   }
 
-  //TODO: Refactor this function
+  //TODO: Ajouter fermeture ligne pour 3px
   stopLine(event: MouseEvent): void {
     this.lastX = undefined;
     this.lastY = undefined;

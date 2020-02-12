@@ -59,15 +59,11 @@ export class LineComponent implements OnInit, OnDestroy {
 
   @HostListener('document:keydown.shift', ['$event'])
     alignLine(event: KeyboardEvent){
-      //TODO: Remove ConsoleLog after testing
-      console.log('shift keydown');
       this.lineService.setShiftKeyDown(true);
     }
 
   @HostListener('document:keyup.shift', ['$event'])
     freeLine(event: KeyboardEvent) {
-      //TODO: Remove ConsoleLog after testing
-      console.log('shift keyup');
       this.lineService.setShiftKeyDown(false);
     }
 
