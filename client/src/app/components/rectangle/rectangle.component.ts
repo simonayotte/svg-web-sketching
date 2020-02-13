@@ -38,7 +38,6 @@ export class RectangleComponent implements OnInit, OnDestroy {
   }
 
     ngOnInit() {
-        
         if (this.canvasRef) {this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);}
     }
 
@@ -48,14 +47,14 @@ export class RectangleComponent implements OnInit, OnDestroy {
 
     setThickness($event: Event) {
         if ($event.target) {
-            this.rectangleService.setThickess(parseInt(($event.target as HTMLInputElement).value, 10));
+            this.rectangleService.setThickness(parseInt(($event.target as HTMLInputElement).value, 10));
         }
     }
 
     setRectangleType(rectangleType: string) {
         if (rectangleType === 'outline only' || rectangleType === 'fill only' || rectangleType === 'outline and fill') {
-            this.rectangleService.setRectangleType(rectangleType);
             this.rectangleType = rectangleType;
+            this.rectangleService.setRectangleType(rectangleType);
         }
     }
 }

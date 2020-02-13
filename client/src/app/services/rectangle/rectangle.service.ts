@@ -74,8 +74,12 @@ export class RectangleService {
     private currentWidth: number;
 
 
-    setThickess(thickness: number) {
+    setThickness(thickness: number) {
         this.thickness.next(thickness);
+    }
+
+    getThickness(): number {
+        return this.thickness.value;
     }
 
     startRect(event: MouseEvent): void {
@@ -133,13 +137,13 @@ export class RectangleService {
                     if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 1st and 3d quadrants
                         height = -width;
                     } else {
-                        height=width;
+                        height = width;
                         }
                 } else {
                     if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 1st and 3d quadrants
                         height = -width;
                     } else {
-                    height=width;
+                    height = width;
                         }
                 }
             }

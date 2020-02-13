@@ -59,5 +59,4 @@ describe('RectangleComponent', () => {
     fixture.detectChanges();
     expect(setThicknessSpy).toHaveBeenCalledTimes(2);
   });
-
 });
