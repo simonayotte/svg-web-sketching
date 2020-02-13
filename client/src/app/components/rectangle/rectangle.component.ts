@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
-import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
 
 @Component({
     selector: 'app-rectangle',
@@ -9,8 +9,8 @@ import { DrawStateService } from 'src/app/services/draw-state/draw-state.service
 })
 export class RectangleComponent implements OnInit, OnDestroy {
 
-    public rectangleType = 'outline only';
-    public thickness: number;
+    rectangleType = 'outline only';
+    thickness: number;
 
     private canvasRef: ElementRef;
     private mouseDownListener: EventListener;
@@ -38,7 +38,7 @@ export class RectangleComponent implements OnInit, OnDestroy {
   }
 
     ngOnInit() {
-        if (this.canvasRef) {this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);}
+        if (this.canvasRef) {this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener); }
     }
 
     ngOnDestroy() {

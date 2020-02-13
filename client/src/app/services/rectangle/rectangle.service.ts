@@ -55,7 +55,6 @@ export class RectangleService {
     private displayOutline: boolean;
     private displayFill: boolean;
 
-
     private initialX: number;
     private initialY: number;
 
@@ -103,15 +102,15 @@ export class RectangleService {
     }
 
     continueRect(event: MouseEvent): void {
-        this.currentStartX =
-            event.offsetX > this.initialX ? this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
-            this.currentStartY =
-            event.clientY > this.initialY ? this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
+        this.currentStartX = event.offsetX > this.initialX ?
+                this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
+        this.currentStartY = event.clientY > this.initialY ?
+                this.initialY + this.canvasContext.lineWidth / 2 : this.initialY - this.canvasContext.lineWidth / 2;
 
         this.currentWidth = event.offsetX - this.initialX;
         this.currentHeight = event.clientY - this.initialY;
 
-        this.drawRect(this.currentStartX,this.currentStartY,this.currentWidth,this.currentHeight);
+        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight);
     }
 
     drawRect(startX: number, startY: number, width: number, height: number): void {
@@ -133,13 +132,13 @@ export class RectangleService {
             if (this.isShiftDown) {
 
                 if  (Math.abs(width) < Math.abs(height)) {
-                    if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 1st and 3d quadrants
+                    if ( (width < 0 && height > 0) || (width > 0 && height < 0) ) { // XOR for 1st and 3d quadrants
                         height = -width;
                     } else {
                         height = width;
                         }
                 } else {
-                    if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 2nd and 4th quadrants
+                    if ( (width < 0 && height > 0) || (width > 0 && height < 0) ) { // XOR for 2nd and 4th quadrants
                         height = -width;
                     } else {
                     height = width;
@@ -191,6 +190,6 @@ export class RectangleService {
 
     setshiftDown(value: boolean): void {
         this.isShiftDown = value;
-        this.drawRect(this.currentStartX,this.currentStartY,this.currentWidth,this.currentHeight);
+        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight);
     }
 }
