@@ -91,7 +91,16 @@
         </div>
         <div class="subject-text" id="page-ligne" *ngSwitchCase="'ligne'">
             <h1>Ligne</h1>
-            <p>Ceci est la page de la ligne</p>
+            <p>L'outils ligne permet de tracer une ligne d'un ou plusieurs segments.
+                <br />Pour ce faire, séléctionnez l'option ligne dans la barre d'outils (<i class="fas fa-grip-lines"></i>) ou pesez sur la touche "L".
+                <br />Une fois l'outils séléctionné, un clic définis le début de la ligne et chaque clic suivant forme un segment connecté au clic précédant.<br />
+                Un double-clic permet de terminer la ligne.
+                </p>
+                <h4>Alignement</h4>
+                <p>Il est possible de créer des segments aligés avec l'axe des X et des angles multiple de 45 degrés en gardant la touche "Shift" enfoncée</p>
+                <h4>Annuler</h4>
+                <p>Il est possible d'annuler le tracage complet avec la touche "Escape" ou de supprimer le dernier point avec la touche "Backspace".
+                </p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('pinceau')"><span>Précédent</span></button>
                 <button class="button right" (click)="displayTextSubject('rectangle')"><span>Suivant</span></button>
@@ -107,9 +116,9 @@
             <p>L'épaisseur du contour du rectangle peut-être modifée avec la glissière "Épaisseur".</p>
             <h4>Styles</h4>
             <p>3 styles de rectangles sont disponibles:
-            <br />  - Contour: seul les contours du rectangle sont dessinés. ()
-            <br />  - Plein avec contour: l'intérieur et les contours du rectangle sont dessinés. ()
-            <br />  - Plein: seul l'intérieur du rectangle est dessiné. ()
+            <br />  - Contour: seul les contours du rectangle sont dessinés. (<i class="far fa-square"></i>)
+            <br />  - Plein avec contour: l'intérieur et les contours du rectangle sont dessinés. (<i class="fas fa-square"></i>)
+            <br />  - Plein: seul l'intérieur du rectangle est dessiné. (<i class="fas fa-fill-drip"></i>)
             </p>
             <h4>Couleur</h4>
             <p>La couleur principale définie la couleur de l'intérieur du rectangle.
@@ -124,6 +133,3 @@
         </div>
     </div>
 </div>
-
-
-
