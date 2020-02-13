@@ -27,7 +27,9 @@ describe('RectangleService', () => {
   beforeEach(() => {
     drawStateService = TestBed.get(DrawStateService);
     let drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-    drawStateService.setCanvasRef(new ElementRef(drawPageFixture.debugElement.nativeElement.querySelector('.canvas')));
+    let canvasRef = new ElementRef(drawPageFixture.debugElement.nativeElement.querySelector('.canvas'))
+    drawStateService.setCanvasRef(canvasRef);
+    drawStateService.setCanvasContext(canvasRef.nativeElement.getContext('2d'));
     fixture = TestBed.createComponent(RectangleComponent);
     fixture.detectChanges();
   });
@@ -43,14 +45,12 @@ describe('RectangleService', () => {
     expect(service.getThickness()).toBe(20);
   });
 
-  //Ne fonctionne pas car il initialise jamais this.canvasContext et canvasRef (les services passe pas)
   it('startRect should bind the event listener accordingly', (done: DoneFn) => {
     const service: RectangleService = TestBed.get(RectangleService);
     
     const continueRectSpy = spyOn(service, 'continueRect');
     const stopRectSpy = spyOn(service, 'stopRect');
     const drawRectSpy = spyOn(service, 'drawRect');
-    const startRectSpy = spyOn(service, 'startRect');
     const testMouseEvent = new MouseEvent('onclick');
     const testMouseMoveEvent = new MouseEvent('onmousemove');
     const testMouseUpEvent = new MouseEvent('onmouseup');
@@ -62,7 +62,6 @@ describe('RectangleService', () => {
         document.dispatchEvent(testMouseMoveEvent);
         document.dispatchEvent(testMouseUpEvent);
         expect(drawRectSpy).toHaveBeenCalled();
-        expect(startRectSpy).toHaveBeenCalled();
         expect(stopRectSpy).toHaveBeenCalled();
         expect(continueRectSpy).toHaveBeenCalled();
         done(); 
