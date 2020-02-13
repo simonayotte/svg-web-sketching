@@ -54,19 +54,12 @@ describe('RectangleService', () => {
     const testMouseEvent = new MouseEvent('onclick');
     const testMouseMoveEvent = new MouseEvent('onmousemove');
     const testMouseUpEvent = new MouseEvent('onmouseup');
-    
-    drawStateService.canvasRefObs.subscribe(() => {
-      drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
-        service.setCanvasContext(canvasContext);
-        service.startRect(testMouseEvent);
-        document.dispatchEvent(testMouseMoveEvent);
-        document.dispatchEvent(testMouseUpEvent);
-        expect(drawRectSpy).toHaveBeenCalled();
-        expect(stopRectSpy).toHaveBeenCalled();
-        expect(continueRectSpy).toHaveBeenCalled();
-        done(); 
-    });
-    });
+    service.startRect(testMouseEvent);
+    document.dispatchEvent(testMouseMoveEvent);
+    document.dispatchEvent(testMouseUpEvent);
+    expect(drawRectSpy).toHaveBeenCalled();
+    expect(stopRectSpy).toHaveBeenCalled();
+    expect(continueRectSpy).toHaveBeenCalled();
   });
 
   it('stopRect should unbind the event listener', () => {
