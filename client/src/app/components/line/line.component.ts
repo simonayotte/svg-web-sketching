@@ -1,4 +1,5 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { Component, OnInit, OnDestroy, HostListener, ElementRef } from '@angular/core';
 import { LineService } from './../../services/line/line.service';
 
 @Component({
@@ -8,7 +9,7 @@ import { LineService } from './../../services/line/line.service';
 })
 export class LineComponent implements OnInit, OnDestroy {
 
-  constructor(private lineService: LineService) { 
+  constructor(private drawStateService:DrawStateService, private lineService: LineService) { 
     this.lineService.thicknessObs.subscribe((thickness: number) => { 
       this.thickness = thickness;
     });
@@ -16,18 +17,26 @@ export class LineComponent implements OnInit, OnDestroy {
     this.lineService.junctionPointThicknessObs.subscribe((junctionPointThickness: number) =>{
       this.junctionPointThickness = junctionPointThickness;
     })
+
+    this.drawStateService.canvasRefObs.subscribe((canvasRef:ElementRef)=>this.canvasRef = canvasRef)
+    this.mouseDownListener = this.lineService.connectLineEventHandler.bind(this.lineService);
+
   }
-    
+  
+  canvasRef:ElementRef;
   thickness: number;
   lineHasJunction: boolean = true;
   junctionPointThickness: number;
 
+  private mouseDownListener: EventListener;
+
+
   ngOnInit() {
-    this.lineService.ngOnInit();
+    this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
   }
 
   ngOnDestroy() {
-    this.lineService.ngOnDestroy();
+    this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
   }
 
   setThickness($event: Event){

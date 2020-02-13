@@ -1,4 +1,4 @@
-import { Injectable, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, ElementRef, OnInit } from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from 'src/app/services/color/color.service';
@@ -6,7 +6,7 @@ import { ColorService } from 'src/app/services/color/color.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LineService implements OnInit, OnDestroy {
+export class LineService implements OnInit {
 
   constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
     this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
@@ -18,18 +18,16 @@ export class LineService implements OnInit, OnDestroy {
     //Get draw page state
     this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
-    this.colorService.firstColorWithOpacityObs.subscribe((color: string) => (this.color = color));
+    this.colorService.firstColorObs.subscribe((color: string) => (this.color = color));
 
     //Bind this to event listeners
     this.lineHasJunction = false;
-    this.mouseDownListener = this.connectLineEventHandler.bind(this);
     this.mouseMoveListener = this.previewLineEventHandler.bind(this);
     this.mouseOutListener = this.stopLine.bind(this);
     this.mouseDoubleDownListener = this.stopLine.bind(this);
   }
 
   ngOnInit(){
-    this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
     this.canvasRef.nativeElement.addEventListener('dblclick', this.mouseDoubleDownListener);
     this.canvasHeight = 2000;
     this.canvasWidth = 2000;
@@ -39,9 +37,6 @@ export class LineService implements OnInit, OnDestroy {
     this.setJunctionType(true);
   }
 
-  ngOnDestroy() {
-    this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
-  }
 
   private thickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   thicknessObs: Observable<number> = this.thickness.asObservable();
@@ -53,7 +48,6 @@ export class LineService implements OnInit, OnDestroy {
   private canvasRef: ElementRef;
   private canvasContext: CanvasRenderingContext2D;
 
-  private mouseDownListener: EventListener;
   //private mouseUpListener: EventListener;
   private mouseMoveListener: EventListener;
   private mouseOutListener: EventListener;
