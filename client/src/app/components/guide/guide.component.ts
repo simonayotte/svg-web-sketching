@@ -1,16 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-guide',
   templateUrl: './guide.component.html',
   styleUrls: ['./guide.component.scss']
 })
-export class GuideComponent implements OnInit {
+export class GuideComponent {
   currentText = 'bienvenue';
   currentCategory = '';
-
-  ngOnInit() {
-  }
 
   displayCategory(category: string) {
     this.currentCategory = category;
@@ -18,7 +15,7 @@ export class GuideComponent implements OnInit {
 
   displayTextSubject(subject: string) {
     this.currentText = subject;
-    switch(this.currentText) {
+    switch (this.currentText) {
       case 'crayon':
       case 'pinceau':
       case 'ligne':
