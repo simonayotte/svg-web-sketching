@@ -30,10 +30,6 @@ export class RectangleService {
                 this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
             }
         });
-
-        // Get draw page state
-        //this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
-
         this.colorService.firstColorObs.subscribe((color: string) => (this.firstColor = color));
         this.colorService.secondColorObs.subscribe((color: string) => (this.secondColor = color));
 
@@ -73,6 +69,9 @@ export class RectangleService {
     private currentHeight: number;
     private currentWidth: number;
 
+    setCanvasContext(canvasContext: CanvasRenderingContext2D) {
+        this.canvasContext = canvasContext;
+    }
 
     setThickness(thickness: number) {
         this.thickness.next(thickness);
@@ -140,7 +139,7 @@ export class RectangleService {
                         height = width;
                         }
                 } else {
-                    if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 1st and 3d quadrants
+                    if( (width<0 && height >0) || (width>0 && height <0) ){ //XOR for 2nd and 4th quadrants
                         height = -width;
                     } else {
                     height = width;
