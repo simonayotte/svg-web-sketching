@@ -56,18 +56,18 @@ export class RectangleService {
     private displayFill: boolean;
     private rectangleType: string;
 
-    private initialX: number;
-    private initialY: number;
+    initialX: number;
+    initialY: number;
+    isDrawing: boolean;
 
-    private isDrawing: boolean;
     private canvasImage: ImageData;
     private canvasHeight: number;
     private canvasWidth: number;
 
-    private currentStartX: number;
-    private currentStartY: number;
-    private currentHeight: number;
-    private currentWidth: number;
+    currentStartX: number;
+    currentStartY: number;
+    currentHeight: number;
+    currentWidth: number;
 
     setCanvasContext(canvasContext: CanvasRenderingContext2D) {
         this.canvasContext = canvasContext;
@@ -88,17 +88,9 @@ export class RectangleService {
     startRect(event: MouseEvent): void {
         if (!this.isDrawing) {
             this.isDrawing = true;
+            this.setDrawingParameters(event.offsetX, event.offsetY);
 
-            this.initialX = event.offsetX;
-            this.initialY = event.offsetY;
-
-            // Stroke style
-
-            this.canvasContext.lineJoin = 'miter';
-            this.canvasContext.lineCap = 'square';
-            this.canvasContext.strokeStyle = this.secondColor;
-            this.canvasContext.fillStyle = this.firstColor;
-
+            // Bind other mouse event
             this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
             this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
             this.canvasRef.nativeElement.addEventListener('mouseout', this.mouseOutListener);
@@ -106,8 +98,19 @@ export class RectangleService {
         }
     }
 
+    setDrawingParameters(mousePositionX: number, mousePositionY: number) {
+        this.initialX = mousePositionX;
+        this.initialY = mousePositionY;
+
+        // Stroke style
+        this.canvasContext.lineJoin = 'miter';
+        this.canvasContext.lineCap = 'square';
+        this.canvasContext.strokeStyle = this.secondColor;
+        this.canvasContext.fillStyle = this.firstColor;
+    }
+
     continueRect(event: MouseEvent): void {
-        this.adjustStartPosition(event.offsetX, event.clientY);
+        this.adjustStartPosition(event.offsetX, event.offsetY);
         this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, this.canvasContext.lineWidth);
     }
 
@@ -204,6 +207,8 @@ export class RectangleService {
 
     setshiftDown(value: boolean): void {
         this.isShiftDown = value;
-        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, this.canvasContext.lineWidth);
+        if (this.isDrawing) {
+            this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, this.canvasContext.lineWidth);
+        }
     }
 }

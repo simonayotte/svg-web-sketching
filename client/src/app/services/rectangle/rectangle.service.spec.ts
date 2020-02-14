@@ -43,20 +43,33 @@ describe('RectangleService', () => {
     expect(service.getThickness()).toBe(20);
   });
 
-  it('startRect should bind the event listener accordingly', () => {
+  it('startRect should call setDrawingParameters when clicking on the canvas', () => {
     const service: RectangleService = TestBed.get(RectangleService);
     const testMouseEvent = new MouseEvent('onclick');
-    const testMouseMoveEvent = new MouseEvent('onmousemove');
-    const testMouseUpEvent = new MouseEvent('onmouseup');
+    const setDrawingParametersSpy = spyOn(service, 'setDrawingParameters');
     service.startRect(testMouseEvent);
-    const stopRectSpy = spyOn(service, 'stopRect');
-    const drawRectSpy = spyOn(service, 'drawRect');
-    const continueRectSpy = spyOn(service, 'continueRect');
-    document.dispatchEvent(testMouseMoveEvent);
-    document.dispatchEvent(testMouseUpEvent);
-    expect(drawRectSpy).toHaveBeenCalled();
-    expect(stopRectSpy).toHaveBeenCalled();
-    expect(continueRectSpy).toHaveBeenCalled();
+    expect(setDrawingParametersSpy).toHaveBeenCalled();
+  });
+
+  it('setDrawingParameters should initialize the drawing parameters', () => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    service.setDrawingParameters(10, 10);
+    expect(service.initialX).toBe(10);
+    expect(service.initialY).toBe(10);
+    expect(service.getCanvasContext().lineJoin).toBe('miter');
+    expect(service.getCanvasContext().lineCap).toBe('square');
+  });
+
+  it('adjustStartPosition should modify the class attributes with the right values', () => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    service.setThickness(5);
+    service.initialX = 5;
+    service.initialY = 5;
+    service.adjustStartPosition(10, 10);
+    expect(service.currentStartX).toBe(5.5);
+    expect(service.currentStartY).toBe(5.5);
+    expect(service.currentHeight).toBe(5);
+    expect(service.currentWidth).toBe(5);
   });
 
   it('drawRect should correctly reset the canvas and begin drawing', () => {
@@ -154,6 +167,7 @@ describe('RectangleService', () => {
   it('setshiftDown should call drawRect', () => {
     const service: RectangleService = TestBed.get(RectangleService);
     const drawRectSpy = spyOn(service, 'drawRect');
+    service.isDrawing = true;
     service.setshiftDown(true);
     expect(drawRectSpy).toHaveBeenCalled();
   });
