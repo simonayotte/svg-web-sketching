@@ -45,4 +45,37 @@ describe('LineComponent', () => {
       done();
     }
   });
+
+  //Inclure ces tests quand le service sera debug
+  it('#cancelLine should be called on keydown escape', () => {
+    const spyOnEscape = spyOn(component, 'cancelLine');
+    const eventMock = new KeyboardEvent('keydown', {code: 'Escape'});
+    component.cancelLine(eventMock);
+    expect(spyOnEscape).toHaveBeenCalled();
+  });
+
+
+  it('#cancelSegment should be called on keydown backspace', () => {
+    const spyOnBackspace = spyOn(component, 'cancelSegment');
+    const eventMock = new KeyboardEvent('keydown', {code: 'Backspace'});
+    component.cancelSegment(eventMock);
+    expect(spyOnBackspace).toHaveBeenCalled();
+  });
+
+  it('#alignLine should be called on keydown shift', () => {
+    const spyOnKeydownShift = spyOn(component, 'alignLine');
+    const eventMock = new KeyboardEvent('keydown', {code: 'Shift'});
+    component.alignLine(eventMock);
+    expect(spyOnKeydownShift).toHaveBeenCalled();
+  });
+
+  it('#freeLine should be called on keyup shift', () => {
+    const spyOnKeyupShift = spyOn(component, 'freeLine');
+    const eventMock = new KeyboardEvent('keyup', {code: 'Shift'});
+    component.freeLine(eventMock);
+    expect(spyOnKeyupShift).toHaveBeenCalled();
+  });
+
+
+
 });

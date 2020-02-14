@@ -27,11 +27,9 @@ export class LineService {
     this.mouseDoubleDownListener = this.stopLine.bind(this);
 
     //Deplacement de ce qu'il y avait dans le ngOnInit()
-    this.canvasRef.nativeElement.addEventListener('dblclick', this.mouseDoubleDownListener);
     this.canvasHeight = 2000;
     this.canvasWidth = 2000;
-    this.lineImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
-    this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
+    //this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
     this.coordinates = new Array<Coordinate>();
     this.setJunctionType(true);
   }
@@ -70,7 +68,6 @@ export class LineService {
   private canvasHeight: number;
   private canvasImage: ImageData;
 
-  private lineImage: ImageData;
 
   //Structure pour save les points pour annuler le dernier segment
   private coordinates: Array<Coordinate>;
@@ -119,6 +116,7 @@ export class LineService {
         this.drawPoint(positionX,positionY);
         this.lastX = positionX;
         this.lastY = positionY;
+        this.canvasRef.nativeElement.addEventListener('dblclick', this.mouseDoubleDownListener);
       }
       //Ajouter la nouvelle ligne au saved Canvas Image
       this.canvasImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
@@ -176,7 +174,6 @@ export class LineService {
       this.coordinates.pop();
     }
     this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
-    this.canvasContext.putImageData(this.lineImage, 0, 0,);  
     this.lastX = undefined;
     this.lastY = undefined;
   }
@@ -209,7 +206,7 @@ export class LineService {
     while(this.coordinates.length != 0){
       this.coordinates.pop();
     }
-    this.lineImage = this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
+    this.canvasContext.getImageData(0,0, this.canvasWidth, this.canvasHeight);
     this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
     this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
   }
