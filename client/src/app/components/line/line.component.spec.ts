@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LineComponent } from './line.component';
+import { By } from '@angular/platform-browser';
 
 //Ajout imports
 import { BrushComponent } from './../brush/brush.component'
@@ -76,6 +77,20 @@ describe('LineComponent', () => {
     expect(spyOnKeyupShift).toHaveBeenCalled();
   });
 
+  it('should correctly call setThickness when using the slider', () => {
+    const setThicknessSpy = spyOn(component,'setThickness');
+    const slider = fixture.debugElement.query(By.css('.slider'));
+    slider.triggerEventHandler('input',{});
+    fixture.detectChanges();
+    expect(setThicknessSpy).toHaveBeenCalledTimes(1);
+  });
 
-
+  it('should correctly call setJunctionType when cliking on a type button', () => {
+    const setJunctionType = spyOn(component,'setJunctionType');
+    const button = fixture.debugElement.query(By.css('.lineoption-box'));
+    button.triggerEventHandler('click',{});
+    fixture.detectChanges();
+    expect(setJunctionType).toHaveBeenCalledTimes(1);
+  });
+  
 });

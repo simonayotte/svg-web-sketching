@@ -9,4 +9,6 @@ describe('LineService', () => {
     const service: LineService = TestBed.get(LineService);
     expect(service).toBeTruthy();
   });
+
+  //Test pour la fonction ConnectLineEventHandler
 });
