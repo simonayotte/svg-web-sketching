@@ -15,6 +15,7 @@ export class CreateDrawingComponent implements OnInit {
 isWidthModified = false;
 isHeightModified = false;
 isFormColorWindowOpen = false;
+private isDrawingStarted = false;
 private widthString = 'width';
 private heightString = 'height'
 private canvasContext: CanvasRenderingContext2D;
@@ -32,6 +33,9 @@ constructor(private drawStateService: DrawStateService,
 });
   this.drawStateService.canvasHeightObs.subscribe((canvasHeight) => {
     this.canvasHeight = canvasHeight;
+});
+  this.drawStateService.isDrawingStartedObs.subscribe((isDrawingStarted) => {
+    this.isDrawingStarted = isDrawingStarted;
 });
   this.colorService.isFormColorWindowOpenObs.subscribe((isFormColorWindowOpen) => {
     this.isFormColorWindowOpen = isFormColorWindowOpen
@@ -52,8 +56,10 @@ constructor(private drawStateService: DrawStateService,
     this.drawStateService.setCanvasWidth(this.drawingForm.controls[this.widthString].value - SIDEBAR_WIDTH);
     this.drawStateService.setCanvasHeight(this.drawingForm.controls[this.heightString].value);
     this.colorService.setCanvasColor(this.selectedCanvasColor);
-    this.drawStateService.setIsDrawingStarted(false);
-    this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+    if (this.isDrawingStarted) {
+      this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+      this.drawStateService.setIsDrawingStarted(false);
+    }
     this.colorService.setIsFormSubmitted(true);
     }
 
