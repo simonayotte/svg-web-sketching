@@ -24,7 +24,6 @@ export class HomePageComponent implements OnInit {
 
     @HostListener('document:keydown', ['$event'])
     openModal(event: KeyboardEvent) {
-        console.log(event.code);
         if (event.code === 'KeyO' && event.ctrlKey) {
             event.preventDefault();
             event.stopPropagation();
