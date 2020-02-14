@@ -12,8 +12,8 @@ describe('CreateDrawingComponent', () => {
   const width = 'width';
   const height = 'height'
   const dialogMock = {
-    close: () => {return}
-};
+    close: () => {/*empty function*/}
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

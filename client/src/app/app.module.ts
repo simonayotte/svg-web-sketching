@@ -1,3 +1,4 @@
+import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -28,7 +29,7 @@ import { RectangleComponent } from './components/rectangle/rectangle.component';
         ColorComponent,
         RectangleComponent,
         PencilComponent,
-        DrawingStartedDialogComponent
+        DrawingStartedDialogComponent,
     ],
     imports: [BrowserModule,
               HttpClientModule,
@@ -36,7 +37,8 @@ import { RectangleComponent } from './components/rectangle/rectangle.component';
               ReactiveFormsModule,
               FormsModule,
               MatDialogModule,
-              BrowserAnimationsModule],
+              BrowserAnimationsModule,
+              OverlayModule],
     providers: [],
     entryComponents: [CreateDrawingComponent,
                       DrawingStartedDialogComponent,
