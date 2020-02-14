@@ -83,7 +83,7 @@ export class BrushService {
     }
 
     startDraw(event: MouseEvent): void {
-        //Stroke style
+        // Stroke style
         this.canvasContext.lineJoin = 'round';
         this.canvasContext.lineCap = 'round';
         this.canvasContext.lineWidth = this.thickness.value;

@@ -1,17 +1,17 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ElementRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material';
 
-import { PencilService } from './pencil.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
+import { PencilService } from './pencil.service';
 
+import { BrushComponent } from 'src/app/components/brush/brush.component';
+import { ColorComponent } from 'src/app/components/color/color.component';
 import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
 import { GuideComponent } from 'src/app/components/guide/guide.component';
-import { ColorComponent } from 'src/app/components/color/color.component';
 import { PencilComponent } from 'src/app/components/pencil/pencil.component';
-import { BrushComponent } from 'src/app/components/brush/brush.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
-import { ElementRef } from '@angular/core';
-import { MatDialogModule } from '@angular/material';
 
 describe('PencilService', () => {
     let service: PencilService;
@@ -24,23 +24,23 @@ describe('PencilService', () => {
         });
 
         drawStateService = TestBed.get(DrawStateService);
-        let drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-        let pencilFixture: ComponentFixture<PencilComponent> = TestBed.createComponent(PencilComponent);
+        const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
+        const pencilFixture: ComponentFixture<PencilComponent> = TestBed.createComponent(PencilComponent);
         service = TestBed.get(PencilService);
         drawPageFixture.detectChanges();
         pencilFixture.detectChanges();
     });
 
     it('should be created', () => {
-        const service: PencilService = TestBed.get(PencilService);
-        expect(service).toBeTruthy();
+        const testService: PencilService = TestBed.get(PencilService);
+        expect(testService).toBeTruthy();
     });
 
     it('#startDraw() should be called on mouse down', (done: DoneFn) => {
         service.lastX = 0;
         service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            let mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
                 clientX: 300,
                 clientY: 400,
             });
@@ -56,7 +56,6 @@ describe('PencilService', () => {
         service.lastX = 0;
         service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            canvasRef.nativeElement.mouseDown;
             const mouseDown: MouseEvent = new MouseEvent('mousedown', {
                 clientX: 0,
                 clientY: 0,
