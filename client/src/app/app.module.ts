@@ -30,7 +30,6 @@ import { RectangleComponent } from './components/rectangle/rectangle.component';
         RectangleComponent,
         PencilComponent,
         DrawingStartedDialogComponent,
-        OverlayModule
     ],
     imports: [BrowserModule,
               HttpClientModule,
@@ -38,7 +37,8 @@ import { RectangleComponent } from './components/rectangle/rectangle.component';
               ReactiveFormsModule,
               FormsModule,
               MatDialogModule,
-              BrowserAnimationsModule],
+              BrowserAnimationsModule,
+              OverlayModule],
     providers: [],
     entryComponents: [CreateDrawingComponent,
                       DrawingStartedDialogComponent,
