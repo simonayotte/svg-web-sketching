@@ -74,4 +74,25 @@ describe('RectangleService', () => {
     expect(stopRectSpy).toHaveBeenCalled();
     expect(continueRectSpy).toHaveBeenCalledTimes(0);
   });
+
+  it('setRectangleType should change the type accordingly', () => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    let testType = 'fill only';
+    service.setRectangleType(testType);
+    expect(service.getRectangleType()).toBe(testType);
+    testType = 'outline only';
+    service.setRectangleType(testType);
+    expect(service.getRectangleType()).toBe(testType);
+    testType = 'other';
+    service.setRectangleType(testType);
+    expect(service.getRectangleType()).toBe('outline and fill');
+  });
+
+  it('setshiftDown should call drawRect', () => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    const drawRectSpy = spyOn(service, 'drawRect');
+    service.setshiftDown(true);
+    expect(drawRectSpy).toHaveBeenCalled();
+  });
+
 });

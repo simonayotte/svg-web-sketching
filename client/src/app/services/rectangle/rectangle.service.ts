@@ -54,6 +54,7 @@ export class RectangleService {
     private secondColor: string;
     private displayOutline: boolean;
     private displayFill: boolean;
+    private rectangleType: string;
 
     private initialX: number;
     private initialY: number;
@@ -100,7 +101,7 @@ export class RectangleService {
             this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
         }
     }
-
+    // TODO Test
     continueRect(event: MouseEvent): void {
         this.currentStartX = event.offsetX > this.initialX ?
                 this.initialX + this.canvasContext.lineWidth / 2 : this.initialX - this.canvasContext.lineWidth / 2;
@@ -113,6 +114,7 @@ export class RectangleService {
         this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight);
     }
 
+    // TODO Test
     drawRect(startX: number, startY: number, width: number, height: number): void {
 
         this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -170,18 +172,25 @@ export class RectangleService {
                 this.displayOutline = true;
                 this.displayFill = false;
                 this.canvasContext.lineWidth = this.thickness.value;
+                this.rectangleType = rectangleType;
                 break;
             case 'fill only':
                 this.displayOutline = false;
                 this.displayFill = true;
                 this.canvasContext.lineWidth = 1;
+                this.rectangleType = rectangleType;
                 break;
             default:
                 this.displayOutline = true;
                 this.displayFill = true;
                 this.canvasContext.lineWidth = this.thickness.value;
+                this.rectangleType = 'outline and fill';
                 break;
         }
+    }
+
+    getRectangleType(): string {
+        return this.rectangleType;
     }
 
     getshiftDown(): boolean {
