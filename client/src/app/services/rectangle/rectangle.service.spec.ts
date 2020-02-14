@@ -45,16 +45,16 @@ describe('RectangleService', () => {
     expect(service.getThickness()).toBe(20);
   });
 
-  it('startRect should bind the event listener accordingly', (done: DoneFn) => {
+  it('startRect should bind the event listener accordingly', () => {
     const service: RectangleService = TestBed.get(RectangleService);
     
-    const continueRectSpy = spyOn(service, 'continueRect');
-    const stopRectSpy = spyOn(service, 'stopRect');
-    const drawRectSpy = spyOn(service, 'drawRect');
     const testMouseEvent = new MouseEvent('onclick');
     const testMouseMoveEvent = new MouseEvent('onmousemove');
     const testMouseUpEvent = new MouseEvent('onmouseup');
     service.startRect(testMouseEvent);
+    const stopRectSpy = spyOn(service, 'stopRect');
+    const drawRectSpy = spyOn(service, 'drawRect');
+    const continueRectSpy = spyOn(service, 'continueRect');
     document.dispatchEvent(testMouseMoveEvent);
     document.dispatchEvent(testMouseUpEvent);
     expect(drawRectSpy).toHaveBeenCalled();
