@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { DrawPageComponent } from './draw-page.component';
+
 import { BrushComponent } from '../brush/brush.component';
 import { ColorComponent } from '../color/color.component';
 import { GuideComponent } from '../guide/guide.component';

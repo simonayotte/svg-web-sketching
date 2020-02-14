@@ -17,7 +17,7 @@ export class HomePageComponent implements OnInit {
         const dialogRef = this.dialog.open(CreateDrawingComponent);
         this.isCreateDrawingOpen = true;
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe( (result) => {
             this.isCreateDrawingOpen = false;
         });
     }
