@@ -120,6 +120,8 @@ export class BrushService {
     }
 
     stopDraw(): void {
+        this.lastX = 0;
+        this.lastY = 0;
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);

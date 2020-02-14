@@ -11,6 +11,7 @@ import { ColorComponent } from 'src/app/components/color/color.component';
 import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { BrushComponent } from 'src/app/components/brush/brush.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
+import { ElementRef } from '@angular/core';
 
 describe('BrushService', () => {
     let service: BrushService;
@@ -33,14 +34,6 @@ describe('BrushService', () => {
         expect(service).toBeTruthy();
     });
 
-    /*it('#setTexture() should set #pattern correctly if the texture parameter is valid', (done: DoneFn) => {
-        drawStateService.canvasContextObs.subscribe(() => {
-            service.setTexture('wave');
-            expect(service.pattern).not.toBeNull();
-            done();
-        });
-    });*/
-
     it('#setTexture() should set #pattern to null if the texture parameter is not valid', (done: DoneFn) => {
         drawStateService.canvasContextObs.subscribe(() => {
             service.setTexture('invalid');
@@ -49,71 +42,105 @@ describe('BrushService', () => {
         });
     });
 
-    /*it('#startDraw() should be called on mouse down', (done: DoneFn) => {
-        let spy = spyOn(service, 'startDraw');
+    it('#startDraw() should be called on mouse down', (done: DoneFn) => {
+        service.lastX = 0;
+        service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown');
+            let mouseDown: MouseEvent = new MouseEvent('mousedown', {
+                clientX: 300,
+                clientY: 400,
+            });
+
             canvasRef.nativeElement.dispatchEvent(mouseDown);
-            expect(spy).toHaveBeenCalled();
+            expect(service.lastX).toEqual(300);
+            expect(service.lastY).toEqual(400);
             done();
         });
     });
 
-    it('#continueDraw() should be called on mouse move ', (done: DoneFn) => {
-        let spy = spyOn(service, 'continueDraw');
+    it('#continueDraw() should be called on mouse move after mouse down ', (done: DoneFn) => {
+        service.lastX = 0;
+        service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown');
+            canvasRef.nativeElement.mouseDown;
+            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+                clientX: 0,
+                clientY: 0,
+            });
             canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseMove: MouseEvent = new MouseEvent('mousemove');
+            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+                clientX: 100,
+                clientY: 50,
+            });
             canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(spy).toHaveBeenCalled();
+            expect(service.lastX).toEqual(100);
+            expect(service.lastY).toEqual(50);
             done();
         });
     });
 
     it('#continueDraw() should not be called on mouse move before mouse down ', (done: DoneFn) => {
-        let spy = spyOn(service, 'continueDraw');
-
+        service.lastX = 0;
+        service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseMove: MouseEvent = new MouseEvent('mousemove');
+            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+                clientX: 100,
+                clientY: 50,
+            });
             canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(spy).not.toHaveBeenCalled();
+            expect(service.lastX).toEqual(0);
+            expect(service.lastY).toEqual(0);
             done();
         });
     });
 
     it('#continueDraw() should not be called on mouse move after mouse up ', (done: DoneFn) => {
-        let spy = spyOn(service, 'continueDraw');
+        service.lastX = 0;
+        service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown');
+            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+                clientX: 100,
+                clientY: 10,
+            });
             canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseMove: MouseEvent = new MouseEvent('mousemove');
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
             const mouseUp: MouseEvent = new MouseEvent('mouseup');
             canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(spy).not.toHaveBeenCalled();
+            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+                clientX: 75,
+                clientY: 400,
+            });
+            canvasRef.nativeElement.dispatchEvent(mouseMove);
+            expect(service.lastX).toEqual(0);
+            expect(service.lastY).toEqual(0);
             done();
         });
     });
 
     it('#stopDraw() should be called on mouse up', (done: DoneFn) => {
-        let spy = spyOn(service, 'stopDraw');
+        service.lastX = 0;
+        service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown');
+            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+                clientX: 100,
+                clientY: 10,
+            });
             canvasRef.nativeElement.dispatchEvent(mouseDown);
             const mouseUp: MouseEvent = new MouseEvent('mouseup');
             canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(spy).toHaveBeenCalled();
+            expect(service.lastX).toEqual(0);
+            expect(service.lastY).toEqual(0);
             done();
         });
     });
     it('#stopDraw() should not be called on mouse up before mouse down', (done: DoneFn) => {
-        let spy = spyOn(service, 'stopDraw');
+        service.lastX = 200;
+        service.lastY = 100;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
             const mouseUp: MouseEvent = new MouseEvent('mouseup');
             canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(spy).not.toHaveBeenCalled();
+            expect(service.lastX).toEqual(200);
+            expect(service.lastY).toEqual(100);
             done();
         });
-    });*/
+    });
 });
