@@ -4,11 +4,9 @@
 
 .toolbar { 
     background: lightgrey;
-    width: 10%;
-    height: 100%;
-    max-height: 90vh;
+    width: 15%;
+    height: 90vh;
     float: left;
-    position: fixed;
     overflow: auto;
 }
 
@@ -49,6 +47,10 @@
     margin-left: 10px;
 }
 
+.category-items.active {
+    display: block;
+}
+
 .subject {
     display: flex;
     align-items: center;
@@ -59,8 +61,12 @@
     cursor: pointer;
 }
 
+.subject.active {
+    color: red;
+}
+
 .subject-text {
-    display: none;
+    display: block;
 }
 
 .header {

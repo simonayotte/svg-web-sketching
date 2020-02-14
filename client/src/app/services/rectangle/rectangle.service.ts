@@ -73,6 +73,7 @@ export class RectangleService {
     }
 
     startRect(event: MouseEvent): void {
+        this.drawStateService.setIsDrawingStarted(true);
         if (!this.isDrawing) {
             this.isDrawing = true;
             const positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;

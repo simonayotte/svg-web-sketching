@@ -24,8 +24,15 @@ export class ColorService {
     private canvasColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffffff');
     canvasColorObs: Observable<string> = this.canvasColor.asObservable();
 
+    private selectedCanvasColor: BehaviorSubject<string> = new BehaviorSubject<string>('#ffffffff');
+    selectedCanvasColorObs: Observable<string> = this.selectedCanvasColor.asObservable();
+
     setCanvasColor(canvasColor: string): void {
         this.canvasColor.next(canvasColor);
+    }
+
+    setSelectedCanvasColor(selectedCanvasColor: string): void {
+        this.selectedCanvasColor.next(selectedCanvasColor);
     }
 
     private usedColors: BehaviorSubject<Array<string>> = new BehaviorSubject<Array<string>>(new Array(10));
@@ -44,16 +51,33 @@ export class ColorService {
     private selectedColor: BehaviorSubject<string> = new BehaviorSubject<string>('');
     selectedColorObs: Observable<string> = this.selectedColor.asObservable();
 
-    private isColorWindowOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-    isColorWindowOpenObs: Observable<boolean> = this.isColorWindowOpen.asObservable();
+    private isFormColorWindowOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isFormColorWindowOpenObs: Observable<boolean> = this.isFormColorWindowOpen.asObservable();
 
-    openColorWindow(selectedColor: string): void {
-        this.isColorWindowOpen.next(true);
+    private isPanelColorWindowOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isPanelColorWindowOpenObs: Observable<boolean> = this.isPanelColorWindowOpen.asObservable();
+
+
+    private isFormSubmitted: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isFormSubmittedObs: Observable<boolean> = this.isFormSubmitted.asObservable();
+
+    setIsFormSubmitted(isFormSubmitted:boolean){
+        this.isFormSubmitted.next(isFormSubmitted)
+    }
+
+    openFormColorWindow(selectedColor: string): void {
+        this.isFormColorWindowOpen.next(true);
+        this.selectedColor.next(selectedColor);
+    }
+
+    openPanelColorWindow(selectedColor: string): void {
+        this.isPanelColorWindowOpen.next(true);
         this.selectedColor.next(selectedColor);
     }
 
     closeColorWindow(): void {
-        this.isColorWindowOpen.next(false);
+        this.isFormColorWindowOpen.next(!this.isFormColorWindowOpen);
+        this.isPanelColorWindowOpen.next(!this.isPanelColorWindowOpen);
         this.selectedColor.next('');
     }
 }

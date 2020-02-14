@@ -16,7 +16,6 @@ export class PencilService {
             if (canvasContext != null) this.canvasContext = canvasContext;
         });
         //Get draw page state
-        this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => (this.isPanelOpen = isPanelOpen));
 
         this.colorService.firstColorObs.subscribe((color: string) => (this.color = color));
 
@@ -41,13 +40,12 @@ export class PencilService {
     private mouseOutListener: EventListener;
 
     private color: string;
-    private isPanelOpen: boolean;
 
-    private lastX: number;
-    private lastY: number;
+    public lastX: number;
+    public lastY: number;
 
     startDraw(event: MouseEvent): void {
-        let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+        this.drawStateService.setIsDrawingStarted(true);
 
         //Stroke style
         this.canvasContext.lineJoin = 'round';
@@ -58,11 +56,11 @@ export class PencilService {
 
         //Write circle when click only
         this.canvasContext.beginPath();
-        this.canvasContext.arc(positionX, event.clientY, this.thickness.value / 2, 0, 2 * Math.PI);
+        this.canvasContext.arc(event.offsetX, event.offsetY, this.thickness.value / 2, 0, 2 * Math.PI);
         this.canvasContext.closePath();
         this.canvasContext.fill();
-        this.lastX = positionX;
-        this.lastY = event.clientY;
+        this.lastX = event.offsetX;
+        this.lastY = event.offsetY;
 
         this.canvasRef.nativeElement.addEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.addEventListener('mouseup', this.mouseUpListener);
@@ -70,18 +68,18 @@ export class PencilService {
     }
 
     continueDraw(event: MouseEvent): void {
-        let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-
         this.canvasContext.beginPath();
         this.canvasContext.moveTo(this.lastX, this.lastY);
-        this.canvasContext.lineTo(positionX, event.clientY);
+        this.canvasContext.lineTo(event.offsetX, event.offsetY);
         this.canvasContext.closePath();
         this.canvasContext.stroke();
-        this.lastX = positionX;
-        this.lastY = event.clientY;
+        this.lastX = event.offsetX;
+        this.lastY = event.offsetY;
     }
 
     stopDraw(): void {
+        this.lastX = 0;
+        this.lastY = 0;
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);

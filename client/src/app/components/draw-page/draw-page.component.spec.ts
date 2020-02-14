@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material';
 
 import { DrawPageComponent } from './draw-page.component';
 import { GuideComponent } from '../guide/guide.component';
@@ -13,7 +14,7 @@ describe('DrawPageComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [DrawPageComponent, GuideComponent, PencilComponent, BrushComponent, RectangleComponent, ColorComponent],
-            imports: [FormsModule],
+            imports: [FormsModule, MatDialogModule],
         }).compileComponents();
     }));
 
@@ -59,12 +60,12 @@ describe('DrawPageComponent', () => {
     });
     it('#openColorWindow() should set #isColorWindowOpen to true if the parameter value is valid', () => {
         component.openColorWindow('first');
-        expect(component.isColorWindowOpen).toEqual(true);
+        expect(component.isPanelColorWindowOpen).toEqual(true);
     });
 
     it('#openColorWindow() should set #isColorWindowOpen to false if the parameter value is not valid', () => {
         component.openColorWindow('invalidValue');
-        expect(component.isColorWindowOpen).toEqual(false);
+        expect(component.isPanelColorWindowOpen).toEqual(false);
     });
     it('#swapColors should() swap #firstColor and #secondColor if the function has been called once', () => {
         let oldFirstColor: string = component.firstColor;

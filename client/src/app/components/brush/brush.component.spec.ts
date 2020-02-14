@@ -1,13 +1,14 @@
+import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material';
 import { BrushComponent } from './brush.component';
+import { ColorComponent } from '../color/color.component';
 import { DrawPageComponent } from '../draw-page/draw-page.component';
-import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { GuideComponent } from '../guide/guide.component';
 import { PencilComponent } from '../pencil/pencil.component';
 import { RectangleComponent } from '../rectangle/rectangle.component';
-import { ColorComponent } from '../color/color.component';
-import { FormsModule } from '@angular/forms';
-import { ElementRef } from '@angular/core';
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 
 describe('BrushComponent', () => {
     let drawStateService: DrawStateService;
@@ -17,13 +18,13 @@ describe('BrushComponent', () => {
         TestBed.configureTestingModule({
             declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent],
             providers: [DrawStateService],
-            imports: [FormsModule],
+            imports: [FormsModule, MatDialogModule],
         }).compileComponents();
     }));
 
     beforeEach(() => {
         drawStateService = TestBed.get(DrawStateService);
-        let drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
+        const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
         drawStateService.setCanvasRef(new ElementRef(drawPageFixture.debugElement.nativeElement.querySelector('.canvas')));
         fixture = TestBed.createComponent(BrushComponent);
         component = fixture.componentInstance;

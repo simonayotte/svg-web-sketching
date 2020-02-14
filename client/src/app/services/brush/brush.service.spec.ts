@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 
 import { BrushService } from './brush.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
-//import { ElementRef } from '@angular/core';
 
 import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
 import { GuideComponent } from 'src/app/components/guide/guide.component';

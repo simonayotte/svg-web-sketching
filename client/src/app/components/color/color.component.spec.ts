@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { ColorComponent } from './color.component';
 import { ColorService } from 'src/app/services/color/color.service';
+import { MatDialogModule } from '@angular/material';
 
 describe('ColorComponent', () => {
     let component: ColorComponent;
@@ -11,14 +12,14 @@ describe('ColorComponent', () => {
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [ColorComponent],
-            imports: [FormsModule],
+            imports: [FormsModule, MatDialogModule],
             providers: [ColorService],
         }).compileComponents();
     }));
 
     beforeEach(() => {
         colorService = TestBed.get(ColorService);
-        colorService.openColorWindow('first');
+        colorService.openPanelColorWindow('first');
         fixture = TestBed.createComponent(ColorComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -29,21 +30,21 @@ describe('ColorComponent', () => {
     });
 
     it('#colorHex should be set to #firstColor from colorService on ngInit if #selectedColor is equal to first', (done: DoneFn) => {
-        colorService.openColorWindow('first');
+        colorService.openPanelColorWindow('first');
         colorService.firstColorObs.subscribe((color: string) => {
             expect(component.colorHex).toEqual(color.substring(1, color.length - 2));
             done();
         });
     });
     it('#colorHex should be set to #secondColor from colorService on ngInit if #selectedColor is equal to second', (done: DoneFn) => {
-        colorService.openColorWindow('second');
+        colorService.openPanelColorWindow('second');
         colorService.secondColorObs.subscribe((color: string) => {
             expect(component.colorHex).toEqual(color.substring(1, color.length - 2));
             done();
         });
     });
     it('#colorHex should be set to #canvasColor from colorService on ngInit if #selectedColor is equal to canvas', (done: DoneFn) => {
-        colorService.openColorWindow('canvas');
+        colorService.openPanelColorWindow('canvas');
         colorService.canvasColorObs.subscribe((color: string) => {
             expect(component.colorHex).toEqual(color.substring(1, color.length - 2));
             done();
@@ -132,7 +133,7 @@ describe('ColorComponent', () => {
     });
 
     it('#confirmColor() should correctly set ColorService #canvasColor if #selectedColor is equal to canvas', (done: DoneFn) => {
-        colorService.openColorWindow('canvas');
+        colorService.openPanelColorWindow('canvas');
         component.colorRGBA = [255, 0, 100, 255];
         component.confirmColor();
         colorService.canvasColorObs.subscribe((color: string) => {
@@ -142,7 +143,7 @@ describe('ColorComponent', () => {
     });
 
     it('#confirmColor() should add confirmed color to ColorService #usedColors array', (done: DoneFn) => {
-        colorService.openColorWindow('canvas');
+        colorService.openPanelColorWindow('canvas');
         component.colorRGBA = [255, 0, 100, 255];
         component.confirmColor();
         colorService.usedColorsObs.subscribe((usedColors: string[]) => {
@@ -163,7 +164,7 @@ describe('ColorComponent', () => {
     });
 
     it('#useColor() should set ColorService #secondColor if right clicked on used color ', () => {
-        colorService.openColorWindow('second');
+        colorService.openPanelColorWindow('second');
 
         const spy = spyOn(colorService, 'setSecondColor');
 
