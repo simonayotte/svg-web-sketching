@@ -73,9 +73,15 @@ export class RectangleService {
         this.canvasContext = canvasContext;
     }
 
+    getCanvasContext(): CanvasRenderingContext2D {
+        return this.canvasContext;
+    }
+
     setThickness(thickness: number) {
         this.thickness.next(thickness);
     }
+
+
 
     getThickness(): number {
         return this.thickness.value;
@@ -134,16 +140,16 @@ export class RectangleService {
             if (this.isShiftDown) {
 
                 if  (Math.abs(width) < Math.abs(height)) {
-                    if ( (width < 0 && height > 0) || (width > 0 && height < 0) ) { // XOR for 1st and 3d quadrants
+                    if ( (width <= 0 && height >= 0) || (width >= 0 && height <= 0) ) { // XOR for 1st and 3d quadrants
                         height = -width;
                     } else {
                         height = width;
                         }
                 } else {
-                    if ( (width < 0 && height > 0) || (width > 0 && height < 0) ) { // XOR for 2nd and 4th quadrants
-                        height = -width;
+                    if ( (width <= 0 && height >= 0) || (width >= 0 && height <= 0) ) { // XOR for 2nd and 4th quadrants
+                        width = -height;
                     } else {
-                    height = width;
+                        width = height;
                         }
                 }
             }

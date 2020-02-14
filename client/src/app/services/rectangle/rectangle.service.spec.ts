@@ -45,6 +45,15 @@ describe('RectangleService', () => {
     expect(service.getThickness()).toBe(20);
   });
 
+ /* it('setCanvasContext should apply the CanvasContext correctly ', () => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    const canvasContext=new CanvasRenderingContext2D();
+    service.setCanvasContext(canvasContext);
+    expect(service.getCanvasContext()).toBe(canvasContext);
+  });*/
+
+  
+
   it('startRect should bind the event listener accordingly', () => {
     const service: RectangleService = TestBed.get(RectangleService);
     
@@ -60,6 +69,20 @@ describe('RectangleService', () => {
     expect(drawRectSpy).toHaveBeenCalled();
     expect(stopRectSpy).toHaveBeenCalled();
     expect(continueRectSpy).toHaveBeenCalled();
+  });
+
+  
+
+  it('continueRect should correctly draw the rectangle',() => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    const testMouseMoveEvent = new MouseEvent('onmousemove');
+    service.continueRect(testMouseMoveEvent);
+    const continueRectSpy = spyOn(service, 'continueRect');
+    const drawRectSpy = spyOn(service, 'drawRect');
+    document.dispatchEvent(testMouseMoveEvent);
+    expect(continueRectSpy).toHaveBeenCalled();
+    expect(drawRectSpy).toHaveBeenCalled();
+    
   });
 
   it('stopRect should unbind the event listener', () => {
