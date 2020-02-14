@@ -47,6 +47,7 @@ export class PencilService {
     private lastY: number;
 
     startDraw(event: MouseEvent): void {
+        this.drawStateService.setIsDrawingStarted(true);
         let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
 
         //Stroke style

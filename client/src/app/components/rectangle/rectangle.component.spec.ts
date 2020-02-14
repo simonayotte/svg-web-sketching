@@ -10,6 +10,8 @@ import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
+import { MatDialogModule } from '@angular/material';
+
 
 describe('RectangleComponent', () => {
   let component: RectangleComponent;
@@ -20,7 +22,7 @@ describe('RectangleComponent', () => {
     TestBed.configureTestingModule({
         declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent],
         providers: [DrawStateService, RectangleService],
-        imports: [FormsModule],
+        imports: [FormsModule, MatDialogModule],
     }).compileComponents();
 }));
 

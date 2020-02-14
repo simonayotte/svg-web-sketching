@@ -53,12 +53,12 @@ describe('DrawPageComponent', () => {
     });
     it('#openColorWindow() should set #isColorWindowOpen to true if the parameter value is valid', () => {
         component.openColorWindow('first');
-        expect(component.isColorWindowOpen).toBe(true);
+        expect(component.isPanelColorWindowOpen).toBe(true);
     });
 
     it('#openColorWindow() should set #isColorWindowOpen to false if the parameter value is not valid', () => {
         component.openColorWindow('invalidValue');
-        expect(component.isColorWindowOpen).toBe(false);
+        expect(component.isPanelColorWindowOpen).toBe(false);
     });
     it('#swapColors should() swap #firstColor and #secondColor if the function has been called once', () => {
         let oldFirstColor: string = component.firstColor;

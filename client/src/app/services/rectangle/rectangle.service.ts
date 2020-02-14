@@ -86,6 +86,7 @@ export class RectangleService {
     }
 
     startRect(event: MouseEvent): void {
+        this.drawStateService.setIsDrawingStarted(true);
         if (!this.isDrawing) {
             this.isDrawing = true;
             this.setDrawingParameters(event.offsetX, event.offsetY);

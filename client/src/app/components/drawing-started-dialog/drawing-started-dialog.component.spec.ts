@@ -1,18 +1,17 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material'
-import { GuideComponent } from 'src/app/components/guide/guide.component'
-import { HomePageComponent } from './home-page.component';
+import { DrawingStartedDialogComponent } from './drawing-started-dialog.component';
 
-describe('HomePageComponent', () => {
-  let component: HomePageComponent;
-  let fixture: ComponentFixture<HomePageComponent>;
+describe('DrawingStartedDialogComponent', () => {
+  let component: DrawingStartedDialogComponent;
+  let fixture: ComponentFixture<DrawingStartedDialogComponent>;
   const dialogMock = {
     close: () => {/*empty function*/}
   };
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HomePageComponent, GuideComponent ],
+      declarations: [ DrawingStartedDialogComponent ],
       providers: [
         {
           provide: MatDialogRef,
@@ -25,7 +24,7 @@ describe('HomePageComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(HomePageComponent);
+    fixture = TestBed.createComponent(DrawingStartedDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
