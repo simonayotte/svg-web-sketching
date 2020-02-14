@@ -16,6 +16,5 @@ export class DrawingStartedDialogComponent implements OnInit {
   closeDialog() {
     this.dialogRef.close()
   }
-  ngOnInit() {/* Nothing in ngOnInit() */}
-  }
+  ngOnInit() {/* nothing needed in ngOnInit */}
 }

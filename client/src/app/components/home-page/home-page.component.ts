@@ -10,7 +10,7 @@ import { CreateDrawingComponent } from 'src/app/components/create-drawing/create
 export class HomePageComponent implements OnInit {
   private isCreateDrawingOpen = false;
   constructor(private dialog: MatDialog) {}
-  ngOnInit() {/* Nothing in ngOnInit() */}
+  ngOnInit() {/* Nothing needed in ngOnInit() */}
   openDialog(): void {
     const dialogRef = this.dialog.open(CreateDrawingComponent)
     this.isCreateDrawingOpen = true;
