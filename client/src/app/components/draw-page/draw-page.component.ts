@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { ColorService } from 'src/app/services/color/color.service';
-import { MatDialog} from '@angular/material'
+import { MatDialog } from '@angular/material'
 import { CreateDrawingComponent } from '../create-drawing/create-drawing.component'
 import { DrawingStartedDialogComponent} from '../drawing-started-dialog/drawing-started-dialog.component'
 //import { ConsoleReporter } from 'jasmine';
@@ -59,15 +59,15 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     private canvasWidth: number;
     private canvasHeight: number;
 
-    protected workspaceColor: string = '#00000080';
-    private selectedOption: string;
+    public workspaceColor: string = '#00000080';
+    public selectedOption: string;
 
-    protected firstColor: string;
-    protected secondColor: string;
-    protected canvasColor: string;
+    public firstColor: string;
+    public secondColor: string;
+    public canvasColor: string;
 
-    private isPanelOpen: boolean;
-    protected isPanelColorWindowOpen: boolean;
+    public isPanelOpen: boolean;
+    public isPanelColorWindowOpen: boolean;
 
     private keyDownListener: EventListener;
 
@@ -93,11 +93,6 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.selectedOption = option;
     }
 
-    //Function for test
-    getIsPanelOpen(): boolean {
-        return this.isPanelOpen;
-    }
-
     toogleDrawOptions(): void {
         this.isShowDrawOptions = !this.isShowDrawOptions;
     }
@@ -115,12 +110,6 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.isShowSettingOptions = !this.isShowSettingOptions;
     }
 
-    setCanvasColor($event: Event) {
-        if ($event.target) {
-            let color: string = (<HTMLInputElement>$event.target).value;
-            this.colorService.setCanvasColor(color);
-        }
-    }
     keyDown(event: KeyboardEvent) {
         let key: string = event.key;
         if (!this.isPanelColorWindowOpen) {

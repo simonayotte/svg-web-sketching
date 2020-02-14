@@ -3,9 +3,9 @@ import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/create-drawing/create-drawing.component';
 
 @Component({
-  selector: 'app-home-page',
-  templateUrl: './home-page.component.html',
-  styleUrls: ['./home-page.component.scss']
+    selector: 'app-home-page',
+    templateUrl: './home-page.component.html',
+    styleUrls: ['./home-page.component.scss'],
 })
 export class HomePageComponent implements OnInit {
   private isCreateDrawingOpen = false;

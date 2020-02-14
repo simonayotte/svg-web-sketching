@@ -1,12 +1,12 @@
-import { ColorService } from '../color/color.service'
-import { Injectable, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { ColorService } from 'src/app/services/color/color.service';
+import { Injectable, ElementRef } from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
 })
-export class PencilService implements OnInit, OnDestroy {
+export class PencilService {
     constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
         //Get canvas reference
         this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
@@ -21,18 +21,9 @@ export class PencilService implements OnInit, OnDestroy {
         this.colorService.firstColorObs.subscribe((color: string) => (this.color = color));
 
         //Bind this to event listeners
-        this.mouseDownListener = this.startDraw.bind(this);
         this.mouseMoveListener = this.continueDraw.bind(this);
         this.mouseUpListener = this.stopDraw.bind(this);
         this.mouseOutListener = this.stopDraw.bind(this);
-    }
-
-    ngOnInit() {
-        this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
-    }
-
-    ngOnDestroy() {
-        this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
     }
 
     private thickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
@@ -44,8 +35,6 @@ export class PencilService implements OnInit, OnDestroy {
 
     private canvasRef: ElementRef;
     private canvasContext: CanvasRenderingContext2D;
-
-    private mouseDownListener: EventListener;
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;

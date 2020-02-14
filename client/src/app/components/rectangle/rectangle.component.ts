@@ -1,44 +1,60 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
 
 @Component({
-  selector: 'app-rectangle',
-  templateUrl: './rectangle.component.html',
-  styleUrls: ['./rectangle.component.scss']
+    selector: 'app-rectangle',
+    templateUrl: './rectangle.component.html',
+    styleUrls: ['./rectangle.component.scss'],
 })
 export class RectangleComponent implements OnInit, OnDestroy {
 
-  constructor(private rectangleService: RectangleService) {
-    this.rectangleService.thicknessObs.subscribe((thickness: number) => {
-        this.thickness = thickness;
-    });
-}
+    rectangleType = 'outline only';
+    thickness: number;
 
-rectangleType = 'outline only';
-thickness: number;
+    private canvasRef: ElementRef;
+    private mouseDownListener: EventListener;
 
-ngOnInit() {
-    this.rectangleService.ngOnInit();
-}
-
-ngOnDestroy() {
-    this.rectangleService.ngOnDestroy();
-}
-setThickness($event: Event) {
-    if ($event.target) {
-        this.rectangleService.setThickess(parseInt(($event.target as HTMLInputElement).value, 10));
+    constructor(private drawStateService: DrawStateService, private rectangleService: RectangleService) {
+        this.rectangleService.thicknessObs.subscribe((thickness: number) => {
+            this.thickness = thickness;
+        });
+        this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => (this.canvasRef = canvasRef));
+        this.mouseDownListener = this.rectangleService.startRect.bind(this.rectangleService);
     }
-}
 
-setRectangleType(rectangleType: string) {
-    if (
-        rectangleType === 'outline only' ||
-        rectangleType === 'fill only' ||
-        rectangleType === 'outline and fill'
-    ) {
-        this.rectangleService.setRectangleType(rectangleType);
-        this.rectangleType = rectangleType;
+@HostListener('document:keydown', ['$event'])
+@HostListener('document:keyup', ['$event'])
+  changeSquareToRectangle(event: KeyboardEvent) {
+      if (event.shiftKey) {
+        if (!this.rectangleService.getshiftDown()) {
+            this.rectangleService.setshiftDown(true);
+        }
+      } else {
+        if (this.rectangleService.getshiftDown()) {
+            this.rectangleService.setshiftDown(false);
+        }
+      }
+  }
+
+    ngOnInit() {
+        this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
     }
-}
 
+    ngOnDestroy() {
+        this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
+    }
+
+    setThickness($event: Event) {
+        if ($event.target) {
+            this.rectangleService.setThickness(parseInt(($event.target as HTMLInputElement).value, 10));
+        }
+    }
+
+    setRectangleType(rectangleType: string) {
+        if (rectangleType === 'outline only' || rectangleType === 'fill only' || rectangleType === 'outline and fill') {
+            this.rectangleType = rectangleType;
+            this.rectangleService.setRectangleType(rectangleType);
+        }
+    }
 }
