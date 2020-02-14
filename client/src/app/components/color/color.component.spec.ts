@@ -1,9 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-
-import { ColorComponent } from './color.component';
-import { ColorService } from 'src/app/services/color/color.service';
 import { MatDialogModule } from '@angular/material';
+import { ColorService } from 'src/app/services/color/color.service';
+import { ColorComponent } from './color.component';
 
 describe('ColorComponent', () => {
     let component: ColorComponent;

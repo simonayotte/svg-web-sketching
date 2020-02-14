@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
-
 import { DrawPageComponent } from './draw-page.component';
+import { BrushComponent } from '../brush/brush.component';
+import { ColorComponent } from '../color/color.component';
 import { GuideComponent } from '../guide/guide.component';
 import { PencilComponent } from '../pencil/pencil.component';
-import { BrushComponent } from '../brush/brush.component';
 import { RectangleComponent } from '../rectangle/rectangle.component';
-import { ColorComponent } from '../color/color.component';
-import { FormsModule } from '@angular/forms';
+
 describe('DrawPageComponent', () => {
     let component: DrawPageComponent;
     let fixture: ComponentFixture<DrawPageComponent>;
@@ -43,7 +43,7 @@ describe('DrawPageComponent', () => {
     });
 
     it('#keyDown() should set #selectedOption to crayon if user presses on c ', () => {
-        let event: KeyboardEvent = new KeyboardEvent('keydown', {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'c',
         });
         component.keyDown(event);
@@ -51,10 +51,10 @@ describe('DrawPageComponent', () => {
     });
 
     it('#keyDown() should not set #selectedOption if user presses on invalid button ', () => {
-        let event: KeyboardEvent = new KeyboardEvent('keydown', {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'Enter',
         });
-        let oldSelectedOption = component.selectedOption;
+        const oldSelectedOption = component.selectedOption;
         component.keyDown(event);
         expect(component.selectedOption).toEqual(oldSelectedOption);
     });
@@ -68,15 +68,15 @@ describe('DrawPageComponent', () => {
         expect(component.isPanelColorWindowOpen).toEqual(false);
     });
     it('#swapColors should() swap #firstColor and #secondColor if the function has been called once', () => {
-        let oldFirstColor: string = component.firstColor;
-        let oldSecondColor: string = component.secondColor;
+        const oldFirstColor: string = component.firstColor;
+        const oldSecondColor: string = component.secondColor;
         component.swapColors();
         expect(component.firstColor).toEqual(oldSecondColor);
         expect(component.secondColor).toEqual(oldFirstColor);
     });
     it('#swapColors() should not swap #firstColor and #secondColor if the function has been called twice', () => {
-        let oldFirstColor: string = component.firstColor;
-        let oldSecondColor: string = component.secondColor;
+        const oldFirstColor: string = component.firstColor;
+        const oldSecondColor: string = component.secondColor;
         component.swapColors();
         component.swapColors();
         expect(component.firstColor).toEqual(oldFirstColor);
