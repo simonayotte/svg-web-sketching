@@ -41,6 +41,10 @@ export class LineService {
   setThickness(thickness: number) {
       this.thickness.next(thickness);
   }
+  
+  getThickness(): number {
+    return this.thickness.value;
+  }
 
   private canvasRef: ElementRef;
   private canvasContext: CanvasRenderingContext2D;
@@ -76,20 +80,16 @@ export class LineService {
   private isShiftKeyDown: boolean;
 
   connectLineEventHandler(event: MouseEvent): void {
-    let positionX = this.mousePositionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-    let positionY = this.mousePositionY = event.clientY;
+    let positionX = this.mousePositionX = event.offsetX;
+    let positionY = this.mousePositionY = event.offsetY;
     if (this.isShiftKeyDown) {
       let point = this.calculateAlignedPoint(positionX, positionY);
       this.connectLine(point.pointX, point.pointY);
+      this.previewAlignedLine(this.mousePositionX, this.mousePositionY);
     } else {
       this.connectLine(positionX, positionY);
+      this.previewLine(this.mousePositionX, this.mousePositionY);
     }
-    //Preview de ligne automatique
-      if (this.isShiftKeyDown) {
-        this.previewAlignedLine(this.mousePositionX, this.mousePositionY);
-      } else {
-        this.previewLine(this.mousePositionX, this.mousePositionY);
-      }
     this.coordinates.push(new Coordinate(positionX, positionY));
   }
 
@@ -128,8 +128,8 @@ export class LineService {
   }
   //MouseMoveEvent => PreviewLine
   previewLineEventHandler(event: MouseEvent) {
-    let positionX = this.mousePositionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-    let positionY = this.mousePositionY = event.clientY;
+    let positionX = this.mousePositionX = event.offsetX;
+    let positionY = this.mousePositionY = event.offsetY;
     if (this.getShiftKeyDown()) {
       this.previewAlignedLine(positionX, positionY);
     } else {
