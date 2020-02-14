@@ -71,7 +71,18 @@ describe('RectangleService', () => {
     expect(continueRectSpy).toHaveBeenCalled();
   });
 
-  
+  it('drawRect should correctly ',() => {
+    const service: RectangleService = TestBed.get(RectangleService);
+    //let startX=2; let startY=4; let width=2; let height=6;
+    const canvasContextclearRectSpy = spyOn(service.getCanvasContext(), 'clearRect');
+    const canvasContextputImageDataSpy = spyOn(service.getCanvasContext(), 'putImageData');
+    const canvasContextbeginPath = spyOn(service.getCanvasContext(),'beginPath');
+    expect(canvasContextclearRectSpy).toHaveBeenCalled();
+    expect(canvasContextputImageDataSpy).toHaveBeenCalled();
+    expect(canvasContextbeginPath).toHaveBeenCalled();
+    
+  });
+
 
   it('continueRect should correctly draw the rectangle',() => {
     const service: RectangleService = TestBed.get(RectangleService);
@@ -81,9 +92,11 @@ describe('RectangleService', () => {
     const drawRectSpy = spyOn(service, 'drawRect');
     document.dispatchEvent(testMouseMoveEvent);
     expect(continueRectSpy).toHaveBeenCalled();
-    expect(drawRectSpy).toHaveBeenCalled();
+    expect(drawRectSpy).toHaveBeenCalled(); 
+    // A completer
     
   });
+
 
   it('stopRect should unbind the event listener', () => {
     const service: RectangleService = TestBed.get(RectangleService);
