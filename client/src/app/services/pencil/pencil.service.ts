@@ -1,36 +1,15 @@
-import { ColorService } from 'src/app/services/color/color.service';
-import { Injectable, ElementRef } from '@angular/core';
-import { DrawStateService } from '../draw-state/draw-state.service';
+import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ColorService } from 'src/app/services/color/color.service';
+import { DrawStateService } from '../draw-state/draw-state.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class PencilService {
-    constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
-        //Get canvas reference
-        this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            if (canvasRef != null) this.canvasRef = canvasRef;
-        });
-        this.drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
-            if (canvasContext != null) this.canvasContext = canvasContext;
-        });
-        //Get draw page state
-
-        this.colorService.firstColorObs.subscribe((color: string) => (this.color = color));
-
-        //Bind this to event listeners
-        this.mouseMoveListener = this.continueDraw.bind(this);
-        this.mouseUpListener = this.stopDraw.bind(this);
-        this.mouseOutListener = this.stopDraw.bind(this);
-    }
 
     private thickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
     thicknessObs: Observable<number> = this.thickness.asObservable();
-
-    setThickess(thickness: number) {
-        this.thickness.next(thickness);
-    }
 
     private canvasRef: ElementRef;
     private canvasContext: CanvasRenderingContext2D;
@@ -41,20 +20,42 @@ export class PencilService {
 
     private color: string;
 
-    public lastX: number;
-    public lastY: number;
+    lastX: number;
+    lastY: number;
+
+    constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
+        // Get canvas reference
+        this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
+            if (canvasRef != null) { this.canvasRef = canvasRef; }
+        });
+        this.drawStateService.canvasContextObs.subscribe((canvasContext: CanvasRenderingContext2D) => {
+            if (canvasContext != null) { this.canvasContext = canvasContext; }
+        });
+        // Get draw page state
+
+        this.colorService.firstColorObs.subscribe((color: string) => (this.color = color));
+
+        // Bind this to event listeners
+        this.mouseMoveListener = this.continueDraw.bind(this);
+        this.mouseUpListener = this.stopDraw.bind(this);
+        this.mouseOutListener = this.stopDraw.bind(this);
+    }
+
+    setThickess(thickness: number) {
+        this.thickness.next(thickness);
+    }
 
     startDraw(event: MouseEvent): void {
         this.drawStateService.setIsDrawingStarted(true);
 
-        //Stroke style
+        // Stroke style
         this.canvasContext.lineJoin = 'round';
         this.canvasContext.lineCap = 'round';
         this.canvasContext.lineWidth = this.thickness.value;
         this.canvasContext.strokeStyle = this.color;
         this.canvasContext.fillStyle = this.color;
 
-        //Write circle when click only
+        // Write circle when click only
         this.canvasContext.beginPath();
         this.canvasContext.arc(event.offsetX, event.offsetY, this.thickness.value / 2, 0, 2 * Math.PI);
         this.canvasContext.closePath();
