@@ -1,6 +1,7 @@
 import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
 import { BrushComponent } from 'src/app/components/brush/brush.component';
 import { ColorComponent } from 'src/app/components/color/color.component';
@@ -10,8 +11,6 @@ import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
-import { MatDialogModule } from '@angular/material';
-
 
 describe('RectangleComponent', () => {
   let component: RectangleComponent;

@@ -104,6 +104,7 @@ export class RectangleService {
         this.initialY = mousePositionY;
 
         // Stroke style
+        this.canvasContext.lineWidth = this.thickness.value;
         this.canvasContext.lineJoin = 'miter';
         this.canvasContext.lineCap = 'square';
         this.canvasContext.strokeStyle = this.secondColor;
