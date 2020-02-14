@@ -1,16 +1,17 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ElementRef } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-
-import { BrushService } from './brush.service';
-import { DrawStateService } from '../draw-state/draw-state.service';
 import { MatDialogModule } from '@angular/material';
+
+import { DrawStateService } from '../draw-state/draw-state.service';
+import { BrushService } from './brush.service';
+
+import { BrushComponent } from 'src/app/components/brush/brush.component';
+import { ColorComponent } from 'src/app/components/color/color.component';
 import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
 import { GuideComponent } from 'src/app/components/guide/guide.component';
-import { ColorComponent } from 'src/app/components/color/color.component';
 import { PencilComponent } from 'src/app/components/pencil/pencil.component';
-import { BrushComponent } from 'src/app/components/brush/brush.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
-import { ElementRef } from '@angular/core';
 
 describe('BrushService', () => {
     let service: BrushService;
@@ -22,8 +23,8 @@ describe('BrushService', () => {
             declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent],
         });
         drawStateService = TestBed.get(DrawStateService);
-        let drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-        let brushFixture: ComponentFixture<BrushComponent> = TestBed.createComponent(BrushComponent);
+        const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
+        const brushFixture: ComponentFixture<BrushComponent> = TestBed.createComponent(BrushComponent);
         service = TestBed.get(BrushService);
         drawPageFixture.detectChanges();
         brushFixture.detectChanges();
@@ -45,7 +46,7 @@ describe('BrushService', () => {
         service.lastX = 0;
         service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            let mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
                 clientX: 300,
                 clientY: 400,
             });
@@ -61,7 +62,6 @@ describe('BrushService', () => {
         service.lastX = 0;
         service.lastY = 0;
         drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            canvasRef.nativeElement.mouseDown;
             const mouseDown: MouseEvent = new MouseEvent('mousedown', {
                 clientX: 0,
                 clientY: 0,
