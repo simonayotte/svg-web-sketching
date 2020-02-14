@@ -1,10 +1,9 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
-import { ColorService } from 'src/app/services/color/color.service';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, } from '@angular/core';
 import { MatDialog } from '@angular/material';
+import { ColorService } from 'src/app/services/color/color.service';
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
-//import { ConsoleReporter } from 'jasmine';
 
 @Component({
     selector: 'app-draw-page',
@@ -48,24 +47,24 @@ export class DrawPageComponent implements OnInit, OnDestroy {
 
     @ViewChild('canvas', { static: true }) canvasRef: ElementRef;
 
-    private isShowDrawOptions: boolean = false;
-    private isShowFormOptions: boolean = false;
-    private isShowToolOptions: boolean = false;
-    private isShowEditOptions: boolean = false;
-    private isShowSettingOptions: boolean = false;
-    private isDrawingStarted: boolean = false;
+    private isShowDrawOptions = false;
+    private isShowFormOptions = false;
+    private isShowToolOptions = false;
+    private isShowEditOptions = false;
+    private isShowSettingOptions = false;
+    private isDrawingStarted = false;
     private canvasWidth: number;
     private canvasHeight: number;
 
-    public workspaceColor: string = '#00000080';
-    public selectedOption: string;
+    workspaceColor = '#00000080';
+    selectedOption: string;
 
-    public firstColor: string;
-    public secondColor: string;
-    public canvasColor: string;
+    firstColor: string;
+    secondColor: string;
+    canvasColor: string;
 
-    public isPanelOpen: boolean;
-    public isPanelColorWindowOpen: boolean;
+    isPanelOpen: boolean;
+    isPanelColorWindowOpen: boolean;
 
     private keyDownListener: EventListener;
 
@@ -82,7 +81,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
 
     selectOption(option: string, isPanelOpen: boolean): void {
-        if (this.selectedOption == option && isPanelOpen) {
+        if (this.selectedOption === option && isPanelOpen) {
             this.drawStateService.setIsPanelOpen(this.isPanelOpen ? false : true);
             this.selectedOption = option;
             return;
@@ -109,7 +108,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
 
     keyDown(event: KeyboardEvent) {
-        let key: string = event.key;
+        const key: string = event.key;
         if (!this.isPanelColorWindowOpen) {
             switch (key) {
                 case '1':
@@ -132,18 +131,21 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
 
     openColorWindow(selectedColor: string): void {
-        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openPanelColorWindow(selectedColor);
+        if (selectedColor === 'first' || selectedColor === 'second' || selectedColor === 'canvas') {
+            this.colorService.openPanelColorWindow(selectedColor);
+        }
     }
 
     swapColors(): void {
-        let oldFirstColor: string = this.firstColor;
+        const oldFirstColor: string = this.firstColor;
         this.colorService.setFirstColor(this.secondColor);
         this.colorService.setSecondColor(oldFirstColor);
     }
     openDialog(): void {
-        let dialogRef = this.isDrawingStarted ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
+        const dialogRef = this.isDrawingStarted ?
+            this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
         window.removeEventListener('keydown', this.keyDownListener);
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe( (result) => {
             window.addEventListener('keydown', this.keyDownListener);
         });
     }
