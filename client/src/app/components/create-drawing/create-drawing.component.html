@@ -4,7 +4,7 @@
   <form [formGroup]='drawingForm'>
     <label>
       Largeur(px):
-      <input type='number' (keydown) = 'toggleIsWidthChanged()' formControlName='width'>
+      <input type='number' (keydown) = 'setIsWidthChangedToTrue()' formControlName='width'>
       <div *ngIf = 'width.errors?.required'class="alert alert-danger">
         La largeur est requise
       </div>
@@ -16,7 +16,7 @@
     
     <label>
       Longueur(px):
-      <input type='number' (keydown) = 'toggleIsHeightChanged()' formControlName='height'>
+      <input type='number' (keydown) = 'setIsHeightChangedToTrue()' formControlName='height'>
       <div *ngIf = 'height.errors?.required'class="alert alert-danger">
         La longueur est requise
       </div>
@@ -30,7 +30,7 @@
     </label>
     <br>
     <button type='submit' [disabled]='!drawingForm.valid' data-dismiss='modal' (click)='onSubmit()' routerLink="/draw">Soumettre</button>
-    <button (click) = 'closeDialog()'>Fermer</button>
+    <button mat-dialog-close>Fermer</button>
   </form>
 </div>
 

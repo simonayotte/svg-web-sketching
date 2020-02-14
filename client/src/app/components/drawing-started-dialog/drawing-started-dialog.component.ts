@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialogRef, MatDialog } from '@angular/material';
-import { CreateDrawingComponent } from '../create-drawing/create-drawing.component'
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { CreateDrawingComponent } from 'src/app/components/create-drawing/create-drawing.component'
 
 @Component({
   selector: 'app-drawing-started-dialog',
@@ -8,15 +8,14 @@ import { CreateDrawingComponent } from '../create-drawing/create-drawing.compone
   styleUrls: ['./drawing-started-dialog.component.scss']
 })
 export class DrawingStartedDialogComponent implements OnInit {
-  constructor(private dialogRef:MatDialogRef<DrawingStartedDialogComponent>,private dialog:MatDialog) { }
+  constructor(private dialogRef: MatDialogRef<DrawingStartedDialogComponent>, private dialog: MatDialog) {}
   openCreateDrawing(): void {
     this.closeDialog();
     this.dialog.open(CreateDrawingComponent)
   }
-  closeDialog(){
+  closeDialog() {
     this.dialogRef.close()
   }
-  ngOnInit() {
+  ngOnInit() {/* Nothing in ngOnInit() */}
   }
-
 }
