@@ -1,4 +1,4 @@
-import { Injectable, ElementRef, OnInit } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from 'src/app/services/color/color.service';
@@ -6,7 +6,7 @@ import { ColorService } from 'src/app/services/color/color.service';
 @Injectable({
   providedIn: 'root'
 })
-export class LineService implements OnInit {
+export class LineService {
 
   constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
     this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
@@ -25,9 +25,8 @@ export class LineService implements OnInit {
     this.mouseMoveListener = this.previewLineEventHandler.bind(this);
     this.mouseOutListener = this.stopLine.bind(this);
     this.mouseDoubleDownListener = this.stopLine.bind(this);
-  }
 
-  ngOnInit(){
+    //Deplacement de ce qu'il y avait dans le ngOnInit()
     this.canvasRef.nativeElement.addEventListener('dblclick', this.mouseDoubleDownListener);
     this.canvasHeight = 2000;
     this.canvasWidth = 2000;
@@ -61,7 +60,6 @@ export class LineService implements OnInit {
 
   //Attributs pour les jonctions entre les points
   private lineHasJunction: boolean;
-  //private junctionPointRadius: number;
   private junctionPointThickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
   junctionPointThicknessObs: Observable<number> = this.thickness.asObservable();
 
@@ -81,9 +79,20 @@ export class LineService implements OnInit {
   private isShiftKeyDown: boolean;
 
   connectLineEventHandler(event: MouseEvent): void {
-    let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
-    let positionY = event.clientY;
-    this.connectLine(positionX, positionY);
+    let positionX = this.mousePositionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+    let positionY = this.mousePositionY = event.clientY;
+    if (this.isShiftKeyDown) {
+      let point = this.calculateAlignedPoint(positionX, positionY);
+      this.connectLine(point.pointX, point.pointY);
+    } else {
+      this.connectLine(positionX, positionY);
+    }
+    //Preview de ligne automatique
+      if (this.isShiftKeyDown) {
+        this.previewAlignedLine(this.mousePositionX, this.mousePositionY);
+      } else {
+        this.previewLine(this.mousePositionX, this.mousePositionY);
+      }
     this.coordinates.push(new Coordinate(positionX, positionY));
   }
 
@@ -95,6 +104,7 @@ export class LineService implements OnInit {
       this.canvasContext.lineWidth = this.thickness.value;
       this.canvasContext.strokeStyle = this.color;
       this.canvasContext.fillStyle = this.color;
+
 
       //Si ce n'est pas le premier point de la sequence de ligne
       if(this.lastX && this.lastY) {
@@ -148,8 +158,13 @@ export class LineService implements OnInit {
       this.coordinates.forEach(element => {
         this.connectLine(element.pointX, element.pointY);
       });
-      //TODO: Ajouter le segment temporaire de preview
-      this.previewLine(this.mousePositionX, this.mousePositionY);
+
+      //Ajouter le segment temporaire de preview
+      if (this.isShiftKeyDown) {
+        this.previewAlignedLine(this.mousePositionX, this.mousePositionY);
+      } else {
+        this.previewLine(this.mousePositionX, this.mousePositionY);
+      }
     }
   }
 
@@ -215,65 +230,63 @@ export class LineService implements OnInit {
   }
 
   previewAlignedLine(positionX: number, positionY: number): void {
+    if(this.lastX && this.lastY) {
+      let point = this.calculateAlignedPoint(positionX, positionY);
+      this.canvasContext.clearRect(0,0, this.canvasWidth, this.canvasHeight);
+      this.canvasContext.putImageData(this.canvasImage, 0, 0,);
+      this.drawLine(point.pointX, point.pointY);
+    }
+  }
+
+  calculateAlignedPoint(positionX :number, positionY :number): Coordinate {
     if (this.lastX && this.lastY){
       let adjacentLineLength = Math.abs(positionX - this.lastX);  
       let oppositeLineLength = Math.abs(positionY - this.lastY);
       let hypothenuseLineLength = Math.sqrt(Math.pow(adjacentLineLength,2) + Math.pow(oppositeLineLength,2));
       
       let angle = Math.atan(oppositeLineLength/adjacentLineLength);
-
-      //Cadran 4
       if (positionX - this.lastX >= 0 && positionY - this.lastY >= 0) {
         if (angle >= 0 && angle < Math.PI/6){
           //Retourner point avec alignement 0deg
-          let point = this.getPointHypothenuseEndPoint(0, hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
         }
         //Alignement 45deg
         else if (angle > Math.PI/6 && angle <= Math.PI/3){
-          let point = this.getPointHypothenuseEndPoint(Math.PI/4, hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(Math.PI/4, hypothenuseLineLength);
         }
         //Alignement 90deg
         else if (angle > Math.PI/3 && angle <= Math.PI/2){
-          let point = this.getPointHypothenuseEndPoint(Math.PI/2, hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(Math.PI/2, hypothenuseLineLength);
         }
       }
-    
+  
       //Cadran 3
       else if (positionX - this.lastX < 0 && positionY - this.lastY >= 0) {
         if (angle >= 0 && angle < Math.PI/6){
-          let point = this.getPointHypothenuseEndPoint(0, -hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
         }
         //Alignement 45deg
         else if (angle > Math.PI/6 && angle <= Math.PI/3){
-          let point = this.getPointHypothenuseEndPoint(-Math.PI/4, -hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(-Math.PI/4, -hypothenuseLineLength);
         }
         //Alignement 90deg
         else if (angle > Math.PI/3 && angle <= Math.PI/2){
-          let point = this.getPointHypothenuseEndPoint(Math.PI/2, hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(Math.PI/2, hypothenuseLineLength);
         }    
       }
 
       //Cadran 2
       else if (positionX - this.lastX >= 0 && positionY - this.lastY < 0) {
         if (angle >= 0 && angle < Math.PI/6){
-          let point = this.getPointHypothenuseEndPoint(0, hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
         }
         //Alignement 45deg
         else if (angle > Math.PI/6 && angle <= Math.PI/3){
-          let point = this.getPointHypothenuseEndPoint(-Math.PI/4, hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(-Math.PI/4, hypothenuseLineLength);
         }
         //Alignement 90deg
         else if (angle > Math.PI/3 && angle <= Math.PI/2){
-          let point = this.getPointHypothenuseEndPoint(Math.PI/2, -hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(Math.PI/2, -hypothenuseLineLength);
         }         
       }
 
@@ -281,25 +294,23 @@ export class LineService implements OnInit {
       else if (positionX - this.lastX < 0 && positionY - this.lastY < 0) {
         if (angle >= 0 && angle < Math.PI/6){
           //Retourner point avec alignement 0deg
-          let point = this.getPointHypothenuseEndPoint(0, -hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
         }
         //Alignement 45deg
         else if (angle > Math.PI/6 && angle <= Math.PI/3){
-          let point = this.getPointHypothenuseEndPoint(Math.PI/4, -hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(Math.PI/4, -hypothenuseLineLength);
         }
         //Alignement 90deg
         else if (angle > Math.PI/3 && angle <= Math.PI/2){
-          let point = this.getPointHypothenuseEndPoint(Math.PI/2, -hypothenuseLineLength);
-          this.previewLine(point.pointX, point.pointY);
+          return this.calculateAngledLineEndPoint(Math.PI/2, -hypothenuseLineLength);
         }
       }
     }
+    return new Coordinate(0,0);
   }
 
   //Trouve le point d'apogée de l'hypothenuse d'un triangle
-  getPointHypothenuseEndPoint(angle: number, hypothenuse: number) {
+  calculateAngledLineEndPoint(angle: number, hypothenuse: number): Coordinate {
     if (this.lastX && this.lastY){
       let x = Math.cos(angle) * hypothenuse + this.lastX; //Retourne valeur entre -1 et 1
       let y = Math.sin(angle) * hypothenuse + this.lastY; //Retourne valeur entre -1 et 1
@@ -321,4 +332,3 @@ class Coordinate {
     this.pointY = pointY;
   }
 }
-
