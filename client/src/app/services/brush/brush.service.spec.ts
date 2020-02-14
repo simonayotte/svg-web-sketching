@@ -3,7 +3,7 @@ import { FormsModule } from '@angular/forms';
 
 import { BrushService } from './brush.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
-
+import { MatDialogModule } from '@angular/material';
 import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
 import { GuideComponent } from 'src/app/components/guide/guide.component';
 import { ColorComponent } from 'src/app/components/color/color.component';
@@ -18,7 +18,7 @@ describe('BrushService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule],
+            imports: [FormsModule, MatDialogModule],
             declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent],
         });
         drawStateService = TestBed.get(DrawStateService);
