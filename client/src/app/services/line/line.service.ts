@@ -105,7 +105,7 @@ export class LineService {
       this.canvasContext.strokeStyle = this.color;
       this.canvasContext.fillStyle = this.color;
 
-
+      
       //Si ce n'est pas le premier point de la sequence de ligne
       if(this.lastX && this.lastY) {
         if(this.lineHasJunction){
@@ -199,8 +199,10 @@ export class LineService {
 
   }
 
-  //TODO: Ajouter fermeture ligne pour 3px
   stopLine(event: MouseEvent): void {
+    if(this.lastX && this.lastY) {
+      this.previewLine(this.lastX, this.lastY);
+    }
     this.lastX = undefined;
     this.lastY = undefined;
     //Enlever tout les elements de l'array
