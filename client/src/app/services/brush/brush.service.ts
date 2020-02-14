@@ -25,7 +25,7 @@ export class BrushService {
     private canvasRef: ElementRef;
     private canvasContext: CanvasRenderingContext2D;
 
-    private pattern: CanvasPattern | null;
+    public pattern: CanvasPattern | null;
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
@@ -33,8 +33,8 @@ export class BrushService {
 
     private firstColor: string;
 
-    private lastX: number;
-    private lastY: number;
+    public lastX: number;
+    public lastY: number;
 
     private thickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
     thicknessObs: Observable<number> = this.thickness.asObservable();

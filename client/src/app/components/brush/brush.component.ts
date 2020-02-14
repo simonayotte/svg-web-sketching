@@ -16,7 +16,6 @@ export class BrushComponent implements OnInit, OnDestroy {
         });
         this.colorService.firstColorObs.subscribe(() => this.setTexture(this.texture)); //to load texture with different color
 
-        this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => (this.canvasRef = canvasRef));
         this.mouseDownListener = this.brushService.startDraw.bind(this.brushService);
     }
 
@@ -27,7 +26,10 @@ export class BrushComponent implements OnInit, OnDestroy {
     private mouseDownListener: EventListener;
 
     ngOnInit() {
-        this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
+        this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
+            this.canvasRef = canvasRef;
+            this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
+        });
     }
 
     ngOnDestroy() {

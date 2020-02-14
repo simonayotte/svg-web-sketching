@@ -17,15 +17,17 @@ export class ColorComponent implements OnInit {
     private squareContext: CanvasRenderingContext2D;
     private barContext: CanvasRenderingContext2D;
 
-    private colorRGBA: number[];
-    private colorHex: string;
+    public colorRGBA: number[];
+    public colorHex: string;
 
-    private hexRegExp: RegExp = new RegExp('^[A-Fa-f0-9]{6}$');
+    private rgbHexRegExp: RegExp = new RegExp('^[A-Fa-f0-9]{6}$');
 
-    protected isRGBError: boolean = false;
-    protected isHexError: boolean = false;
+    private rgbaHexRegExp: RegExp = new RegExp('^#[A-Fa-f0-9]{8}$');
 
-    protected usedColors: string[] = [];
+    public isRGBError: boolean = false;
+    public isHexError: boolean = false;
+
+    public usedColors: string[] = [];
     ngOnInit() {
         this.squareContext = this.squareRef.nativeElement.getContext('2d');
         this.barContext = this.barRef.nativeElement.getContext('2d');
@@ -42,11 +44,13 @@ export class ColorComponent implements OnInit {
             } else if (this.selectedColor == 'second') {
                 this.colorService.secondColorObs.subscribe((color: string) => {
                     this.colorRGBA = this.toRGBA(color);
+                    this.colorHex = color.substring(1, color.length - 2);
                     this.fillSquare();
                 });
             } else if (this.selectedColor == 'canvas') {
                 this.colorService.canvasColorObs.subscribe((color: string) => {
                     this.colorRGBA = this.toRGBA(color);
+                    this.colorHex = color.substring(1, color.length - 2);
                     this.fillSquare();
                 });
             }
@@ -58,7 +62,7 @@ export class ColorComponent implements OnInit {
     }
 
     setRGBWithHex(): void {
-        if (this.hexRegExp.test(this.colorHex)) {
+        if (this.rgbHexRegExp.test(this.colorHex)) {
             this.colorRGBA = [...this.toRGB(this.colorHex), this.colorRGBA[3]];
             this.fillSquare();
             this.isHexError = false;
@@ -98,22 +102,28 @@ export class ColorComponent implements OnInit {
     }
 
     toRGB(hex: string): number[] {
-        let r: number = parseInt(hex.slice(0, 2), 16);
-        let g: number = parseInt(hex.slice(2, 4), 16);
-        let b: number = parseInt(hex.slice(4, 6), 16);
-        return [r, g, b];
+        if (this.rgbHexRegExp.test(hex)) {
+            let r: number = parseInt(hex.slice(0, 2), 16);
+            let g: number = parseInt(hex.slice(2, 4), 16);
+            let b: number = parseInt(hex.slice(4, 6), 16);
+            return [r, g, b];
+        }
+        return [0, 0, 0];
     }
 
     toRGBA(hex: string): number[] {
-        let r: number = parseInt(hex.slice(1, 3), 16);
-        let g: number = parseInt(hex.slice(3, 5), 16);
-        let b: number = parseInt(hex.slice(5, 7), 16);
-        let a: number = parseInt(hex.slice(7, 9), 16);
+        if (this.rgbaHexRegExp.test(hex)) {
+            let r: number = parseInt(hex.slice(1, 3), 16);
+            let g: number = parseInt(hex.slice(3, 5), 16);
+            let b: number = parseInt(hex.slice(5, 7), 16);
+            let a: number = parseInt(hex.slice(7, 9), 16);
 
-        return [r, g, b, a];
+            return [r, g, b, a];
+        }
+        return [0, 0, 0, 1];
     }
 
-    private fillSquare(): void {
+    fillSquare(): void {
         const width: number = this.squareRef.nativeElement.width;
         const height: number = this.squareRef.nativeElement.height;
         this.squareContext.fillStyle = '#' + this.colorHex;
@@ -131,7 +141,7 @@ export class ColorComponent implements OnInit {
         this.squareContext.fillStyle = blackGradient;
         this.squareContext.fillRect(0, 0, width, height);
     }
-    private fillBar(): void {
+    fillBar(): void {
         const width: number = this.barRef.nativeElement.width;
         const height: number = this.barRef.nativeElement.height;
 

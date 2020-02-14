@@ -31,14 +31,14 @@ export class ColorService {
     private usedColors: BehaviorSubject<Array<string>> = new BehaviorSubject<Array<string>>(new Array(10));
     usedColorsObs: Observable<Array<string>> = this.usedColors.asObservable();
 
-    private lastUsedColorIndex: number = 0;
+    public lastUsedColorIndex: number = 0;
 
     addUsedColor(color: string) {
         let temp = this.usedColors.value;
         temp[this.lastUsedColorIndex] = color;
         this.usedColors.next(temp);
-        if (this.lastUsedColorIndex === this.usedColors.value.length - 1) this.lastUsedColorIndex = 0;
-        else this.lastUsedColorIndex++;
+
+        this.lastUsedColorIndex = (this.lastUsedColorIndex + 1) % 10;
     }
 
     private selectedColor: BehaviorSubject<string> = new BehaviorSubject<string>('');
