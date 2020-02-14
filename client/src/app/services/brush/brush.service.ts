@@ -100,6 +100,7 @@ export class BrushService implements OnInit, OnDestroy {
     startDraw(event: MouseEvent): void {
         //comment tester une fonction comme celle la
         let positionX = this.isPanelOpen ? event.clientX - 252 : event.clientX - 52;
+        this.drawStateService.setIsDrawingStarted(true);
 
         //Stroke style
         this.canvasContext.lineJoin = 'round';
