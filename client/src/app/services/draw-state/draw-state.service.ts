@@ -10,8 +10,15 @@ export class DrawStateService {
     private canvasRef: BehaviorSubject<ElementRef | null> = new BehaviorSubject<ElementRef | null>(null);
     canvasRefObs: Observable<ElementRef | null> = this.canvasRef.asObservable();
 
+    private isDrawingStarted: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+    isDrawingStartedObs: Observable<boolean> = this.isDrawingStarted.asObservable();
+
     setCanvasRef(canvasRef: ElementRef) {
         this.canvasRef.next(canvasRef);
+    }
+
+    setIsDrawingStarted(isDrawingStarted:boolean){
+        this.isDrawingStarted.next(isDrawingStarted);
     }
 
     private canvasContext: BehaviorSubject<CanvasRenderingContext2D | null> = new BehaviorSubject<CanvasRenderingContext2D | null>(null);
@@ -26,6 +33,7 @@ export class DrawStateService {
 
     setIsPanelOpen(isPanelOpen: boolean): void {
         this.isPanelOpen.next(isPanelOpen);
+        
     }
 
     private canvasWidth: BehaviorSubject<number> = new BehaviorSubject<number>(750);

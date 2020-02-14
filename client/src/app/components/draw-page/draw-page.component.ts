@@ -1,6 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { ColorService } from 'src/app/services/color/color.service';
+import { MatDialog} from '@angular/material'
+import { CreateDrawingComponent } from '../create-drawing/create-drawing.component'
+import { DrawingStartedDialogComponent} from '../drawing-started-dialog/drawing-started-dialog.component'
+//import { ConsoleReporter } from 'jasmine';
+
 
 @Component({
     selector: 'app-draw-page',
@@ -8,12 +13,17 @@ import { ColorService } from 'src/app/services/color/color.service';
     styleUrls: ['./draw-page.component.scss'],
 })
 export class DrawPageComponent implements OnInit, OnDestroy {
-    constructor(private drawStateService: DrawStateService, private colorService: ColorService) {
+    constructor(private drawStateService: DrawStateService, private colorService: ColorService, private dialog:MatDialog
+        ) {
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => {
             this.isPanelOpen = isPanelOpen;
         });
-        this.colorService.isColorWindowOpenObs.subscribe((isColorWindowOpen: boolean) => {
-            this.isColorWindowOpen = isColorWindowOpen;
+        
+        this.drawStateService.isDrawingStartedObs.subscribe((isDrawingStarted: boolean) => {
+            this.isDrawingStarted = isDrawingStarted;
+        });
+        this.colorService.isPanelColorWindowOpenObs.subscribe((isPanelColorWindowOpen: boolean) => {
+            this.isPanelColorWindowOpen = isPanelColorWindowOpen;
         });
 
         this.colorService.canvasColorObs.subscribe((canvasColor: string) => {
@@ -45,6 +55,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     private isShowToolOptions: boolean = false;
     private isShowEditOptions: boolean = false;
     private isShowSettingOptions: boolean = false;
+    private isDrawingStarted: boolean = false;
     private canvasWidth: number;
     private canvasHeight: number;
 
@@ -56,13 +67,12 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     protected canvasColor: string;
 
     private isPanelOpen: boolean;
-    protected isColorWindowOpen: boolean;
+    protected isPanelColorWindowOpen: boolean;
 
     private keyDownListener: EventListener;
 
     ngOnInit() {
         this.drawStateService.setCanvasRef(this.canvasRef);
-
         this.drawStateService.setCanvasContext(this.canvasRef.nativeElement.getContext('2d'));
 
         this.canvasRef.nativeElement.width = this.canvasWidth;
@@ -113,7 +123,7 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
     keyDown(event: KeyboardEvent) {
         let key: string = event.key;
-        if (!this.isColorWindowOpen) {
+        if (!this.isPanelColorWindowOpen) {
             switch (key) {
                 case '1':
                     this.selectOption('Rectangle', true);
@@ -124,12 +134,18 @@ export class DrawPageComponent implements OnInit, OnDestroy {
                 case 'w':
                     this.selectOption('Pinceau', true);
                     break;
+                case 'o':
+                    if (event.ctrlKey){
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.openDialog();
+                    }
             }
         }
     }
 
     openColorWindow(selectedColor: string): void {
-        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openColorWindow(selectedColor);
+        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openPanelColorWindow(selectedColor);
     }
 
     swapColors(): void {
@@ -137,4 +153,11 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.colorService.setFirstColor(this.secondColor);
         this.colorService.setSecondColor(oldFirstColor);
     }
+    openDialog(): void {
+        let dialogRef = this.isDrawingStarted ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
+        window.removeEventListener('keydown', this.keyDownListener);
+        dialogRef.afterClosed().subscribe(result => {
+            window.addEventListener('keydown',this.keyDownListener);
+            })
+    }  
 }

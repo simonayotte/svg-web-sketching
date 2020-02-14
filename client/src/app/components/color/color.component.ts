@@ -7,13 +7,17 @@ import { ColorService } from 'src/app/services/color/color.service';
     styleUrls: ['./color.component.scss'],
 })
 export class ColorComponent implements OnInit {
-    constructor(private colorService: ColorService) {}
+    constructor(private colorService: ColorService) {
+    this.colorService.isFormColorWindowOpenObs.subscribe((isFormColorWindowOpen) => {
+        this.isFormColorWindowOpen = isFormColorWindowOpen
+    });
+    }
 
     @ViewChild('square', { static: true }) squareRef: ElementRef;
     @ViewChild('bar', { static: true }) barRef: ElementRef;
 
     private selectedColor: string;
-
+    private isFormColorWindowOpen:boolean;
     private squareContext: CanvasRenderingContext2D;
     private barContext: CanvasRenderingContext2D;
 
@@ -167,7 +171,13 @@ export class ColorComponent implements OnInit {
         } else if (this.selectedColor == 'second') {
             this.colorService.setSecondColor(hex);
         } else if (this.selectedColor == 'canvas') {
-            this.colorService.setCanvasColor(hex);
+            if(!this.isFormColorWindowOpen){
+                this.colorService.setCanvasColor(hex);
+            }
+            else
+            {
+                this.colorService.setSelectedCanvasColor(hex);
+            }
         }
         this.colorService.closeColorWindow();
         this.colorService.addUsedColor(hex);

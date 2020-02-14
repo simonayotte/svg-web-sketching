@@ -1,9 +1,10 @@
+<app-color *ngIf = 'isFormColorWindowOpen'></app-color>
 <h1 mat-dialog-title>Créer un dessin</h1>
 <div mat-dialog-content>
   <form [formGroup]='drawingForm'>
     <label>
       Largeur(px):
-      <input type='number' (keydown) = 'toggleIsWidthChanged()' formControlName='width'>
+      <input type='number' (keydown) = 'setIsWidthChangedToTrue()' formControlName='width'>
       <div *ngIf = 'width.errors?.required'class="alert alert-danger">
         La largeur est requise
       </div>
@@ -12,40 +13,24 @@
       </div>
     </label>
     <br>
+    
     <label>
       Longueur(px):
-      <input type='number' (keydown) = 'toggleIsHeightChanged()' formControlName='height'>
+      <input type='number' (keydown) = 'setIsHeightChangedToTrue()' formControlName='height'>
       <div *ngIf = 'height.errors?.required'class="alert alert-danger">
         La longueur est requise
       </div>
       <div *ngIf = 'height.errors?.min'class="alert alert-danger">
         La longueur doit être positive
       </div>
+    </label><br>
+    
+    <label>
+      <button [ngStyle]="{ 'background-color': selectedCanvasColor }" (click) = 'openColorWindow()'>Couleur d'arrière plan</button>
     </label>
     <br>
-    <label *ngIf = 'isRGB'>
-      <input type = 'text' value = "(255,255,255)" formControlName = 'rgb'>
-      <button [disabled] = 'rgb.errors?.pattern' (click)=changeColor()>OK</button>
-      <div *ngIf = 'rgb.errors?.pattern'class="alert alert-danger">
-        La couleur doit prendre le format suivant (x,x,x) avec x entre 0 et 255
-      </div>
-    </label>
-
-    <label *ngIf = 'isHEX'>
-      <input type = 'text' value = '#ffffff' formControlName = 'hex' pattern = '#[0-9a-fA-F]{6}'>
-      <button [disabled] = 'hex.errors?.pattern' (click)=changeColor()>OK</button>
-      <div *ngIf = 'hex.errors?.pattern'class="alert alert-danger">
-        La couleur doit prendre le format suivant #xxxxxx avec x entre 0 et 9 ou entre a et f
-      </div>
-    </label>
-
-    <label>
-      <input type = 'color' value = '#ffffff' formControlName = 'backgroundColor'>
-    </label><br>
-    <button (click)='toggleHEX()'>HEX</button>
-    <button (click)='toggleRGB()'>RGB</button><br>
     <button type='submit' [disabled]='!drawingForm.valid' data-dismiss='modal' (click)='onSubmit()' routerLink="/draw">Soumettre</button>
-    <button (click) = 'closeDialog()'>Fermer</button>
+    <button mat-dialog-close>Fermer</button>
   </form>
 </div>
 
