@@ -12,7 +12,7 @@ export class LineService {
     thicknessObs: Observable<number> = this.thickness.asObservable();
 
     private canvasRef: ElementRef;
-    public canvasContext: CanvasRenderingContext2D;
+    canvasContext: CanvasRenderingContext2D;
 
     // private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
@@ -257,7 +257,8 @@ export class LineService {
         return new Coordinate(0, 0);
     }
 
-    findCadrant(hypothenuseLineLength: number, angle: number, positionX: number, positionY: number, lastX: number, lastY: number): Coordinate {
+    findCadrant(hypothenuseLineLength: number, angle: number, positionX: number,
+                positionY: number, lastX: number, lastY: number): Coordinate {
             if (positionX - lastX >= 0 && positionY - lastY >= 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     // Retourner point avec alignement 0deg
