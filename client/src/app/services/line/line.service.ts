@@ -19,8 +19,8 @@ export class LineService {
     private mouseOutListener: EventListener;
     private mouseDoubleDownListener: EventListener;
 
-    public mousePositionX: number;
-    public mousePositionY: number;
+    mousePositionX: number;
+    mousePositionY: number;
 
     private color: string;
 
@@ -29,15 +29,15 @@ export class LineService {
     private junctionPointThickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
     junctionPointThicknessObs: Observable<number> = this.thickness.asObservable();
 
-    public lastX?: number;
-    public lastY?: number;
+    lastX?: number;
+    lastY?: number;
 
     private canvasWidth: number;
     private canvasHeight: number;
     private canvasImage: ImageData;
 
     // Structure pour save les points pour annuler le dernier segment
-    private coordinates: Coordinate[];
+    coordinates: Coordinate[];
 
     // Attributs pour l'alignement de segment
     private isShiftKeyDown: boolean;
@@ -82,6 +82,10 @@ export class LineService {
     connectLineEventHandler(event: MouseEvent): void {
         const positionX = (this.mousePositionX = event.offsetX);
         const positionY = (this.mousePositionY = event.offsetY);
+        this.getPointPosition(positionX, positionY);
+    }
+
+    getPointPosition(positionX: number, positionY: number): void {
         if (this.isShiftKeyDown) {
             const point = this.calculateAlignedPoint(positionX, positionY);
             this.connectLine(point.pointX, point.pointY);
