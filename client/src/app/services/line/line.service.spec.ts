@@ -207,7 +207,7 @@ describe('LineService', () => {
         const oppositeLineLengthTest = Math.abs(2 - service.lastY);
         const hypothenuseLineLengthTest = Math.sqrt(Math.pow(adjacentLineLengthTest, 2) + Math.pow(oppositeLineLengthTest, 2));
         const angleTest = Math.atan(oppositeLineLengthTest / adjacentLineLengthTest);
-        service.calculateAlignedPoint(2,2);
+        service.calculateAlignedPoint(2, 2);
         expect(findCadrantSpy).toHaveBeenCalledWith(hypothenuseLineLengthTest, angleTest, 2, 2, 1, 1);
     });
 
