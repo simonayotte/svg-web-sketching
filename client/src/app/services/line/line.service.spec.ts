@@ -101,7 +101,7 @@ describe('LineService', () => {
 
       service.lastX = 100;
       service.lastY = 200;
-
+      service.canvasImagePrevious = new ImageData(5, 5);
       service.cancelSegment();
       expect(service.coordinates.length).toBe(1);
       service.cancelSegment();
@@ -117,7 +117,7 @@ describe('LineService', () => {
       service.coordinates.push(coord1);
       service.coordinates.push(coord2);
       service.coordinates.push(coord3);
-
+      service.canvasImagePrevious = new ImageData(5, 5);
       service.cancelLine();
       expect(service.coordinates.length).toBe(0);
     });

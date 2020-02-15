@@ -35,6 +35,7 @@ export class LineService {
     private canvasWidth: number;
     private canvasHeight: number;
     private canvasImage: ImageData;
+    canvasImagePrevious: ImageData;
 
     // Structure pour save les points pour annuler le dernier segment
     coordinates: Coordinate[];
@@ -66,7 +67,6 @@ export class LineService {
         // Deplacement de ce qu'il y avait dans le ngOnInit()
         this.canvasHeight = 2000;
         this.canvasWidth = 2000;
-        // this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
         this.coordinates = new Array<Coordinate>();
         this.setJunctionType(true);
     }
@@ -115,6 +115,7 @@ export class LineService {
             this.lastY = positionY;
         } else {
             // Si c'est le premier point de la sequence
+            this.canvasImagePrevious = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
             this.drawPoint(positionX, positionY);
             this.lastX = positionX;
             this.lastY = positionY;
@@ -154,6 +155,7 @@ export class LineService {
             this.lastX = undefined;
             this.lastY = undefined;
             this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+            this.canvasContext.putImageData(this.canvasImagePrevious, 0, 0);
             this.coordinates.forEach( (element) => {
                 this.connectLine(element.pointX, element.pointY);
             });
@@ -175,6 +177,8 @@ export class LineService {
             this.coordinates.pop();
         }
         this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
+        this.canvasContext.putImageData(this.canvasImagePrevious, 0, 0);
+        this.canvasImagePrevious = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
         this.lastX = undefined;
         this.lastY = undefined;
     }
@@ -215,7 +219,7 @@ export class LineService {
         while (this.coordinates.length !== 0) {
             this.coordinates.pop();
         }
-        this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
+        this.canvasImagePrevious = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
     }
@@ -252,7 +256,7 @@ export class LineService {
             const oppositeLineLength = Math.abs(positionY - this.lastY);
             const hypothenuseLineLength = Math.sqrt(Math.pow(adjacentLineLength, 2) + Math.pow(oppositeLineLength, 2));
             const angle = Math.atan(oppositeLineLength / adjacentLineLength);
-            this.findCadrant(hypothenuseLineLength, angle, positionX, positionY, this.lastX, this.lastY);
+            return this.findCadrant(hypothenuseLineLength, angle, positionX, positionY, this.lastX, this.lastY);
         }
         return new Coordinate(0, 0);
     }
@@ -315,8 +319,6 @@ export class LineService {
                 if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
                     return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
                 }
-            } else {
-                return new Coordinate(0, 0);
             }
             return new Coordinate(0, 0);
     }
