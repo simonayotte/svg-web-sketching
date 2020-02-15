@@ -251,9 +251,15 @@ export class LineService {
             const adjacentLineLength = Math.abs(positionX - this.lastX);
             const oppositeLineLength = Math.abs(positionY - this.lastY);
             const hypothenuseLineLength = Math.sqrt(Math.pow(adjacentLineLength, 2) + Math.pow(oppositeLineLength, 2));
-
             const angle = Math.atan(oppositeLineLength / adjacentLineLength);
-            if (positionX - this.lastX >= 0 && positionY - this.lastY >= 0) {
+            this.findCadrant(hypothenuseLineLength, angle, positionX, positionY, this.lastX, this.lastY);
+
+        }
+        return new Coordinate(0, 0);
+    }
+
+    findCadrant(hypothenuseLineLength: number, angle: number, positionX: number, positionY: number, lastX: number, lastY: number): Coordinate {
+            if (positionX - lastX >= 0 && positionY - lastY >= 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     // Retourner point avec alignement 0deg
                     return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
@@ -268,7 +274,7 @@ export class LineService {
                 }
             } else
             // Cadran 3
-            if (positionX - this.lastX < 0 && positionY - this.lastY >= 0) {
+            if (positionX - lastX < 0 && positionY - lastY >= 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
                 } else
@@ -282,7 +288,7 @@ export class LineService {
                 }
             } else
             // Cadran 2
-            if (positionX - this.lastX >= 0 && positionY - this.lastY < 0) {
+            if (positionX - lastX >= 0 && positionY - lastY < 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
                 } else
@@ -296,7 +302,7 @@ export class LineService {
                 }
             } else
             // Cadran 1
-            if (positionX - this.lastX < 0 && positionY - this.lastY < 0) {
+            if (positionX - lastX < 0 && positionY - lastY < 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     // Retourner point avec alignement 0deg
                     return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
@@ -309,9 +315,10 @@ export class LineService {
                 if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
                     return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
                 }
+            } else {
+                return new Coordinate(0, 0);
             }
-        }
-        return new Coordinate(0, 0);
+            return new Coordinate(0, 0);
     }
 
     // Trouve le point d'apogée de l'hypothenuse d'un triangle
