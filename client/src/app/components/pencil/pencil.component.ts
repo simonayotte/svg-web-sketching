@@ -16,7 +16,7 @@ export class PencilComponent implements OnInit {
 
         this.mouseDownListener = this.pencilService.startDraw.bind(this.pencilService);
     }
-    public thickness: number;
+    thickness: number;
 
     private canvasRef: ElementRef;
     private mouseDownListener: EventListener;
@@ -29,9 +29,9 @@ export class PencilComponent implements OnInit {
         this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
     }
 
-    setThickness($event: Event) {
-        if ($event.target) {
-            this.pencilService.setThickess(parseInt((<HTMLInputElement>$event.target).value));
+    setThickness(event: Event) {
+        if (event.target) {
+            this.pencilService.setThickess(parseInt((event.target as HTMLInputElement).value, 10));
         }
     }
 }
