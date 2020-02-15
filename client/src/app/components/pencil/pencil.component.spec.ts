@@ -19,7 +19,8 @@ describe('PencilComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [PencilComponent, BrushComponent, DrawPageComponent, GuideComponent, RectangleComponent, ColorComponent, LineComponent],
+            declarations: [PencilComponent, BrushComponent, DrawPageComponent, GuideComponent,
+                           RectangleComponent, ColorComponent, LineComponent],
             providers: [DrawStateService],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();

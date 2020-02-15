@@ -20,7 +20,8 @@ describe('RectangleComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, LineComponent],
+            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent,
+                           RectangleComponent, ColorComponent, LineComponent],
             providers: [DrawStateService, RectangleService],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();
