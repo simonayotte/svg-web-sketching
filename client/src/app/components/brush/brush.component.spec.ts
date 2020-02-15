@@ -17,7 +17,8 @@ describe('BrushComponent', () => {
     let fixture: ComponentFixture<BrushComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, LineComponent],
+            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent,
+                           RectangleComponent, ColorComponent, LineComponent],
             providers: [DrawStateService],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();

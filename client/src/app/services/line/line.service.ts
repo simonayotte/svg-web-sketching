@@ -2,6 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
+import { Coordinate } from './coordinate';
 
 @Injectable({
     providedIn: 'root',
@@ -149,7 +150,7 @@ export class LineService {
             this.lastX = undefined;
             this.lastY = undefined;
             this.canvasContext.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
-            this.coordinates.forEach(element => {
+            this.coordinates.forEach( (element) => {
                 this.connectLine(element.pointX, element.pointY);
             });
 
@@ -252,56 +253,56 @@ export class LineService {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     // Retourner point avec alignement 0deg
                     return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
-                }
+                } else
                 // Alignement 45deg
-                else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
                     return this.calculateAngledLineEndPoint(Math.PI / 4, hypothenuseLineLength);
-                }
+                } else
                 // Alignement 90deg
-                else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
                     return this.calculateAngledLineEndPoint(Math.PI / 2, hypothenuseLineLength);
                 }
-            }
+            } else
             // Cadran 3
-            else if (positionX - this.lastX < 0 && positionY - this.lastY >= 0) {
+            if (positionX - this.lastX < 0 && positionY - this.lastY >= 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
-                }
+                } else
                 // Alignement 45deg
-                else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
                     return this.calculateAngledLineEndPoint(-Math.PI / 4, -hypothenuseLineLength);
-                }
+                } else
                 // Alignement 90deg
-                else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
                     return this.calculateAngledLineEndPoint(Math.PI / 2, hypothenuseLineLength);
                 }
-            }
+            } else
             // Cadran 2
-            else if (positionX - this.lastX >= 0 && positionY - this.lastY < 0) {
+            if (positionX - this.lastX >= 0 && positionY - this.lastY < 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
-                }
+                } else
                 // Alignement 45deg
-                else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
                     return this.calculateAngledLineEndPoint(-Math.PI / 4, hypothenuseLineLength);
-                }
+                } else
                 // Alignement 90deg
-                else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
                     return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
                 }
-            }
+            } else
             // Cadran 1
-            else if (positionX - this.lastX < 0 && positionY - this.lastY < 0) {
+            if (positionX - this.lastX < 0 && positionY - this.lastY < 0) {
                 if (angle >= 0 && angle < Math.PI / 6) {
                     // Retourner point avec alignement 0deg
                     return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
-                }
+                } else
                 // Alignement 45deg
-                else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
                     return this.calculateAngledLineEndPoint(Math.PI / 4, -hypothenuseLineLength);
-                }
+                } else
                 // Alignement 90deg
-                else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
                     return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
                 }
             }
@@ -318,15 +319,5 @@ export class LineService {
         } else {
             return new Coordinate(0, 0);
         }
-    }
-}
-
-// Structure pour sauver les points
-class Coordinate {
-    pointX: number;
-    pointY: number;
-    constructor(pointX: number, pointY: number) {
-        this.pointX = pointX;
-        this.pointY = pointY;
     }
 }

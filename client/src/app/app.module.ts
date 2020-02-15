@@ -15,9 +15,9 @@ import { DrawPageComponent } from './components/draw-page/draw-page.component';
 import { DrawingStartedDialogComponent } from './components/drawing-started-dialog/drawing-started-dialog.component';
 import { GuideComponent } from './components/guide/guide.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
+import { LineComponent } from './components/line/line.component';
 import { PencilComponent } from './components/pencil/pencil.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
-import { LineComponent } from './components/line/line.component';
 
 @NgModule({
     declarations: [

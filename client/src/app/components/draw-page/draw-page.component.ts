@@ -147,9 +147,10 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.colorService.setSecondColor(oldFirstColor);
     }
     openDialog(): void {
-        const dialogRef = this.isDrawingStarted ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
+        const dialogRef = this.isDrawingStarted ?
+        this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
         window.removeEventListener('keydown', this.keyDownListener);
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe( (result) => {
             window.addEventListener('keydown', this.keyDownListener);
         });
     }
