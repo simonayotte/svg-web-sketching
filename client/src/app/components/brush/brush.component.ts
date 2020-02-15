@@ -1,9 +1,8 @@
-import { Component, OnInit, ElementRef, OnDestroy } from '@angular/core';
-//import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
-
-import { BrushService } from '../../services/brush/brush.service';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { BrushService } from '../../services/brush/brush.service';
+
 @Component({
     selector: 'app-brush',
     templateUrl: './brush.component.html',
@@ -14,13 +13,13 @@ export class BrushComponent implements OnInit, OnDestroy {
         this.brushService.thicknessObs.subscribe((thickness: number) => {
             this.thickness = thickness;
         });
-        this.colorService.firstColorObs.subscribe(() => this.setTexture(this.texture)); //to load texture with different color
+        this.colorService.firstColorObs.subscribe(() => this.setTexture(this.texture)); // to load texture with different color
 
         this.mouseDownListener = this.brushService.startDraw.bind(this.brushService);
     }
 
-    public texture: string = 'normal';
-    public thickness: number;
+    texture = 'normal';
+    thickness: number;
 
     private canvasRef: ElementRef;
     private mouseDownListener: EventListener;
@@ -38,7 +37,7 @@ export class BrushComponent implements OnInit, OnDestroy {
 
     setThickness(event: Event) {
         if (event.target) {
-            this.brushService.setThickess(parseInt((<HTMLInputElement>event.target).value));
+            this.brushService.setThickess(parseInt((event.target as HTMLInputElement).value, 10));
         }
     }
 

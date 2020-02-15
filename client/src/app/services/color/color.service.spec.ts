@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { ColorService } from './color.service';
 
 describe('ColorService', () => {
@@ -14,8 +13,9 @@ describe('ColorService', () => {
     });
 
     it('#addUsedColor() should not have more than 10 colors', () => {
-        for (let i: number = 0; i < 20; i++) service.addUsedColor('#ffffffff');
-
+        for (let i = 0; i < 20; i++) {
+            service.addUsedColor('#ffffffff');
+        }
         service.usedColorsObs.subscribe((usedColors: string[]) => {
             expect(usedColors.length).toBe(10);
         });
@@ -37,7 +37,9 @@ describe('ColorService', () => {
     });
 
     it('#addUsedColor() should replace first index in #usedColors after 10 added colors', () => {
-        for (let i: number = 0; i < 10; i++) service.addUsedColor('#ffffffff');
+        for (let i = 0; i < 10; i++) {
+            service.addUsedColor('#ffffffff');
+        }
 
         service.addUsedColor('#00000000');
 
@@ -47,7 +49,9 @@ describe('ColorService', () => {
     });
 
     it('#addUsedColor() should reset #lastUsedColorIndex to 0 after 10 added colors', () => {
-        for (let i: number = 0; i < 10; i++) service.addUsedColor('#ffffffff');
+        for (let i = 0; i < 10; i++) {
+            service.addUsedColor('#ffffffff');
+        }
 
         expect(service.lastUsedColorIndex).toBe(0);
     });

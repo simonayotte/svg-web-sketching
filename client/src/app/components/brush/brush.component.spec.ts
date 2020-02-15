@@ -2,13 +2,13 @@ import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { BrushComponent } from './brush.component';
 import { ColorComponent } from '../color/color.component';
 import { DrawPageComponent } from '../draw-page/draw-page.component';
 import { GuideComponent } from '../guide/guide.component';
 import { PencilComponent } from '../pencil/pencil.component';
 import { RectangleComponent } from '../rectangle/rectangle.component';
-import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 
 describe('BrushComponent', () => {
     let drawStateService: DrawStateService;
@@ -38,19 +38,11 @@ describe('BrushComponent', () => {
         });
     });
 
-    /*it('#setTexture() should set #texture ', (done: DoneFn) => {
+    it('#setTexture() should not set #texture if the input string is not a valid texture ', (done: DoneFn) => {
         drawStateService.canvasRefObs.subscribe(() => {
-            component.setTexture('wave');
-            expect(component.texture).toBe('wave');
+            component.setTexture('invalid');
+            expect(component.texture).toEqual('normal');
             done();
         });
     });
-
-    it('#setTexture() should not set #texture if the input string is not a valid texture ', (done: DoneFn) => {
-        drawStateService.canvasRefObs.subscribe(() => {
-            component.setTexture('text');
-            expect(component.texture).toBe('normal');
-            done();
-        });
-    });*/
 });
