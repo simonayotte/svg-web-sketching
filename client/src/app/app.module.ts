@@ -15,8 +15,9 @@ import { DrawPageComponent } from './components/draw-page/draw-page.component';
 import { DrawingStartedDialogComponent } from './components/drawing-started-dialog/drawing-started-dialog.component';
 import { GuideComponent } from './components/guide/guide.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
-import { PencilComponent } from './components/pencil/pencil.component'
+import { PencilComponent } from './components/pencil/pencil.component';
 import { RectangleComponent } from './components/rectangle/rectangle.component';
+import { LineComponent } from './components/line/line.component';
 
 @NgModule({
     declarations: [
@@ -30,19 +31,20 @@ import { RectangleComponent } from './components/rectangle/rectangle.component';
         RectangleComponent,
         PencilComponent,
         DrawingStartedDialogComponent,
+        LineComponent,
     ],
-    imports: [BrowserModule,
-              HttpClientModule,
-              RouterModule.forRoot(routes),
-              ReactiveFormsModule,
-              FormsModule,
-              MatDialogModule,
-              BrowserAnimationsModule,
-              OverlayModule],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        RouterModule.forRoot(routes),
+        ReactiveFormsModule,
+        FormsModule,
+        MatDialogModule,
+        BrowserAnimationsModule,
+        OverlayModule,
+    ],
     providers: [],
-    entryComponents: [CreateDrawingComponent,
-                      DrawingStartedDialogComponent,
-                      ColorComponent],
+    entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, ColorComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

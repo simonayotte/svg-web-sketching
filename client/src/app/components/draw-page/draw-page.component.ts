@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
@@ -127,6 +127,10 @@ export class DrawPageComponent implements OnInit, OnDestroy {
                         event.stopPropagation();
                         this.openDialog();
                     }
+                    break;
+                case 'l':
+                    this.selectOption('Ligne', true);
+                    break;
             }
         }
     }
@@ -143,10 +147,9 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.colorService.setSecondColor(oldFirstColor);
     }
     openDialog(): void {
-        const dialogRef = this.isDrawingStarted ?
-            this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
+        const dialogRef = this.isDrawingStarted ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
         window.removeEventListener('keydown', this.keyDownListener);
-        dialogRef.afterClosed().subscribe( (result) => {
+        dialogRef.afterClosed().subscribe(result => {
             window.addEventListener('keydown', this.keyDownListener);
         });
     }

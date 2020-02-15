@@ -21,11 +21,10 @@ export class ColorComponent implements OnInit {
     private squareContext: CanvasRenderingContext2D;
     private barContext: CanvasRenderingContext2D;
 
-    colorRGBA: number[];
+    colorRGBA: number[] = [];
     colorHex: string;
 
     private rgbHexRegExp: RegExp = new RegExp('^[A-Fa-f0-9]{6}$');
-
     private rgbaHexRegExp: RegExp = new RegExp('^#[A-Fa-f0-9]{8}$');
 
     isRGBError = false;
