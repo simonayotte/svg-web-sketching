@@ -1,13 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material';
 import { DrawPageComponent } from './draw-page.component';
+
+import { BrushComponent } from '../brush/brush.component';
+import { ColorComponent } from '../color/color.component';
+import { GuideComponent } from '../guide/guide.component';
+import { PencilComponent } from '../pencil/pencil.component';
+import { RectangleComponent } from '../rectangle/rectangle.component';
 
 describe('DrawPageComponent', () => {
     let component: DrawPageComponent;
     let fixture: ComponentFixture<DrawPageComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawPageComponent],
+            declarations: [DrawPageComponent, GuideComponent, PencilComponent, BrushComponent, RectangleComponent, ColorComponent],
+            imports: [FormsModule, MatDialogModule],
         }).compileComponents();
     }));
 
@@ -23,56 +31,56 @@ describe('DrawPageComponent', () => {
 
     it('#selectOption() should set #isPanelOpen to true when parameter panelOpen is true', () => {
         component.selectOption('', true);
-        expect(component.isPanelOpen).toBe(true);
+        expect(component.isPanelOpen).toEqual(true);
     });
     it('#selectOption() should set #isPanelOpen to false when parameter panelOpen is false', () => {
         component.selectOption('', false);
-        expect(component.isPanelOpen).toBe(false);
+        expect(component.isPanelOpen).toEqual(false);
     });
     it('#selectOption() should set #isPanelOpen to false when same option is selected and parameter panelOpen is true', () => {
         component.selectOption('test', true);
         component.selectOption('test', true);
-        expect(component.isPanelOpen).toBe(false);
+        expect(component.isPanelOpen).toEqual(false);
     });
 
     it('#keyDown() should set #selectedOption to crayon if user presses on c ', () => {
-        let event: KeyboardEvent = new KeyboardEvent('keydown', {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'c',
         });
         component.keyDown(event);
-        expect(component.selectedOption).toBe('Crayon');
+        expect(component.selectedOption).toEqual('Crayon');
     });
 
     it('#keyDown() should not set #selectedOption if user presses on invalid button ', () => {
-        let event: KeyboardEvent = new KeyboardEvent('keydown', {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'Enter',
         });
-        let oldSelectedOption = component.selectedOption;
+        const oldSelectedOption = component.selectedOption;
         component.keyDown(event);
-        expect(component.selectedOption).toBe(oldSelectedOption);
+        expect(component.selectedOption).toEqual(oldSelectedOption);
     });
     it('#openColorWindow() should set #isColorWindowOpen to true if the parameter value is valid', () => {
         component.openColorWindow('first');
-        expect(component.isPanelColorWindowOpen).toBe(true);
+        expect(component.isPanelColorWindowOpen).toEqual(true);
     });
 
     it('#openColorWindow() should set #isColorWindowOpen to false if the parameter value is not valid', () => {
         component.openColorWindow('invalidValue');
-        expect(component.isPanelColorWindowOpen).toBe(false);
+        expect(component.isPanelColorWindowOpen).toEqual(false);
     });
     it('#swapColors should() swap #firstColor and #secondColor if the function has been called once', () => {
-        let oldFirstColor: string = component.firstColor;
-        let oldSecondColor: string = component.secondColor;
+        const oldFirstColor: string = component.firstColor;
+        const oldSecondColor: string = component.secondColor;
         component.swapColors();
-        expect(component.firstColor).toBe(oldSecondColor);
-        expect(component.secondColor).toBe(oldFirstColor);
+        expect(component.firstColor).toEqual(oldSecondColor);
+        expect(component.secondColor).toEqual(oldFirstColor);
     });
     it('#swapColors() should not swap #firstColor and #secondColor if the function has been called twice', () => {
-        let oldFirstColor: string = component.firstColor;
-        let oldSecondColor: string = component.secondColor;
+        const oldFirstColor: string = component.firstColor;
+        const oldSecondColor: string = component.secondColor;
         component.swapColors();
         component.swapColors();
-        expect(component.firstColor).toBe(oldFirstColor);
-        expect(component.secondColor).toBe(oldSecondColor);
+        expect(component.firstColor).toEqual(oldFirstColor);
+        expect(component.secondColor).toEqual(oldSecondColor);
     });
 });

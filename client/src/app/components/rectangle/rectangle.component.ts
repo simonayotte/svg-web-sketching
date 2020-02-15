@@ -8,7 +8,6 @@ import { RectangleService } from 'src/app/services/rectangle/rectangle.service';
     styleUrls: ['./rectangle.component.scss'],
 })
 export class RectangleComponent implements OnInit, OnDestroy {
-
     rectangleType = 'outline only';
     thickness: number;
 
@@ -21,21 +20,23 @@ export class RectangleComponent implements OnInit, OnDestroy {
         });
         this.drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => (this.canvasRef = canvasRef));
         this.mouseDownListener = this.rectangleService.startRect.bind(this.rectangleService);
+
+        this.rectangleService.setRectangleType(this.rectangleType);
     }
 
-@HostListener('document:keydown', ['$event'])
-@HostListener('document:keyup', ['$event'])
-  changeSquareToRectangle(event: KeyboardEvent) {
-      if (event.shiftKey) {
-        if (!this.rectangleService.getshiftDown()) {
-            this.rectangleService.setshiftDown(true);
+    @HostListener('document:keydown', ['$event'])
+    @HostListener('document:keyup', ['$event'])
+    changeSquareToRectangle(event: KeyboardEvent) {
+        if (event.shiftKey) {
+            if (!this.rectangleService.getshiftDown()) {
+                this.rectangleService.setshiftDown(true);
+            }
+        } else {
+            if (this.rectangleService.getshiftDown()) {
+                this.rectangleService.setshiftDown(false);
+            }
         }
-      } else {
-        if (this.rectangleService.getshiftDown()) {
-            this.rectangleService.setshiftDown(false);
-        }
-      }
-  }
+    }
 
     ngOnInit() {
         this.canvasRef.nativeElement.addEventListener('mousedown', this.mouseDownListener);
