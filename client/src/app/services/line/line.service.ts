@@ -12,7 +12,7 @@ export class LineService {
     thicknessObs: Observable<number> = this.thickness.asObservable();
 
     private canvasRef: ElementRef;
-    private canvasContext: CanvasRenderingContext2D;
+    public canvasContext: CanvasRenderingContext2D;
 
     // private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
@@ -145,7 +145,7 @@ export class LineService {
 
     // Backspace => cancelSegment
     cancelSegment(): void {
-        if (this.coordinates.length !== 1) {
+        if (this.coordinates.length > 1) {
             this.coordinates.pop();
             this.lastX = undefined;
             this.lastY = undefined;

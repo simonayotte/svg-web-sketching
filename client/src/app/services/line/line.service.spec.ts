@@ -66,7 +66,41 @@ describe('LineService', () => {
           done();
       });
     });
+    
+    it('#calculatedAlignedPoint() should be called on shift keydown & mousedown', () => {
+      const service: LineService = TestBed.get(LineService);
+      service.setShiftKeyDown(true);
+      const calculateAlignedPointSpy = spyOn(service, 'calculateAlignedPoint');
+      service.lastX = 0;
+      service.lastY = 0;
+      drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
+          const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+              clientX: 300,
+              clientY: 400,
+          });
 
-   
+          canvasRef.nativeElement.dispatchEvent(mouseDown);
+          expect(calculateAlignedPointSpy).toHaveBeenCalled();
+      });
+    });
+
+    it('#drawLine should call lineTo with correct arguments', () => {
+      const service: LineService = TestBed.get(LineService);
+      service.lastX = 100;
+      service.lastY = 150;
+      const posX: number = 200;
+      const posY: number = 200;
+      const lineToSpy = spyOn(service.canvasContext, 'lineTo');
+      service.drawLine(posX, posY);
+      expect(lineToSpy).toHaveBeenCalledWith(posX, posY);
+    });
+
+    
+    // it('#cancelSegment should delete a line', () => {
+    //   const service: LineService = TestBed.get(LineService);
+      
+    // });
+
+
 
 });
