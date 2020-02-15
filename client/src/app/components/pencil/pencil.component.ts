@@ -1,13 +1,13 @@
-import { PencilService } from './../../services/pencil/pencil.service';
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { PencilService } from 'src/app/services/pencil/pencil.service';
 
 @Component({
     selector: 'app-pencil',
     templateUrl: './pencil.component.html',
     styleUrls: ['./pencil.component.scss'],
 })
-export class PencilComponent implements OnInit {
+export class PencilComponent implements OnInit, OnDestroy {
     constructor(private drawStateService: DrawStateService, private pencilService: PencilService) {
         this.pencilService.thicknessObs.subscribe((thickness: number) => {
             this.thickness = thickness;
@@ -16,7 +16,7 @@ export class PencilComponent implements OnInit {
 
         this.mouseDownListener = this.pencilService.startDraw.bind(this.pencilService);
     }
-    public thickness: number;
+    thickness: number;
 
     private canvasRef: ElementRef;
     private mouseDownListener: EventListener;
@@ -29,9 +29,9 @@ export class PencilComponent implements OnInit {
         this.canvasRef.nativeElement.removeEventListener('mousedown', this.mouseDownListener);
     }
 
-    setThickness($event: Event) {
-        if ($event.target) {
-            this.pencilService.setThickess(parseInt((<HTMLInputElement>$event.target).value));
+    setThickness(event: Event) {
+        if (event.target) {
+            this.pencilService.setThickess(parseInt((event.target as HTMLInputElement).value, 10));
         }
     }
 }

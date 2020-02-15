@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 import { BrushComponent } from './brush.component';
+
 import { ColorComponent } from '../color/color.component';
 import { DrawPageComponent } from '../draw-page/draw-page.component';
 import { GuideComponent } from '../guide/guide.component';
