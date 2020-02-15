@@ -176,6 +176,8 @@ describe('LineService', () => {
 
     it('#calculateAngleLineEndPoint should return a default point when there is no last position', () => {
         const testCoordinates = new Coordinate(0, 0);
+        service.lastX = 0;
+        service.lastY = 0;
         expect(service.calculateAngledLineEndPoint(Math.PI, 40).pointX).toBeCloseTo(testCoordinates.pointX);
         expect(service.calculateAngledLineEndPoint(Math.PI, 40).pointY).toBeCloseTo(testCoordinates.pointY);
     });
