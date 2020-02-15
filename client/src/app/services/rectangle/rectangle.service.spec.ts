@@ -10,6 +10,7 @@ import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { RectangleService } from './rectangle.service';
+import { LineComponent } from 'src/app/components/line/line.component';
 
 describe('RectangleService', () => {
     let drawStateService: DrawStateService;
@@ -17,7 +18,7 @@ describe('RectangleService', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent],
+            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, LineComponent],
             providers: [DrawStateService],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();

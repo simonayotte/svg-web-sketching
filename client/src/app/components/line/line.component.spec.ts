@@ -1,9 +1,9 @@
 import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
-import { LineComponent } from './line.component';
-
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 // Ajout imports
 import { BrushComponent } from '../brush/brush.component';
 import { ColorComponent } from '../color/color.component';
@@ -11,8 +11,7 @@ import { DrawPageComponent } from '../draw-page/draw-page.component';
 import { GuideComponent } from '../guide/guide.component';
 import { PencilComponent } from '../pencil/pencil.component';
 import { RectangleComponent } from '../rectangle/rectangle.component';
-
-import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { LineComponent } from './line.component';
 
 describe('LineComponent', () => {
     let drawStateService: DrawStateService;
@@ -21,10 +20,9 @@ describe('LineComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [LineComponent, DrawPageComponent, GuideComponent,
-                PencilComponent, RectangleComponent, ColorComponent, BrushComponent],
+            declarations: [LineComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, BrushComponent],
             providers: [DrawStateService],
-            imports: [FormsModule],
+            imports: [FormsModule, MatDialogModule],
         }).compileComponents();
     }));
 

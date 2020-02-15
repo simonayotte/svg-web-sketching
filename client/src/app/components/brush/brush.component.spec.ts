@@ -8,16 +8,16 @@ import { BrushComponent } from './brush.component';
 import { ColorComponent } from '../color/color.component';
 import { DrawPageComponent } from '../draw-page/draw-page.component';
 import { GuideComponent } from '../guide/guide.component';
+import { LineComponent } from '../line/line.component';
 import { PencilComponent } from '../pencil/pencil.component';
 import { RectangleComponent } from '../rectangle/rectangle.component';
-
 describe('BrushComponent', () => {
     let drawStateService: DrawStateService;
     let component: BrushComponent;
     let fixture: ComponentFixture<BrushComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent],
+            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, LineComponent],
             providers: [DrawStateService],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();

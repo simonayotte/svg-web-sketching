@@ -12,6 +12,7 @@ import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.compon
 import { GuideComponent } from 'src/app/components/guide/guide.component';
 import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
+import { LineComponent } from 'src/app/components/line/line.component';
 
 describe('PencilService', () => {
     let service: PencilService;
@@ -20,7 +21,7 @@ describe('PencilService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [FormsModule, MatDialogModule],
-            declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent],
+            declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent, LineComponent],
         });
 
         drawStateService = TestBed.get(DrawStateService);

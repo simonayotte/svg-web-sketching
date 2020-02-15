@@ -6,6 +6,7 @@ import { DrawPageComponent } from './draw-page.component';
 import { BrushComponent } from '../brush/brush.component';
 import { ColorComponent } from '../color/color.component';
 import { GuideComponent } from '../guide/guide.component';
+import { LineComponent } from '../line/line.component';
 import { PencilComponent } from '../pencil/pencil.component';
 import { RectangleComponent } from '../rectangle/rectangle.component';
 
@@ -14,7 +15,7 @@ describe('DrawPageComponent', () => {
     let fixture: ComponentFixture<DrawPageComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawPageComponent, GuideComponent, PencilComponent, BrushComponent, RectangleComponent, ColorComponent],
+            declarations: [DrawPageComponent, GuideComponent, PencilComponent, BrushComponent, RectangleComponent, ColorComponent, LineComponent],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();
     }));
