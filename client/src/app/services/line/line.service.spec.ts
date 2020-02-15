@@ -13,7 +13,6 @@ import { RectangleComponent } from './../../components/rectangle/rectangle.compo
 import { Coordinate } from './coordinate';
 import { LineService } from './line.service';
 
-
 describe('LineService', () => {
     let service: LineService;
     let drawStateService: DrawStateService;
@@ -65,9 +64,8 @@ describe('LineService', () => {
           done();
       });
     });
-    
+
     it('#calculatedAlignedPoint() should be called on shift keydown & mousedown', () => {
-      const service: LineService = TestBed.get(LineService);
       service.setShiftKeyDown(true);
       const calculateAlignedPointSpy = spyOn(service, 'calculateAlignedPoint');
       service.lastX = 0;
@@ -84,20 +82,18 @@ describe('LineService', () => {
     });
 
     it('#drawLine should call lineTo with correct arguments', () => {
-      const service: LineService = TestBed.get(LineService);
       service.lastX = 100;
       service.lastY = 150;
-      const posX: number = 200;
-      const posY: number = 200;
+      const posX = 200;
+      const posY = 200;
       const lineToSpy = spyOn(service.canvasContext, 'lineTo');
       service.drawLine(posX, posY);
       expect(lineToSpy).toHaveBeenCalledWith(posX, posY);
     });
-   
-    it('#cancelSegment should delete a line', () => {
-      const service: LineService = TestBed.get(LineService);
-      let coord1 = new Coordinate(200, 200);
-      let coord2 = new Coordinate(300, 250);
+
+    it('#cancelSegment should delete a segment', () => {
+      const coord1 = new Coordinate(200, 200);
+      const coord2 = new Coordinate(300, 250);
 
       service.coordinates = new Array();
       service.coordinates.push(coord1);
@@ -108,37 +104,23 @@ describe('LineService', () => {
 
       service.cancelSegment();
       expect(service.coordinates.length).toBe(1);
-      expect(service.lastX).toBe(undefined);
-      expect(service.lastY).toBe(undefined);
-
       service.cancelSegment();
       expect(service.coordinates.length).toBe(1);
-
     });
 
-    // it('#cancelLine should delete line', () => {
-    //   const service: LineService = TestBed.get(LineService);
-    //   let coord1 = new Coordinate(200, 200);
-    //   let coord2 = new Coordinate(300, 250);
+    it('#cancelLine should delete line', () => {
+      const coord1 = new Coordinate(200, 200);
+      const coord2 = new Coordinate(300, 250);
+      const coord3 = new Coordinate(400, 289);
 
-    //   service.coordinates = new Array();
-    //   service.coordinates.push(coord1);
-    //   service.coordinates.push(coord2);
+      service.coordinates = new Array();
+      service.coordinates.push(coord1);
+      service.coordinates.push(coord2);
+      service.coordinates.push(coord3);
 
-    //   service.lastX = 100;
-    //   service.lastY = 200;
-
-    //   service.cancelSegment();
-    //   expect(service.coordinates.length).toBe(1);
-    //   expect(service.lastX).toBe(undefined);
-    //   expect(service.lastY).toBe(undefined);
-
-    //   service.cancelSegment();
-    //   expect(service.coordinates.length).toBe(1);
-
-    // });
-
-
+      service.cancelLine();
+      expect(service.coordinates.length).toBe(0);
+    });
 
     it('#previewLineEventHandler() should call prievewLine with the right arguments', () => {
         service.lastX = 0;
