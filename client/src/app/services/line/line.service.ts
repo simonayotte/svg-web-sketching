@@ -18,8 +18,8 @@ export class LineService {
     private mouseOutListener: EventListener;
     private mouseDoubleDownListener: EventListener;
 
-    private mousePositionX: number;
-    private mousePositionY: number;
+    public mousePositionX: number;
+    public mousePositionY: number;
 
     private color: string;
 
@@ -28,8 +28,8 @@ export class LineService {
     private junctionPointThickness: BehaviorSubject<number> = new BehaviorSubject<number>(25);
     junctionPointThicknessObs: Observable<number> = this.thickness.asObservable();
 
-    private lastX?: number;
-    private lastY?: number;
+    public lastX?: number;
+    public lastY?: number;
 
     private canvasWidth: number;
     private canvasHeight: number;
