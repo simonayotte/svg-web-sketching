@@ -10,17 +10,18 @@ import { GuideComponent } from './../../components/guide/guide.component';
 import { LineComponent } from './../../components/line/line.component';
 import { PencilComponent } from './../../components/pencil/pencil.component';
 import { RectangleComponent } from './../../components/rectangle/rectangle.component';
+import { Coordinate } from './coordinate';
 import { LineService } from './line.service';
 
 describe('LineService', () => {
-  let service: LineService;
-  let drawStateService: DrawStateService;
+    let service: LineService;
+    let drawStateService: DrawStateService;
 
-  beforeEach(() => {
-        
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [FormsModule, MatDialogModule],
-            declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent, LineComponent],
+            declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent,
+                           RectangleComponent, LineComponent],
         });
         drawStateService = TestBed.get(DrawStateService);
         const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
@@ -31,20 +32,17 @@ describe('LineService', () => {
     });
 
     it('should be created', () => {
-        const service: LineService = TestBed.get(LineService);
         expect(service).toBeTruthy();
     });
 
-    //Tester setThickness()
+    // Tester setThickness()
     it('#setThickness should apply the thickness correctly to the observable', () => {
-        const service: LineService = TestBed.get(LineService);
         service.setThickness(20);
         expect(service.getThickness()).toBe(20);
     });
 
-    //Tester MouseDown Click
+    // Tester MouseDown Click
     it('#connectLineEventHandler should call connectLine', () => {
-        const service: LineService = TestBed.get(LineService);
         const testMouseEvent = new MouseEvent('onclick');
         const connectLineSpy = spyOn(service, 'connectLine');
         service.connectLineEventHandler(testMouseEvent);
@@ -102,5 +100,81 @@ describe('LineService', () => {
     // });
 
 
+    it('#previewLineEventHandler() should call prievewLine with the right arguments', () => {
+        service.lastX = 0;
+        service.lastY = 0;
+        const previewLineSpy = spyOn(service, 'previewLine');
+        const testMouseMouve: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 300,
+            clientY: 400,
+        });
+        service.previewLineEventHandler(testMouseMouve);
+        expect(service.mousePositionX).toEqual(300);
+        expect(service.mousePositionY).toEqual(400);
+        expect(previewLineSpy).toHaveBeenCalledWith(300, 400);
+      });
+
+    it('#previewLineEventHandler() should call prievewAlignesLine when shift is pressed', () => {
+        service.lastX = 0;
+        service.lastY = 0;
+        service.setShiftKeyDown(true);
+        const previewAlignedLineSpy = spyOn(service, 'previewAlignedLine');
+        const testMouseMouve: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 300,
+            clientY: 400,
+        });
+        service.previewLineEventHandler(testMouseMouve);
+        expect(service.mousePositionX).toEqual(300);
+        expect(service.mousePositionY).toEqual(400);
+        expect(previewAlignedLineSpy).toHaveBeenCalledWith(300, 400);
+    });
+
+    it('#stopLine() should empty the coordinate array', () => {
+        service.lastX = 0;
+        service.lastY = 0;
+        service.coordinates.push(new Coordinate(1, 1));
+        service.coordinates.push(new Coordinate(1, 2));
+        service.coordinates.push(new Coordinate(1, 3));
+        service.coordinates.push(new Coordinate(1, 4));
+        const testMouseStop: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 300,
+            clientY: 400,
+        });
+        service.stopLine(testMouseStop);
+        expect(service.coordinates).toEqual([]);
+    });
+
+    it('#calculateAngleLineEndPoint should calculate the right coordinates', () => {
+        service.lastX = 10;
+        service.lastY = 10;
+        const testCoordinates = new Coordinate(-30, 10);
+        expect(service.calculateAngledLineEndPoint(Math.PI, 40).pointX).toBeCloseTo(testCoordinates.pointX);
+        expect(service.calculateAngledLineEndPoint(Math.PI, 40).pointY).toBeCloseTo(testCoordinates.pointY);
+    });
+
+    it('#calculateAngleLineEndPoint should return a default point when there is no last position', () => {
+        const testCoordinates = new Coordinate(0, 0);
+        expect(service.calculateAngledLineEndPoint(Math.PI, 40).pointX).toBeCloseTo(testCoordinates.pointX);
+        expect(service.calculateAngledLineEndPoint(Math.PI, 40).pointY).toBeCloseTo(testCoordinates.pointY);
+    });
+
+    it('#getPointPosition should add the right coordinates to the list of coordinates', () => {
+        const testCoordinates = new Coordinate(1, 1);
+        service.getPointPosition(1, 1);
+        expect(service.coordinates.pop()).toEqual(testCoordinates);
+    });
+
+    it('#getPointPosition should call connectLine with the right arguments', () => {
+        const connectLineSpy = spyOn(service, 'connectLine');
+        service.getPointPosition(1, 1);
+        expect(connectLineSpy).toHaveBeenCalledWith(1, 1);
+    });
+
+    it('#getPointPosition should call connectLine with the right arguments when shiftIsPressed', () => {
+        const connectLineSpy = spyOn(service, 'connectLine');
+        service.setShiftKeyDown(true);
+        service.getPointPosition(1, 1);
+        expect(connectLineSpy).toHaveBeenCalledWith(0, 0);
+    });
 
 });
