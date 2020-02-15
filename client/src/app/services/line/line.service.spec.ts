@@ -176,12 +176,24 @@ describe('LineService', () => {
         service.getPointPosition(1, 1);
         expect(connectLineSpy).toHaveBeenCalledWith(0, 0);
     });
-/*
+
     it('#calculateAlignedPoint should call findCadrant with the right arguments', () => {
-        const angleLineSpy = spyOn(service, 'calculateAngledLineEndPoint');
+        const findCadrantSpy = spyOn(service, 'findCadrant');
         service.lastX = 1;
         service.lastY = 1;
+        const adjacentLineLengthTest = Math.abs(2 - service.lastX);
+        const oppositeLineLengthTest = Math.abs(2 - service.lastY);
+        const hypothenuseLineLengthTest = Math.sqrt(Math.pow(adjacentLineLengthTest, 2) + Math.pow(oppositeLineLengthTest, 2));
+        const angleTest = Math.atan(oppositeLineLengthTest / adjacentLineLengthTest);
         service.calculateAlignedPoint(2,2);
-        expect(angleLineSpy).toHaveBeenCalledWith(Math.PI / 4, 0);
-    });*/
+        expect(findCadrantSpy).toHaveBeenCalledWith(hypothenuseLineLengthTest, angleTest, 2, 2, 1, 1);
+    });
+
+    it('#findCadrant should call calculateAngledLineEndPoint with the right arguments', () => {
+        const endPointSpy = spyOn(service, 'calculateAngledLineEndPoint');
+        service.lastX = 1;
+        service.lastY = 1;
+        service.findCadrant(1, 0, 2, 2, 1, 1);
+        expect(endPointSpy).toHaveBeenCalledWith(0, 1);
+    });
 });

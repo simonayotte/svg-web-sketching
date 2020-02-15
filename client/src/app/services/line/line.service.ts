@@ -253,7 +253,6 @@ export class LineService {
             const hypothenuseLineLength = Math.sqrt(Math.pow(adjacentLineLength, 2) + Math.pow(oppositeLineLength, 2));
             const angle = Math.atan(oppositeLineLength / adjacentLineLength);
             this.findCadrant(hypothenuseLineLength, angle, positionX, positionY, this.lastX, this.lastY);
-
         }
         return new Coordinate(0, 0);
     }
