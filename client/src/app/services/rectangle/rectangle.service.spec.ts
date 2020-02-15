@@ -6,6 +6,7 @@ import { BrushComponent } from 'src/app/components/brush/brush.component';
 import { ColorComponent } from 'src/app/components/color/color.component';
 import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
 import { GuideComponent } from 'src/app/components/guide/guide.component';
+import { LineComponent } from 'src/app/components/line/line.component';
 import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
 import { DrawStateService } from '../draw-state/draw-state.service';
@@ -17,7 +18,8 @@ describe('RectangleService', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent],
+            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent,
+                           RectangleComponent, ColorComponent, LineComponent],
             providers: [DrawStateService],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();
