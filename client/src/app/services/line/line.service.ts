@@ -2,7 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from 'src/app/services/color/color.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
-import { Coordinate } from './coordinate';
+import { Coordinate } from '../../models/coordinate';
 
 @Injectable({
     providedIn: 'root',

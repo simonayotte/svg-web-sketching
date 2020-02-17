@@ -10,7 +10,7 @@ import { GuideComponent } from './../../components/guide/guide.component';
 import { LineComponent } from './../../components/line/line.component';
 import { PencilComponent } from './../../components/pencil/pencil.component';
 import { RectangleComponent } from './../../components/rectangle/rectangle.component';
-import { Coordinate } from './coordinate';
+import { Coordinate } from '../../models/coordinate';
 import { LineService } from './line.service';
 
 describe('LineService', () => {
