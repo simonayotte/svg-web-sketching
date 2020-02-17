@@ -119,16 +119,13 @@
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
 
-    <!--<input type="color" class="sidebar-option input-color" (change)="setCanvasColor($event)" />-->
-
     <div class="sidebar-option" data-toggle="modal" data-target="#userGuide">
         <i class="far fa-question-circle"></i>
     </div>
 
-    <div class="sidebar-option" (click) = 'openDialog()'>
+    <div class="sidebar-option" (click)="openDialog()">
         <i class="fas fa-plus"></i>
     </div>
-
 </div>
 
 <!-- Modal -->
@@ -149,6 +146,7 @@
         <app-brush *ngSwitchCase="'Pinceau'"></app-brush>
         <app-pencil *ngSwitchCase="'Crayon'"></app-pencil>
         <app-rectangle *ngSwitchCase="'Rectangle'"></app-rectangle>
+        <app-line *ngSwitchCase="'Ligne'"></app-line>
 
         <!--Add 3 color buttons that will open colorWindow-->
         <div class="d-flex justify-content-between align-items-center mb-3">
@@ -171,4 +169,11 @@
 <app-color *ngIf="isPanelColorWindowOpen == true"></app-color>
 
 <div class="workspace" [style.background-color]="workspaceColor"></div>
-<canvas #canvas class="canvas" [style.background-color]="canvasColor" [width] = "canvasWidth" [height] = "canvasHeight"[ngClass]="{ withPanel: isPanelOpen == true }"></canvas>
+<canvas
+    #canvas
+    class="canvas"
+    [style.background-color]="canvasColor"
+    [width]="canvasWidth"
+    [height]="canvasHeight"
+    [ngClass]="{ withPanel: isPanelOpen == true }"
+></canvas>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ColorService } from 'src/app/services/color/color.service';
 
 @Component({
@@ -8,49 +8,52 @@ import { ColorService } from 'src/app/services/color/color.service';
 })
 export class ColorComponent implements OnInit {
     constructor(private colorService: ColorService) {
-    this.colorService.isFormColorWindowOpenObs.subscribe((isFormColorWindowOpen) => {
-        this.isFormColorWindowOpen = isFormColorWindowOpen
-    });
+        this.colorService.isFormColorWindowOpenObs.subscribe((isFormColorWindowOpen: boolean) => {
+            this.isFormColorWindowOpen = isFormColorWindowOpen;
+        });
     }
 
     @ViewChild('square', { static: true }) squareRef: ElementRef;
     @ViewChild('bar', { static: true }) barRef: ElementRef;
 
     private selectedColor: string;
-    private isFormColorWindowOpen:boolean;
+    private isFormColorWindowOpen: boolean;
     private squareContext: CanvasRenderingContext2D;
     private barContext: CanvasRenderingContext2D;
 
-    private colorRGBA: number[];
-    private colorHex: string;
+    colorRGBA: number[] = [];
+    colorHex: string;
 
-    private hexRegExp: RegExp = new RegExp('^[A-Fa-f0-9]{6}$');
+    private rgbHexRegExp: RegExp = new RegExp('^[A-Fa-f0-9]{6}$');
+    private rgbaHexRegExp: RegExp = new RegExp('^#[A-Fa-f0-9]{8}$');
 
-    protected isRGBError: boolean = false;
-    protected isHexError: boolean = false;
+    isRGBError = false;
+    isHexError = false;
 
-    protected usedColors: string[] = [];
+    usedColors: string[] = [];
     ngOnInit() {
         this.squareContext = this.squareRef.nativeElement.getContext('2d');
         this.barContext = this.barRef.nativeElement.getContext('2d');
         this.fillBar();
         this.colorService.selectedColorObs.subscribe((selectedColor: string) => {
-            //get the right color
+            // get the right color
             this.selectedColor = selectedColor;
-            if (this.selectedColor == 'first') {
+            if (this.selectedColor === 'first') {
                 this.colorService.firstColorObs.subscribe((color: string) => {
                     this.colorRGBA = this.toRGBA(color);
                     this.colorHex = color.substring(1, color.length - 2);
                     this.fillSquare();
                 });
-            } else if (this.selectedColor == 'second') {
+            } else if (this.selectedColor === 'second') {
                 this.colorService.secondColorObs.subscribe((color: string) => {
                     this.colorRGBA = this.toRGBA(color);
+                    this.colorHex = color.substring(1, color.length - 2);
                     this.fillSquare();
                 });
-            } else if (this.selectedColor == 'canvas') {
+            } else if (this.selectedColor === 'canvas') {
                 this.colorService.canvasColorObs.subscribe((color: string) => {
                     this.colorRGBA = this.toRGBA(color);
+                    this.colorHex = color.substring(1, color.length - 2);
                     this.fillSquare();
                 });
             }
@@ -62,7 +65,7 @@ export class ColorComponent implements OnInit {
     }
 
     setRGBWithHex(): void {
-        if (this.hexRegExp.test(this.colorHex)) {
+        if (this.rgbHexRegExp.test(this.colorHex)) {
             this.colorRGBA = [...this.toRGB(this.colorHex), this.colorRGBA[3]];
             this.fillSquare();
             this.isHexError = false;
@@ -81,65 +84,79 @@ export class ColorComponent implements OnInit {
         }
     }
 
-    //convert rgba to hex
+    // convert rgba to hex
     toHex(rgba: number[], isWithOpacity: boolean): string {
         let redHex: string = Number(rgba[0]).toString(16);
-        if (redHex.length < 2) redHex = '0' + redHex;
+        if (redHex.length < 2) {
+            redHex = '0' + redHex;
+        }
 
         let greenHex: string = Number(rgba[1]).toString(16);
-        if (greenHex.length < 2) greenHex = '0' + greenHex;
+        if (greenHex.length < 2) {
+            greenHex = '0' + greenHex;
+        }
 
         let blueHex: string = Number(rgba[2]).toString(16);
-        if (blueHex.length < 2) blueHex = '0' + blueHex;
+        if (blueHex.length < 2) {
+            blueHex = '0' + blueHex;
+        }
 
-        let opacityHex: string = '';
+        let opacityHex = '';
         if (isWithOpacity) {
             opacityHex = Number(rgba[3]).toString(16);
-            if (opacityHex.length < 2) opacityHex = '0' + opacityHex;
+            if (opacityHex.length < 2) {
+                opacityHex = '0' + opacityHex;
+            }
         }
 
         return redHex + greenHex + blueHex + opacityHex;
     }
 
     toRGB(hex: string): number[] {
-        let r: number = parseInt(hex.slice(0, 2), 16);
-        let g: number = parseInt(hex.slice(2, 4), 16);
-        let b: number = parseInt(hex.slice(4, 6), 16);
-        return [r, g, b];
+        if (this.rgbHexRegExp.test(hex)) {
+            const r: number = parseInt(hex.slice(0, 2), 16);
+            const g: number = parseInt(hex.slice(2, 4), 16);
+            const b: number = parseInt(hex.slice(4, 6), 16);
+            return [r, g, b];
+        }
+        return [0, 0, 0];
     }
 
     toRGBA(hex: string): number[] {
-        let r: number = parseInt(hex.slice(1, 3), 16);
-        let g: number = parseInt(hex.slice(3, 5), 16);
-        let b: number = parseInt(hex.slice(5, 7), 16);
-        let a: number = parseInt(hex.slice(7, 9), 16);
+        if (this.rgbaHexRegExp.test(hex)) {
+            const r: number = parseInt(hex.slice(1, 3), 16);
+            const g: number = parseInt(hex.slice(3, 5), 16);
+            const b: number = parseInt(hex.slice(5, 7), 16);
+            const a: number = parseInt(hex.slice(7, 9), 16);
 
-        return [r, g, b, a];
+            return [r, g, b, a];
+        }
+        return [0, 0, 0, 1];
     }
 
-    private fillSquare(): void {
+    fillSquare(): void {
         const width: number = this.squareRef.nativeElement.width;
         const height: number = this.squareRef.nativeElement.height;
         this.squareContext.fillStyle = '#' + this.colorHex;
         this.squareContext.fillRect(0, 0, width, height);
 
-        let whiteGradient: CanvasGradient = this.squareContext.createLinearGradient(0, 0, width, 0);
+        const whiteGradient: CanvasGradient = this.squareContext.createLinearGradient(0, 0, width, 0);
         whiteGradient.addColorStop(0, 'rgba(255,255,255,1');
         whiteGradient.addColorStop(1, 'rgba(255,255,255,0');
         this.squareContext.fillStyle = whiteGradient;
         this.squareContext.fillRect(0, 0, width, height);
 
-        let blackGradient: CanvasGradient = this.squareContext.createLinearGradient(0, 0, 0, height);
+        const blackGradient: CanvasGradient = this.squareContext.createLinearGradient(0, 0, 0, height);
         blackGradient.addColorStop(0, 'rgba(0,0,0,0');
         blackGradient.addColorStop(1, 'rgba(0,0,0,1');
         this.squareContext.fillStyle = blackGradient;
         this.squareContext.fillRect(0, 0, width, height);
     }
-    private fillBar(): void {
+    fillBar(): void {
         const width: number = this.barRef.nativeElement.width;
         const height: number = this.barRef.nativeElement.height;
 
-        let colorGradient: CanvasGradient = this.barContext.createLinearGradient(0, 0, 0, height);
+        const colorGradient: CanvasGradient = this.barContext.createLinearGradient(0, 0, 0, height);
         colorGradient.addColorStop(0, 'rgba(255, 0, 0, 1)');
         colorGradient.addColorStop(0.17, 'rgba(255, 255, 0, 1)');
         colorGradient.addColorStop(0.34, 'rgba(0, 255, 0, 1)');
@@ -152,30 +169,28 @@ export class ColorComponent implements OnInit {
     }
 
     setSquareColor($event: MouseEvent): void {
-        let pixel: Uint8ClampedArray = this.barContext.getImageData($event.offsetX, $event.offsetY, 1, 1).data;
+        const pixel: Uint8ClampedArray = this.barContext.getImageData($event.offsetX, $event.offsetY, 1, 1).data;
         this.colorRGBA = [...pixel];
         this.colorHex = this.toHex(this.colorRGBA, false);
         this.fillSquare();
     }
 
     setColor($event: MouseEvent): void {
-        let pixel: Uint8ClampedArray = this.squareContext.getImageData($event.offsetX, $event.offsetY, 1, 1).data;
+        const pixel: Uint8ClampedArray = this.squareContext.getImageData($event.offsetX, $event.offsetY, 1, 1).data;
         this.colorRGBA = [...pixel];
         this.colorHex = this.toHex(this.colorRGBA, false);
     }
 
     confirmColor(): void {
-        let hex: string = '#' + this.toHex(this.colorRGBA, true);
-        if (this.selectedColor == 'first') {
+        const hex: string = '#' + this.toHex(this.colorRGBA, true);
+        if (this.selectedColor === 'first') {
             this.colorService.setFirstColor(hex);
-        } else if (this.selectedColor == 'second') {
+        } else if (this.selectedColor === 'second') {
             this.colorService.setSecondColor(hex);
-        } else if (this.selectedColor == 'canvas') {
-            if(!this.isFormColorWindowOpen){
+        } else if (this.selectedColor === 'canvas') {
+            if (!this.isFormColorWindowOpen) {
                 this.colorService.setCanvasColor(hex);
-            }
-            else
-            {
+            } else {
                 this.colorService.setSelectedCanvasColor(hex);
             }
         }
@@ -183,11 +198,15 @@ export class ColorComponent implements OnInit {
         this.colorService.addUsedColor(hex);
     }
 
-    //Set first or second color after clicking on recently used color
+    // Set first or second color after clicking on recently used color
     useColor($event: MouseEvent, color: string): void {
-        if ($event.button == 0) this.colorService.setFirstColor(color);
-        //left click
-        else if ($event.button == 2) this.colorService.setSecondColor(color); //right click
+        if ($event.button === 0) {
+            // left click
+            this.colorService.setFirstColor(color);
+        } else if ($event.button === 2) {
+            // right click
+            this.colorService.setSecondColor(color);
+        }
     }
 
     closeColorWindow(): void {

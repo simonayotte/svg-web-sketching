@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material';
 import { ColorService } from 'src/app/services/color/color.service';
-import { MatDialog} from '@angular/material'
-import { CreateDrawingComponent } from '../create-drawing/create-drawing.component'
-import { DrawingStartedDialogComponent} from '../drawing-started-dialog/drawing-started-dialog.component'
-//import { ConsoleReporter } from 'jasmine';
+import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
 
+import { CreateDrawingComponent } from '../create-drawing/create-drawing.component';
+import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
 
 @Component({
     selector: 'app-draw-page',
@@ -13,12 +12,11 @@ import { DrawingStartedDialogComponent} from '../drawing-started-dialog/drawing-
     styleUrls: ['./draw-page.component.scss'],
 })
 export class DrawPageComponent implements OnInit, OnDestroy {
-    constructor(private drawStateService: DrawStateService, private colorService: ColorService, private dialog:MatDialog
-        ) {
+    constructor(private drawStateService: DrawStateService, private colorService: ColorService, private dialog: MatDialog) {
         this.drawStateService.isPanelOpenObs.subscribe((isPanelOpen: boolean) => {
             this.isPanelOpen = isPanelOpen;
         });
-        
+
         this.drawStateService.isDrawingStartedObs.subscribe((isDrawingStarted: boolean) => {
             this.isDrawingStarted = isDrawingStarted;
         });
@@ -50,24 +48,24 @@ export class DrawPageComponent implements OnInit, OnDestroy {
 
     @ViewChild('canvas', { static: true }) canvasRef: ElementRef;
 
-    private isShowDrawOptions: boolean = false;
-    private isShowFormOptions: boolean = false;
-    private isShowToolOptions: boolean = false;
-    private isShowEditOptions: boolean = false;
-    private isShowSettingOptions: boolean = false;
-    private isDrawingStarted: boolean = false;
+    private isShowDrawOptions = false;
+    private isShowFormOptions = false;
+    private isShowToolOptions = false;
+    private isShowEditOptions = false;
+    private isShowSettingOptions = false;
+    private isDrawingStarted = false;
     private canvasWidth: number;
     private canvasHeight: number;
 
-    protected workspaceColor: string = '#00000080';
-    private selectedOption: string;
+    workspaceColor = '#00000080';
+    selectedOption: string;
 
-    protected firstColor: string;
-    protected secondColor: string;
-    protected canvasColor: string;
+    firstColor: string;
+    secondColor: string;
+    canvasColor: string;
 
-    private isPanelOpen: boolean;
-    protected isPanelColorWindowOpen: boolean;
+    isPanelOpen: boolean;
+    isPanelColorWindowOpen: boolean;
 
     private keyDownListener: EventListener;
 
@@ -84,18 +82,13 @@ export class DrawPageComponent implements OnInit, OnDestroy {
     }
 
     selectOption(option: string, isPanelOpen: boolean): void {
-        if (this.selectedOption == option && isPanelOpen) {
+        if (this.selectedOption === option && isPanelOpen) {
             this.drawStateService.setIsPanelOpen(this.isPanelOpen ? false : true);
             this.selectedOption = option;
             return;
         }
         this.drawStateService.setIsPanelOpen(isPanelOpen);
         this.selectedOption = option;
-    }
-
-    //Function for test
-    getIsPanelOpen(): boolean {
-        return this.isPanelOpen;
     }
 
     toogleDrawOptions(): void {
@@ -115,14 +108,8 @@ export class DrawPageComponent implements OnInit, OnDestroy {
         this.isShowSettingOptions = !this.isShowSettingOptions;
     }
 
-    setCanvasColor($event: Event) {
-        if ($event.target) {
-            let color: string = (<HTMLInputElement>$event.target).value;
-            this.colorService.setCanvasColor(color);
-        }
-    }
     keyDown(event: KeyboardEvent) {
-        let key: string = event.key;
+        const key: string = event.key;
         if (!this.isPanelColorWindowOpen) {
             switch (key) {
                 case '1':
@@ -135,29 +122,36 @@ export class DrawPageComponent implements OnInit, OnDestroy {
                     this.selectOption('Pinceau', true);
                     break;
                 case 'o':
-                    if (event.ctrlKey){
+                    if (event.ctrlKey) {
                         event.preventDefault();
                         event.stopPropagation();
                         this.openDialog();
                     }
+                    break;
+                case 'l':
+                    this.selectOption('Ligne', true);
+                    break;
             }
         }
     }
 
     openColorWindow(selectedColor: string): void {
-        if (selectedColor == 'first' || selectedColor == 'second' || selectedColor == 'canvas') this.colorService.openPanelColorWindow(selectedColor);
+        if (selectedColor === 'first' || selectedColor === 'second' || selectedColor === 'canvas') {
+            this.colorService.openPanelColorWindow(selectedColor);
+        }
     }
 
     swapColors(): void {
-        let oldFirstColor: string = this.firstColor;
+        const oldFirstColor: string = this.firstColor;
         this.colorService.setFirstColor(this.secondColor);
         this.colorService.setSecondColor(oldFirstColor);
     }
     openDialog(): void {
-        let dialogRef = this.isDrawingStarted ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
+        const dialogRef = this.isDrawingStarted ?
+        this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
         window.removeEventListener('keydown', this.keyDownListener);
-        dialogRef.afterClosed().subscribe(result => {
-            window.addEventListener('keydown',this.keyDownListener);
-            })
-    }  
+        dialogRef.afterClosed().subscribe( (result) => {
+            window.addEventListener('keydown', this.keyDownListener);
+        });
+    }
 }
