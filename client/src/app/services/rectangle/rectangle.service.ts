@@ -2,6 +2,7 @@ import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from '../color/color.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
+import { Rectangle } from 'src/app/models/rectangle';
 
 @Injectable({
     providedIn: 'root',
@@ -171,9 +172,37 @@ export class RectangleService {
     stopRect(): void {
         this.canvasImage = this.canvasContext.getImageData(0, 0, this.canvasWidth, this.canvasHeight);
         this.isDrawing = false;
+        // const rectangleElement = this.createRectangleElement(this.currentStartX, this.currentStartY, this.currentWidth - this.initialX,
+        //                                                      this.currentHeight - this.initialY, this.thickness.value, this.firstColor,
+        //                                                        this.secondColor, this.rectangleType);
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+    }
+
+    createRectangleElement(startX: number, startY: number, endX: number, endY: number, rectangleThickness: number,
+                           firstColor: string, secondColor: string, rectangleType: string): Rectangle {
+        const rectangleElement: Rectangle = {
+            startSelectX: startX,
+            startSelectY: startY,
+            endSelectX: endX,
+            endSelectY: endY,
+            primaryColor: firstColor,
+            secondaryColor: secondColor,
+            thickness: rectangleThickness,
+            type: rectangleType
+        }
+        return rectangleElement;
+    }
+
+    drawFromRectangleElement(rectangle: Rectangle): void {
+        this.setDrawingParameters(rectangle.startSelectX, rectangle.startSelectY);
+        this.adjustStartPosition(rectangle.endSelectX, rectangle.endSelectY);
+        this.setRectangleType(rectangle.type);
+        this.setThickness(rectangle.thickness);
+        this.firstColor = rectangle.primaryColor;
+        this.secondColor = rectangle.secondaryColor;
+        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, this.canvasContext.lineWidth);
     }
 
     setRectangleType(rectangleType: string): void {
@@ -210,7 +239,7 @@ export class RectangleService {
     setshiftDown(value: boolean): void {
         this.isShiftDown = value;
         if (this.isDrawing) {
-            this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, this.canvasContext.lineWidth);
+            this.drawRect(this.initialX, this.initialY, this.currentWidth, this.currentHeight, this.canvasContext.lineWidth);
         }
     }
 }
