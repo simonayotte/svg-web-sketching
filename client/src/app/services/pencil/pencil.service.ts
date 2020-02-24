@@ -84,17 +84,17 @@ export class PencilService {
         this.path.push(new Coordinate(this.lastX, this.lastY));
     }
 
-    createPencilElement(lineThickness: number, firstColor: string, secondColor: string, linePath: Coordinate[]): Pencil {
-        let leftMostPoint = linePath[0].pointX;
-        let rightMostPoint = linePath[0].pointX;
-        let topMostPoint = linePath[0].pointY;
-        let bottomMostPoint = linePath[0].pointY;
+    createPencilElement(lineThickness: number, firstColor: string, secondColor: string, pencilPath: Coordinate[]): Pencil {
+        let leftMostPoint = pencilPath[0].pointX;
+        let rightMostPoint = pencilPath[0].pointX;
+        let topMostPoint = pencilPath[0].pointY;
+        let bottomMostPoint = pencilPath[0].pointY;
 
-        for (let i = 0; i < linePath.length; i++) {
-            if (linePath[i].pointX < leftMostPoint) {leftMostPoint = linePath[i].pointX;}
-            if (linePath[i].pointX > rightMostPoint) {rightMostPoint = linePath[i].pointX;}
-            if (linePath[i].pointY < topMostPoint) {topMostPoint = linePath[i].pointY;}
-            if (linePath[i].pointY > bottomMostPoint) {bottomMostPoint = linePath[i].pointY;}
+        for (let i = 0; i < pencilPath.length; i++) {
+            if (pencilPath[i].pointX < leftMostPoint) {leftMostPoint = pencilPath[i].pointX;}
+            if (pencilPath[i].pointX > rightMostPoint) {rightMostPoint = pencilPath[i].pointX;}
+            if (pencilPath[i].pointY < topMostPoint) {topMostPoint = pencilPath[i].pointY;}
+            if (pencilPath[i].pointY > bottomMostPoint) {bottomMostPoint = pencilPath[i].pointY;}
         }
 
         const pencilElement: Pencil = {
@@ -105,7 +105,7 @@ export class PencilService {
             primaryColor: firstColor,
             secondaryColor: secondColor,
             thickness: lineThickness,
-            path: linePath
+            path: pencilPath
         }
 
         return pencilElement;
@@ -115,7 +115,7 @@ export class PencilService {
         // Stroke style
         this.canvasContext.lineJoin = 'round';
         this.canvasContext.lineCap = 'round';
-        this.canvasContext.lineWidth = pencil.thickness;
+        this.setThickess(pencil.thickness);
         this.canvasContext.strokeStyle = pencil.primaryColor;
         this.canvasContext.fillStyle = pencil.primaryColor;
         this.lastX = pencil.path[0].pointX;
@@ -132,11 +132,12 @@ export class PencilService {
         }
     }
 
-    stopDraw(): void {
+    stopDraw(): Pencil {
         this.lastX = 0;
         this.lastY = 0;
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
+        return this.createPencilElement(this.thickness.value, this.color, this.color, this.path);
     }
 }
