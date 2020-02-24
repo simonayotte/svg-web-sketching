@@ -1,9 +1,9 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ColorService } from 'src/app/services/color/color.service';
-import { DrawStateService } from '../draw-state/draw-state.service';
 import { Coordinate } from 'src/app/models/coordinate';
 import { Pencil } from 'src/app/models/pencil';
+import { ColorService } from 'src/app/services/color/color.service';
+import { DrawStateService } from '../draw-state/draw-state.service';
 
 @Injectable({
     providedIn: 'root',
@@ -90,11 +90,11 @@ export class PencilService {
         let topMostPoint = pencilPath[0].pointY;
         let bottomMostPoint = pencilPath[0].pointY;
 
-        for (let i = 0; i < pencilPath.length; i++) {
-            if (pencilPath[i].pointX < leftMostPoint) {leftMostPoint = pencilPath[i].pointX;}
-            if (pencilPath[i].pointX > rightMostPoint) {rightMostPoint = pencilPath[i].pointX;}
-            if (pencilPath[i].pointY < topMostPoint) {topMostPoint = pencilPath[i].pointY;}
-            if (pencilPath[i].pointY > bottomMostPoint) {bottomMostPoint = pencilPath[i].pointY;}
+        for (const coordinate of pencilPath) {
+            if (coordinate.pointX < leftMostPoint) {leftMostPoint = coordinate.pointX; }
+            if (coordinate.pointX > rightMostPoint) {rightMostPoint = coordinate.pointX; }
+            if (coordinate.pointY < topMostPoint) {topMostPoint = coordinate.pointY; }
+            if (coordinate.pointY > bottomMostPoint) {bottomMostPoint = coordinate.pointY; }
         }
 
         const pencilElement: Pencil = {
@@ -121,14 +121,14 @@ export class PencilService {
         this.lastX = pencil.path[0].pointX;
         this.lastY = pencil.path[0].pointY;
 
-        for (let i = 0; i < pencil.path.length; i++) {
+        for (const coordinate of pencil.path) {
             this.canvasContext.beginPath();
             this.canvasContext.moveTo(this.lastX, this.lastY);
-            this.canvasContext.lineTo(pencil.path[i].pointX, pencil.path[i].pointY);
+            this.canvasContext.lineTo(coordinate.pointX, coordinate.pointY);
             this.canvasContext.closePath();
             this.canvasContext.stroke();
-            this.lastX = pencil.path[i].pointX;
-            this.lastY = pencil.path[i].pointY;
+            this.lastX = coordinate.pointX;
+            this.lastY = coordinate.pointY;
         }
     }
 

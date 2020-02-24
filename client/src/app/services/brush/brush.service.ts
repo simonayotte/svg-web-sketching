@@ -3,8 +3,8 @@ import { ColorService } from '../color/color.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
 
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Coordinate } from 'src/app/models/coordinate';
 import { Brush } from 'src/app/models/brush';
+import { Coordinate } from 'src/app/models/coordinate';
 
 @Injectable({
     providedIn: 'root',
@@ -153,20 +153,20 @@ export class BrushService {
         this.canvasRef.nativeElement.removeEventListener('mousemove', this.mouseMoveListener);
         this.canvasRef.nativeElement.removeEventListener('mouseup', this.mouseUpListener);
         this.canvasRef.nativeElement.removeEventListener('mouseout', this.mouseOutListener);
-        return this.createBrushElement(this.thickness.value, this.firstColor, this.firstColor, this.path, this.texture);
+        return this.createBrush(this.thickness.value, this.firstColor, this.firstColor, this.path, this.texture);
     }
 
-    createBrushElement(lineThickness: number, firstColor: string, secondColor: string, brushPath: Coordinate[], brushTexture: string): Brush {
+    createBrush(lineThickness: number, firstColor: string, secondColor: string, brushPath: Coordinate[], brushTexture: string): Brush {
         let leftMostPoint = brushPath[0].pointX;
         let rightMostPoint = brushPath[0].pointX;
         let topMostPoint = brushPath[0].pointY;
         let bottomMostPoint = brushPath[0].pointY;
 
-        for (let i = 0; i < brushPath.length; i++) {
-            if (brushPath[i].pointX < leftMostPoint) {leftMostPoint = brushPath[i].pointX;}
-            if (brushPath[i].pointX > rightMostPoint) {rightMostPoint = brushPath[i].pointX;}
-            if (brushPath[i].pointY < topMostPoint) {topMostPoint = brushPath[i].pointY;}
-            if (brushPath[i].pointY > bottomMostPoint) {bottomMostPoint = brushPath[i].pointY;}
+        for (const coordinate of brushPath) {
+            if (coordinate.pointX < leftMostPoint) {leftMostPoint = coordinate.pointX; }
+            if (coordinate.pointX > rightMostPoint) {rightMostPoint = coordinate.pointX; }
+            if (coordinate.pointY < topMostPoint) {topMostPoint = coordinate.pointY; }
+            if (coordinate.pointY > bottomMostPoint) {bottomMostPoint = coordinate.pointY; }
         }
 
         const brushElement: Brush = {
@@ -195,14 +195,14 @@ export class BrushService {
         this.lastX = brush.path[0].pointX;
         this.lastY = brush.path[0].pointY;
 
-        for (let i = 0; i < brush.path.length; i++) {
+        for (const coordinate of brush.path) {
             this.canvasContext.beginPath();
             this.canvasContext.moveTo(this.lastX, this.lastY);
-            this.canvasContext.lineTo(brush.path[i].pointX, brush.path[i].pointY);
+            this.canvasContext.lineTo(coordinate.pointX, coordinate.pointY);
             this.canvasContext.closePath();
             this.canvasContext.stroke();
-            this.lastX = brush.path[i].pointX;
-            this.lastY = brush.path[i].pointY;
+            this.lastX = coordinate.pointX;
+            this.lastY = coordinate.pointY;
         }
     }
 }

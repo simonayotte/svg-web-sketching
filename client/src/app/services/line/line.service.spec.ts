@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
+import { Coordinate } from '../../models/coordinate';
 import { BrushComponent } from './../../components/brush/brush.component';
 import { ColorComponent } from './../../components/color/color.component';
 import { DrawPageComponent } from './../../components/draw-page/draw-page.component';
@@ -10,7 +11,6 @@ import { GuideComponent } from './../../components/guide/guide.component';
 import { LineComponent } from './../../components/line/line.component';
 import { PencilComponent } from './../../components/pencil/pencil.component';
 import { RectangleComponent } from './../../components/rectangle/rectangle.component';
-import { Coordinate } from '../../models/coordinate';
 import { LineService } from './line.service';
 
 describe('LineService', () => {

@@ -1,8 +1,8 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Rectangle } from 'src/app/models/rectangle';
 import { ColorService } from '../color/color.service';
 import { DrawStateService } from '../draw-state/draw-state.service';
-import { Rectangle } from 'src/app/models/rectangle';
 
 @Injectable({
     providedIn: 'root',

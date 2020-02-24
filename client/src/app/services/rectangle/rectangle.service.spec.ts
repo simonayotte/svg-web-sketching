@@ -9,9 +9,9 @@ import { GuideComponent } from 'src/app/components/guide/guide.component';
 import { LineComponent } from 'src/app/components/line/line.component';
 import { PencilComponent } from 'src/app/components/pencil/pencil.component';
 import { RectangleComponent } from 'src/app/components/rectangle/rectangle.component';
+import { Rectangle } from 'src/app/models/rectangle';
 import { DrawStateService } from '../draw-state/draw-state.service';
 import { RectangleService } from './rectangle.service';
-import { Rectangle } from 'src/app/models/rectangle';
 
 describe('RectangleService', () => {
     let drawStateService: DrawStateService;
@@ -178,20 +178,21 @@ describe('RectangleService', () => {
 
     it('createRectangleElement should create the right element', () => {
         const service: RectangleService = TestBed.get(RectangleService);
-        let startX = 1;
-        let startY = 1;
-        let endSelectX = 2;
-        let endSelectY = 2;
-        let firstColor = 'color';
-        let secondColor = 'color';
-        let thicknessTest = 1;
-        let typeTest = 'type';
-        expect(service.createRectangleElement(startX, startY, endSelectX, endSelectY, thicknessTest, firstColor, secondColor, typeTest)).toEqual(
+        const startX = 1;
+        const startY = 1;
+        const endSelectX = 2;
+        const endSelectY = 2;
+        const firstColor = 'color';
+        const secondColor = 'color';
+        const thicknessTest = 1;
+        const typeTest = 'type';
+        expect(service.createRectangleElement(startX, startY, endSelectX, endSelectY, thicknessTest, firstColor,
+                                              secondColor, typeTest, false)).toEqual(
             {
                 startSelectX: startX,
                 startSelectY: startY,
-                endSelectX: endSelectX,
-                endSelectY: endSelectY,
+                endSelectX,
+                endSelectY,
                 primaryColor: firstColor,
                 secondaryColor: secondColor,
                 thickness: thicknessTest,
@@ -203,24 +204,24 @@ describe('RectangleService', () => {
 
     it('drawFromRectangleElement should set the right drawing conditions', () => {
         const service: RectangleService = TestBed.get(RectangleService);
-        let startX = 1;
-        let startY = 1;
-        let endSelectX = 2;
-        let endSelectY = 2;
-        let firstColor = 'color';
-        let secondColor = 'color';
-        let thicknessTest = 1;
-        let typeTest = 'outline and fill';
-        let testRectangle: Rectangle =
-            {
+        const startX = 1;
+        const startY = 1;
+        const endSelectX = 2;
+        const endSelectY = 2;
+        const firstColor = 'color';
+        const secondColor = 'color';
+        const thicknessTest = 1;
+        const typeTest = 'outline and fill';
+        const testRectangle: Rectangle = {
                 startSelectX: startX,
                 startSelectY: startY,
-                endSelectX: endSelectX,
-                endSelectY: endSelectY,
+                endSelectX,
+                endSelectY,
                 primaryColor: firstColor,
                 secondaryColor: secondColor,
                 thickness: thicknessTest,
-                type: typeTest
+                type: typeTest,
+                isSquare: false
             }
         service.drawFromRectangleElement(testRectangle);
         expect(service.initialX).toEqual(startX);

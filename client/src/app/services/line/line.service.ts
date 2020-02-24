@@ -1,8 +1,8 @@
 import { ElementRef, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { ColorService } from 'src/app/services/color/color.service';
-import { DrawStateService } from '../draw-state/draw-state.service';
 import { Coordinate } from '../../models/coordinate';
+import { DrawStateService } from '../draw-state/draw-state.service';
 
 @Injectable({
     providedIn: 'root',
