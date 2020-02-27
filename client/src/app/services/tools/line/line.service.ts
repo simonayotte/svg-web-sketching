@@ -26,8 +26,8 @@ export class LineService implements Tool {
 
     prepare() {
         this.color = this.state.colorState.firstColor.hex();
-        this.state.canvasState.ctx.lineJoin = 'miter';
-        this.state.canvasState.ctx.lineCap = 'square';
+        this.state.canvasState.ctx.lineJoin = 'round';
+        this.state.canvasState.ctx.lineCap = 'round';
         this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
         this.state.canvasState.ctx.fillStyle = this.color;
         this.state.canvasState.ctx.strokeStyle = this.color;
