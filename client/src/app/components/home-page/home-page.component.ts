@@ -1,6 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { CreateDrawingComponent } from 'src/app/components/create-drawing/create-drawing.component';
+import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
 
 @Component({
     selector: 'app-home-page',
@@ -17,7 +17,7 @@ export class HomePageComponent implements OnInit {
         const dialogRef = this.dialog.open(CreateDrawingComponent);
         this.isCreateDrawingOpen = true;
 
-        dialogRef.afterClosed().subscribe( (result) => {
+        dialogRef.afterClosed().subscribe(result => {
             this.isCreateDrawingOpen = false;
         });
     }
