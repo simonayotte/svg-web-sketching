@@ -12,9 +12,11 @@ import { AppComponent } from './components/app/app.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { DrawModule } from './modules/draw.module';
 import { DrawingStartedDialogComponent } from './components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
+import { PreviewImageComponent } from './components/dialogs/preview-image/preview-image.component';
+import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-drawing.component';
 
 @NgModule({
-    declarations: [AppComponent, CreateDrawingComponent, HomePageComponent, DrawingStartedDialogComponent],
+    declarations: [AppComponent, CreateDrawingComponent, HomePageComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -27,7 +29,7 @@ import { DrawingStartedDialogComponent } from './components/dialogs/drawing-star
         DrawModule,
     ],
     providers: [],
-    entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent],
+    entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

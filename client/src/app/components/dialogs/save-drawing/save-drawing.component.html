@@ -1,0 +1,40 @@
+<h1 mat-dialog-title>Sauvegarder un dessin</h1>
+<div mat-dialog-content>
+  <form [formGroup]='saveDrawingForm'>
+    <label>
+        <div>
+            Nom:
+            <input type='text' formControlName='name' placeholder="Nom du dessin">
+            <i *ngIf = 'name.errors?.required' class="fas fa-exclamation-triangle" title = "Le nom est requis!"></i>
+        </div>
+    </label>
+    <br>
+    
+    <div formArrayName="tags">
+        <div class = 'etiquettes'>
+            Étiquettes:
+            <i class="fas fa-plus" (click)='addTag()' title='Ajouter une étiquette'></i>
+            <div class="alert alert-warning">
+                Les caractères spéciaux et les espaces ne sont pas acceptés
+              </div>
+        </div>
+        
+        <div *ngFor="let tag of tags.controls; let i=index">
+            <label>
+                <input type="text" [formControlName]="i" value = ''>
+                <i class="fas fa-times"(click)='removeTag(i)' title='Enlever une étiquette'></i>
+                <i *ngIf = 'tag.errors?.required' class="fas fa-exclamation-triangle" title = "L'étiquette est requise"></i>
+                <i *ngIf = 'tag.errors?.pattern' class="fas fa-exclamation-triangle" title = "Pas caractères spéciaux ou d'espace"></i>
+            </label>
+        </div>
+    </div>
+
+    <br>
+    <button type='submit' mat-dialog-close (click)='onSubmit()'[disabled] = '!saveDrawingForm.valid'>Sauvegarder</button>
+    <button mat-dialog-close (click)='Cancel()'>Fermer</button>
+  </form>
+</div>
+
+
+
+
