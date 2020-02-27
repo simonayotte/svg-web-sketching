@@ -1,0 +1,43 @@
+<app-color
+    *ngIf="isCreateDrawColorOpen"
+    [color]="canvasColor"
+    [lastColors]="[]"
+    (saveColor)="setCanvasColor($event)"
+    (closeColor)="setIsCreateDrawColorOpen(false)"
+></app-color>
+<h1 mat-dialog-title>Créer un dessin</h1>
+<div mat-dialog-content>
+    <form [formGroup]="drawingForm">
+        <label>
+            Largeur(px):
+            <input type="number" (keydown)="setIsWidthChangedToTrue()" formControlName="width" />
+            <div *ngIf="width.errors?.required" class="alert alert-danger">
+                La largeur est requise
+            </div>
+            <div *ngIf="width.errors?.min" class="alert alert-danger">
+                La largeur doit être positive
+            </div>
+        </label>
+        <br />
+
+        <label>
+            Longueur(px):
+            <input type="number" (keydown)="setIsHeightChangedToTrue()" formControlName="height" />
+            <div *ngIf="height.errors?.required" class="alert alert-danger">
+                La longueur est requise
+            </div>
+            <div *ngIf="height.errors?.min" class="alert alert-danger">
+                La longueur doit être positive
+            </div> </label
+        ><br />
+
+        <label>
+            <button [ngStyle]="{ 'background-color': canvasColor.hex() }" (click)="setIsCreateDrawColorOpen(true)">
+                Couleur d'arrière plan
+            </button>
+        </label>
+        <br />
+        <button type="submit" [disabled]="!drawingForm.valid" data-dismiss="modal" (click)="submit()" routerLink="/draw">Soumettre</button>
+        <button mat-dialog-close>Fermer</button>
+    </form>
+</div>

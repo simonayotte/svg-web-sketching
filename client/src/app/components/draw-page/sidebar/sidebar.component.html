@@ -1,0 +1,69 @@
+<div class="sidebar">
+    <i class="sidebar-option fas fa-mouse-pointer" (click)="changeTool('Selection')" [ngClass]="{ active: tool == 'Selection' }"></i>
+
+    <div class="sidebar-option" (click)="toogleDrawOptions()">
+        <i class=" fas fa-pencil-ruler"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowDrawOptions == true }">
+        <i class="sidebar-dropdown-option fas fa-pencil-alt" (click)="changeTool('Crayon')" [ngClass]="{ active: tool == 'Crayon' }"></i>
+        <i class="sidebar-dropdown-option fas fa-feather-alt" (click)="changeTool('Plume')" [ngClass]="{ active: tool == 'Plume' }"></i>
+        <i class="sidebar-dropdown-option fas fa-paint-brush" (click)="changeTool('Pinceau')" [ngClass]="{ active: tool == 'Pinceau' }"></i>
+        <i class="sidebar-dropdown-option fas fa-spray-can" (click)="changeTool('Aérosol')" [ngClass]="{ active: tool == 'Aérosol' }"></i>
+        <i class="sidebar-dropdown-option fas fa-fill" (click)="changeTool('Sceau')" [ngClass]="{ active: tool == 'Sceau' }"></i>
+    </div>
+
+    <div class="sidebar-option" (click)="toggleFormOptions()">
+        <i class="fas fa-shapes"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowFormOptions == true }">
+        <i class="sidebar-dropdown-option fas fa-grip-lines" (click)="changeTool('Ligne')" [ngClass]="{ active: tool == 'Ligne' }"></i>
+        <i class="sidebar-dropdown-option fas fa-stop" (click)="changeTool('Rectangle')" [ngClass]="{ active: tool == 'Rectangle' }"></i>
+        <i class="sidebar-dropdown-option fas fa-circle" (click)="changeTool('Ellipse')" [ngClass]="{ active: tool == 'Ellipse' }"></i>
+        <i class="sidebar-dropdown-option fas fa-draw-polygon" (click)="changeTool('Polygone')" [ngClass]="{ active: tool == 'Polygone' }"></i>
+    </div>
+
+    <div class="sidebar-option" (click)="toggleToolOptions()">
+        <i class=" fas fa-tools"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowToolOptions == true }">
+        <i class="sidebar-dropdown-option fas fa-stamp" (click)="changeTool('Étampe')" [ngClass]="{ active: tool == 'Étampe' }"></i>
+        <i class="sidebar-dropdown-option fas fa-eye-dropper" (click)="changeTool('pipette')" [ngClass]="{ active: tool == 'pipette' }"></i>
+        <i class="sidebar-dropdown-option fas fa-eraser" (click)="changeTool('Efface')" [ngClass]="{ active: tool == 'Efface' }"></i>
+    </div>
+
+    <div class="sidebar-option" (click)="toggleEditOptions()">
+        <i class=" fas fa-compress"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowEditOptions == true }">
+        <i class="sidebar-dropdown-option fas fa-sync-alt" (click)="changeTool('Rotation')" [ngClass]="{ active: tool == 'Rotation' }"></i>
+        <i class="sidebar-dropdown-option fas fa-crop-alt" (click)="changeTool('Redimension')" [ngClass]="{ active: tool == 'Redimension' }"></i>
+        <i class="sidebar-dropdown-option fas fa-cut" (click)="changeTool('Couper', false)" [ngClass]="{ active: tool == 'Couper' }"></i>
+        <i class="sidebar-dropdown-option fas fa-copy" (click)="changeTool('Copier', false)" [ngClass]="{ active: tool == 'Copier' }"></i>
+        <i class="sidebar-dropdown-option fas fa-clone" (click)="changeTool('Dupliquer', false)" [ngClass]="{ active: tool == 'Dupliquer' }"></i>
+        <i class="sidebar-dropdown-option fas fa-trash" (click)="changeTool('Supprimer', false)" [ngClass]="{ active: tool == 'Supprimer' }"></i>
+    </div>
+
+    <i class="sidebar-option fas fa-palette" (click)="changeTool('Couleur')" [ngClass]="{ active: tool == 'Couleur' }"></i>
+
+    <i class="sidebar-option fas fa-font" (click)="changeTool('Texte')" [ngClass]="{ active: tool == 'Texte' }"></i>
+
+    <!--Will contain actions like file saving ...-->
+    <div class="sidebar-option">
+        <i class="fas fa-cog"></i>
+        <i class="fas fa-sort-down"></i>
+    </div>
+    <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
+
+    <div class="sidebar-option" data-toggle="modal" data-target="#userGuide">
+        <i class="far fa-question-circle"></i>
+    </div>
+
+    <div class="sidebar-option" (click)="openDialog()">
+        <i class="fas fa-plus"></i>
+    </div>
+</div>

@@ -1,0 +1,49 @@
+<div class="color">
+    <div>
+        <canvas width="150" height="150" class="canvas-square" (click)="setColorWithSquare($event)" #square> </canvas>
+        <canvas width="25" height="150" class="canvas-bar" (click)="setColorWithBar($event)" #bar> </canvas>
+    </div>
+    <div>
+        <input class="slider" type="range" min="0" max="255" value="255" [(ngModel)]="color.a" />
+        <span class="opacity-value">{{ (color.a * 100) / 255 | number: '1.0-0' }} %</span>
+    </div>
+    <div class="rgb-form">
+        <div class="input-container">
+            <div class="input-label">R:</div>
+            <input class="rgb-input" type="number" [(ngModel)]="color.r" (input)="onRGBChange($event, 'r')" />
+        </div>
+        <div class="input-container">
+            <div class="input-label">G:</div>
+            <input class="rgb-input" type="number" [(ngModel)]="color.g" (input)="onRGBChange($event, 'g')" />
+        </div>
+        <div class="input-container">
+            <div class="input-label">B:</div>
+            <input class="rgb-input" type="number" [(ngModel)]="color.b" (input)="onRGBChange($event, 'b')" />
+        </div>
+    </div>
+
+    <div class="color-footer">
+        <div>
+            <div class="input-container">
+                <div class="input-label">#</div>
+                <input class="hex-input" type="text" [(ngModel)]="color.RGBHex" (input)="onHexChange($event)" maxlength="6" />
+            </div>
+            <div class="color-error" [hidden]="color.isHexValid == true">
+                Syntaxe invalide
+            </div>
+        </div>
+        <div class="color-sample" [ngStyle]="{ 'background-color': color.hex() }"></div>
+    </div>
+
+    <div class="used-colors">
+        <div *ngFor="let color of lastColors">
+            <div class="used-color" *ngIf="color" [ngStyle]="{ 'background-color': color.hex() }" (mousedown)="useColor($event, color)"></div>
+        </div>
+    </div>
+    <div class="confirm-button" (click)="save()">
+        Confirmer
+    </div>
+    <div class="cancel-button" (click)="close()">
+        Annuler
+    </div>
+</div>
