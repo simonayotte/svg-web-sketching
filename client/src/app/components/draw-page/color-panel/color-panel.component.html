@@ -1,0 +1,16 @@
+<!--Add 3 color buttons that will open colorWindow-->
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div (click)="openColorWindow('first')" class="panel-color-button">
+        <div class="panel-color-button-title">1</div>
+        <div class="panel-color-button-color" [ngStyle]="{ 'background-color': firstColor.hex() }"></div>
+    </div>
+    <i class="fas fa-exchange-alt text-white" (click)="swap()"></i>
+    <div (click)="openColorWindow('second')" class="panel-color-button">
+        <div class="panel-color-button-title">2</div>
+        <div class="panel-color-button-color" [ngStyle]="{ 'background-color': secondColor.hex() }"></div>
+    </div>
+</div>
+<div (click)="openColorWindow('canvas')" class="panel-color-button">
+    <div class="panel-color-button-title">Canevas</div>
+    <div class="panel-color-button-color" [ngStyle]="{ 'background-color': canvasColor.hex() }"></div>
+</div>
