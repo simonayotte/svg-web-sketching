@@ -1,4 +1,4 @@
-import { Color } from '../classes/color';
+import { Color } from '../models/color';
 
 export class ColorState {
     firstColor = new Color(0, 0, 0, 255);

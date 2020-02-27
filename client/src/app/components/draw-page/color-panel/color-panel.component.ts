@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Color } from 'src/app/classes/color';
+import { Color } from 'src/app/models/color';
 @Component({
     selector: 'app-color-panel',
     templateUrl: './color-panel.component.html',

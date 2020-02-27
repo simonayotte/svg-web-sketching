@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { BrushService } from '../tools/brush/brush.service';
 import { DrawState } from 'src/app/state/draw-state';
-import { Tool } from 'src/app/classes/tool';
+import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
 import { LineService } from '../tools/line/line.service';
 import { RectangleService } from '../tools/rectangle/rectangle.service';

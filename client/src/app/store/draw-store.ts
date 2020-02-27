@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
-import { Color } from '../classes/color';
+import { Color } from '../models/color';
+import { Shape } from '../models/shape';
 @Injectable({
     providedIn: 'root',
 })
@@ -42,6 +43,12 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             canvasState: { ...this.state.canvasState, height: value },
         });
+    }
+    pushShape(value: Shape) {
+        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value)}});
+    }
+    popShape(value: Shape) {
+        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
     }
 
     //Color

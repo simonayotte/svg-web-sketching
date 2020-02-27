@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Tool } from 'src/app/classes/tool';
+import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { Coordinate } from 'src/app/models/coordinate';
+import { Brush } from 'src/app/models/brush';
 @Injectable({
     providedIn: 'root',
 })
@@ -22,6 +24,8 @@ export class BrushService implements Tool {
     textureMap: Map<string, string> = new Map();
     lastX: number;
     lastY: number;
+
+    private path: Coordinate[];
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
@@ -63,6 +67,7 @@ export class BrushService implements Tool {
         this.state.canvasState.ctx.fill();
         this.lastX = event.offsetX;
         this.lastY = event.offsetY;
+        this.path.push(new Coordinate(this.lastX, this.lastY));
 
         this.state.canvasState.canvas.addEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.addEventListener('mouseup', this.mouseUpListener);
@@ -76,11 +81,13 @@ export class BrushService implements Tool {
         this.state.canvasState.ctx.stroke();
         this.lastX = event.offsetX;
         this.lastY = event.offsetY;
+        this.path.push(new Coordinate(this.lastX, this.lastY));
     }
 
     stop() {
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
+        this.store.pushShape(this.createBrush(this.state.globalState.thickness, this.color, this.color, this.path, this.state.brushTexture));
     }
     initMap() {
         this.textureMap.set(
@@ -127,5 +134,55 @@ export class BrushService implements Tool {
                   1,
               )}' fill-opacity='1' fill-rule='evenodd'/%3E%3C/svg%3E`,
         );
+    }
+
+    createBrush(lineThickness: number, firstColor: string, secondColor: string, brushPath: Coordinate[], brushTexture: string): Brush {
+        let leftMostPoint = brushPath[0].pointX;
+        let rightMostPoint = brushPath[0].pointX;
+        let topMostPoint = brushPath[0].pointY;
+        let bottomMostPoint = brushPath[0].pointY;
+
+        for (const coordinate of brushPath) {
+            if (coordinate.pointX < leftMostPoint) {leftMostPoint = coordinate.pointX; }
+            if (coordinate.pointX > rightMostPoint) {rightMostPoint = coordinate.pointX; }
+            if (coordinate.pointY < topMostPoint) {topMostPoint = coordinate.pointY; }
+            if (coordinate.pointY > bottomMostPoint) {bottomMostPoint = coordinate.pointY; }
+        }
+
+        const brushElement: Brush = {
+            startSelectX: leftMostPoint,
+            startSelectY: topMostPoint,
+            endSelectX: rightMostPoint,
+            endSelectY: bottomMostPoint,
+            primaryColor: firstColor,
+            secondaryColor: secondColor,
+            thickness: lineThickness,
+            path: brushPath,
+            texture: brushTexture
+        }
+
+        return brushElement;
+    }
+
+    drawFromPencilElement(brush: Brush): void {
+        // Stroke style
+        this.state.canvasState.ctx.lineJoin = 'round';
+        this.state.canvasState.ctx.lineCap = 'round';
+        this.state.globalState.thickness = brush.thickness;
+        this.state.brushTexture = brush.texture;
+        this.state.canvasState.ctx.strokeStyle = brush.primaryColor;
+        this.state.canvasState.ctx.fillStyle = brush.primaryColor;
+        this.lastX = brush.path[0].pointX;
+        this.lastY = brush.path[0].pointY;
+
+        for (const coordinate of brush.path) {
+            this.state.canvasState.ctx.beginPath();
+            this.state.canvasState.ctx.moveTo(this.lastX, this.lastY);
+            this.state.canvasState.ctx.lineTo(coordinate.pointX, coordinate.pointY);
+            this.state.canvasState.ctx.closePath();
+            this.state.canvasState.ctx.stroke();
+            this.lastX = coordinate.pointX;
+            this.lastY = coordinate.pointY;
+        }
     }
 }

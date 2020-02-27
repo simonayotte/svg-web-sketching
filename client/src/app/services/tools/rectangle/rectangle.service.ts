@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Tool } from 'src/app/classes/tool';
+import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { Rectangle } from 'src/app/models/rectangle';
 
 @Injectable({
     providedIn: 'root',
@@ -67,6 +68,9 @@ export class RectangleService implements Tool {
         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
+        this.store.pushShape(this.createRectangleElement(this.currentStartX, this.currentStartY, this.currentWidth - this.initialX,
+            this.currentHeight - this.initialY, this.state.globalState.thickness, this.firstColor,
+            this.secondColor, this.state.rectangleType, this.isShiftDown));
     }
     handleKeyDown(key: string) {
         if (key === 'Shift') {
@@ -154,5 +158,41 @@ export class RectangleService implements Tool {
                 this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
                 break;
         }
+    }
+
+    createRectangleElement(startX: number, startY: number, endX: number, endY: number, rectangleThickness: number,
+                           firstColor: string, secondColor: string, rectangleType: string, shift: boolean): Rectangle {
+        const rectangleElement: Rectangle = {
+            startSelectX: startX,
+            startSelectY: startY,
+            endSelectX: endX,
+            endSelectY: endY,
+            primaryColor: firstColor,
+            secondaryColor: secondColor,
+            thickness: rectangleThickness,
+            type: rectangleType,
+            isSquare: shift
+        }
+        return rectangleElement;
+    }
+
+    drawFromRectangleElement(rectangle: Rectangle): void {
+        this.setDrawingParameters(rectangle);
+        this.adjustStartPosition(rectangle.endSelectX, rectangle.endSelectY);
+        this.setRectangleDisplay(rectangle.type);
+        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, rectangle.thickness);
+    }
+
+    setDrawingParameters(rectangle: Rectangle): void {
+        this.initialX = rectangle.startSelectX;
+        this.initialY = rectangle.startSelectY;
+
+        // Stroke style
+        this.state.canvasState.ctx.lineWidth = rectangle.thickness;
+        this.state.canvasState.ctx.lineJoin = 'miter';
+        this.state.canvasState.ctx.lineCap = 'square';
+        this.state.canvasState.ctx.strokeStyle = rectangle.secondaryColor;
+        this.state.canvasState.ctx.fillStyle = rectangle.primaryColor;
+        this.isShiftDown = rectangle.isSquare;
     }
 }

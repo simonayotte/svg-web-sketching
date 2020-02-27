@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Color } from 'src/app/classes/color';
+import { Color } from 'src/app/models/color';
 
 const SIDEBAR_WIDTH = 52;
 

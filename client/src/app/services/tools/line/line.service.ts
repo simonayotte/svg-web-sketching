@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Coordinate } from '../../../classes/coordinate';
-import { Tool } from 'src/app/classes/tool';
+import { Coordinate } from '../../../models/coordinate';
+import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 
@@ -26,8 +26,8 @@ export class LineService implements Tool {
 
     prepare() {
         this.color = this.state.colorState.firstColor.hex();
-        this.state.canvasState.ctx.lineJoin = 'miter';
-        this.state.canvasState.ctx.lineCap = 'square';
+        this.state.canvasState.ctx.lineJoin = 'round';
+        this.state.canvasState.ctx.lineCap = 'round';
         this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
         this.state.canvasState.ctx.fillStyle = this.color;
         this.state.canvasState.ctx.strokeStyle = this.color;
