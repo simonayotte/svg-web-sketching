@@ -1,179 +1,99 @@
-<div class="sidebar">
-    <i
-        class="sidebar-option fas fa-mouse-pointer"
-        (click)="selectOption('Selection', false)"
-        [ngClass]="{ active: selectedOption == 'Selection' }"
-    ></i>
-
-    <div class="sidebar-option" (click)="toogleDrawOptions()">
-        <i class=" fas fa-pencil-ruler"></i>
-        <i class="fas fa-sort-down"></i>
-    </div>
-    <div class="sidebar-dropdown" [ngClass]="{ active: isShowDrawOptions == true }">
-        <i
-            class="sidebar-dropdown-option fas fa-pencil-alt"
-            (click)="selectOption('Crayon', true)"
-            [ngClass]="{ active: selectedOption == 'Crayon' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-feather-alt"
-            (click)="selectOption('Plume', true)"
-            [ngClass]="{ active: selectedOption == 'Plume' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-paint-brush"
-            (click)="selectOption('Pinceau', true)"
-            [ngClass]="{ active: selectedOption == 'Pinceau' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-spray-can"
-            (click)="selectOption('Aérosol', true)"
-            [ngClass]="{ active: selectedOption == 'Aérosol' }"
-        ></i>
-        <i class="sidebar-dropdown-option fas fa-fill" (click)="selectOption('Sceau', true)" [ngClass]="{ active: selectedOption == 'Sceau' }"></i>
-    </div>
-
-    <div class="sidebar-option" (click)="toggleFormOptions()">
-        <i class="fas fa-shapes"></i>
-        <i class="fas fa-sort-down"></i>
-    </div>
-    <div class="sidebar-dropdown" [ngClass]="{ active: isShowFormOptions == true }">
-        <i
-            class="sidebar-dropdown-option fas fa-grip-lines"
-            (click)="selectOption('Ligne', true)"
-            [ngClass]="{ active: selectedOption == 'Ligne' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-stop"
-            (click)="selectOption('Rectangle', true)"
-            [ngClass]="{ active: selectedOption == 'Rectangle' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-circle"
-            (click)="selectOption('Ellipse', true)"
-            [ngClass]="{ active: selectedOption == 'Ellipse' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-draw-polygon"
-            (click)="selectOption('Polygone', true)"
-            [ngClass]="{ active: selectedOption == 'Polygone' }"
-        ></i>
-    </div>
-
-    <div class="sidebar-option" (click)="toggleToolOptions()">
-        <i class=" fas fa-tools"></i>
-        <i class="fas fa-sort-down"></i>
-    </div>
-
-    <div class="sidebar-dropdown" [ngClass]="{ active: isShowToolOptions == true }">
-        <i class="sidebar-dropdown-option fas fa-stamp" (click)="selectOption('Étampe', true)" [ngClass]="{ active: selectedOption == 'Étampe' }"></i>
-        <i
-            class="sidebar-dropdown-option fas fa-eye-dropper"
-            (click)="selectOption('pipette')"
-            [ngClass]="{ active: selectedOption == 'pipette' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-eraser"
-            (click)="selectOption('Efface', true)"
-            [ngClass]="{ active: selectedOption == 'Efface' }"
-        ></i>
-    </div>
-
-    <div class="sidebar-option" (click)="toggleEditOptions()">
-        <i class=" fas fa-compress"></i>
-        <i class="fas fa-sort-down"></i>
-    </div>
-    <div class="sidebar-dropdown" [ngClass]="{ active: isShowEditOptions == true }">
-        <i
-            class="sidebar-dropdown-option fas fa-sync-alt"
-            (click)="selectOption('Rotation', true)"
-            [ngClass]="{ active: selectedOption == 'Rotation' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-crop-alt"
-            (click)="selectOption('Redimension', true)"
-            [ngClass]="{ active: selectedOption == 'Redimension' }"
-        ></i>
-        <i class="sidebar-dropdown-option fas fa-cut" (click)="selectOption('Couper', false)" [ngClass]="{ active: selectedOption == 'Couper' }"></i>
-        <i class="sidebar-dropdown-option fas fa-copy" (click)="selectOption('Copier', false)" [ngClass]="{ active: selectedOption == 'Copier' }"></i>
-        <i
-            class="sidebar-dropdown-option fas fa-clone"
-            (click)="selectOption('Dupliquer', false)"
-            [ngClass]="{ active: selectedOption == 'Dupliquer' }"
-        ></i>
-        <i
-            class="sidebar-dropdown-option fas fa-trash"
-            (click)="selectOption('Supprimer', false)"
-            [ngClass]="{ active: selectedOption == 'Supprimer' }"
-        ></i>
-    </div>
-
-    <i class="sidebar-option fas fa-palette" (click)="selectOption('Couleur', true)" [ngClass]="{ active: selectedOption == 'Couleur' }"></i>
-
-    <i class="sidebar-option fas fa-font" (click)="selectOption('Texte', true)" [ngClass]="{ active: selectedOption == 'Texte' }"></i>
-
-    <!--Will contain actions like file saving ...-->
-    <div class="sidebar-option">
-        <i class="fas fa-cog"></i>
-        <i class="fas fa-sort-down"></i>
-    </div>
-    <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }"></div>
-
-    <div class="sidebar-option" data-toggle="modal" data-target="#userGuide">
-        <i class="far fa-question-circle"></i>
-    </div>
-
-    <div class="sidebar-option" (click)="openDialog()">
-        <i class="fas fa-plus"></i>
-    </div>
-</div>
-
-<!-- Modal -->
-<div id="userGuide" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-xl">
-        <!-- Modal content-->
-        <div class="modal-content">
-            <app-guide></app-guide>
-        </div>
-    </div>
-</div>
-
-<!--Will contain option's customizations-->
-<div class="panel" [hidden]="!isPanelOpen">
-    <div class="panel-title">{{ selectedOption }}</div>
-    <!--Put components inside panel-content with ngswitchcase-->
-    <div class="panel-content" [ngSwitch]="selectedOption">
-        <app-brush *ngSwitchCase="'Pinceau'"></app-brush>
-        <app-pencil *ngSwitchCase="'Crayon'"></app-pencil>
-        <app-rectangle *ngSwitchCase="'Rectangle'"></app-rectangle>
-        <app-line *ngSwitchCase="'Ligne'"></app-line>
-
-        <!--Add 3 color buttons that will open colorWindow-->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div (click)="openColorWindow('first')" class="panel-color-button">
-                <div class="panel-color-button-title">1</div>
-                <div class="panel-color-button-color" [ngStyle]="{ 'background-color': firstColor }"></div>
-            </div>
-            <i class="fas fa-exchange-alt text-white" (click)="swapColors()"></i>
-            <div (click)="openColorWindow('second')" class="panel-color-button">
-                <div class="panel-color-button-title">2</div>
-                <div class="panel-color-button-color" [ngStyle]="{ 'background-color': secondColor }"></div>
+<ng-container *ngIf="store.stateObs | async as state">
+    <app-sidebar [tool]="state.globalState.tool" (toolChange)="store.setTool($event)"></app-sidebar>
+    <!-- Modal -->
+    <div id="userGuide" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-xl">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <app-guide></app-guide>
             </div>
         </div>
-        <div (click)="openColorWindow('canvas')" class="panel-color-button">
-            <div class="panel-color-button-title">Canevas</div>
-            <div class="panel-color-button-color" [ngStyle]="{ 'background-color': canvasColor }"></div>
-        </div>
     </div>
-</div>
-<app-color *ngIf="isPanelColorWindowOpen == true"></app-color>
 
-<div class="workspace" [style.background-color]="workspaceColor"></div>
-<canvas
-    #canvas
-    class="canvas"
-    [style.background-color]="canvasColor"
-    [width]="canvasWidth"
-    [height]="canvasHeight"
-    [ngClass]="{ withPanel: isPanelOpen == true }"
-></canvas>
+    <!--Will contain option's customizations-->
+    <div class="panel" *ngIf="state.globalState.isPanelOpen">
+        <div class="panel-title">{{ state.globalState.tool }}</div>
+        <!--Put components inside panel-content with ngswitchcase-->
+        <div class="panel-content" [ngSwitch]="state.globalState.tool">
+            <app-brush
+                *ngSwitchCase="'Pinceau'"
+                [texture]="state.brushTexture"
+                [thickness]="state.globalState.thickness"
+                (textureChange)="store.setBrushTexture($event)"
+                (thicknessChange)="store.setThickness($event)"
+            ></app-brush>
+            <app-line
+                *ngSwitchCase="'Ligne'"
+                [thickness]="state.globalState.thickness"
+                [lineHasJunction]="state.lineHasJunction"
+                [lineJunctionThickness]="state.lineJunctionThickness"
+                (lineJunctionThicknessChange)="store.setLineJunctionThickness($event)"
+                (lineHasJunctionChange)="store.setLineHasJunction($event)"
+                (thicknessChange)="store.setThickness($event)"
+            ></app-line>
+            <app-rectangle
+                *ngSwitchCase="'Rectangle'"
+                [thickness]="state.globalState.thickness"
+                [rectangleType]="state.rectangleType"
+                (thicknessChange)="store.setThickness($event)"
+                (rectangleTypeChange)="store.setRectangleType($event)"
+            ></app-rectangle>
+            <app-pencil
+                *ngSwitchCase="'Crayon'"
+                [thickness]="state.globalState.thickness"
+                (thicknessChange)="store.setThickness($event)"
+            ></app-pencil>
+        </div>
+
+        <app-color-panel
+            [firstColor]="state.colorState.firstColor"
+            [secondColor]="state.colorState.secondColor"
+            [canvasColor]="state.colorState.canvasColor"
+            (openColor)="store.setIsSidebarColorOpen(true)"
+            (selectedColorChange)="store.selectColor($event)"
+            (swapColor)="store.swapColor()"
+        ></app-color-panel>
+    </div>
+
+    <div class="color-picker" [ngSwitch]="state.colorState.selectedColor" *ngIf="state.colorState.isSidebarColorOpen">
+        <app-color
+            *ngSwitchCase="'first'"
+            [color]="state.colorState.firstColor"
+            [lastColors]="state.colorState.lastColors"
+            (saveColor)="store.setFirstColor($event, true)"
+            (setFirstColor)="store.setFirstColor($event)"
+            (setSecondColor)="store.setSecondColor($event)"
+            (closeColor)="store.setIsSidebarColorOpen(false)"
+        ></app-color>
+        <app-color
+            *ngSwitchCase="'second'"
+            [color]="state.colorState.secondColor"
+            [lastColors]="state.colorState.lastColors"
+            (saveColor)="store.setSecondColor($event, true)"
+            (closeColor)="store.setIsSidebarColorOpen(false)"
+            (setFirstColor)="store.setFirstColor($event)"
+            (setSecondColor)="store.setSecondColor($event)"
+        ></app-color>
+        <app-color
+            *ngSwitchCase="'canvas'"
+            [color]="state.colorState.canvasColor"
+            [lastColors]="state.colorState.lastColors"
+            (saveColor)="store.setCanvasColor($event, true)"
+            (closeColor)="store.setIsSidebarColorOpen(false)"
+            (setFirstColor)="store.setFirstColor($event)"
+            (setSecondColor)="store.setSecondColor($event)"
+        ></app-color>
+    </div>
+
+    <div class="workspace" [style.background-color]="state.colorState.workspaceColor.hex()"></div>
+    <canvas
+        canvas
+        class="canvas"
+        [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
+        [width]="state.canvasState.width"
+        [height]="state.canvasState.height"
+        [style.background-color]="state.colorState.canvasColor.hex()"
+        (toolChange)="store.setTool($event)"
+        (canvasHTMLChange)="store.setCanvasHTML($event)"
+    ></canvas>
+</ng-container>
