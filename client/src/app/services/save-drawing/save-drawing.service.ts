@@ -1,5 +1,11 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Drawing } from 'src/app/models/drawing';
+import { HttpClient } from '@angular/common/http';
+import { HttpResponse } from 'src/app/models/httpResponse';
+
+const BASE_URL: string = 'http://localhost:3000/savedrawing'
+
 
 @Injectable({
   providedIn: 'root'
@@ -12,9 +18,9 @@ export class SaveDrawingService {
   imgNameObs: Observable<string> = this.imgName.asObservable();
 
   private tags: BehaviorSubject<Array<string>> = new BehaviorSubject<Array<string>>([]);
-  tagsObs: Observable<Array<string>> = this.tags.asObservable();
+  tagsObs: Observable<Array<string>> = this.tags.asObservable()
 
-  constructor() { }
+  constructor(private http:HttpClient) { }
 
   setDataURL(dataURL:string): void{
     this.dataURL.next(dataURL);
@@ -27,4 +33,10 @@ export class SaveDrawingService {
   setTags(tags:Array<string>): void{
     this.tags.next(tags);
   }
+
+  saveDrawing(){
+    let drawing = new Drawing(this.imgName.getValue(), this.tags.getValue(), this.dataURL.getValue());
+    return this.http.post<HttpResponse>(BASE_URL,drawing)
+  }
 }
+

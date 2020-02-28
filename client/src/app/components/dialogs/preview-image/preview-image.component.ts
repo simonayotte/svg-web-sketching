@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SaveDrawingService } from 'src/app/services/save-drawing/save-drawing.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'app-preview-image',
@@ -10,11 +11,10 @@ import { DrawState } from 'src/app/state/draw-state';
 })
 export class PreviewImageComponent implements OnInit {
   dataURL: string;
-  name: string;
   state:DrawState;
-  constructor(private saveDrawingService:SaveDrawingService, private store:DrawStore) { 
+  buttonDisabled = false;
+  constructor(private saveDrawingService:SaveDrawingService, private store:DrawStore, private dialogRef:MatDialogRef<PreviewImageComponent>) { 
     this.saveDrawingService.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
-    this.saveDrawingService.imgNameObs.subscribe((imgName: string) => (this.name = imgName));
 
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
@@ -26,5 +26,13 @@ export class PreviewImageComponent implements OnInit {
 
   ngOnDestroy() {
     this.state.globalState.isKeyHandlerActive = true;
+  }
+
+  saveDrawing() {
+    this.buttonDisabled = true;
+    this.saveDrawingService.saveDrawing().subscribe(data => alert(data.message),
+    err => alert(err.message))
+    this.buttonDisabled = false;
+    this.dialogRef.close();
   }
 }
