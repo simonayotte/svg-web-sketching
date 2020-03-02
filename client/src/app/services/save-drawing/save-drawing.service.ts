@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Drawing } from 'src/app/models/drawing';
+import { Drawing } from '../../../../../common/models/drawing'
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from 'src/app/models/httpResponse';
 
