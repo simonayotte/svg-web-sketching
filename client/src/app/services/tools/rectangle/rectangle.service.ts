@@ -25,6 +25,7 @@ export class RectangleService implements Tool {
     currentStartY: number;
     currentHeight: number;
     currentWidth: number;
+    
 
     private canvasImage: ImageData;
 

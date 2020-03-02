@@ -46,6 +46,7 @@ export class DrawStore extends Store<DrawState> {
     }
     pushShape(value: Shape) {
         this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value)}});
+        console.log(this.state.canvasState.shapes);
     }
     popShape(value: Shape) {
         this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
