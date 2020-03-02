@@ -7,6 +7,7 @@ import * as logger from 'morgan';
 import { DateController } from './controllers/date.controller';
 import { IndexController } from './controllers/index.controller';
 import Types from './types';
+import { SaveDrawingController } from './controllers/savedrawing.controller';
 
 @injectable()
 export class Application {
@@ -16,6 +17,7 @@ export class Application {
     constructor(
         @inject(Types.IndexController) private indexController: IndexController,
         @inject(Types.DateController) private dateController: DateController,
+        @inject(Types.SaveDrawingController) private saveDrawingController: SaveDrawingController
     ) {
         this.app = express();
 
@@ -37,6 +39,7 @@ export class Application {
         // Notre application utilise le routeur de notre API `Index`
         this.app.use('/api/index', this.indexController.router);
         this.app.use('/api/date', this.dateController.router);
+        this.app.use('/savedrawing', this.saveDrawingController.router)
         this.errorHandling();
     }
 

@@ -25,7 +25,7 @@ export class BrushService implements Tool {
     lastX: number;
     lastY: number;
 
-    private path: Coordinate[];
+    private path: Coordinate[] = [];
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
