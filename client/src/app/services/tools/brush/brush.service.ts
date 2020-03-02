@@ -25,7 +25,7 @@ export class BrushService implements Tool {
     lastX: number;
     lastY: number;
 
-    private path: Coordinate[];
+    private path: Coordinate[] = [];
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
@@ -88,6 +88,8 @@ export class BrushService implements Tool {
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
         this.store.pushShape(this.createBrush(this.state.globalState.thickness, this.color, this.color, this.path, this.state.brushTexture));
+        this.drawFromPencilElement(this.createBrush(this.state.globalState.thickness, this.color, this.color, this.path, this.state.brushTexture));
+        this.path = [];
     }
     initMap() {
         this.textureMap.set(

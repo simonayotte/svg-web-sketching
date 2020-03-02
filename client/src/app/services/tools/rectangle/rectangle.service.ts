@@ -25,7 +25,7 @@ export class RectangleService implements Tool {
     currentStartY: number;
     currentHeight: number;
     currentWidth: number;
-    
+    isDrawing = false;
 
     private canvasImage: ImageData;
 
@@ -53,6 +53,7 @@ export class RectangleService implements Tool {
     }
 
     continue(event: MouseEvent): void {
+        this.isDrawing = true;
         this.adjustStartPosition(event.offsetX, event.offsetY);
         this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight, this.state.canvasState.ctx.lineWidth);
     }
@@ -69,9 +70,12 @@ export class RectangleService implements Tool {
         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
-        this.store.pushShape(this.createRectangleElement(this.currentStartX, this.currentStartY, this.currentWidth - this.initialX,
-            this.currentHeight - this.initialY, this.state.globalState.thickness, this.firstColor,
-            this.secondColor, this.state.rectangleType, this.isShiftDown));
+        if (this.isDrawing) {
+            this.store.pushShape(this.createRectangleElement(this.initialX, this.initialY, this.currentWidth + this.initialX,
+                this.currentHeight + this.initialY, this.state.globalState.thickness, this.firstColor,
+                this.secondColor, this.state.rectangleType, this.isShiftDown));
+            this.isDrawing = false;
+        }
     }
     handleKeyDown(key: string) {
         if (key === 'Shift') {
