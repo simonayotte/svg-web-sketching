@@ -21,44 +21,53 @@ export class CreateDrawingComponent implements OnInit {
 
     state: DrawState;
     ngOnInit() {
-        this.drawingForm.patchValue({ width: window.innerWidth });
-        this.drawingForm.patchValue({ height: window.innerHeight });
+        this.createDrawingForm.patchValue({ width: window.innerWidth });
+        this.createDrawingForm.patchValue({ height: window.innerHeight });
         this.isWidthModified = false;
         this.isHeightModified = false;
         this.canvasColor = new Color(255, 255, 255, 255);
+        this.state.globalState.isKeyHandlerActive = false;
     }
+
+    ngOnDestroy(){
+        this.state.globalState.isKeyHandlerActive = true;
+    }
+    
     isWidthModified = false;
     isHeightModified = false;
     isCreateDrawColorOpen = false;
 
     canvasColor: Color;
 
-    drawingForm = new FormGroup({
-        width: new FormControl('width', [Validators.required, Validators.min(0)]),
-        height: new FormControl('height', [Validators.required, Validators.min(0)]),
-    });
+    createDrawingForm = new FormGroup({
+        width: new FormControl('width', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
+        height: new FormControl('height', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
+      })
     get width() {
-        return this.drawingForm.get('width');
+        return this.createDrawingForm.get('width');
     }
     get height() {
-        return this.drawingForm.get('height');
+        return this.createDrawingForm.get('height');
     }
 
     submit(): void {
         this.dialogRef.close();
-        this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
+        if(this.state.canvasState.shapes.length != 0){
+            this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
+            this.state.canvasState.shapes = [];
+        }
         this.store.setCanvasColor(this.canvasColor);
-        this.store.setCanvasWidth(this.drawingForm.controls['width'].value - SIDEBAR_WIDTH);
-        this.store.setCanvasHeight(this.drawingForm.controls['height'].value);
+        this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH);
+        this.store.setCanvasHeight(this.createDrawingForm.controls['height'].value);
     }
 
     @HostListener('window:resize')
     onResize(): void {
         if (!this.isWidthModified) {
-            this.drawingForm.patchValue({ width: window.innerWidth });
+            this.createDrawingForm.patchValue({ width: window.innerWidth });
         }
         if (!this.isHeightModified) {
-            this.drawingForm.patchValue({ height: window.innerHeight });
+            this.createDrawingForm.patchValue({ height: window.innerHeight });
         }
     }
 
