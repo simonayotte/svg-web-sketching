@@ -14,7 +14,7 @@ export class SaveDrawingService {
         throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
       }
       let base64DataURL:string = dataURL.replace('data:image/png;base64,','');
-      let data = new Buffer(base64DataURL,'base64');
+      let data = Buffer.from(base64DataURL,'base64');
       let filename:string = name + '.png';
       fs.writeFileSync(__dirname + '/image-storage/'+ filename,data,'utf-8'); 
     }
