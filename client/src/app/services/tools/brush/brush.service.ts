@@ -25,7 +25,7 @@ export class BrushService implements Tool {
     lastX: number;
     lastY: number;
 
-    private path: Coordinate[];
+    private path: Coordinate[] = [];
 
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
@@ -87,7 +87,9 @@ export class BrushService implements Tool {
     stop() {
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
-        this.store.pushShape(this.createBrush(this.state.globalState.thickness, this.color, this.color, this.path, this.state.brushTexture));
+        if (this.path.length > 0) {
+            this.store.pushShape(this.createBrush(this.state.globalState.thickness, this.color, this.color, this.path, this.state.brushTexture));
+        }
     }
     initMap() {
         this.textureMap.set(
@@ -143,10 +145,18 @@ export class BrushService implements Tool {
         let bottomMostPoint = brushPath[0].pointY;
 
         for (const coordinate of brushPath) {
-            if (coordinate.pointX < leftMostPoint) {leftMostPoint = coordinate.pointX; }
-            if (coordinate.pointX > rightMostPoint) {rightMostPoint = coordinate.pointX; }
-            if (coordinate.pointY < topMostPoint) {topMostPoint = coordinate.pointY; }
-            if (coordinate.pointY > bottomMostPoint) {bottomMostPoint = coordinate.pointY; }
+            if (coordinate.pointX < leftMostPoint) {
+                leftMostPoint = coordinate.pointX;
+            }
+            if (coordinate.pointX > rightMostPoint) {
+                rightMostPoint = coordinate.pointX;
+            }
+            if (coordinate.pointY < topMostPoint) {
+                topMostPoint = coordinate.pointY;
+            }
+            if (coordinate.pointY > bottomMostPoint) {
+                bottomMostPoint = coordinate.pointY;
+            }
         }
 
         const brushElement: Brush = {
@@ -158,8 +168,8 @@ export class BrushService implements Tool {
             secondaryColor: secondColor,
             thickness: lineThickness,
             path: brushPath,
-            texture: brushTexture
-        }
+            texture: brushTexture,
+        };
 
         return brushElement;
     }

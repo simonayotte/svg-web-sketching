@@ -72,7 +72,9 @@ export class PencilService implements Tool {
     stop() {
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
-        this.store.pushShape(this.createPencilElement(this.state.globalState.thickness, this.color, this.color, this.path));
+        if (this.path.length > 0) {
+            this.store.pushShape(this.createPencilElement(this.state.globalState.thickness, this.color, this.color, this.path));
+        }
     }
 
     createPencilElement(lineThickness: number, firstColor: string, secondColor: string, pencilPath: Coordinate[]): Pencil {
@@ -82,10 +84,18 @@ export class PencilService implements Tool {
         let bottomMostPoint = pencilPath[0].pointY;
 
         for (const coordinate of pencilPath) {
-            if (coordinate.pointX < leftMostPoint) {leftMostPoint = coordinate.pointX; }
-            if (coordinate.pointX > rightMostPoint) {rightMostPoint = coordinate.pointX; }
-            if (coordinate.pointY < topMostPoint) {topMostPoint = coordinate.pointY; }
-            if (coordinate.pointY > bottomMostPoint) {bottomMostPoint = coordinate.pointY; }
+            if (coordinate.pointX < leftMostPoint) {
+                leftMostPoint = coordinate.pointX;
+            }
+            if (coordinate.pointX > rightMostPoint) {
+                rightMostPoint = coordinate.pointX;
+            }
+            if (coordinate.pointY < topMostPoint) {
+                topMostPoint = coordinate.pointY;
+            }
+            if (coordinate.pointY > bottomMostPoint) {
+                bottomMostPoint = coordinate.pointY;
+            }
         }
 
         const pencilElement: Pencil = {
@@ -96,8 +106,8 @@ export class PencilService implements Tool {
             primaryColor: firstColor,
             secondaryColor: secondColor,
             thickness: lineThickness,
-            path: pencilPath
-        }
+            path: pencilPath,
+        };
 
         return pencilElement;
     }
