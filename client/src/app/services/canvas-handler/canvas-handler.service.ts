@@ -8,6 +8,8 @@ import { RectangleService } from '../tools/rectangle/rectangle.service';
 import { PencilService } from '../tools/pencil/pencil.service';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
+import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
+import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 
 @Injectable({
     providedIn: 'root',
@@ -48,26 +50,34 @@ export class CanvasHandlerService {
     }
 
     onKeyDown(event: KeyboardEvent) {
-        const key = event.key;
+        if (this.state.globalState.isKeyHandlerActive){
+            const key = event.key;
 
-        const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
-        if (service) {
-            service.handleKeyDown(key);
-        }
+            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+            if (service) {
+                service.handleKeyDown(key);
+            }
 
-        if (this.keyMap.has(key)) {
-            const tool = this.keyMap.get(key) as string;
-            this.store.setTool(tool);
-        } else {
-            switch (key) {
-                case 'o':
-                    if (event.ctrlKey) {
-                        //mat dialog display
-                        this.matDialog.open(CreateDrawingComponent);
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    break;
+            if (this.keyMap.has(key)) {
+                const tool = this.keyMap.get(key) as string;
+                this.store.setTool(tool);
+            } else {
+                switch (key) {
+                    case 'o':
+                        if (event.ctrlKey) {
+                            //mat dialog display
+                            event.preventDefault();
+                            event.stopPropagation();
+                            this.state.canvasState.shapes.length > 0 ? this.matDialog.open(DrawingStartedDialogComponent) : this.matDialog.open(CreateDrawingComponent);
+                        }
+                        break;
+                    case 's':
+                        if (event.ctrlKey){
+                            this.matDialog.open(SaveDrawingComponent);
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                }
             }
         }
     }
