@@ -20,6 +20,7 @@ export class IndexController {
             // Send the request to the service and send the response
             const time: Message = await this.indexService.helloWorld();
             res.json(time);
+            
         });
 
         this.router.get('/about', (req: Request, res: Response, next: NextFunction) => {
