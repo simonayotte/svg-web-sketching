@@ -1,6 +1,10 @@
 <div mat-dialog-content>
-    <div class = 'previewImg'>
-        <img [src] = 'dataURL'/>
+    <div class = 'previewImg' 
+    [style.width.px] = "previewWidth"
+    [style.height.px] = "previewHeight">
+        <img [style.width.px] = "previewWidth"
+         [src] = 'dataURL'
+         [style.height.px] = "previewHeight"/>
     </div>
     <p>Êtes vous certain de vouloir sauvegarder l'image?</p>
     <button (click) = 'saveDrawing()' [disabled] = 'buttonDisabled'>Confirmer</button>
