@@ -26,6 +26,16 @@ export class CanvasDirective implements OnInit {
         this.canvasHandler.startTool(event);
     }
 
+    @HostListener('mouseup')
+    onMouseUp() {
+        this.canvasHandler.stopTool();
+    }
+
+    @HostListener('dblclick', ['$event'])
+    onDoubleClick(event: MouseEvent) {
+        //this.canvasHandler.onDoubleClick(event);
+    }
+
     @HostListener('mouseleave')
     onMouseleave() {
         this.canvasHandler.stopTool();

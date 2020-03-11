@@ -10,13 +10,20 @@ import { CreateDrawingComponent } from './components/dialogs/create-drawing-dial
 import { routes } from '../environments/routes';
 import { AppComponent } from './components/app/app.component';
 import { HomePageComponent } from './components/home-page/home-page.component';
-import { DrawModule } from './modules/draw.module';
+import { DrawModule } from './services/canvas-handler/modules/draw.module';
 import { DrawingStartedDialogComponent } from './components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { PreviewImageComponent } from './components/dialogs/preview-image/preview-image.component';
 import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-drawing.component';
 
 @NgModule({
-    declarations: [AppComponent, CreateDrawingComponent, HomePageComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent],
+    declarations: [
+        AppComponent,
+        CreateDrawingComponent,
+        HomePageComponent,
+        DrawingStartedDialogComponent,
+        SaveDrawingComponent,
+        PreviewImageComponent,
+    ],
     imports: [
         BrowserModule,
         HttpClientModule,

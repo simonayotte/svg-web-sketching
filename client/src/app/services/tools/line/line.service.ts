@@ -23,6 +23,9 @@ export class LineService implements Tool {
             }
         });
     }
+    continueSignal(): void {}
+
+    stopSignal(): void {}
 
     prepare() {
         this.color = this.state.colorState.firstColor.hex();

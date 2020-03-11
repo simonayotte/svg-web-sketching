@@ -30,6 +30,10 @@ export class PencilService implements Tool {
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
 
+    continueSignal(): void {}
+
+    stopSignal(): void {}
+
     prepare() {
         this.color = this.state.colorState.firstColor.hex();
 

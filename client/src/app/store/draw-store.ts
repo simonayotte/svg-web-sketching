@@ -45,11 +45,12 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     pushShape(value: Shape) {
-        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value)}});
+        this.setState({ ...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value) } });
     }
-    popShape(value: Shape) {
-        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
-    }
+    /* popShape(value: Shape) {
+        this.setState({...this.state, 
+            canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
+    }*/
 
     //Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {

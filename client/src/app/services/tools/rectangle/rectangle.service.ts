@@ -41,6 +41,10 @@ export class RectangleService implements Tool {
         });
     }
 
+    continueSignal(): void {}
+
+    stopSignal(): void {}
+
     start(event: MouseEvent) {
         this.initialX = event.offsetX;
         this.initialY = event.offsetY;
@@ -68,9 +72,19 @@ export class RectangleService implements Tool {
         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
-        this.store.pushShape(this.createRectangleElement(this.currentStartX, this.currentStartY, this.currentWidth - this.initialX,
-            this.currentHeight - this.initialY, this.state.globalState.thickness, this.firstColor,
-            this.secondColor, this.state.rectangleType, this.isShiftDown));
+        this.store.pushShape(
+            this.createRectangleElement(
+                this.currentStartX,
+                this.currentStartY,
+                this.currentWidth - this.initialX,
+                this.currentHeight - this.initialY,
+                this.state.globalState.thickness,
+                this.firstColor,
+                this.secondColor,
+                this.state.rectangleType,
+                this.isShiftDown,
+            ),
+        );
     }
     handleKeyDown(key: string) {
         if (key === 'Shift') {
@@ -160,8 +174,17 @@ export class RectangleService implements Tool {
         }
     }
 
-    createRectangleElement(startX: number, startY: number, endX: number, endY: number, rectangleThickness: number,
-                           firstColor: string, secondColor: string, rectangleType: string, shift: boolean): Rectangle {
+    createRectangleElement(
+        startX: number,
+        startY: number,
+        endX: number,
+        endY: number,
+        rectangleThickness: number,
+        firstColor: string,
+        secondColor: string,
+        rectangleType: string,
+        shift: boolean,
+    ): Rectangle {
         const rectangleElement: Rectangle = {
             startSelectX: startX,
             startSelectY: startY,
@@ -171,8 +194,8 @@ export class RectangleService implements Tool {
             secondaryColor: secondColor,
             thickness: rectangleThickness,
             type: rectangleType,
-            isSquare: shift
-        }
+            isSquare: shift,
+        };
         return rectangleElement;
     }
 

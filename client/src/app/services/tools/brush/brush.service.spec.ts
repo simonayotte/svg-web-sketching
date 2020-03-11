@@ -1,143 +1,129 @@
-import { ElementRef } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material';
-import { BrushComponent } from 'src/app/components/tools/brush/brush.component';
-import { ColorComponent } from 'src/app/components/tools/color/color.component';
-import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
-import { GuideComponent } from 'src/app/components/guide/guide.component';
-import { LineComponent } from 'src/app/components/tools/line/line.component';
-import { PencilComponent } from 'src/app/components/tools/pencil/pencil.component';
-import { RectangleComponent } from 'src/app/components/tools/rectangle/rectangle.component';
+import { TestBed } from '@angular/core/testing';
+
 import { BrushService } from './brush.service';
-
-describe('BrushService', () => {
+import { DrawStore } from '../../../store/draw-store';
+import { DrawState } from 'src/app/state/draw-state';
+fdescribe('BrushService', () => {
     let service: BrushService;
-    let drawStateService: DrawStateService;
-
+    //let state: DrawState;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, MatDialogModule],
-            declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent, LineComponent],
+            providers: [BrushService, DrawStore],
         });
-        drawStateService = TestBed.get(DrawStateService);
-        const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-        const brushFixture: ComponentFixture<BrushComponent> = TestBed.createComponent(BrushComponent);
-        service = TestBed.get(BrushService);
-        drawPageFixture.detectChanges();
-        brushFixture.detectChanges();
+        let store: DrawStore = TestBed.get(DrawStore);
+
+        store.setCanvasHTML(document.createElement('canvas'));
+
+        store.stateObs.subscribe((value: DrawState) => {
+            service = TestBed.get(BrushService);
+            service.state = value;
+        });
     });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#setTexture() should set #pattern to null if the texture parameter is not valid', (done: DoneFn) => {
-        drawStateService.canvasContextObs.subscribe(() => {
-            service.setTexture('invalid');
-            expect(service.pattern).toBeNull();
-            done();
+    it('#start should call prepare function', () => {
+        const event: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 300,
+            clientY: 400,
         });
+        const spy = spyOn(service, 'prepare');
+        service.start(event);
+        expect(spy).toHaveBeenCalled();
     });
 
-    it('#startDraw() should be called on mouse down', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 300,
-                clientY: 400,
-            });
-
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            expect(service.lastX).toEqual(300);
-            expect(service.lastY).toEqual(400);
-            done();
+    it('#start should set lastX and lastY with the last position of the mouse', () => {
+        const event: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 300,
+            clientY: 400,
         });
+        service.start(event);
+        expect(service.lastX).toEqual(300);
+        expect(service.lastY).toEqual(400);
     });
 
-    it('#continueDraw() should be called on mouse move after mouse down ', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 0,
-                clientY: 0,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
-                clientX: 100,
-                clientY: 50,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(service.lastX).toEqual(100);
-            expect(service.lastY).toEqual(50);
-            done();
-        });
+    it('#prepare should call #prepareTexture if texture is different from normal', () => {
+        const spy = spyOn(service, 'prepareTexture');
+        service.state.brushTexture = 'wave';
+        service.prepare();
+        expect(spy).toHaveBeenCalled();
     });
 
-    it('#continueDraw() should not be called on mouse move before mouse down ', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
-                clientX: 100,
-                clientY: 50,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(service.lastX).toEqual(0);
-            expect(service.lastY).toEqual(0);
-            done();
+    it('#prepare should set correctly canvas context settings', () => {
+        const event: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 300,
+            clientY: 400,
         });
+        service.start(event);
+        expect(service.lastX).toEqual(300);
+        expect(service.lastY).toEqual(400);
     });
 
-    it('#continueDraw() should not be called on mouse move after mouse up ', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 100,
-                clientY: 10,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseUp: MouseEvent = new MouseEvent('mouseup');
-            canvasRef.nativeElement.dispatchEvent(mouseUp);
-            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
-                clientX: 75,
-                clientY: 400,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(service.lastX).toEqual(0);
-            expect(service.lastY).toEqual(0);
-            done();
+    it('#continue should be called on mouse move after mouse down ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 0,
+            clientY: 0,
         });
+
+        service.start(mouseDown);
+
+        const spy = spyOn(service, 'continueSignal');
+
+        const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 100,
+            clientY: 50,
+        });
+        service.state.canvasState.canvas.dispatchEvent(mouseMove);
+        expect(spy).toHaveBeenCalled();
     });
 
-    it('#stopDraw() should be called on mouse up', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 100,
-                clientY: 10,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseUp: MouseEvent = new MouseEvent('mouseup');
-            canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(service.lastX).toEqual(0);
-            expect(service.lastY).toEqual(0);
-            done();
+    it('#continue should not be called on mouse move before mouse down ', () => {
+        const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 100,
+            clientY: 50,
         });
+        const spy = spyOn(service, 'continueSignal');
+        service.state.canvasState.canvas.dispatchEvent(mouseMove);
+        expect(spy).not.toHaveBeenCalled();
     });
-    it('#stopDraw() should not be called on mouse up before mouse down', (done: DoneFn) => {
-        service.lastX = 200;
-        service.lastY = 100;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseUp: MouseEvent = new MouseEvent('mouseup');
-            canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(service.lastX).toEqual(200);
-            expect(service.lastY).toEqual(100);
-            done();
+
+    it('#continue should not be called on mouse move after mouse up ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 100,
+            clientY: 10,
         });
+        service.start(mouseDown);
+        const spy = spyOn(service, 'continueSignal');
+
+        const mouseUp: MouseEvent = new MouseEvent('mouseup');
+        service.state.canvasState.canvas.dispatchEvent(mouseUp);
+        const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 75,
+            clientY: 400,
+        });
+
+        service.state.canvasState.canvas.dispatchEvent(mouseMove);
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('#stop should be called on mouse up', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 100,
+            clientY: 10,
+        });
+        service.start(mouseDown);
+        const mouseUp: MouseEvent = new MouseEvent('mouseup');
+        const spy = spyOn(service, 'stopSignal');
+        service.state.canvasState.canvas.dispatchEvent(mouseUp);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#stopDraw() should not be called on mouse up before mouse down', () => {
+        const mouseUp: MouseEvent = new MouseEvent('mouseup');
+        const spy = spyOn(service, 'stopSignal');
+        service.state.canvasState.canvas.dispatchEvent(mouseUp);
+        expect(spy).not.toHaveBeenCalled();
     });
 });

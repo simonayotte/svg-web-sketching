@@ -48,9 +48,14 @@ export class CanvasHandlerService {
             service.stop();
         }
     }
+    /*onDoubleClick(event: MouseEvent) {
+        if (this.state.globalState.tool === 'Ligne') {
+            this.stopTool();
+        }
+    }*/
 
     onKeyDown(event: KeyboardEvent) {
-        if (this.state.globalState.isKeyHandlerActive){
+        if (this.state.globalState.isKeyHandlerActive) {
             const key = event.key;
 
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
@@ -68,11 +73,13 @@ export class CanvasHandlerService {
                             //mat dialog display
                             event.preventDefault();
                             event.stopPropagation();
-                            this.state.canvasState.shapes.length > 0 ? this.matDialog.open(DrawingStartedDialogComponent) : this.matDialog.open(CreateDrawingComponent);
+                            this.state.canvasState.shapes.length > 0
+                                ? this.matDialog.open(DrawingStartedDialogComponent)
+                                : this.matDialog.open(CreateDrawingComponent);
                         }
                         break;
                     case 's':
-                        if (event.ctrlKey){
+                        if (event.ctrlKey) {
                             this.matDialog.open(SaveDrawingComponent);
                             event.preventDefault();
                             event.stopPropagation();

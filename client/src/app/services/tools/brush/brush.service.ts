@@ -32,7 +32,6 @@ export class BrushService implements Tool {
 
     prepare() {
         this.color = this.state.colorState.firstColor.hex();
-
         this.state.canvasState.ctx.lineJoin = 'round';
         this.state.canvasState.ctx.lineCap = 'round';
         this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
@@ -47,6 +46,10 @@ export class BrushService implements Tool {
     handleKeyDown(key: string): void {}
 
     handleKeyUp(key: string): void {}
+
+    continueSignal(): void {}
+
+    stopSignal(): void {}
 
     prepareTexture(texture: string) {
         this.initMap();
@@ -82,14 +85,21 @@ export class BrushService implements Tool {
         this.lastX = event.offsetX;
         this.lastY = event.offsetY;
         this.path.push(new Coordinate(this.lastX, this.lastY));
+        this.continueSignal();
     }
 
     stop() {
-        this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
-        this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
+        let canvas: HTMLCanvasElement = this.state.canvasState.canvas;
+
+        canvas.removeEventListener('mousemove', this.mouseMoveListener);
+
+        canvas.removeEventListener('mouseup', this.mouseUpListener);
+
         if (this.path.length > 0) {
             this.store.pushShape(this.createBrush(this.state.globalState.thickness, this.color, this.color, this.path, this.state.brushTexture));
         }
+
+        this.stopSignal();
     }
     initMap() {
         this.textureMap.set(
