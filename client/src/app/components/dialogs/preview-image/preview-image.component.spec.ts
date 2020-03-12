@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PreviewImageComponent } from './preview-image.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from '@angular/material';
 import { DrawStore } from 'src/app/store/draw-store';
+import { SaveDrawingService } from 'src/app/services/save-drawing/save-drawing.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PreviewImageComponent', () => {
   let component: PreviewImageComponent;
+  let store:DrawStore;
   let fixture: ComponentFixture<PreviewImageComponent>;
   const dialogMock = {
     close: () => {
@@ -17,15 +20,19 @@ describe('PreviewImageComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
         declarations: [PreviewImageComponent],
-        imports: [FormsModule, ReactiveFormsModule],
+        imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule, BrowserAnimationsModule],
         providers: [
-            {
-                provide: MatDialogRef,
-                useValue: { dialogMock },
-            },
-            DrawStore
+              {provide: MatDialogTitle, useValue: {}},
+              {provide: MatDialogRef, useValue: dialogMock},
+              {provide: MAT_DIALOG_DATA, useValue: []},
+            DrawStore,
+            SaveDrawingService
         ],
     }).compileComponents();
+    store = TestBed.get(DrawStore);
+
+    store.setCanvasHTML(document.createElement('canvas'));
+    
   }));
 
   beforeEach(() => {
@@ -38,16 +45,16 @@ describe('PreviewImageComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#setPreviewImgDimension should set #previewWidth to be equal to the canvas width if the canvas width is smaller than 300 px', async(inject([DrawStore], (drawStore: DrawStore) => {
-    drawStore.setCanvasWidth(150);
-    component.setPreviewImgDimension()
-    expect(component.previewWidth).toBe(150);
+  it('#saveDrawing() should call #saveDrawing of the saveDrawingService', async(inject([SaveDrawingService], (saveDrawingService: SaveDrawingService) => {
+    spyOn(saveDrawingService,'saveDrawing').and.callThrough();
+    component.saveDrawing()
+    expect(saveDrawingService.saveDrawing).toHaveBeenCalled();
   })));
 
-  it('#setPreviewImgDimension should set #previewHeight to be equal to the canvas height if the canvas width is smaller than 300 px', async(inject([DrawStore], (drawStore: DrawStore) => {
-    drawStore.setCanvasHeight(200);
-    component.setPreviewImgDimension()
-    expect(component.previewHeight).toBe(200);
-  })));
+  it('#saveDrawing() should close the dialog', () => {
+    spyOn(component.dialogRef, 'close').and.callThrough();
+    component.saveDrawing()
+    expect(component.dialogRef.close).toHaveBeenCalled();
+  });
   
 });
