@@ -21,7 +21,7 @@
         
         <div *ngFor="let tag of tags.controls; let i=index">
             <label>
-                <input type="text" [formControlName]="i" value = ''>
+                <input type="text" formControlName="i" value = ''>
                 <i class="fas fa-times"(click)='removeTag(i)' title='Enlever une étiquette'></i>
                 <i *ngIf = 'tag.errors?.required' class="fas fa-exclamation-triangle" title = "L'étiquette est requise"></i>
                 <i *ngIf = 'tag.errors?.pattern' class="fas fa-exclamation-triangle" title = "Pas caractères spéciaux ou d'espace"></i>
@@ -30,7 +30,7 @@
     </div>
 
     <br>
-    <button type='submit' mat-dialog-close (click)='onSubmit()'[disabled] = '!saveDrawingForm.valid'>Sauvegarder</button>
+    <button type='submit' mat-dialog-close (click)='submit()'[disabled] = '!saveDrawingForm.valid'>Sauvegarder</button>
     <button mat-dialog-close (click)='Cancel()'>Fermer</button>
   </form>
 </div>

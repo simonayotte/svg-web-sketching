@@ -57,7 +57,9 @@ export class CreateDrawingComponent implements OnInit {
             this.state.canvasState.shapes = [];
         }
         this.store.setCanvasColor(this.canvasColor);
-        this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH);
+        this.createDrawingForm.controls['width'].value >= window.innerWidth?
+        this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
+        this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value);
         this.store.setCanvasHeight(this.createDrawingForm.controls['height'].value);
     }
 
