@@ -49,6 +49,7 @@ export class RectangleService implements Tool {
         this.initialX = event.offsetX;
         this.initialY = event.offsetY;
         // Bind other mouse event
+        this.prepare();
         this.setRectangleDisplay(this.state.rectangleType);
         this.state.canvasState.canvas.addEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.addEventListener('mouseup', this.mouseUpListener);
@@ -114,7 +115,6 @@ export class RectangleService implements Tool {
     drawRect(startX: number, startY: number, width: number, height: number, thickness: number): void {
         this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
         this.state.canvasState.ctx.putImageData(this.canvasImage, 0, 0);
-        this.prepare();
         this.state.canvasState.ctx.beginPath();
 
         // Check if the rectangle is smaller than the thickness

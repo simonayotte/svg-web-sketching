@@ -1,6 +1,6 @@
 import { Shape } from './shape';
 
-export interface Rectangle extends Shape {
+export class Rectangle extends Shape {
     type: string;
     isSquare: boolean;
 }

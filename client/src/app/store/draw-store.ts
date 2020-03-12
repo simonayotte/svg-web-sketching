@@ -47,11 +47,12 @@ export class DrawStore extends Store<DrawState> {
     pushShape(value: Shape) {
         this.setState({ ...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value) } });
     }
-    /* popShape(value: Shape) {
-        this.setState({...this.state, 
-            canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
-    }*/
-
+    popShape(value: Shape) {
+        this.setState({
+            ...this.state,
+            canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0, this.state.canvasState.shapes.length - 1) },
+        });
+    }
     //Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({
@@ -161,6 +162,22 @@ export class DrawStore extends Store<DrawState> {
         this.setState({
             ...this.state,
             rectangleType: value,
+        });
+    }
+
+    //Polygon
+
+    setPolygonType(value: string) {
+        this.setState({
+            ...this.state,
+            polygonType: value,
+        });
+    }
+
+    setPolygonSides(value: number) {
+        this.setState({
+            ...this.state,
+            polygonSides: value,
         });
     }
 }

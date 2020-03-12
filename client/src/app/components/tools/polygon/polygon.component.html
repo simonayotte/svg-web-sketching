@@ -1,0 +1,27 @@
+<div class="configuration">
+    <div class="configuration-title">
+        Épaisseur
+    </div>
+    <input class="slider" value="thickness" (input)="setThickness($event)" type="range" min="1" max="50" />
+    <div class="configuration-value">{{ thickness }} px</div>
+</div>
+
+<div class="configuration">
+    <div class="configuration-title">
+        Tracé
+    </div>
+    <div class="type-boxes">
+        <i class="far fa-square type-box " (click)="setType('outline')" [ngClass]="{ active: type == 'outline' }"></i>
+        <i class="fas fa-square type-box " (click)="setType('outlineFill')" [ngClass]="{ active: type == 'outlineFill' }"></i>
+        <i class="fas fa-fill-drip type-box" (click)="setType('fill')" [ngClass]="{ active: type == 'fill' }"></i>
+    </div>
+</div>
+
+<div class="configuration">
+    <div class="configuration-title">
+        Côtés
+    </div>
+
+    <input class="slider" value="sides" (input)="setSides($event)" type="range" min="3" max="12" />
+    <div class="configuration-value">{{ sides }}</div>
+</div>

@@ -43,6 +43,16 @@
                 [thickness]="state.globalState.thickness"
                 (thicknessChange)="store.setThickness($event)"
             ></app-pencil>
+
+            <app-polygon
+                *ngSwitchCase="'Polygone'"
+                [thickness]="state.globalState.thickness"
+                [type]="state.polygonType"
+                [polygonSides]="state.polygonSides"
+                (thicknessChange)="store.setThickness($event)"
+                (polygonTypeChange)="store.setPolygonType($event)"
+                (polygonSidesChange)="store.setPolygonSides($event)"
+            ></app-polygon>
         </div>
 
         <app-color-panel

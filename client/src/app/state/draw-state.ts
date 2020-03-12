@@ -10,7 +10,10 @@ export class DrawState {
     lineJunctionThickness = 25;
     //rectangle
     rectangleType = 'outline only';
-    //
+    //polygon
+    polygonSides = 3;
+    polygonType = 'outline';
+
     colorState: ColorState;
     globalState: GlobalState;
     canvasState: CanvasState;
@@ -20,15 +23,3 @@ export class DrawState {
         this.canvasState = new CanvasState();
     }
 }
-
-/*readonly globalState: GlobalState;
-    readonly pencilState: PencilState;
-    readonly brushState: BrushState;
-    readonly colorState: ColorState;
-
-    constructor() {
-        this.globalState = new GlobalState();
-        this.pencilState = new PencilState();
-        this.brushState = new BrushState();
-        this.colorState = new ColorState();
-    }*/

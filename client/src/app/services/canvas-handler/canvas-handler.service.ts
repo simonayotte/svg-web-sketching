@@ -10,6 +10,8 @@ import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
+import { PolygonService } from '../tools/polygon/polygon.service';
+import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
 
 @Injectable({
     providedIn: 'root',
@@ -27,10 +29,15 @@ export class CanvasHandlerService {
         this.servicesMap.set('Pinceau', injector.get(BrushService));
         this.servicesMap.set('Rectangle', injector.get(RectangleService));
         this.servicesMap.set('Ligne', injector.get(LineService));
+        this.servicesMap.set('Polygone', injector.get(PolygonService));
+        this.servicesMap.set('Ellipse', injector.get(EllipsisService));
+
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
         this.keyMap.set('w', 'Pinceau');
         this.keyMap.set('l', 'Ligne');
+        this.keyMap.set('3', 'Polygone');
+        this.keyMap.set('2', 'Ellipse');
     }
 
     private servicesMap: Map<string, Tool> = new Map();

@@ -1,7 +1,7 @@
 import { Coordinate } from './coordinate';
 import { Shape } from './shape';
 
-export interface Brush extends Shape {
+export class Brush extends Shape {
     texture: string;
-    path: Coordinate[];
+    path: Coordinate[] = [];
 }

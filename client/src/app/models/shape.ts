@@ -1,4 +1,4 @@
-export interface Shape {
+export abstract class Shape {
     startSelectX: number;
     startSelectY: number;
     endSelectX: number;
