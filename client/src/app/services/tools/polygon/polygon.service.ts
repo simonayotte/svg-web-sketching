@@ -2,20 +2,17 @@ import { Injectable } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Polygon } from 'src/app/models/polygon';
-import { Coordinate } from 'src/app/models/coordinate';
+import { Polygon } from 'src/app/models/Polygon';
 
 @Injectable({
     providedIn: 'root',
 })
-export class PolygonService implements Tool {
+export class PolygonService extends Tool<Polygon> {
     state: DrawState;
     constructor(private store: DrawStore) {
+        super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
-            if (this.state.canvasState.canvas) {
-                this.prepare();
-            }
         });
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
@@ -24,66 +21,74 @@ export class PolygonService implements Tool {
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
 
-    private firstColor: string;
-    private secondColor: string;
-
     canvasImage: ImageData;
+    isDrawing = false;
 
-    startX: number;
-    startY: number;
-
-    size: number;
-
-    points: Coordinate[] = [];
-    prepare() {
-        this.firstColor = this.state.colorState.firstColor.hex();
-        this.secondColor = this.state.colorState.secondColor.hex();
-        this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
+    setup(element: Polygon) {
+        this.state.canvasState.ctx.lineWidth = element.thickness;
         this.state.canvasState.ctx.lineJoin = 'miter';
         this.state.canvasState.ctx.lineCap = 'square';
 
-        switch (this.state.polygonType) {
+        switch (element.type) {
             case 'outline':
-                this.state.canvasState.ctx.strokeStyle = this.secondColor;
+                this.state.canvasState.ctx.strokeStyle = element.secondaryColor;
+
                 break;
             case 'outlineFill':
-                this.state.canvasState.ctx.fillStyle = this.firstColor;
-                this.state.canvasState.ctx.strokeStyle = this.secondColor;
+                this.state.canvasState.ctx.fillStyle = element.primaryColor;
+                this.state.canvasState.ctx.strokeStyle = element.secondaryColor;
                 break;
             case 'fill':
-                this.state.canvasState.ctx.fillStyle = this.firstColor;
+                this.state.canvasState.ctx.fillStyle = element.primaryColor;
+
                 break;
         }
     }
     start(event: MouseEvent) {
-        this.prepare();
-        this.startX = event.offsetX;
-        this.startY = event.offsetY;
+        this.element = {
+            ...this.element,
+            centerX: event.offsetX,
+            centerY: event.offsetY,
+            primaryColor: this.state.colorState.firstColor.hex(),
+            secondaryColor: this.state.colorState.secondColor.hex(),
+            thickness: this.state.globalState.thickness,
+            type: this.state.polygonType,
+            sides: this.state.polygonSides,
+        };
+        this.setup(this.element);
+
         this.state.canvasState.canvas.addEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.addEventListener('mouseup', this.mouseUpListener);
         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
     }
-    continue(event: MouseEvent) {
+
+    draw(element: Polygon) {
         this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
         this.state.canvasState.ctx.putImageData(this.canvasImage, 0, 0);
-        this.size = (Math.abs(this.startX - event.offsetX) + Math.abs(this.startY - event.offsetY)) / 2;
-        this.state.canvasState.ctx.beginPath();
-        this.state.canvasState.ctx.moveTo(this.startX, this.startY - this.size);
-        this.points.push(new Coordinate(this.startX, this.startY - this.size));
 
-        for (let i: number = 0; i < this.state.polygonSides - 1; i++) {
-            let angle = ((360 / this.state.polygonSides) * (i + 1) + 90) * (Math.PI / 180);
-            let nextX = this.startX + this.size * Math.cos(angle);
-            let nextY = this.startY - this.size * Math.sin(angle);
+        this.state.canvasState.ctx.beginPath();
+        this.state.canvasState.ctx.moveTo(element.centerX, element.centerY - element.size);
+
+        for (let i: number = 0; i < element.sides - 1; i++) {
+            let angle = ((360 / element.sides) * (i + 1) + 90) * (Math.PI / 180);
+            let nextX = element.centerX + element.size * Math.cos(angle);
+            let nextY = element.centerY - element.size * Math.sin(angle);
 
             this.state.canvasState.ctx.lineTo(nextX, nextY);
-            this.points.push(new Coordinate(nextX, nextY));
         }
         this.state.canvasState.ctx.closePath();
 
-        this.addColors(this.state.polygonType);
+        this.addColors(element.type);
+    }
+    continue(event: MouseEvent) {
+        this.element = {
+            ...this.element,
+            size: (Math.abs(this.element.centerX - event.offsetX) + Math.abs(this.element.centerY - event.offsetY)) / 2,
+        };
 
-        this.continueSignal();
+        this.isDrawing = true;
+
+        this.draw(this.element);
     }
 
     addColors(type: string) {
@@ -100,7 +105,6 @@ export class PolygonService implements Tool {
                 break;
         }
     }
-    continueSignal() {}
 
     stop() {
         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
@@ -108,22 +112,22 @@ export class PolygonService implements Tool {
         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
 
-        const polygonElement: Polygon = {
-            sides: this.state.polygonSides,
-            points: this.points,
-            type: this.state.polygonType,
-            startSelectX: this.startX - this.size,
-            startSelectY: this.startY - this.size,
-            endSelectX: this.startX + this.size,
-            endSelectY: this.startY + this.size,
-            primaryColor: this.firstColor,
-            secondaryColor: this.secondColor,
-            thickness: this.state.globalState.thickness,
-        };
-        this.store.pushShape(polygonElement);
+        if (this.isDrawing) {
+            this.element = {
+                ...this.element,
+                startSelectX: this.element.centerX - this.element.size,
+                startSelectY: this.element.centerY - this.element.size,
+                endSelectX: this.element.centerX + this.element.size,
+                endSelectY: this.element.centerY + this.element.size,
+            };
+            this.store.pushShape(this.element);
+            this.isDrawing = false;
+        }
         this.stopSignal();
     }
-    stopSignal() {}
-    handleKeyDown(key: string) {}
-    handleKeyUp(key: string) {}
+
+    drawFromPolygonElement(element: Polygon): void {
+        this.setup(element);
+        this.draw(element);
+    }
 }

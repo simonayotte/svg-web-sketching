@@ -4,6 +4,7 @@ import { PolygonService } from './polygon.service';
 
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { Color } from 'src/app/models/color';
 
 describe('PolygonService', () => {
     let service: PolygonService;
@@ -17,6 +18,19 @@ describe('PolygonService', () => {
 
         store.stateObs.subscribe((value: DrawState) => {
             service = TestBed.get(PolygonService);
+            service.element = {
+                ...service.element,
+                primaryColor: '#0f0f33ff',
+                secondaryColor: '#0000ff10',
+                thickness: 20,
+                startSelectX: 0,
+                startSelectY: 0,
+                endSelectX: 0,
+                endSelectY: 0,
+                type: 'outline',
+                size: 20,
+                sides: 3,
+            };
             service.state = value;
         });
     });
@@ -24,15 +38,17 @@ describe('PolygonService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-    it('#start should call prepare function', () => {
+
+    it('#start should call setup function', () => {
         const event: MouseEvent = new MouseEvent('mousedown', {
             clientX: 300,
             clientY: 400,
         });
-        const spy = spyOn(service, 'prepare');
+        const spy = spyOn(service, 'setup');
         service.start(event);
         expect(spy).toHaveBeenCalled();
     });
+
     it('#start should get image data of canvas ', () => {
         const event: MouseEvent = new MouseEvent('mousedown', {
             clientX: 300,
@@ -42,24 +58,28 @@ describe('PolygonService', () => {
         expect(service.canvasImage).not.toBeNull();
     });
 
-    it('#prepare should set canvas context stroke style correctly if polygonType is outline ', () => {
-        service.state.polygonType = 'outline';
-        service.prepare();
-        expect(service.state.canvasState.ctx.strokeStyle).toContain(service.state.colorState.secondColor.colorHex());
+    it('#setup should set canvas context stroke style correctly if polygonType is outline ', () => {
+        let color = new Color(255, 10, 20, 255);
+        service.element = { ...service.element, type: 'outline', secondaryColor: color.hex() };
+        service.setup(service.element);
+        expect(service.state.canvasState.ctx.strokeStyle).toContain(color.colorHex());
     });
-    it('#prepare should set canvas context stroke style and fill style correctly if polygonType is outlineFill', () => {
-        service.state.polygonType = 'outlineFill';
-        service.prepare();
-        expect(service.state.canvasState.ctx.strokeStyle).toContain(service.state.colorState.secondColor.colorHex());
-        expect(service.state.canvasState.ctx.fillStyle).toContain(service.state.colorState.firstColor.colorHex());
+    it('#setup should set canvas context stroke style and fill style correctly if polygonType is outlineFill', () => {
+        let firstColor = new Color(255, 10, 20, 255);
+        let secondColor = new Color(0, 70, 20, 255);
+        service.element = { ...service.element, type: 'outlineFill', primaryColor: firstColor.hex(), secondaryColor: secondColor.hex() };
+        service.setup(service.element);
+        expect(service.state.canvasState.ctx.strokeStyle).toContain(secondColor.colorHex());
+        expect(service.state.canvasState.ctx.fillStyle).toContain(firstColor.colorHex());
     });
-    it('#prepare should set canvas context fill style correctly if polygonType is fill ', () => {
-        service.state.polygonType = 'fill';
-        service.prepare();
-        expect(service.state.canvasState.ctx.fillStyle).toContain(service.state.colorState.firstColor.colorHex());
+    it('#setup should set canvas context fill style correctly if polygonType is fill ', () => {
+        let color = new Color(255, 10, 20, 255);
+        service.element = { ...service.element, type: 'fill', primaryColor: color.hex() };
+        service.setup(service.element);
+        expect(service.state.canvasState.ctx.fillStyle).toContain(color.colorHex());
     });
 
-    it('#continue should be called on mouse move after mouse down ', () => {
+    it('#draw should be called on mouse move after mouse down ', () => {
         const mouseDown: MouseEvent = new MouseEvent('mousedown', {
             clientX: 0,
             clientY: 0,
@@ -67,7 +87,7 @@ describe('PolygonService', () => {
 
         service.start(mouseDown);
 
-        const spy = spyOn(service, 'continueSignal');
+        const spy = spyOn(service, 'draw');
 
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 100,
@@ -77,23 +97,23 @@ describe('PolygonService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#continue should not be called on mouse move before mouse down ', () => {
+    it('#draw should not be called on mouse move before mouse down ', () => {
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 100,
             clientY: 50,
         });
-        const spy = spyOn(service, 'continueSignal');
+        const spy = spyOn(service, 'draw');
         service.state.canvasState.canvas.dispatchEvent(mouseMove);
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#continue should not be called on mouse move after mouse up ', () => {
+    it('#draw should not be called on mouse move after mouse up ', () => {
         const mouseDown: MouseEvent = new MouseEvent('mousedown', {
             clientX: 100,
             clientY: 10,
         });
         service.start(mouseDown);
-        const spy = spyOn(service, 'continueSignal');
+        const spy = spyOn(service, 'draw');
 
         const mouseUp: MouseEvent = new MouseEvent('mouseup');
         service.state.canvasState.canvas.dispatchEvent(mouseUp);

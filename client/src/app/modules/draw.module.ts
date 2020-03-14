@@ -12,6 +12,7 @@ import { SidebarComponent } from '../components/draw-page/sidebar/sidebar.compon
 import { ColorPanelComponent } from '../components/draw-page/color-panel/color-panel.component';
 import { CanvasDirective } from '../directives/canvas.directive';
 import { PolygonComponent } from '../components/tools/polygon/polygon.component';
+import { EllipsisComponent } from '../components/tools/ellipsis/ellipsis.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { PolygonComponent } from '../components/tools/polygon/polygon.component'
         ColorPanelComponent,
         CanvasDirective,
         PolygonComponent,
+        EllipsisComponent,
     ],
     imports: [CommonModule, FormsModule],
     exports: [
@@ -42,6 +44,7 @@ import { PolygonComponent } from '../components/tools/polygon/polygon.component'
         ColorComponent,
         CanvasDirective,
         PolygonComponent,
+        EllipsisComponent,
     ],
 })
 export class DrawModule {}

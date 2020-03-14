@@ -3,14 +3,16 @@ import { Coordinate } from '../../../models/coordinate';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { Line } from 'src/app/models/line';
 
 @Injectable({
     providedIn: 'root',
 })
-export class LineService implements Tool {
+export class LineService extends Tool<Line> {
     state: DrawState;
 
     constructor(private store: DrawStore) {
+        super();
         this.coordinates = new Array<Coordinate>();
 
         this.mouseMoveListener = this.continue.bind(this);

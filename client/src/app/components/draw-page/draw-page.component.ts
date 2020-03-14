@@ -12,12 +12,4 @@ export class DrawPageComponent implements OnInit {
     constructor(public store: DrawStore) {}
 
     ngOnInit() {}
-
-    /*openDialog(): void { hibenk bro
-        const dialogRef = this.isDrawingStarted ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
-        window.removeEventListener('keydown', this.keyDownListener);
-        dialogRef.afterClosed().subscribe(result => {
-            window.addEventListener('keydown', this.keyDownListener);
-        });
-    }*/
 }

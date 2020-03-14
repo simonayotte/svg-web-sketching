@@ -8,9 +8,10 @@ import { Coordinate } from 'src/app/models/coordinate';
 @Injectable({
     providedIn: 'root',
 })
-export class PencilService implements Tool {
+export class PencilService extends Tool<Pencil> {
     state: DrawState;
     constructor(private store: DrawStore) {
+        super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
             if (this.state.canvasState.canvas) {

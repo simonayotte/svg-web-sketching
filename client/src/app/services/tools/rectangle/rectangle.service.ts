@@ -7,7 +7,7 @@ import { Rectangle } from 'src/app/models/rectangle';
 @Injectable({
     providedIn: 'root',
 })
-export class RectangleService implements Tool {
+export class RectangleService extends Tool<Rectangle> {
     state: DrawState;
 
     private mouseUpListener: EventListener;
@@ -29,6 +29,7 @@ export class RectangleService implements Tool {
     private canvasImage: ImageData;
 
     constructor(private store: DrawStore) {
+        super();
         // Bind this to event listeners
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);

@@ -18,7 +18,8 @@ import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.servic
 })
 export class CanvasHandlerService {
     state: DrawState;
-    private keyMap: Map<string, string> = new Map();
+    keyMap: Map<string, string> = new Map();
+    servicesMap: Map<string, Tool<any>> = new Map();
 
     constructor(public injector: Injector, public store: DrawStore, private matDialog: MatDialog) {
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -40,32 +41,25 @@ export class CanvasHandlerService {
         this.keyMap.set('2', 'Ellipse');
     }
 
-    private servicesMap: Map<string, Tool> = new Map();
-
     startTool(event: MouseEvent) {
         if (this.servicesMap.has(this.state.globalState.tool)) {
-            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+            const service: Tool<any> = this.servicesMap.get(this.state.globalState.tool) as Tool<any>;
             service.start(event);
         }
     }
 
     stopTool() {
         if (this.servicesMap.has(this.state.globalState.tool)) {
-            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+            const service: Tool<any> = this.servicesMap.get(this.state.globalState.tool) as Tool<any>;
             service.stop();
         }
     }
-    /*onDoubleClick(event: MouseEvent) {
-        if (this.state.globalState.tool === 'Ligne') {
-            this.stopTool();
-        }
-    }*/
 
     onKeyDown(event: KeyboardEvent) {
         if (this.state.globalState.isKeyHandlerActive) {
             const key = event.key;
 
-            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+            const service: Tool<any> = this.servicesMap.get(this.state.globalState.tool) as Tool<any>;
             if (service) {
                 service.handleKeyDown(key);
             }
@@ -98,7 +92,7 @@ export class CanvasHandlerService {
 
     onKeyUp(event: KeyboardEvent) {
         const key = event.key;
-        const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+        const service: Tool<any> = this.servicesMap.get(this.state.globalState.tool) as Tool<any>;
         if (service) {
             service.handleKeyUp(key);
         }

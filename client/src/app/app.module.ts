@@ -14,7 +14,6 @@ import { DrawModule } from './modules/draw.module';
 import { DrawingStartedDialogComponent } from './components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { PreviewImageComponent } from './components/dialogs/preview-image/preview-image.component';
 import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-drawing.component';
-import { EllipsisComponent } from './ellipsis/ellipsis.component';
 
 @NgModule({
     declarations: [
@@ -24,7 +23,6 @@ import { EllipsisComponent } from './ellipsis/ellipsis.component';
         DrawingStartedDialogComponent,
         SaveDrawingComponent,
         PreviewImageComponent,
-        EllipsisComponent,
     ],
     imports: [
         BrowserModule,

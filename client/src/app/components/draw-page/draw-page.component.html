@@ -1,5 +1,9 @@
 <ng-container *ngIf="store.stateObs | async as state">
-    <app-sidebar [tool]="state.globalState.tool" (toolChange)="store.setTool($event)"></app-sidebar>
+    <app-sidebar
+        [tool]="state.globalState.tool"
+        [isStartedDrawing]="state.canvasState.shapes.length > 0"
+        (toolChange)="store.setTool($event)"
+    ></app-sidebar>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">
         <div class="modal-dialog modal-xl">
@@ -53,6 +57,13 @@
                 (polygonTypeChange)="store.setPolygonType($event)"
                 (polygonSidesChange)="store.setPolygonSides($event)"
             ></app-polygon>
+            <app-ellipsis
+                *ngSwitchCase="'Ellipse'"
+                [thickness]="state.globalState.thickness"
+                [type]="state.ellipsisType"
+                (thicknessChange)="store.setThickness($event)"
+                (ellipsisTypeChange)="store.setEllipsisType($event)"
+            ></app-ellipsis>
         </div>
 
         <app-color-panel

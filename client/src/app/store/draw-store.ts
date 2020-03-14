@@ -92,6 +92,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     setIsSidebarColorOpen(value: boolean): void {
+        console.log('wha');
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, isKeyHandlerActive: !value },
@@ -100,6 +101,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     selectColor(value: string): void {
+        console.log('whaa');
         if (value == 'first') {
             this.setState({
                 ...this.state,
@@ -119,6 +121,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     swapColor(): void {
+        console.log('swap');
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, firstColor: this.state.colorState.secondColor, secondColor: this.state.colorState.firstColor },
@@ -178,6 +181,14 @@ export class DrawStore extends Store<DrawState> {
         this.setState({
             ...this.state,
             polygonSides: value,
+        });
+    }
+
+    //Ellipsis
+    setEllipsisType(value: string) {
+        this.setState({
+            ...this.state,
+            ellipsisType: value,
         });
     }
 }

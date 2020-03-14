@@ -10,6 +10,7 @@ export class CanvasDirective implements OnInit {
     @Output() toolChange = new EventEmitter<string>();
 
     ngOnInit() {
+        console.log(this.el.nativeElement);
         this.canvasHTMLChange.emit(this.el.nativeElement);
     }
 
@@ -26,18 +27,18 @@ export class CanvasDirective implements OnInit {
         this.canvasHandler.startTool(event);
     }
 
-    @HostListener('mouseup')
-    onMouseUp() {
-        this.canvasHandler.stopTool();
-    }
-
-    @HostListener('dblclick', ['$event'])
-    onDoubleClick(event: MouseEvent) {
-        //this.canvasHandler.onDoubleClick(event);
-    }
-
     @HostListener('mouseleave')
     onMouseleave() {
         this.canvasHandler.stopTool();
     }
+
+    /*@HostListener('mouseup')
+    onMouseUp() {
+        this.canvasHandler.stopTool();
+    }*/
+
+    /*@HostListener('dblclick', ['$event'])
+    onDoubleClick(event: MouseEvent) {
+        //this.canvasHandler.onDoubleClick(event);
+    }*/
 }

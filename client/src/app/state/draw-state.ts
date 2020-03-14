@@ -13,6 +13,8 @@ export class DrawState {
     //polygon
     polygonSides = 3;
     polygonType = 'outline';
+    //ellipsis
+    ellipsisType = 'outline';
 
     colorState: ColorState;
     globalState: GlobalState;

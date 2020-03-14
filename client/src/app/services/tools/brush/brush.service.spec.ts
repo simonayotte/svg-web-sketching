@@ -15,6 +15,18 @@ describe('BrushService', () => {
 
         store.stateObs.subscribe((value: DrawState) => {
             service = TestBed.get(BrushService);
+            service.element = {
+                ...service.element,
+                primaryColor: '#0f0f33ff',
+                secondaryColor: '#0000ff10',
+                thickness: 20,
+                startSelectX: 0,
+                startSelectY: 0,
+                endSelectX: 0,
+                endSelectY: 0,
+                texture: 'normal',
+                path: [],
+            };
             service.state = value;
         });
     });
@@ -22,35 +34,14 @@ describe('BrushService', () => {
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
-
-    it('#start should call prepare function', () => {
-        const event: MouseEvent = new MouseEvent('mousedown', {
-            clientX: 300,
-            clientY: 400,
-        });
-        const spy = spyOn(service, 'prepare');
-        service.start(event);
-        expect(spy).toHaveBeenCalled();
-    });
-
-    it('#start should set lastX and lastY with the last position of the mouse', () => {
-        const event: MouseEvent = new MouseEvent('mousedown', {
-            clientX: 300,
-            clientY: 400,
-        });
-        service.start(event);
-        expect(service.lastX).toEqual(300);
-        expect(service.lastY).toEqual(400);
-    });
-
-    it('#prepare should call #prepareTexture if texture is different from normal', () => {
+    it('#setup should call #prepareTexture if texture is different from normal', () => {
         const spy = spyOn(service, 'prepareTexture');
-        service.state.brushTexture = 'wave';
-        service.prepare();
+        service.element = { ...service.element, texture: 'wave' };
+        service.setup(service.element);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#continue should be called on mouse move after mouse down ', () => {
+    it('#draw should be called on mouse move after mouse down ', () => {
         const mouseDown: MouseEvent = new MouseEvent('mousedown', {
             clientX: 0,
             clientY: 0,
@@ -58,7 +49,7 @@ describe('BrushService', () => {
 
         service.start(mouseDown);
 
-        const spy = spyOn(service, 'continueSignal');
+        const spy = spyOn(service, 'draw');
 
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 100,
@@ -68,23 +59,23 @@ describe('BrushService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#continue should not be called on mouse move before mouse down ', () => {
+    it('#draw should not be called on mouse move before mouse down ', () => {
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 100,
             clientY: 50,
         });
-        const spy = spyOn(service, 'continueSignal');
+        const spy = spyOn(service, 'draw');
         service.state.canvasState.canvas.dispatchEvent(mouseMove);
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#continue should not be called on mouse move after mouse up ', () => {
+    it('#draw should not be called on mouse move after mouse up ', () => {
         const mouseDown: MouseEvent = new MouseEvent('mousedown', {
             clientX: 100,
             clientY: 10,
         });
         service.start(mouseDown);
-        const spy = spyOn(service, 'continueSignal');
+        const spy = spyOn(service, 'draw');
 
         const mouseUp: MouseEvent = new MouseEvent('mouseup');
         service.state.canvasState.canvas.dispatchEvent(mouseUp);
@@ -109,7 +100,7 @@ describe('BrushService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#stop() should not be called on mouse up before mouse down', () => {
+    it('#stop should not be called on mouse up before mouse down', () => {
         const mouseUp: MouseEvent = new MouseEvent('mouseup');
         const spy = spyOn(service, 'stopSignal');
         service.state.canvasState.canvas.dispatchEvent(mouseUp);
