@@ -12,6 +12,7 @@ import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/sa
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { PolygonService } from '../tools/polygon/polygon.service';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
+import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 
 @Injectable({
     providedIn: 'root',
@@ -32,6 +33,7 @@ export class CanvasHandlerService {
         this.servicesMap.set('Ligne', injector.get(LineService));
         this.servicesMap.set('Polygone', injector.get(PolygonService));
         this.servicesMap.set('Ellipse', injector.get(EllipsisService));
+        this.servicesMap.set('Pipette', injector.get(PipetteService));
 
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
@@ -39,6 +41,7 @@ export class CanvasHandlerService {
         this.keyMap.set('l', 'Ligne');
         this.keyMap.set('3', 'Polygone');
         this.keyMap.set('2', 'Ellipse');
+        this.keyMap.set('t', 'Pipette');
     }
 
     startTool(event: MouseEvent) {

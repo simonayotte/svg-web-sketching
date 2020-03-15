@@ -14,7 +14,17 @@
     margin-left: 52px;
 }
 
+.canvas-grid {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: 2;
+    margin-left: 52px;
+    pointer-events: none;
+}
+
 .canvas.withPanel,
+.canvas-grid.withPanel,
 .color-picker {
     margin-left: 252px;
 }

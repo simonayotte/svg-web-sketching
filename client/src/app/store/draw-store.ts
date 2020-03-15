@@ -31,6 +31,18 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
         });
     }
+    toggleGrid() {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, isDisplayGrid: !this.state.globalState.isDisplayGrid },
+        });
+    }
+    setGridSize(value: number) {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, gridSize: value },
+        });
+    }
     //Canvas
     setCanvasWidth(value: number) {
         this.setState({
@@ -92,7 +104,6 @@ export class DrawStore extends Store<DrawState> {
     }
 
     setIsSidebarColorOpen(value: boolean): void {
-        console.log('wha');
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, isKeyHandlerActive: !value },
@@ -101,7 +112,6 @@ export class DrawStore extends Store<DrawState> {
     }
 
     selectColor(value: string): void {
-        console.log('whaa');
         if (value == 'first') {
             this.setState({
                 ...this.state,
@@ -121,7 +131,6 @@ export class DrawStore extends Store<DrawState> {
     }
 
     swapColor(): void {
-        console.log('swap');
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, firstColor: this.state.colorState.secondColor, secondColor: this.state.colorState.firstColor },

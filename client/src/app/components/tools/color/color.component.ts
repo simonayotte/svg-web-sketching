@@ -56,8 +56,6 @@ export class ColorComponent implements OnInit {
         this.color.b = data[2];
         this.color.a = data[3];
         this.color.synchronizeHex();
-
-        //this.colorChange.emit(); //and add last color
     }
     setColorWithBar(event: MouseEvent) {
         const data: Uint8ClampedArray = this.barContext.getImageData(event.offsetX, event.offsetY, 1, 1).data;
@@ -68,8 +66,6 @@ export class ColorComponent implements OnInit {
         this.color.synchronizeHex();
 
         this.fillSquare();
-
-        //this.colorChange.emit(); //and add last color
     }
 
     save() {

@@ -21,7 +21,9 @@ export class PolygonComponent implements OnInit {
     }
 
     setType(value: string) {
-        this.polygonTypeChange.emit(value);
+        if (value === 'outline' || value === 'outlineFill' || value === 'fill') {
+            this.polygonTypeChange.emit(value);
+        }
     }
 
     setSides(event: any) {

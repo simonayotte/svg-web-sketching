@@ -2,7 +2,9 @@
     <app-sidebar
         [tool]="state.globalState.tool"
         [isStartedDrawing]="state.canvasState.shapes.length > 0"
+        [isDisplayGrid]="state.globalState.isDisplayGrid"
         (toolChange)="store.setTool($event)"
+        (toggleGrid)="store.toggleGrid()"
     ></app-sidebar>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">
@@ -116,5 +118,19 @@
         [style.background-color]="state.colorState.canvasColor.hex()"
         (toolChange)="store.setTool($event)"
         (canvasHTMLChange)="store.setCanvasHTML($event)"
-    ></canvas>
+    >
+    </canvas>
+    <canvas
+        canvas-grid
+        class="canvas-grid"
+        [width]="state.canvasState.width"
+        [height]="state.canvasState.height"
+        [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
+        [gridSize]="state.globalState.gridSize"
+        [isDisplayGrid]="state.globalState.isDisplayGrid"
+        [gridColor]="state.colorState.gridColor.hex()"
+        (toggleGrid)="store.toggleGrid()"
+        (gridSizeChange)="store.setGridSize($event)"
+    >
+    </canvas>
 </ng-container>

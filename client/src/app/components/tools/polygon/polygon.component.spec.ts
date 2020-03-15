@@ -43,7 +43,7 @@ describe('PolygonComponent', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#setSides() should not emit #polygonTypeChange if type is not valid', () => {
+    it('#setSides() should emit #polygonSidesChange ', () => {
         let spy = spyOn(component.polygonSidesChange, 'emit');
         component.setSides({ target: { value: 10 } });
 

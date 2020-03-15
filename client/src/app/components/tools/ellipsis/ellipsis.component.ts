@@ -19,7 +19,7 @@ export class EllipsisComponent implements OnInit {
     }
 
     setType(value: string) {
-        if (value === 'outline ' || value === 'outlineFill' || value === 'fill') {
+        if (value === 'outline' || value === 'outlineFill' || value === 'fill') {
             this.ellipsisTypeChange.emit(value);
         }
     }

@@ -18,13 +18,19 @@ export class SidebarComponent implements OnInit {
     @Input('tool') tool: string;
     @Input('isStartedDrawing') isStartedDrawing: boolean;
 
+    @Input('isDisplayGrid') isDisplayGrid: boolean;
     @Output() toolChange = new EventEmitter();
+    @Output() toggleGrid = new EventEmitter();
+
     constructor(private dialog: MatDialog) {}
 
     changeTool(tool: String) {
         this.toolChange.emit(tool);
     }
 
+    displayGridChange() {
+        this.toggleGrid.emit();
+    }
     ngOnInit() {}
 
     toogleDrawOptions(): void {
