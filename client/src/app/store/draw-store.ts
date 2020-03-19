@@ -43,6 +43,12 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, gridSize: value },
         });
     }
+    setIsKeyHandlerActive(value: boolean) {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, isKeyHandlerActive: value },
+        });
+    }
     //Canvas
     setCanvasWidth(value: number) {
         this.setState({
@@ -145,6 +151,14 @@ export class DrawStore extends Store<DrawState> {
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, lastColorsIndex, lastColors },
+        });
+    }
+
+    setGridOpacity(value: number) {
+        const gridColor = this.state.colorState.gridColor;
+        this.setState({
+            ...this.state,
+            colorState: { ...this.state.colorState, gridColor: new Color(gridColor.r, gridColor.g, gridColor.b, value) },
         });
     }
     //Brush

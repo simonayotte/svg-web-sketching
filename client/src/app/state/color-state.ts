@@ -13,5 +13,3 @@ export class ColorState {
     selectedColor = '';
     constructor() {}
 }
-
-//faire couleur et key-handler

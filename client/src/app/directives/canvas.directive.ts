@@ -7,7 +7,6 @@ export class CanvasDirective implements OnInit {
     constructor(private el: ElementRef, private canvasHandler: CanvasHandlerService) {}
 
     @Output() canvasHTMLChange = new EventEmitter();
-    @Output() toolChange = new EventEmitter<string>();
 
     ngOnInit() {
         this.canvasHTMLChange.emit(this.el.nativeElement);

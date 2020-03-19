@@ -29,7 +29,7 @@ export class ColorComponent implements OnInit {
         this.barContext = this.barRef.nativeElement.getContext('2d');
         this.color = new Color(this.colorInput.r, this.colorInput.g, this.colorInput.b, this.colorInput.a);
 
-        this.fillSquare();
+        this.fillSquare(this.color);
         this.fillBar();
     }
 
@@ -41,12 +41,12 @@ export class ColorComponent implements OnInit {
             event.target.value = 255;
         }
         this.color.synchronizeHex(type);
-        this.fillSquare();
+        this.fillSquare(this.color);
     }
 
     onHexChange() {
         this.color.synchronizeRGB();
-        this.fillSquare();
+        this.fillSquare(this.color);
     }
 
     setColorWithSquare(event: MouseEvent) {
@@ -65,7 +65,7 @@ export class ColorComponent implements OnInit {
         this.color.a = data[3];
         this.color.synchronizeHex();
 
-        this.fillSquare();
+        this.fillSquare(this.color);
     }
 
     save() {
@@ -83,10 +83,10 @@ export class ColorComponent implements OnInit {
             this.setSecondColor.emit(color);
         }
     }
-    fillSquare(): void {
+    fillSquare(color: Color): void {
         const width: number = this.squareRef.nativeElement.width;
         const height: number = this.squareRef.nativeElement.height;
-        this.squareContext.fillStyle = '#' + this.color.colorHex();
+        this.squareContext.fillStyle = '#' + color.colorHex();
         this.squareContext.fillRect(0, 0, width, height);
 
         const whiteGradient: CanvasGradient = this.squareContext.createLinearGradient(0, 0, width, 0);

@@ -1,0 +1,18 @@
+<div class="configuration mt-3">
+    <div class="configuration-title">
+        Taille Grille
+    </div>
+    <div class="size-form" [ngClass]="{ error: isSizeError }">
+        <input type="number" value="50" class="input-number" [(ngModel)]="size" (focus)="setKeyHandler(false)" (focusout)="setKeyHandler(true)" />
+        <i class="fas fa-check" (click)="confirmGridSize()"></i>
+    </div>
+    <div *ngIf="isSizeError" class="input-error">{{ sizeErrorMsg }}</div>
+</div>
+
+<div class="configuration mt-3">
+    <div class="configuration-title">
+        Opacité Grille
+    </div>
+    <input class="slider" value="255" type="range" min="12" max="255" (input)="setGridOpacity($event)" />
+    <div class="configuration-value">{{ (opacity * 100) / 255 | number: '1.0-0' }} %</div>
+</div>

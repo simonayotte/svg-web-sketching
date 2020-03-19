@@ -1,60 +1,70 @@
 import { CanvasDirective } from './canvas.directive';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { CanvasHandlerService } from '../services/canvas-handler/canvas-handler.service';
 //import { ElementRef } from '@angular/core';
 import { MatDialogModule } from '@angular/material';
+import { Component, DebugElement } from '@angular/core';
+import { By } from '@angular/platform-browser';
 
+@Component({
+    template: '<canvas canvas> </canvas>',
+})
+class TestComponent {}
 describe('CanvasDirective', () => {
     // let directive: CanvasDirective;
-    // let canvasHandler: CanvasHandlerService;
-    // let canvas: HTMLCanvasElement;
+    let fixture: ComponentFixture<TestComponent>;
+    let directive: CanvasDirective;
+    let directiveEl: DebugElement;
+    let canvasEl: DebugElement;
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [CanvasDirective],
+            declarations: [CanvasDirective, TestComponent],
             providers: [CanvasHandlerService],
             imports: [MatDialogModule],
         });
-        /*canvasHandler = TestBed.get(CanvasHandlerService);
-        canvas = document.createElement('canvas');
-        directive = new CanvasDirective(new ElementRef(canvas), canvasHandler);*/
-    });
-    /*it('should create an instance', () => {
-        expect(directive).toBeTruthy();
+        fixture = TestBed.createComponent(TestComponent);
+        directiveEl = fixture.debugElement.query(By.directive(CanvasDirective));
+        directive = directiveEl.injector.get(CanvasDirective);
+        canvasEl = fixture.debugElement.query(By.css('canvas'));
+
+        directive.ngOnInit();
     });
 
-    it('keydown event should call #onKeyDown CanvasHandlerService function ', () => {
+    it('should create an instance', () => {
+        expect(directive).toBeTruthy();
+    });
+    it('keydown event should call #onKeyDown()', () => {
         const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'c',
         });
 
-        let spy = spyOn(canvasHandler, 'onKeyDown');
-        canvas.dispatchEvent(event);
+        let spy = spyOn(directive, 'onKeyDown');
+        document.dispatchEvent(event);
         expect(spy).toHaveBeenCalled();
     });
-    it('keyup event should call #onKeyUp CanvasHandlerService function ', () => {
+    it('keyup event should call #onKeyUp()', () => {
         const event: KeyboardEvent = new KeyboardEvent('keyup', {
             key: 'c',
         });
-        let spy = spyOn(canvasHandler, 'onKeyUp');
-        canvas.dispatchEvent(event);
+        let spy = spyOn(directive, 'onKeyUp');
+        document.dispatchEvent(event);
+
         expect(spy).toHaveBeenCalled();
     });
-    it('mousedown event should call #startTool CanvasHandlerService function ', () => {
+    it('mousedown event should call #onMouseDown()', () => {
         const event: MouseEvent = new MouseEvent('mousedown', {
             clientX: 10,
             clientY: 15,
         });
-        let spy = spyOn(canvasHandler, 'startTool');
-        canvas.dispatchEvent(event);
+        let spy = spyOn(directive, 'onMouseDown');
+        canvasEl.triggerEventHandler('mousedown', event);
+
         expect(spy).toHaveBeenCalled();
     });
-    it('mouseout event should call #stopTool CanvasHandlerService function ', () => {
-        const event: MouseEvent = new MouseEvent('mouseout', {
-            clientX: 10,
-            clientY: 15,
-        });
-        let spy = spyOn(canvasHandler, 'stopTool');
-        canvas.dispatchEvent(event);
+    it('mouseleave event should call #onMouseleave()', () => {
+        let spy = spyOn(directive, 'onMouseleave');
+        canvasEl.triggerEventHandler('mouseleave', null);
+
         expect(spy).toHaveBeenCalled();
-    });*/
+    });
 });

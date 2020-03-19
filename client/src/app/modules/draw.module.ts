@@ -14,6 +14,7 @@ import { CanvasDirective } from '../directives/canvas.directive';
 import { PolygonComponent } from '../components/tools/polygon/polygon.component';
 import { EllipsisComponent } from '../components/tools/ellipsis/ellipsis.component';
 import { CanvasGridDirective } from '../directives/canvas-grid.directive';
+import { GridPanelComponent } from '../components/draw-page/grid-panel/grid-panel.component';
 
 @NgModule({
     declarations: [
@@ -27,6 +28,7 @@ import { CanvasGridDirective } from '../directives/canvas-grid.directive';
         RectangleComponent,
         ColorComponent,
         ColorPanelComponent,
+        GridPanelComponent,
         CanvasDirective,
         CanvasGridDirective,
         PolygonComponent,
@@ -37,6 +39,7 @@ import { CanvasGridDirective } from '../directives/canvas-grid.directive';
         DrawPageComponent,
         SidebarComponent,
         ColorPanelComponent,
+        GridPanelComponent,
         BrushComponent,
         ColorComponent,
         GuideComponent,

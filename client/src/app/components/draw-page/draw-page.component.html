@@ -76,6 +76,16 @@
             (selectedColorChange)="store.selectColor($event)"
             (swapColor)="store.swapColor()"
         ></app-color-panel>
+
+        <app-grid-panel
+            *ngIf="state.globalState.isDisplayGrid"
+            [gridOpacity]="state.colorState.gridColor.a"
+            [gridSize]="state.globalState.gridSize"
+            (gridOpacityChange)="store.setGridOpacity($event)"
+            (gridSizeChange)="store.setGridSize($event)"
+            (keyHandlerChange)="store.setIsKeyHandlerActive($event)"
+        >
+        </app-grid-panel>
     </div>
 
     <div class="color-picker" [ngSwitch]="state.colorState.selectedColor" *ngIf="state.colorState.isSidebarColorOpen">
@@ -116,7 +126,6 @@
         [width]="state.canvasState.width"
         [height]="state.canvasState.height"
         [style.background-color]="state.colorState.canvasColor.hex()"
-        (toolChange)="store.setTool($event)"
         (canvasHTMLChange)="store.setCanvasHTML($event)"
     >
     </canvas>
@@ -128,7 +137,7 @@
         [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
         [gridSize]="state.globalState.gridSize"
         [isDisplayGrid]="state.globalState.isDisplayGrid"
-        [gridColor]="state.colorState.gridColor.hex()"
+        [gridColor]="state.colorState.gridColor"
         (toggleGrid)="store.toggleGrid()"
         (gridSizeChange)="store.setGridSize($event)"
     >
