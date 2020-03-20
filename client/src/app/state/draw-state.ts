@@ -10,6 +10,8 @@ export class DrawState {
     lineJunctionThickness = 25;
     //rectangle
     rectangleType = 'outline only';
+    //aerosol
+    emissionRate = 30;
     //
     colorState: ColorState;
     globalState: GlobalState;

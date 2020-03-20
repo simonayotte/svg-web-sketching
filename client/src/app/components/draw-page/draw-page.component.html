@@ -47,6 +47,8 @@
                 *ngSwitchCase="'Aérosol'"
                 [thickness]="state.globalState.thickness"
                 (thicknessChange)="store.setThickness($event)"
+                [emissionRate]="state.emissionRate"
+                (emissionRateChange)="store.setEmissionRate($event)"
             >
             </app-aerosol>
         </div>

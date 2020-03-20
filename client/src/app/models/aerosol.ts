@@ -1,6 +1,7 @@
 import { Shape } from './shape';
-//TODO: Completer models pour aerosol
+import { Coordinate } from './coordinate';
 
 export interface Aerosol extends Shape {
-    //TODO: Ajout attributs pour Shape
+    path: Coordinate[];
+    emissionRate: number;
 }

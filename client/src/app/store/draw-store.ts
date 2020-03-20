@@ -162,4 +162,11 @@ export class DrawStore extends Store<DrawState> {
             rectangleType: value,
         });
     }
+    //Aerosol
+    setEmissionRate(value: number) {
+        this.setState({
+            ...this.state,
+            emissionRate: value,
+        });
+    }
 }
