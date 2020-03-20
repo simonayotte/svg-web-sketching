@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
 import { DrawPageComponent } from './draw-page.component';
 
+import { AerosolComponent } from './../tools/aerosol/aerosol/aerosol.component';
 import { BrushComponent } from '../tools/brush/brush.component';
 import { ColorComponent } from '../tools/color/color.component';
 import { GuideComponent } from '../guide/guide.component';
@@ -10,12 +11,13 @@ import { LineComponent } from '../tools/line/line.component';
 import { PencilComponent } from '../tools/pencil/pencil.component';
 import { RectangleComponent } from '../tools/rectangle/rectangle.component';
 
+
 describe('DrawPageComponent', () => {
     let component: DrawPageComponent;
     let fixture: ComponentFixture<DrawPageComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawPageComponent, GuideComponent, PencilComponent, BrushComponent, RectangleComponent, ColorComponent, LineComponent],
+            declarations: [DrawPageComponent, GuideComponent, PencilComponent, BrushComponent, RectangleComponent, ColorComponent, LineComponent, AerosolComponent],
             imports: [FormsModule, MatDialogModule],
         }).compileComponents();
     }));

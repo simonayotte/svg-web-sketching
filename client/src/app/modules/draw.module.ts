@@ -1,3 +1,4 @@
+import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -25,6 +26,7 @@ import { CanvasDirective } from '../directives/canvas.directive';
         ColorComponent,
         ColorPanelComponent,
         CanvasDirective,
+        AerosolComponent
     ],
     imports: [CommonModule, FormsModule],
     exports: [
@@ -39,6 +41,7 @@ import { CanvasDirective } from '../directives/canvas.directive';
         RectangleComponent,
         ColorComponent,
         CanvasDirective,
+        AerosolComponent
     ],
 })
 export class DrawModule {}

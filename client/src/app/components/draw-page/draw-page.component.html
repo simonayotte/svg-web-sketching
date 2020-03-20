@@ -43,6 +43,12 @@
                 [thickness]="state.globalState.thickness"
                 (thicknessChange)="store.setThickness($event)"
             ></app-pencil>
+            <app-aerosol
+                *ngSwitchCase="'Aérosol'"
+                [thickness]="state.globalState.thickness"
+                (thicknessChange)="store.setThickness($event)"
+            >
+            </app-aerosol>
         </div>
 
         <app-color-panel

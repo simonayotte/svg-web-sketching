@@ -1,3 +1,4 @@
+import { AerosolService } from './../tools/aerosol/aerosol.service';
 import { Injectable, Injector } from '@angular/core';
 import { BrushService } from '../tools/brush/brush.service';
 import { DrawState } from 'src/app/state/draw-state';
@@ -27,10 +28,12 @@ export class CanvasHandlerService {
         this.servicesMap.set('Pinceau', injector.get(BrushService));
         this.servicesMap.set('Rectangle', injector.get(RectangleService));
         this.servicesMap.set('Ligne', injector.get(LineService));
+        this.servicesMap.set('Aérosol', injector.get(AerosolService));
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
         this.keyMap.set('w', 'Pinceau');
         this.keyMap.set('l', 'Ligne');
+        this.keyMap.set('a', 'Aérosol');
     }
 
     private servicesMap: Map<string, Tool> = new Map();
