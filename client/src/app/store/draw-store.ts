@@ -65,7 +65,7 @@ export class DrawStore extends Store<DrawState> {
     pushShape(value: Shape) {
         this.setState({ ...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value) } });
     }
-    popShape(value: Shape) {
+    popShape() {
         this.setState({
             ...this.state,
             canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0, this.state.canvasState.shapes.length - 1) },
@@ -118,22 +118,10 @@ export class DrawStore extends Store<DrawState> {
     }
 
     selectColor(value: string): void {
-        if (value == 'first') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        } else if (value == 'second') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        } else if (value == 'canvas') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        }
+        this.setState({
+            ...this.state,
+            colorState: { ...this.state.colorState, selectedColor: value },
+        });
     }
 
     swapColor(): void {
@@ -144,9 +132,9 @@ export class DrawStore extends Store<DrawState> {
     }
 
     addLastColor(value: Color): void {
-        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
         let lastColors: (Color | null)[] = this.state.colorState.lastColors;
-        lastColors[lastColorsIndex] = value;
+        lastColors[this.state.colorState.lastColorsIndex] = value;
+        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
 
         this.setState({
             ...this.state,
