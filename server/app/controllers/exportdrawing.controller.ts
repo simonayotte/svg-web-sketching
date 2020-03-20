@@ -1,14 +1,13 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { SaveDrawingService } from '../services/save-drawing.service';
+import { ExportDrawingService } from '../services/export-drawing.service';
 import Types from '../types';
-import { DatabaseService } from '../services/database.service';
 
 @injectable()
-export class SaveDrawingController {
+export class ExportDrawingController {
     router: Router;
 
-    constructor(@inject(Types.SaveDrawingService) private saveDrawingService: SaveDrawingService, private dbService: DatabaseService) {
+    constructor(@inject(Types.ExportDrawingService) private exportDrawingService: ExportDrawingService) {
         this.configureRouter();
     }
 
@@ -18,14 +17,13 @@ export class SaveDrawingController {
         this.router.post('/', (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             try{
-                this.dbService.addDrawingDb(req.body.name,req.body.tags);
-                this.saveDrawingService.saveDrawing(req.body.name, req.body.tags, req.body.dataURL);
+                this.exportDrawingService.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
             }
             catch(e){
                 let errorMsg = {status:'400', message: e.message}
                 res.json(errorMsg);
             }
-            let succesMsg = {status:'200', message:'Image sauvegardée avec succès!'}
+            let succesMsg = {status:'200', message:'Image exportée avec succès!'}
             res.json(succesMsg)
         });
     }

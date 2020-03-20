@@ -8,4 +8,9 @@ export default {
     DateService: Symbol('DateService'),
     SaveDrawingService: Symbol('SaveDrawingService'),
     DatabaseService: Symbol('DatabaseService')
+<<<<<<< Updated upstream
+=======
+
+    
+>>>>>>> Stashed changes
 };

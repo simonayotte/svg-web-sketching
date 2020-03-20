@@ -8,7 +8,11 @@ import { IndexService } from './services/index.service';
 import Types from './types';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
 import { SaveDrawingService } from './services/save-drawing.service';
+<<<<<<< Updated upstream
 import { DatabaseService } from './services/DB.service';
+=======
+import {DatabaseService} from './services/database.service'
+>>>>>>> Stashed changes
 
 const container: Container = new Container();
 
@@ -21,6 +25,9 @@ container.bind(Types.DateService).to(DateService);
 container.bind(Types.SaveDrawingController).to(SaveDrawingController);
 container.bind(Types.SaveDrawingService).to(SaveDrawingService);
 container.bind(Types.DatabaseService).to(DatabaseService);
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 export { container };
