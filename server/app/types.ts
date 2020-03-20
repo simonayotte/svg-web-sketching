@@ -6,5 +6,6 @@ export default {
     SaveDrawingController: Symbol('SaveDrawingController'),
     IndexService: Symbol('IndexService'),
     DateService: Symbol('DateService'),
-    SaveDrawingService: Symbol('SaveDrawingService')
+    SaveDrawingService: Symbol('SaveDrawingService'),
+    DatabaseService: Symbol('DatabaseService')
 };

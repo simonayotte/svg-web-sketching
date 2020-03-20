@@ -8,6 +8,7 @@ import { IndexService } from './services/index.service';
 import Types from './types';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
 import { SaveDrawingService } from './services/save-drawing.service';
+import { DatabaseService } from './services/DB.service';
 
 const container: Container = new Container();
 
@@ -19,5 +20,7 @@ container.bind(Types.DateController).to(DateController);
 container.bind(Types.DateService).to(DateService);
 container.bind(Types.SaveDrawingController).to(SaveDrawingController);
 container.bind(Types.SaveDrawingService).to(SaveDrawingService);
+container.bind(Types.DatabaseService).to(DatabaseService);
+
 
 export { container };

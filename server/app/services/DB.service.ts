@@ -33,9 +33,7 @@ export class DatabaseService {
 
     async addDrawingDb(name:string, tags: Array<string>): Promise<void>{
         if(this.validateName(name)){
-            const drawing= new Drawing;
-            drawing.title=name;
-            drawing.tags=tags;
+            const drawing= new Drawing(name,tags);
             this.collection.insertOne(drawing).catch((error:Error)=>{
                 throw error;
             });
