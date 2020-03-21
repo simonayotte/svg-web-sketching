@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
 import { Color } from '../models/color';
-import { Shape } from '../models/shape';
 @Injectable({
     providedIn: 'root',
 })
@@ -11,13 +10,42 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
-    //Global
-    setCanvasHTML(value: HTMLCanvasElement) {
+    //Svg
+    setDrawSvg(value: SVGSVGElement) {
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, canvas: value, ctx: value.getContext('2d') as CanvasRenderingContext2D },
+            svgState: { ...this.state.svgState, drawSvg: value },
         });
     }
+
+    setDrawWidth(value: number) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, width: value },
+        });
+    }
+    setDrawHeight(value: number) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, height: value },
+        });
+    }
+
+    pushSvg(value: SVGElement) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
+        });
+    }
+    popShape() {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
+        });
+    }
+
+    //Global
+
     setThickness(value: number) {
         this.setState({
             ...this.state,
@@ -49,28 +77,7 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, isKeyHandlerActive: value },
         });
     }
-    //Canvas
-    setCanvasWidth(value: number) {
-        this.setState({
-            ...this.state,
-            canvasState: { ...this.state.canvasState, width: value },
-        });
-    }
-    setCanvasHeight(value: number) {
-        this.setState({
-            ...this.state,
-            canvasState: { ...this.state.canvasState, height: value },
-        });
-    }
-    pushShape(value: Shape) {
-        this.setState({ ...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value) } });
-    }
-    popShape() {
-        this.setState({
-            ...this.state,
-            canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0, this.state.canvasState.shapes.length - 1) },
-        });
-    }
+
     //Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({

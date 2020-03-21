@@ -1,6 +1,6 @@
 import { GlobalState } from './global-state';
 import { ColorState } from './color-state';
-import { CanvasState } from './canvas-state';
+import { SvgState } from './svg-state';
 
 export class DrawState {
     //Brush
@@ -18,10 +18,10 @@ export class DrawState {
 
     colorState: ColorState;
     globalState: GlobalState;
-    canvasState: CanvasState;
+    svgState: SvgState;
     constructor() {
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
-        this.canvasState = new CanvasState();
+        this.svgState = new SvgState();
     }
 }

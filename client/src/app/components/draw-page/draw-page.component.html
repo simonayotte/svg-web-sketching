@@ -1,6 +1,154 @@
-<svg class="svg-draw" [hidden]="false" width="750" height="750">
-    <rect width="750" height="750" fill="pink"></rect>
+<ng-container *ngIf="store.stateObs | async as state">
+    <app-sidebar
+        [tool]="state.globalState.tool"
+        [isStartedDrawing]="state.svgState.svgs.length > 0"
+        [isDisplayGrid]="state.globalState.isDisplayGrid"
+        (toolChange)="store.setTool($event)"
+        (toggleGrid)="store.toggleGrid()"
+    ></app-sidebar>
+    <!-- Modal -->
+    <div id="userGuide" class="modal fade" role="dialog">
+        <div class="modal-dialog modal-xl">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <app-guide></app-guide>
+            </div>
+        </div>
+    </div>
 
-    <polygon points="100,10 40,198 190,78 10,78 160,198" style="fill:lime;stroke:purple;stroke-width:5;fill-rule:evenodd;"></polygon>
-    <circle cx="40" cy="40" r="40" stroke="black" stroke-width="3" fill="red" (click)="moveCircle($event)"></circle>
-</svg>
+    <!--Will contain option's customizations-->
+    <div class="panel" *ngIf="state.globalState.isPanelOpen">
+        <div class="panel-title">{{ state.globalState.tool }}</div>
+        <!--Put components inside panel-content with ngswitchcase-->
+        <div class="panel-content" [ngSwitch]="state.globalState.tool">
+            <app-brush
+                *ngSwitchCase="'Pinceau'"
+                [texture]="state.brushTexture"
+                [thickness]="state.globalState.thickness"
+                (textureChange)="store.setBrushTexture($event)"
+                (thicknessChange)="store.setThickness($event)"
+            ></app-brush>
+            <app-line
+                *ngSwitchCase="'Ligne'"
+                [thickness]="state.globalState.thickness"
+                [lineHasJunction]="state.lineHasJunction"
+                [lineJunctionThickness]="state.lineJunctionThickness"
+                (lineJunctionThicknessChange)="store.setLineJunctionThickness($event)"
+                (lineHasJunctionChange)="store.setLineHasJunction($event)"
+                (thicknessChange)="store.setThickness($event)"
+            ></app-line>
+            <app-rectangle
+                *ngSwitchCase="'Rectangle'"
+                [thickness]="state.globalState.thickness"
+                [rectangleType]="state.rectangleType"
+                (thicknessChange)="store.setThickness($event)"
+                (rectangleTypeChange)="store.setRectangleType($event)"
+            ></app-rectangle>
+            <app-pencil
+                *ngSwitchCase="'Crayon'"
+                [thickness]="state.globalState.thickness"
+                (thicknessChange)="store.setThickness($event)"
+            ></app-pencil>
+
+            <app-polygon
+                *ngSwitchCase="'Polygone'"
+                [thickness]="state.globalState.thickness"
+                [type]="state.polygonType"
+                [polygonSides]="state.polygonSides"
+                (thicknessChange)="store.setThickness($event)"
+                (polygonTypeChange)="store.setPolygonType($event)"
+                (polygonSidesChange)="store.setPolygonSides($event)"
+            ></app-polygon>
+            <app-ellipsis
+                *ngSwitchCase="'Ellipse'"
+                [thickness]="state.globalState.thickness"
+                [type]="state.ellipsisType"
+                (thicknessChange)="store.setThickness($event)"
+                (ellipsisTypeChange)="store.setEllipsisType($event)"
+            ></app-ellipsis>
+        </div>
+
+        <app-color-panel
+            [firstColor]="state.colorState.firstColor"
+            [secondColor]="state.colorState.secondColor"
+            [canvasColor]="state.colorState.canvasColor"
+            (openColor)="store.setIsSidebarColorOpen(true)"
+            (selectedColorChange)="store.selectColor($event)"
+            (swapColor)="store.swapColor()"
+        ></app-color-panel>
+
+        <app-grid-panel
+            *ngIf="state.globalState.isDisplayGrid"
+            [gridOpacity]="state.colorState.gridColor.a"
+            [gridSize]="state.globalState.gridSize"
+            (gridOpacityChange)="store.setGridOpacity($event)"
+            (gridSizeChange)="store.setGridSize($event)"
+            (keyHandlerChange)="store.setIsKeyHandlerActive($event)"
+        >
+        </app-grid-panel>
+    </div>
+
+    <div class="color-picker" [ngSwitch]="state.colorState.selectedColor" *ngIf="state.colorState.isSidebarColorOpen">
+        <app-color
+            *ngSwitchCase="'first'"
+            [color]="state.colorState.firstColor"
+            [lastColors]="state.colorState.lastColors"
+            (saveColor)="store.setFirstColor($event, true)"
+            (setFirstColor)="store.setFirstColor($event)"
+            (setSecondColor)="store.setSecondColor($event)"
+            (closeColor)="store.setIsSidebarColorOpen(false)"
+        ></app-color>
+        <app-color
+            *ngSwitchCase="'second'"
+            [color]="state.colorState.secondColor"
+            [lastColors]="state.colorState.lastColors"
+            (saveColor)="store.setSecondColor($event, true)"
+            (closeColor)="store.setIsSidebarColorOpen(false)"
+            (setFirstColor)="store.setFirstColor($event)"
+            (setSecondColor)="store.setSecondColor($event)"
+        ></app-color>
+        <app-color
+            *ngSwitchCase="'canvas'"
+            [color]="state.colorState.canvasColor"
+            [lastColors]="state.colorState.lastColors"
+            (saveColor)="store.setCanvasColor($event, true)"
+            (closeColor)="store.setIsSidebarColorOpen(false)"
+            (setFirstColor)="store.setFirstColor($event)"
+            (setSecondColor)="store.setSecondColor($event)"
+        ></app-color>
+    </div>
+
+    <div class="workspace" [style.background-color]="state.colorState.workspaceColor.hex()"></div>
+
+    <!--The main svg that contains all svgs-->
+    <svg
+        draw
+        class="draw"
+        [attr.width.px]="state.svgState.width"
+        [attr.height.px]="state.svgState.height"
+        [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
+        (drawSvgChange)="store.setDrawSvg($event)"
+    >
+        <rect width="100%" height="100%" [attr.fill]="state.colorState.canvasColor.hex()"></rect>
+
+        <ng-container *ngFor="let svg of state.svgState.svgs">
+            <!--Directive svg adds svg to main svg -->
+            <ng-template svg [svg]="svg" [drawSvg]="state.svgState.drawSvg"></ng-template>
+        </ng-container>
+    </svg>
+
+    <canvas
+        canvas-grid
+        class="canvas-grid"
+        [width]="state.svgState.width"
+        [height]="state.svgState.height"
+        a
+        [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
+        [gridSize]="state.globalState.gridSize"
+        [isDisplayGrid]="state.globalState.isDisplayGrid"
+        [gridColor]="state.colorState.gridColor"
+        (toggleGrid)="store.toggleGrid()"
+        (gridSizeChange)="store.setGridSize($event)"
+    >
+    </canvas>
+</ng-container>

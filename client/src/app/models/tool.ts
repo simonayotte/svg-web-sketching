@@ -1,14 +1,11 @@
-export abstract class Tool<T> {
+export abstract class Tool {
     start(event: MouseEvent) {}
     continue(event: MouseEvent) {}
-    stop() {}
-    stopSignal() {} //to be called in stop for testing purpose
-
-    setup(element: T) {} //to be called in draw
-    draw(element: T) {}
-
+    stop(): SVGElement {
+        return this.svg;
+    }
     handleKeyDown(key: string) {}
     handleKeyUp(key: string) {}
 
-    element: T;
+    svg: SVGElement;
 }
