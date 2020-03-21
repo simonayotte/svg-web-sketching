@@ -8,6 +8,7 @@ import { DateController } from './controllers/date.controller';
 import { IndexController } from './controllers/index.controller';
 import Types from './types';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
+import { ExportDrawingController } from './controllers/exportdrawing.controller';
 
 @injectable()
 export class Application {
@@ -17,7 +18,8 @@ export class Application {
     constructor(
         @inject(Types.IndexController) private indexController: IndexController,
         @inject(Types.DateController) private dateController: DateController,
-        @inject(Types.SaveDrawingController) private saveDrawingController: SaveDrawingController
+        @inject(Types.SaveDrawingController) private saveDrawingController: SaveDrawingController,
+        @inject(Types.ExportDrawingController) private exportDrawingController: ExportDrawingController
     ) {
         this.app = express();
 
@@ -40,6 +42,8 @@ export class Application {
         this.app.use('/api/index', this.indexController.router);
         this.app.use('/api/date', this.dateController.router);
         this.app.use('/savedrawing', this.saveDrawingController.router)
+        this.app.use('/exportdrawing', this.exportDrawingController.router)
+
         this.errorHandling();
     }
 

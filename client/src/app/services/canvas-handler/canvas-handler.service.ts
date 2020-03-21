@@ -10,6 +10,7 @@ import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
+import { ExportDrawingComponent } from 'src/app/components/dialogs/export-drawing/export-drawing.component';
 
 @Injectable({
     providedIn: 'root',
@@ -73,9 +74,16 @@ export class CanvasHandlerService {
                         break;
                     case 's':
                         if (event.ctrlKey){
-                            this.matDialog.open(SaveDrawingComponent);
                             event.preventDefault();
                             event.stopPropagation();
+                            this.matDialog.open(SaveDrawingComponent);
+                            break
+                        }
+                    case 'e':
+                        if (event.ctrlKey){
+                            event.preventDefault();
+                            event.stopPropagation();
+                            this.matDialog.open(ExportDrawingComponent);
                         }
                 }
             }

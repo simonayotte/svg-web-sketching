@@ -80,7 +80,7 @@ export class DrawingHandler {
       this.imageData=this.destCtx.getImageData(0,0,destinationCanvas.width,destinationCanvas.height);
       this.data = this.imageData.data
       if(filter){
-        this.brightenFilter();
+        this.applyFilter(filter);
       }
     }
     //finally use the destinationCanvas.toDataURL() method to get the desired output;

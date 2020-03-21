@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawingStartedDialogComponent } from '../../dialogs/drawing-started-dialog/drawing-started-dialog.component';
+import { ExportDrawingComponent } from '../../dialogs/export-drawing/export-drawing.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -53,5 +54,9 @@ export class SidebarComponent implements OnInit {
     }
     openSaveDrawing(): void {
         this.dialog.open(SaveDrawingComponent)
+    }
+    
+    openExportDrawing(): void {
+        this.dialog.open(ExportDrawingComponent)
     }
 }

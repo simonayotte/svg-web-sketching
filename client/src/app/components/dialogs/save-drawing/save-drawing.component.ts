@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material'
 import { PreviewImageComponent } from 'src/app/components/dialogs/preview-image/preview-image.component'
-import { SaveDrawingService } from 'src/app/services/save-drawing/save-drawing.service';
+import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service'
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 
 const NAME_STRING = 'name';
 const TAGS_STRING = 'tags';
@@ -19,7 +20,7 @@ export class SaveDrawingComponent implements OnInit {
   isPreviewWindowOpened: boolean = false;
   state:DrawState;
    
-  constructor(private fb:FormBuilder, private saveDrawingService:SaveDrawingService, public dialog: MatDialog, private store:DrawStore) {
+  constructor(private fb:FormBuilder, private saveDrawingService:SaveDrawingService, public dialog: MatDialog, private store:DrawStore, private drawingHandler:DrawingHandler) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
   });
@@ -51,16 +52,15 @@ export class SaveDrawingComponent implements OnInit {
 
   getTagsValues(): void{
     for(let i = 0; i < this.tags.length; i++){
-      this.tagStringArray.push(this.tags.at(i).value[0])
+      this.tagStringArray.push(this.tags.at(i).value)
     }
   }
   
   submit(): void {
-    this.saveDrawingService.setDataURL(this.saveDrawingService.setImgBackgroundColor());
+    this.saveDrawingService.setDataURL(this.drawingHandler.setImgBackgroundColor('png'));
     this.saveDrawingService.setImgName(this.saveDrawingForm.controls[NAME_STRING].value);
     this.getTagsValues();
     this.saveDrawingService.setTags(this.tagStringArray);
     this.dialog.open(PreviewImageComponent);
-
   }
 }

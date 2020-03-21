@@ -6,7 +6,7 @@ import { Drawing} from '../models/Drawing'
 // CHANGE the URL for your database information
 //const DATABASE_URL = 'mongodb+srv://Admin:admin1234@cluster0-nxhwj.gcp.mongodb.net/test?retryWrites=true&w=majority';
 const DATABASE_URL = 'mongodb+srv://Tarik:log2990@cluster0-pgvib.mongodb.net/test?retryWrites=true&w=majority';
-const DATABASE_NAME = 'Drawings-LOG2990-106.drawings';
+const DATABASE_NAME = 'Drawings-LOG2990-106';
 const DATABASE_COLLECTION = 'drawings';
 
 @injectable()
@@ -32,15 +32,16 @@ export class DatabaseService {
     }
 
     async addDrawingDb(name:string, tags: Array<string>): Promise<void>{
-        if(this.validateName(name)){
+        if(!this.validateName(name)){
+            throw new Error('Erreur:Le nom est requis. Image non sauvegardée')
+          }
+          if(!this.validateTags(tags)){
+            throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
+          }
             const drawing= new Drawing(name,tags);
             this.collection.insertOne(drawing).catch((error:Error)=>{
                 throw error;
             });
-        }
-        else{
-            throw new Error("Cannot save drawing in database");
-        }
     }
     async deleteDrawingDb(drawingName:string): Promise<void>{
         return this.collection
@@ -72,13 +73,34 @@ export class DatabaseService {
                 });
     }
 
-
-    private validateName(name: string):boolean{
-        if (name=="") // pas de nom vide 
-            return false;
-        else
-            return true;
+    async getIdsOfDrawing(name:string, tags:Array<string>){
+        let ids: Array<string> = []
+        return this.collection.find({name: name, tags: tags}).toArray().then((drawings:Drawing[]) => {
+            for(let drawing of drawings){
+                ids.push(drawing._id);
+            }
+            return ids;
+          })
+          .catch(err => {
+              throw err;
+          });
+        ;
     }
 
+    validateName(name:string):boolean{
+        return name.length>0;
+    }
+
+    validateTags(tags:Array<string>):boolean{
+        for(let tag of tags){
+            if (tag.match('[^a-zA-Z0-9-\S]+') != null){
+                return false;
+            }     
+        }
+        return true;
+    }
 
 }
+
+
+

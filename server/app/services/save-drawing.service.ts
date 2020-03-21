@@ -6,29 +6,16 @@ import * as fs from 'fs'
 export class SaveDrawingService {
     constructor() {}
 
-    saveDrawing(name:string, tags: Array<string>, dataURL:string ){
-      if(!this.validateName(name)){
-        throw new Error('Erreur:Le nom est requis. Image non sauvegardée')
-      }
-      if(!this.validateTags(tags)){
-        throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
-      }
+    saveDrawing(ids:Array<string>, tags: Array<string>, dataURL:string ){
       let base64DataURL:string = dataURL.replace('data:image/png;base64,','');
       let data = Buffer.from(base64DataURL,'base64');
-      let filename:string = name + '.png';
-      fs.writeFileSync(__dirname + '/image-storage/'+ filename,data,'utf-8'); 
-    }
-
-    validateName(name:string):boolean{
-      return name.length>0;
-    }
-
-    validateTags(tags:Array<string>):boolean{
-      for(let tag of tags){
-        if (tag.match('[^a-zA-Z0-9-\S]+') != null){
-          return false;
-        }     
+      let i:number = 0;
+      let path: string = `${__dirname}/image-storage/${ids[0]}.png`
+      while(fs.existsSync(path) && i<ids.length ){
+        i++;
+        path = `${__dirname}/image-storage/${ids[i]}.png`
       }
-      return true;
+      fs.writeFileSync(path,data,'utf-8'); 
     }
-}
+
+  }

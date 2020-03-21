@@ -2,24 +2,30 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { SaveDrawingService } from '../services/save-drawing.service';
 import Types from '../types';
-import { DatabaseService } from '../services/database.service';
+import { DatabaseService } from '../services/DB.service';
+
+const wait = (ms:number) => new Promise(res => setTimeout(res, ms));
 
 @injectable()
 export class SaveDrawingController {
     router: Router;
 
-    constructor(@inject(Types.SaveDrawingService) private saveDrawingService: SaveDrawingService, private dbService: DatabaseService) {
+    constructor(@inject(Types.SaveDrawingService) private saveDrawingService: SaveDrawingService, 
+                @inject(Types.DatabaseService) private dbService: DatabaseService) {
         this.configureRouter();
     }
 
     private configureRouter(): void {
         this.router = Router();
 
-        this.router.post('/', (req: Request, res: Response, next: NextFunction) => {
+        this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             try{
-                this.dbService.addDrawingDb(req.body.name,req.body.tags);
-                this.saveDrawingService.saveDrawing(req.body.name, req.body.tags, req.body.dataURL);
+                this.dbService.addDrawingDb(req.body.name,req.body.tags)
+                await wait(1000);
+                let drawing_id = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
+                await wait(1000);
+                this.saveDrawingService.saveDrawing(drawing_id, req.body.tags, req.body.dataURL);
             }
             catch(e){
                 let errorMsg = {status:'400', message: e.message}
