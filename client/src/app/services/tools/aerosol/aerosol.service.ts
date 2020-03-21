@@ -24,6 +24,7 @@ export class AerosolService implements Tool {
   }
 
   color: string;
+  
   lastX: number;
   lastY: number;
 
@@ -33,6 +34,14 @@ export class AerosolService implements Tool {
   private mouseMoveListener: EventListener;
 
   prepare() {
+      this.color = this.state.colorState.firstColor.hex();
+
+      this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
+      this.state.canvasState.ctx.lineJoin = 'round';
+      this.state.canvasState.ctx.lineCap = 'round';
+      this.state.canvasState.ctx.fillStyle = this.color;
+      this.state.canvasState.ctx.strokeStyle = this.color;
+
       
   }
 
@@ -41,7 +50,10 @@ export class AerosolService implements Tool {
   handleKeyUp(key: string): void {}
 
   start(event: MouseEvent) {
-      
+    this.prepare();
+    this.state.canvasState.canvas.addEventListener('mousemove', this.mouseMoveListener);
+    this.state.canvasState.canvas.addEventListener('mouseup', this.mouseUpListener);
+
   }
 
   continue(event: MouseEvent): void {
@@ -51,6 +63,8 @@ export class AerosolService implements Tool {
   stop() {
     
   }
+
+  
 
   //TODO: Add CreateAerosolElement
 
