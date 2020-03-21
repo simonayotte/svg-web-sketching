@@ -30,6 +30,7 @@ describe('DrawStore', () => {
         store.stateObs.subscribe((value: DrawState) => {
             if (!state) {
                 state = value;
+                console.log(state);
             }
         });
     });
@@ -204,7 +205,7 @@ describe('DrawStore', () => {
         store.addLastColor(color2);
 
         store.stateObs.subscribe((value: DrawState) => {
-            expect(value.colorState.lastColorsIndex).toEqual(1);
+            expect(value.colorState.lastColorsIndex).toEqual(2);
             expect(value.colorState.lastColors[1]).toEqual(color2);
             expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
             done();
