@@ -1,133 +1,82 @@
-// import { Injectable } from '@angular/core';
-// import { Tool } from 'src/app/models/tool';
-// import { DrawStore } from 'src/app/store/draw-store';
-// import { DrawState } from 'src/app/state/draw-state';
-// import { Polygon } from 'src/app/models/Polygon';
+import { Injectable } from '@angular/core';
+import { Tool } from 'src/app/models/tool';
+import { DrawStore } from 'src/app/store/draw-store';
+import { DrawState } from 'src/app/state/draw-state';
+import { Coordinate } from 'src/app/models/coordinate';
 
-// @Injectable({
-//     providedIn: 'root',
-// })
-// export class PolygonService extends Tool<Polygon> {
-//     state: DrawState;
-//     constructor(private store: DrawStore) {
-//         super();
-//         this.store.stateObs.subscribe((value: DrawState) => {
-//             this.state = value;
-//         });
-//         this.mouseMoveListener = this.continue.bind(this);
-//         this.mouseUpListener = this.stop.bind(this);
-//     }
+@Injectable({
+    providedIn: 'root',
+})
+export class PolygonService extends Tool {
+    state: DrawState;
+    centerX: number;
+    centerY: number;
+    constructor(private store: DrawStore) {
+        super();
+        this.store.stateObs.subscribe((value: DrawState) => {
+            this.state = value;
+        });
+    }
 
-//     private mouseUpListener: EventListener;
-//     private mouseMoveListener: EventListener;
+    start(event: MouseEvent) {
+        this.centerX = event.offsetX;
+        this.centerY = event.offsetY;
+        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+        this.setColors(this.state.polygonType);
+        this.state.svgState.drawSvg.appendChild(this.svg);
+    }
 
-//     canvasImage: ImageData;
-//     isDrawing = false;
+    continue(event: MouseEvent) {
+        let size = (Math.abs(this.centerX - event.offsetX) + Math.abs(this.centerY - event.offsetY)) / 2;
+        this.draw(this.centerX, this.centerY, this.state.polygonSides, size);
+    }
 
-//     setup(element: Polygon) {
-//         this.state.canvasState.ctx.lineWidth = element.thickness;
-//         this.state.canvasState.ctx.lineJoin = 'miter';
-//         this.state.canvasState.ctx.lineCap = 'square';
+    draw(centerX: number, centerY: number, sides: number, size: number) {
+        let points: Coordinate[] = [];
 
-//         switch (element.type) {
-//             case 'outline':
-//                 this.state.canvasState.ctx.strokeStyle = element.secondaryColor;
+        for (let i: number = 0; i < sides; i++) {
+            let angle = ((360 / sides) * (i + 1) + 90) * (Math.PI / 180);
+            let pointX = centerX + size * Math.cos(angle);
+            let pointY = centerY - size * Math.sin(angle);
+            points.push(new Coordinate(pointX, pointY));
+        }
+        this.svg.setAttribute('points', this.pointsToString(points));
+    }
 
-//                 break;
-//             case 'outlineFill':
-//                 this.state.canvasState.ctx.fillStyle = element.primaryColor;
-//                 this.state.canvasState.ctx.strokeStyle = element.secondaryColor;
-//                 break;
-//             case 'fill':
-//                 this.state.canvasState.ctx.fillStyle = element.primaryColor;
+    pointsToString(points: Coordinate[]): string {
+        let result: string = '';
+        for (let i = 0; i < points.length; i++) {
+            result = result.concat(`${points[i].pointX},${points[i].pointY}`);
+            if (i < points.length - 1) {
+                result = result.concat(' ');
+            }
+        }
+        return result;
+    }
 
-//                 break;
-//         }
-//     }
-//     start(event: MouseEvent) {
-//         this.element = {
-//             ...this.element,
-//             centerX: event.offsetX,
-//             centerY: event.offsetY,
-//             primaryColor: this.state.colorState.firstColor.hex(),
-//             secondaryColor: this.state.colorState.secondColor.hex(),
-//             thickness: this.state.globalState.thickness,
-//             type: this.state.polygonType,
-//             sides: this.state.polygonSides,
-//         };
-//         this.setup(this.element);
+    stop(): SVGElement {
+        this.state.svgState.drawSvg.removeChild(this.svg);
+        console.log(this.svg);
+        return this.svg;
+    }
 
-//         this.state.canvasState.canvas.addEventListener('mousemove', this.mouseMoveListener);
-//         this.state.canvasState.canvas.addEventListener('mouseup', this.mouseUpListener);
-//         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
-//     }
+    setColors(type: string) {
+        switch (type) {
+            case 'outline':
+                this.svg.setAttribute('fill', 'transparent');
+                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
 
-//     draw(element: Polygon) {
-//         this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
-//         this.state.canvasState.ctx.putImageData(this.canvasImage, 0, 0);
+                break;
+            case 'outlineFill':
+                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
+                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
 
-//         this.state.canvasState.ctx.beginPath();
-//         this.state.canvasState.ctx.moveTo(element.centerX, element.centerY - element.size);
-
-//         for (let i: number = 0; i < element.sides - 1; i++) {
-//             let angle = ((360 / element.sides) * (i + 1) + 90) * (Math.PI / 180);
-//             let nextX = element.centerX + element.size * Math.cos(angle);
-//             let nextY = element.centerY - element.size * Math.sin(angle);
-
-//             this.state.canvasState.ctx.lineTo(nextX, nextY);
-//         }
-//         this.state.canvasState.ctx.closePath();
-
-//         this.addColors(element.type);
-//     }
-//     continue(event: MouseEvent) {
-//         this.element = {
-//             ...this.element,
-//             size: (Math.abs(this.element.centerX - event.offsetX) + Math.abs(this.element.centerY - event.offsetY)) / 2,
-//         };
-
-//         this.isDrawing = true;
-
-//         this.draw(this.element);
-//     }
-
-//     addColors(type: string) {
-//         switch (type) {
-//             case 'outline':
-//                 this.state.canvasState.ctx.stroke();
-//                 break;
-//             case 'outlineFill':
-//                 this.state.canvasState.ctx.fill();
-//                 this.state.canvasState.ctx.stroke();
-//                 break;
-//             case 'fill':
-//                 this.state.canvasState.ctx.fill();
-//                 break;
-//         }
-//     }
-
-//     stop() {
-//         this.canvasImage = this.state.canvasState.ctx.getImageData(0, 0, this.state.canvasState.width, this.state.canvasState.height);
-
-//         this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
-//         this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
-
-//         if (this.isDrawing) {
-//             this.element = {
-//                 ...this.element,
-//                 startSelectX: this.element.centerX - this.element.size,
-//                 startSelectY: this.element.centerY - this.element.size,
-//                 endSelectX: this.element.centerX + this.element.size,
-//                 endSelectY: this.element.centerY + this.element.size,
-//             };
-//             this.store.pushShape(this.element);
-//             this.isDrawing = false;
-//         }
-//         this.stopSignal();
-//     }
-
-//     drawFromPolygonElement(element: Polygon): void {
-//         this.setup(element);
-//         this.draw(element);
-//     }
-// }
+                break;
+            case 'fill':
+                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
+                this.svg.setAttribute('stroke', 'transparent');
+                break;
+        }
+    }
+}

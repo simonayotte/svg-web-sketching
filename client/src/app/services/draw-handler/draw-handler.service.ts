@@ -4,7 +4,6 @@ import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
 // import { BrushService } from '../tools/brush/brush.service';
 // import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
-// import { PolygonService } from '../tools/polygon/polygon.service';
 // import { LineService } from '../tools/line/line.service';
 // import { RectangleService } from '../tools/rectangle/rectangle.service';
 // import { PencilService } from '../tools/pencil/pencil.service';
@@ -13,6 +12,7 @@ import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawin
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
+import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 
 @Injectable({
     providedIn: 'root',
@@ -29,12 +29,12 @@ export class DrawHandlerService {
             this.state = value;
         });
         this.servicesMap.set('Ellipse', injector.get(EllipsisService));
+        this.servicesMap.set('Polygone', injector.get(PolygonService));
 
         /*this.servicesMap.set('Crayon', injector.get(PencilService));
         this.servicesMap.set('Pinceau', injector.get(BrushService));
         this.servicesMap.set('Rectangle', injector.get(RectangleService));
         this.servicesMap.set('Ligne', injector.get(LineService));
-        this.servicesMap.set('Polygone', injector.get(PolygonService));
         this.servicesMap.set('Pipette', injector.get(PipetteService));*/
 
         this.keyMap.set('1', 'Rectangle');
