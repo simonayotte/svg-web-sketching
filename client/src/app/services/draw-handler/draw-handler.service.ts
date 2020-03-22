@@ -22,20 +22,18 @@ export class DrawHandlerService {
     keyMap: Map<string, string> = new Map();
     servicesMap: Map<string, Tool> = new Map();
 
-    isDrawing: boolean = false;
-
-    constructor(public injector: Injector, public store: DrawStore, private matDialog: MatDialog) {
+    constructor(public injector: Injector, public store: DrawStore, public matDialog: MatDialog) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
-        this.servicesMap.set('Ellipse', injector.get(EllipsisService));
-        this.servicesMap.set('Polygone', injector.get(PolygonService));
-        this.servicesMap.set('Pipette', injector.get(PipetteService));
-        this.servicesMap.set('Pinceau', injector.get(BrushService));
+
         this.servicesMap.set('Crayon', injector.get(PencilService));
-        /*
-        this.servicesMap.set('Rectangle', injector.get(RectangleService));
-        this.servicesMap.set('Ligne', injector.get(LineService));*/
+        this.servicesMap.set('Pinceau', injector.get(BrushService));
+        //this.servicesMap.set('Rectangle', injector.get(RectangleService));
+        //this.servicesMap.set('Ligne', injector.get(LineService));
+        this.servicesMap.set('Polygone', injector.get(PolygonService));
+        this.servicesMap.set('Ellipse', injector.get(EllipsisService));
+        this.servicesMap.set('Pipette', injector.get(PipetteService));
 
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
@@ -50,22 +48,13 @@ export class DrawHandlerService {
         if (this.servicesMap.has(this.state.globalState.tool)) {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.start(event);
-            this.isDrawing = true;
-        }
-    }
-
-    continueTool(event: MouseEvent) {
-        if (this.isDrawing && this.servicesMap.has(this.state.globalState.tool)) {
-            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
-            service.continue(event);
         }
     }
 
     stopTool() {
-        if (this.isDrawing && this.servicesMap.has(this.state.globalState.tool)) {
+        if (this.servicesMap.has(this.state.globalState.tool)) {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.stop();
-            this.isDrawing = false;
         }
     }
 
@@ -73,33 +62,36 @@ export class DrawHandlerService {
         if (this.state.globalState.isKeyHandlerActive) {
             const key = event.key;
 
+            //handle tool selection keyboard events
+            if (this.keyMap.has(key)) {
+                const tool = this.keyMap.get(key) as string;
+                this.store.setTool(tool);
+                return;
+            }
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+            //handle tool keyboard events
             if (service) {
                 service.handleKeyDown(key);
             }
 
-            if (this.keyMap.has(key)) {
-                const tool = this.keyMap.get(key) as string;
-                this.store.setTool(tool);
-            } else {
-                switch (key) {
-                    case 'o':
-                        if (event.ctrlKey) {
-                            //mat dialog display
-                            event.preventDefault();
-                            event.stopPropagation();
-                            this.state.svgState.svgs.length > 0
-                                ? this.matDialog.open(DrawingStartedDialogComponent)
-                                : this.matDialog.open(CreateDrawingComponent);
-                        }
-                        break;
-                    case 's':
-                        if (event.ctrlKey) {
-                            this.matDialog.open(SaveDrawingComponent);
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                }
+            //handle other keyboard events
+            switch (key) {
+                case 'o':
+                    if (event.ctrlKey) {
+                        //mat dialog display
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.state.svgState.svgs.length > 0
+                            ? this.matDialog.open(DrawingStartedDialogComponent)
+                            : this.matDialog.open(CreateDrawingComponent);
+                    }
+                    break;
+                case 's':
+                    if (event.ctrlKey) {
+                        this.matDialog.open(SaveDrawingComponent);
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
             }
         }
     }

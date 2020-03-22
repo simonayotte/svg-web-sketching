@@ -14,14 +14,18 @@ export class EllipsisService extends Tool {
     lastX: number;
     lastY: number;
     isShift = false;
-
     isDrawing = false;
+
+    private mouseUpListener: EventListener;
+    private mouseMoveListener: EventListener;
 
     constructor(private store: DrawStore) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.mouseMoveListener = this.continue.bind(this);
+        this.mouseUpListener = this.stop.bind(this);
     }
 
     start(event: MouseEvent) {
@@ -33,6 +37,8 @@ export class EllipsisService extends Tool {
         this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
         this.setColors(this.state.ellipsisType);
         this.state.svgState.drawSvg.appendChild(this.svg);
+        this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+        this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
 
         this.isDrawing = true;
     }
@@ -69,9 +75,15 @@ export class EllipsisService extends Tool {
     }
 
     stop() {
-        this.store.pushSvg(this.svg);
-        this.state.svgState.drawSvg.removeChild(this.svg);
-        this.isDrawing = false;
+        if (this.isDrawing) {
+            this.store.pushSvg(this.svg);
+            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
+            this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+            this.isDrawing = false;
+        }
+
+        this.stopSignal();
     }
 
     handleKeyDown(key: string) {

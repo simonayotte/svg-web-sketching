@@ -5,7 +5,7 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { Color } from 'src/app/models/color';
 
-const SIDEBAR_WIDTH = 52;
+//const SIDEBAR_WIDTH = 52;
 
 @Component({
     selector: 'app-create-drawing',
@@ -29,10 +29,10 @@ export class CreateDrawingComponent implements OnInit {
         this.state.globalState.isKeyHandlerActive = false;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.state.globalState.isKeyHandlerActive = true;
     }
-    
+
     isWidthModified = false;
     isHeightModified = false;
     isCreateDrawColorOpen = false;
@@ -42,7 +42,7 @@ export class CreateDrawingComponent implements OnInit {
     createDrawingForm = new FormGroup({
         width: new FormControl('width', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
         height: new FormControl('height', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
-      })
+    });
     get width() {
         return this.createDrawingForm.get('width');
     }
@@ -51,14 +51,14 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     submit(): void {
-        this.dialogRef.close();
+        /* this.dialogRef.close();
         if(this.state.canvasState.shapes.length != 0){
             this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
             this.state.canvasState.shapes = [];
         }
         this.store.setCanvasColor(this.canvasColor);
         this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH);
-        this.store.setCanvasHeight(this.createDrawingForm.controls['height'].value);
+        this.store.setCanvasHeight(this.createDrawingForm.controls['height'].value);*/
     }
 
     @HostListener('window:resize')

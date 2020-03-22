@@ -22,10 +22,14 @@ export class PipetteService extends Tool {
         this.drawSvgInCanvas(this.state.svgState.drawSvg, event);
     }
 
-    continue(event: MouseEvent) {}
-
-    stop() {}
-
+    createCanvasWithSvgs(width: number, height: number): CanvasRenderingContext2D {
+        let canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+        return ctx;
+    }
+    //Source: https://stackoverflow.com/questions/3768565/drawing-an-svg-file-on-a-html5-canvas
     drawSvgInCanvas(svg: SVGSVGElement, event: MouseEvent) {
         let img = new Image();
         var xml = new XMLSerializer().serializeToString(svg);
@@ -36,8 +40,10 @@ export class PipetteService extends Tool {
         var image64 = b64Start + svg64;
 
         img.onload = () => {
-            this.ctx.drawImage(img, 0, 0);
-            this.setColor(this.ctx, event.offsetX, event.offsetY, event.button);
+            if (this.ctx) {
+                this.ctx.drawImage(img, 0, 0);
+                this.setColor(this.ctx, event.offsetX, event.offsetY, event.button);
+            }
         };
 
         img.src = image64;
@@ -51,14 +57,5 @@ export class PipetteService extends Tool {
         } else if (button === 2) {
             this.store.setSecondColor(new Color(data[0], data[1], data[2], data[3]));
         }
-    }
-
-    createCanvasWithSvgs(width: number, height: number): CanvasRenderingContext2D {
-        let canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
-
-        return ctx;
     }
 }

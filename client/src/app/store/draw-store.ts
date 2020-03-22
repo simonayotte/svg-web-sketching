@@ -37,7 +37,7 @@ export class DrawStore extends Store<DrawState> {
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
         });
     }
-    popShape() {
+    popSvg() {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
