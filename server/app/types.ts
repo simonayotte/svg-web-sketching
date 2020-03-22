@@ -5,9 +5,10 @@ export default {
     DateController: Symbol('DateController'),
     SaveDrawingController: Symbol('SaveDrawingController'),
     ExportDrawingController: Symbol('ExportDrawingController'),
+    GalleryController: Symbol('GalleryController'),
     IndexService: Symbol('IndexService'),
     DateService: Symbol('DateService'),
-    SaveDrawingService: Symbol('SaveDrawingService'),
+    FileHandler: Symbol('FileHandler'),
     ExportDrawingService: Symbol('ExportDrawingService'),
     DatabaseService: Symbol('DatabaseService')
 };

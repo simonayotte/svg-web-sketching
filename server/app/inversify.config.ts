@@ -7,10 +7,10 @@ import { DateService } from './services/date.service';
 import { IndexService } from './services/index.service';
 import Types from './types';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
-import { SaveDrawingService } from './services/save-drawing.service';
+import { FileHandler } from './services/file-handler.service';
 import { DatabaseService } from './services/DB.service';
 import { ExportDrawingController } from './controllers/exportdrawing.controller';
-import { ExportDrawingService } from './services/export-drawing.service';
+import { GalleryController } from './controllers/gallery.controller';
 
 const container: Container = new Container();
 
@@ -22,8 +22,9 @@ container.bind(Types.DateController).to(DateController);
 container.bind(Types.DateService).to(DateService);
 container.bind(Types.SaveDrawingController).to(SaveDrawingController);
 container.bind(Types.ExportDrawingController).to(ExportDrawingController);
-container.bind(Types.SaveDrawingService).to(SaveDrawingService);
+container.bind(Types.GalleryController).to(GalleryController);
+container.bind(Types.FileHandler).to(FileHandler);
 container.bind(Types.DatabaseService).to(DatabaseService);
-container.bind(Types.ExportDrawingService).to(ExportDrawingService);
+
 
 export { container };

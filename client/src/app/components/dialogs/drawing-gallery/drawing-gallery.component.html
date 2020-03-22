@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Galeries des dessins
+    <i class="fas fa-trash" (click)=toggleTrashColor() [style.color] = 'trashColor' title = 'Supprimer un dessin'></i>
+</h1>
+<div mat-dialog-content class = 'container'>
+    <div *ngIf = 'drawings.length == 0' class = no-drawing>
+        Aucun dessin sauvegardé!
+    </div>
+    <div *ngFor = 'let drawing of drawings' class = 'drawing' (click)=deleteDrawing(drawing)>
+        <div>
+            <img [src] = 'drawing.dataURL'><br>
+            nom : {{drawing.name}}
+            <br>
+            étiquettes : 
+            <span *ngFor = 'let tag of drawing.tags, let i = index' class = 'tags'>
+                {{tag}}<span *ngIf = 'i<drawing.tags.length-1'>,</span>
+            </span>
+         </div>
+    </div>
+    
+</div>

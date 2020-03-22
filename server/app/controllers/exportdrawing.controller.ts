@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { ExportDrawingService } from '../services/export-drawing.service';
+import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 
 @injectable()
 export class ExportDrawingController {
     router: Router;
 
-    constructor(@inject(Types.ExportDrawingService) private exportDrawingService: ExportDrawingService) {
+    constructor(@inject(Types.FileHandler) private fileHandler: FileHandler) {
         this.configureRouter();
     }
 
@@ -17,7 +17,7 @@ export class ExportDrawingController {
         this.router.post('/', (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             try{
-                this.exportDrawingService.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
+                this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
             }
             catch(e){
                 let errorMsg = {status:'400', message: e.message}

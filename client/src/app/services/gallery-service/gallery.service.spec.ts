@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ExportDrawingService } from './export-drawing.service';
+import { GalleryService } from './gallery.service';
 
-describe('ExportDrawingService', () => {
+describe('GalleryService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ExportDrawingService = TestBed.get(ExportDrawingService);
+    const service: GalleryService = TestBed.get(GalleryService);
     expect(service).toBeTruthy();
   });
 });

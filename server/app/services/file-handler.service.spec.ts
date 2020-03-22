@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { SaveDrawingService } from './save-drawing.service';
+import { FileHandler } from './file-handler.service';
 
-describe('SaveDrawingService', () => {
+describe('FileHandler', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: SaveDrawingService = TestBed.get(SaveDrawingService);
+    const service: FileHandler = TestBed.get(FileHandler);
     expect(service).toBeTruthy();
   });
 });

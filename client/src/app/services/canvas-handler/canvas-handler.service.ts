@@ -11,6 +11,7 @@ import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawin
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from 'src/app/components/dialogs/export-drawing/export-drawing.component';
+import { DrawingGalleryComponent } from 'src/app/components/dialogs/drawing-gallery/drawing-gallery.component';
 
 @Injectable({
     providedIn: 'root',
@@ -70,20 +71,29 @@ export class CanvasHandlerService {
                             event.preventDefault();
                             event.stopPropagation();
                             this.state.canvasState.shapes.length > 0 ? this.matDialog.open(DrawingStartedDialogComponent) : this.matDialog.open(CreateDrawingComponent);
+                            break;
                         }
-                        break;
+                        
                     case 's':
                         if (event.ctrlKey){
                             event.preventDefault();
                             event.stopPropagation();
                             this.matDialog.open(SaveDrawingComponent);
-                            break
+                            break;
                         }
                     case 'e':
                         if (event.ctrlKey){
                             event.preventDefault();
                             event.stopPropagation();
                             this.matDialog.open(ExportDrawingComponent);
+                            break;
+                        }
+                    case 'g':
+                        if (event.ctrlKey){
+                            event.preventDefault();
+                            event.stopPropagation();
+                            this.matDialog.open(DrawingGalleryComponent);
+                            break;
                         }
                 }
             }

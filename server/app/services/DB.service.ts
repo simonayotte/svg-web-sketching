@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
-import { Collection, MongoClient, MongoClientOptions, FilterQuery } from 'mongodb';
+import { Collection, MongoClient, MongoClientOptions, FilterQuery, ObjectId } from 'mongodb';
 import 'reflect-metadata';
-import { Drawing} from '../models/Drawing'
+import { Drawing} from '../../models/drawing';
 
 // CHANGE the URL for your database information
 //const DATABASE_URL = 'mongodb+srv://Admin:admin1234@cluster0-nxhwj.gcp.mongodb.net/test?retryWrites=true&w=majority';
@@ -31,22 +31,22 @@ export class DatabaseService {
             });
     }
 
-    async addDrawingDb(name:string, tags: Array<string>): Promise<void>{
+    async addDrawingDb(name:string, tags: Array<string>,dataURL:string): Promise<void>{
         if(!this.validateName(name)){
             throw new Error('Erreur:Le nom est requis. Image non sauvegardée')
           }
           if(!this.validateTags(tags)){
             throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
           }
-            const drawing= new Drawing(name,tags);
+            const drawing= new Drawing(name,tags,dataURL);
             this.collection.insertOne(drawing).catch((error:Error)=>{
                 throw error;
             });
     }
-    async deleteDrawingDb(drawingName:string): Promise<void>{
-        return this.collection
-            .findOneAndDelete({ name: drawingName})
-        .then(() => { })
+    async deleteDrawingDb(id:string){
+        
+        return this.collection.findOneAndDelete({_id :  new ObjectId(id)})
+        .then((deletedDocument) => {})
         .catch((error: Error) => {
             throw new Error("Failed to delete course");
         });
@@ -74,7 +74,7 @@ export class DatabaseService {
     }
 
     async getIdsOfDrawing(name:string, tags:Array<string>){
-        let ids: Array<string> = []
+        let ids: Array<ObjectId> = []
         return this.collection.find({name: name, tags: tags}).toArray().then((drawings:Drawing[]) => {
             for(let drawing of drawings){
                 ids.push(drawing._id);

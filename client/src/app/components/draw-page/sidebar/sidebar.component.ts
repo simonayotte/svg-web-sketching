@@ -6,6 +6,7 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawingStartedDialogComponent } from '../../dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from '../../dialogs/export-drawing/export-drawing.component';
+import { DrawingGalleryComponent } from '../../dialogs/drawing-gallery/drawing-gallery.component';
 
 @Component({
     selector: 'app-sidebar',
@@ -58,5 +59,9 @@ export class SidebarComponent implements OnInit {
     
     openExportDrawing(): void {
         this.dialog.open(ExportDrawingComponent)
+    }
+
+    openGallery(): void {
+        this.dialog.open(DrawingGalleryComponent)
     }
 }

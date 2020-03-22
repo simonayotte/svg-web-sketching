@@ -1,0 +1,33 @@
+img{
+    width : 100px;
+    height : 100px;
+    border: 1px solid black;
+    
+}
+
+.fa-trash{
+    float:right;
+}
+
+.no-drawing{
+    margin:auto;
+}
+
+h1{
+    text-align: center;
+}
+
+.container{
+    display:flex;
+    flex-wrap: wrap;
+    width: 800px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.drawing{
+    width: 150px;
+    text-align: center;
+    margin:10px;
+    cursor: pointer;
+}

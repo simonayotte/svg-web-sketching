@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { SaveDrawingService } from '../services/save-drawing.service';
+import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 import { DatabaseService } from '../services/DB.service';
 
@@ -10,7 +10,7 @@ const wait = (ms:number) => new Promise(res => setTimeout(res, ms));
 export class SaveDrawingController {
     router: Router;
 
-    constructor(@inject(Types.SaveDrawingService) private saveDrawingService: SaveDrawingService, 
+    constructor(@inject(Types.FileHandler) private fileHandler: FileHandler, 
                 @inject(Types.DatabaseService) private dbService: DatabaseService) {
         this.configureRouter();
     }
@@ -21,11 +21,11 @@ export class SaveDrawingController {
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             try{
-                this.dbService.addDrawingDb(req.body.name,req.body.tags)
+                this.dbService.addDrawingDb(req.body.name,req.body.tags, req.body.dataURL);
                 await wait(1000);
                 let drawing_id = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
                 await wait(1000);
-                this.saveDrawingService.saveDrawing(drawing_id, req.body.tags, req.body.dataURL);
+                this.fileHandler.saveDrawing(drawing_id, req.body.dataURL);
             }
             catch(e){
                 let errorMsg = {status:'400', message: e.message}

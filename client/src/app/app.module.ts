@@ -16,9 +16,18 @@ import { PreviewImageComponent } from './components/dialogs/preview-image/previe
 import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-drawing.component';
 import { ExportDrawingComponent } from './components/dialogs/export-drawing/export-drawing.component';
 import { PreviewExportComponent } from './components/dialogs/preview-export/preview-export.component';
+import { DrawingGalleryComponent } from './components/dialogs/drawing-gallery/drawing-gallery.component';
 
 @NgModule({
-    declarations: [AppComponent, CreateDrawingComponent, HomePageComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent, ExportDrawingComponent, PreviewExportComponent],
+    declarations: [AppComponent, 
+                CreateDrawingComponent, 
+                HomePageComponent, 
+                DrawingStartedDialogComponent,
+                SaveDrawingComponent, 
+                PreviewImageComponent, 
+                ExportDrawingComponent, 
+                PreviewExportComponent, 
+                DrawingGalleryComponent],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -31,7 +40,7 @@ import { PreviewExportComponent } from './components/dialogs/preview-export/prev
         DrawModule,
     ],
     providers: [],
-    entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent, ExportDrawingComponent, PreviewExportComponent],
+    entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent, ExportDrawingComponent, PreviewExportComponent, DrawingGalleryComponent],
     bootstrap: [AppComponent],
 })
 export class AppModule {}
