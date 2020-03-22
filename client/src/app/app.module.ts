@@ -16,7 +16,14 @@ import { PreviewImageComponent } from './components/dialogs/preview-image/previe
 import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-drawing.component';
 
 @NgModule({
-    declarations: [AppComponent, CreateDrawingComponent, HomePageComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent],
+    declarations: [
+        AppComponent,
+        CreateDrawingComponent,
+        HomePageComponent,
+        DrawingStartedDialogComponent,
+        SaveDrawingComponent,
+        PreviewImageComponent,
+    ],
     imports: [
         BrowserModule,
         HttpClientModule,

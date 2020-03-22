@@ -11,7 +11,13 @@ import { PencilComponent } from '../components/tools/pencil/pencil.component';
 import { RectangleComponent } from '../components/tools/rectangle/rectangle.component';
 import { SidebarComponent } from '../components/draw-page/sidebar/sidebar.component';
 import { ColorPanelComponent } from '../components/draw-page/color-panel/color-panel.component';
-import { CanvasDirective } from '../directives/canvas.directive';
+import { PolygonComponent } from '../components/tools/polygon/polygon.component';
+import { EllipsisComponent } from '../components/tools/ellipsis/ellipsis.component';
+import { CanvasGridDirective } from '../directives/canvas-grid.directive';
+import { GridPanelComponent } from '../components/draw-page/grid-panel/grid-panel.component';
+import { SvgComponent } from '../components/draw-page/svg/svg.component';
+import { SvgDirective } from '../directives/svg.directive';
+import { DrawDirective } from '../directives/draw.directive';
 
 @NgModule({
     declarations: [
@@ -25,7 +31,13 @@ import { CanvasDirective } from '../directives/canvas.directive';
         RectangleComponent,
         ColorComponent,
         ColorPanelComponent,
-        CanvasDirective,
+        GridPanelComponent,
+        CanvasGridDirective,
+        PolygonComponent,
+        EllipsisComponent,
+        SvgComponent,
+        DrawDirective,
+        SvgDirective,
         AerosolComponent
     ],
     imports: [CommonModule, FormsModule],
@@ -33,6 +45,7 @@ import { CanvasDirective } from '../directives/canvas.directive';
         DrawPageComponent,
         SidebarComponent,
         ColorPanelComponent,
+        GridPanelComponent,
         BrushComponent,
         ColorComponent,
         GuideComponent,
@@ -40,7 +53,12 @@ import { CanvasDirective } from '../directives/canvas.directive';
         PencilComponent,
         RectangleComponent,
         ColorComponent,
-        CanvasDirective,
+        CanvasGridDirective,
+        PolygonComponent,
+        EllipsisComponent,
+        SvgComponent,
+        DrawDirective,
+        SvgDirective,
         AerosolComponent
     ],
 })

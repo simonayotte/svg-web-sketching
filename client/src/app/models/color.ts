@@ -104,10 +104,7 @@ export class Color {
 
         return red + green + blue;
     }
-    static fromColorHex(hex: string) {
-        //change rgb
-        //return [r, g, b];
-    }
+
     rgba() {
         return [this.r, this.g, this.b, this.a];
     }

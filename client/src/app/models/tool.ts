@@ -1,8 +1,9 @@
-export interface Tool {
-    start(event: MouseEvent): void;
-    continue(event: MouseEvent): void;
-    prepare(): void;
-    stop(): void;
-    handleKeyDown(key: string): void;
-    handleKeyUp(key: string): void;
+export abstract class Tool {
+    start(event: MouseEvent) {}
+    continue(event: MouseEvent) {}
+    stop() {}
+    handleKeyDown(key: string) {}
+    handleKeyUp(key: string) {}
+
+    svg: SVGElement;
 }

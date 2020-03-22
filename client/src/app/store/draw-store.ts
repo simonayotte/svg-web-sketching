@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
 import { Color } from '../models/color';
-import { Shape } from '../models/shape';
 @Injectable({
     providedIn: 'root',
 })
@@ -11,13 +10,42 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
-    //Global
-    setCanvasHTML(value: HTMLCanvasElement) {
+    //Svg
+    setDrawSvg(value: SVGSVGElement) {
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, canvas: value, ctx: value.getContext('2d') as CanvasRenderingContext2D },
+            svgState: { ...this.state.svgState, drawSvg: value },
         });
     }
+
+    setDrawWidth(value: number) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, width: value },
+        });
+    }
+    setDrawHeight(value: number) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, height: value },
+        });
+    }
+
+    pushSvg(value: SVGElement) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
+        });
+    }
+    popShape() {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
+        });
+    }
+
+    //Global
+
     setThickness(value: number) {
         this.setState({
             ...this.state,
@@ -31,24 +59,23 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
         });
     }
-    //Canvas
-    setCanvasWidth(value: number) {
+    toggleGrid() {
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, width: value },
+            globalState: { ...this.state.globalState, isDisplayGrid: !this.state.globalState.isDisplayGrid },
         });
     }
-    setCanvasHeight(value: number) {
+    setGridSize(value: number) {
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, height: value },
+            globalState: { ...this.state.globalState, gridSize: value },
         });
     }
-    pushShape(value: Shape) {
-        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value)}});
-    }
-    popShape(value: Shape) {
-        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
+    setIsKeyHandlerActive(value: boolean) {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, isKeyHandlerActive: value },
+        });
     }
 
     //Color
@@ -98,22 +125,10 @@ export class DrawStore extends Store<DrawState> {
     }
 
     selectColor(value: string): void {
-        if (value == 'first') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        } else if (value == 'second') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        } else if (value == 'canvas') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        }
+        this.setState({
+            ...this.state,
+            colorState: { ...this.state.colorState, selectedColor: value },
+        });
     }
 
     swapColor(): void {
@@ -124,13 +139,21 @@ export class DrawStore extends Store<DrawState> {
     }
 
     addLastColor(value: Color): void {
-        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
         let lastColors: (Color | null)[] = this.state.colorState.lastColors;
-        lastColors[lastColorsIndex] = value;
+        lastColors[this.state.colorState.lastColorsIndex] = value;
+        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
 
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, lastColorsIndex, lastColors },
+        });
+    }
+
+    setGridOpacity(value: number) {
+        const gridColor = this.state.colorState.gridColor;
+        this.setState({
+            ...this.state,
+            colorState: { ...this.state.colorState, gridColor: new Color(gridColor.r, gridColor.g, gridColor.b, value) },
         });
     }
     //Brush
@@ -167,6 +190,29 @@ export class DrawStore extends Store<DrawState> {
         this.setState({
             ...this.state,
             emissionRate: value,
+        });
+    }
+    //Polygon
+
+    setPolygonType(value: string) {
+        this.setState({
+            ...this.state,
+            polygonType: value,
+        });
+    }
+
+    setPolygonSides(value: number) {
+        this.setState({
+            ...this.state,
+            polygonSides: value,
+        });
+    }
+
+    //Ellipsis
+    setEllipsisType(value: string) {
+        this.setState({
+            ...this.state,
+            ellipsisType: value,
         });
     }
 }

@@ -1,6 +1,6 @@
 import { GlobalState } from './global-state';
 import { ColorState } from './color-state';
-import { CanvasState } from './canvas-state';
+import { SvgState } from './svg-state';
 
 export class DrawState {
     //Brush
@@ -10,27 +10,22 @@ export class DrawState {
     lineJunctionThickness = 25;
     //rectangle
     rectangleType = 'outline only';
+    //polygon
+    polygonSides = 3;
+    polygonType = 'outline';
+    //ellipsis
+    ellipsisType = 'outline';
+
     //aerosol
     emissionRate = 30;
-    //
+
     colorState: ColorState;
     globalState: GlobalState;
-    canvasState: CanvasState;
+    svgState: SvgState;
     constructor() {
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
-        this.canvasState = new CanvasState();
+        this.svgState = new SvgState();
     }
 }
 
-/*readonly globalState: GlobalState;
-    readonly pencilState: PencilState;
-    readonly brushState: BrushState;
-    readonly colorState: ColorState;
-
-    constructor() {
-        this.globalState = new GlobalState();
-        this.pencilState = new PencilState();
-        this.brushState = new BrushState();
-        this.colorState = new ColorState();
-    }*/
