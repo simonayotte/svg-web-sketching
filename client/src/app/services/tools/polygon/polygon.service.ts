@@ -25,6 +25,7 @@ export class PolygonService extends Tool {
     }
 
     start(event: MouseEvent) {
+
         this.centerX = event.offsetX;
         this.centerY = event.offsetY;
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
