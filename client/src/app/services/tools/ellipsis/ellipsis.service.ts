@@ -15,6 +15,8 @@ export class EllipsisService extends Tool {
     lastY: number;
     isShift = false;
 
+    isDrawing = false;
+
     constructor(private store: DrawStore) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -29,9 +31,10 @@ export class EllipsisService extends Tool {
         this.svg.setAttribute('cx', this.startX.toString());
         this.svg.setAttribute('cy', this.startY.toString());
         this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-
         this.setColors(this.state.ellipsisType);
         this.state.svgState.drawSvg.appendChild(this.svg);
+
+        this.isDrawing = true;
     }
 
     continue(event: MouseEvent) {
@@ -65,9 +68,10 @@ export class EllipsisService extends Tool {
         this.svg.setAttribute('ry', ry.toString());
     }
 
-    stop(): SVGElement {
+    stop() {
+        this.store.pushSvg(this.svg);
         this.state.svgState.drawSvg.removeChild(this.svg);
-        return this.svg;
+        this.isDrawing = false;
     }
 
     handleKeyDown(key: string) {
@@ -79,7 +83,9 @@ export class EllipsisService extends Tool {
     handleKeyUp(key: string) {
         if (key === 'Shift') {
             this.isShift = false;
-            this.draw(this.startX, this.startY, this.lastX, this.lastY);
+            if (this.isDrawing) {
+                this.draw(this.startX, this.startY, this.lastX, this.lastY);
+            }
         }
     }
     setColors(type: string) {

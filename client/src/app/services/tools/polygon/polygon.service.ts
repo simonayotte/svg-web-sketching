@@ -55,10 +55,9 @@ export class PolygonService extends Tool {
         return result;
     }
 
-    stop(): SVGElement {
+    stop() {
+        this.store.pushSvg(this.svg);
         this.state.svgState.drawSvg.removeChild(this.svg);
-        console.log(this.svg);
-        return this.svg;
     }
 
     setColors(type: string) {

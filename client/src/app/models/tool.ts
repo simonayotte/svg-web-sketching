@@ -1,9 +1,7 @@
 export abstract class Tool {
     start(event: MouseEvent) {}
     continue(event: MouseEvent) {}
-    stop(): SVGElement {
-        return this.svg;
-    }
+    stop() {}
     handleKeyDown(key: string) {}
     handleKeyUp(key: string) {}
 

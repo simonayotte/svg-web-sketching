@@ -2,17 +2,17 @@ import { Injectable, Injector } from '@angular/core';
 import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
-// import { BrushService } from '../tools/brush/brush.service';
-// import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 // import { LineService } from '../tools/line/line.service';
 // import { RectangleService } from '../tools/rectangle/rectangle.service';
-// import { PencilService } from '../tools/pencil/pencil.service';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
 import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
+import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
+import { BrushService } from '../tools/brush/brush.service';
+import { PencilService } from '../tools/pencil/pencil.service';
 
 @Injectable({
     providedIn: 'root',
@@ -30,12 +30,12 @@ export class DrawHandlerService {
         });
         this.servicesMap.set('Ellipse', injector.get(EllipsisService));
         this.servicesMap.set('Polygone', injector.get(PolygonService));
-
-        /*this.servicesMap.set('Crayon', injector.get(PencilService));
+        this.servicesMap.set('Pipette', injector.get(PipetteService));
         this.servicesMap.set('Pinceau', injector.get(BrushService));
+        this.servicesMap.set('Crayon', injector.get(PencilService));
+        /*
         this.servicesMap.set('Rectangle', injector.get(RectangleService));
-        this.servicesMap.set('Ligne', injector.get(LineService));
-        this.servicesMap.set('Pipette', injector.get(PipetteService));*/
+        this.servicesMap.set('Ligne', injector.get(LineService));*/
 
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
@@ -64,7 +64,7 @@ export class DrawHandlerService {
     stopTool() {
         if (this.isDrawing && this.servicesMap.has(this.state.globalState.tool)) {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
-            this.store.pushSvg(service.stop());
+            service.stop();
             this.isDrawing = false;
         }
     }
