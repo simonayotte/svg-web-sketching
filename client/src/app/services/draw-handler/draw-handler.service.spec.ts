@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
-import { CanvasHandlerService } from './canvas-handler.service';
+import { DrawHandlerService } from './draw-handler.service';
 
-describe('CanvasHandlerService', () => {
+describe('DrawHandlerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: CanvasHandlerService = TestBed.get(CanvasHandlerService);
+    const service: DrawHandlerService = TestBed.get(DrawHandlerService);
     expect(service).toBeTruthy();
   });
 });

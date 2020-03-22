@@ -3,5 +3,7 @@ export class GlobalState {
     isPanelOpen = false;
     thickness = 25;
     tool = '';
+    isDisplayGrid = false;
+    gridSize = 50;
     constructor() {}
 }

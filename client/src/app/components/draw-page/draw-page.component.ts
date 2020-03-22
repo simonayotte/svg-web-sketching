@@ -8,7 +8,5 @@ import { DrawStore } from 'src/app/store/draw-store';
 })
 export class DrawPageComponent implements OnInit {
     constructor(public store: DrawStore) {}
-
     ngOnInit() {}
-
 }

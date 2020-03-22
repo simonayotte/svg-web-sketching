@@ -1,5 +1,11 @@
 <ng-container *ngIf="store.stateObs | async as state">
-    <app-sidebar [tool]="state.globalState.tool" (toolChange)="store.setTool($event)"></app-sidebar>
+    <app-sidebar
+        [tool]="state.globalState.tool"
+        [isStartedDrawing]="state.svgState.svgs.length > 0"
+        [isDisplayGrid]="state.globalState.isDisplayGrid"
+        (toolChange)="store.setTool($event)"
+        (toggleGrid)="store.toggleGrid()"
+    ></app-sidebar>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">
         <div class="modal-dialog modal-xl">
@@ -43,6 +49,23 @@
                 [thickness]="state.globalState.thickness"
                 (thicknessChange)="store.setThickness($event)"
             ></app-pencil>
+
+            <app-polygon
+                *ngSwitchCase="'Polygone'"
+                [thickness]="state.globalState.thickness"
+                [type]="state.polygonType"
+                [polygonSides]="state.polygonSides"
+                (thicknessChange)="store.setThickness($event)"
+                (polygonTypeChange)="store.setPolygonType($event)"
+                (polygonSidesChange)="store.setPolygonSides($event)"
+            ></app-polygon>
+            <app-ellipsis
+                *ngSwitchCase="'Ellipse'"
+                [thickness]="state.globalState.thickness"
+                [type]="state.ellipsisType"
+                (thicknessChange)="store.setThickness($event)"
+                (ellipsisTypeChange)="store.setEllipsisType($event)"
+            ></app-ellipsis>
         </div>
 
         <app-color-panel
@@ -53,6 +76,16 @@
             (selectedColorChange)="store.selectColor($event)"
             (swapColor)="store.swapColor()"
         ></app-color-panel>
+
+        <app-grid-panel
+            *ngIf="state.globalState.isDisplayGrid"
+            [gridOpacity]="state.colorState.gridColor.a"
+            [gridSize]="state.globalState.gridSize"
+            (gridOpacityChange)="store.setGridOpacity($event)"
+            (gridSizeChange)="store.setGridSize($event)"
+            (keyHandlerChange)="store.setIsKeyHandlerActive($event)"
+        >
+        </app-grid-panel>
     </div>
 
     <div class="color-picker" [ngSwitch]="state.colorState.selectedColor" *ngIf="state.colorState.isSidebarColorOpen">
@@ -86,14 +119,36 @@
     </div>
 
     <div class="workspace" [style.background-color]="state.colorState.workspaceColor.hex()"></div>
-    <canvas
-        canvas
-        class="canvas"
+
+    <!--The main svg that contains all svgs-->
+    <svg
+        draw
+        class="draw"
+        [attr.width.px]="state.svgState.width"
+        [attr.height.px]="state.svgState.height"
         [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
-        [width]="state.canvasState.width"
-        [height]="state.canvasState.height"
-        [style.background-color]="state.colorState.canvasColor.hex()"
-        (toolChange)="store.setTool($event)"
-        (canvasHTMLChange)="store.setCanvasHTML($event)"
-    ></canvas>
+        (drawSvgChange)="store.setDrawSvg($event)"
+    >
+        <rect width="100%" height="100%" [attr.fill]="state.colorState.canvasColor.hex()"></rect>
+
+        <ng-container *ngFor="let svg of state.svgState.svgs">
+            <!--Directive svg adds svg to main svg -->
+            <ng-template svg [svg]="svg" [drawSvg]="state.svgState.drawSvg"></ng-template>
+        </ng-container>
+    </svg>
+
+    <canvas
+        canvas-grid
+        class="canvas-grid"
+        [width]="state.svgState.width"
+        [height]="state.svgState.height"
+        a
+        [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
+        [gridSize]="state.globalState.gridSize"
+        [isDisplayGrid]="state.globalState.isDisplayGrid"
+        [gridColor]="state.colorState.gridColor"
+        (toggleGrid)="store.toggleGrid()"
+        (gridSizeChange)="store.setGridSize($event)"
+    >
+    </canvas>
 </ng-container>

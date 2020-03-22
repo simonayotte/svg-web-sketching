@@ -1,18 +1,7 @@
-import { ElementRef } from '@angular/core';
+/*import { ElementRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material';
-<<<<<<< HEAD:client/src/app/services/line/line.service.spec.ts
-import { DrawStateService } from 'src/app/services/draw-state/draw-state.service';
-import { Coordinate } from '../../models/coordinate';
-import { BrushComponent } from './../../components/brush/brush.component';
-import { ColorComponent } from './../../components/color/color.component';
-import { DrawPageComponent } from './../../components/draw-page/draw-page.component';
-import { GuideComponent } from './../../components/guide/guide.component';
-import { LineComponent } from './../../components/line/line.component';
-import { PencilComponent } from './../../components/pencil/pencil.component';
-import { RectangleComponent } from './../../components/rectangle/rectangle.component';
-=======
 import { BrushComponent } from '../../../components/tools/brush/brush.component';
 import { ColorComponent } from '../../../components/tools/color/color.component';
 import { DrawPageComponent } from '../../../components/draw-page/draw-page.component';
@@ -21,7 +10,6 @@ import { LineComponent } from '../../../components/tools/line/line.component';
 import { PencilComponent } from '../../../components/tools/pencil/pencil.component';
 import { RectangleComponent } from '../../../components/rectangle/rectangle.component';
 import { Coordinate } from './coordinate';
->>>>>>> master:client/src/app/services/tools/line/line.service.spec.ts
 import { LineService } from './line.service';
 
 describe('LineService', () => {
@@ -231,3 +219,4 @@ describe('LineService', () => {
         expect(endPointSpy).toHaveBeenCalledWith(0, 1);
     });
 });
+*/

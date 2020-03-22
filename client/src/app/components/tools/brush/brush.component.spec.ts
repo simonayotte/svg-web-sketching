@@ -1,48 +1,43 @@
-import { ElementRef } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material';
-import { BrushComponent } from './brush.component';
 
-import { ColorComponent } from '../color/color.component';
-import { DrawPageComponent } from '../../draw-page/draw-page.component';
-import { GuideComponent } from '../../guide/guide.component';
-import { LineComponent } from '../line/line.component';
-import { PencilComponent } from '../pencil/pencil.component';
-import { RectangleComponent } from '../rectangle/rectangle.component';
+import { BrushComponent } from './brush.component';
 describe('BrushComponent', () => {
-    let drawStateService: DrawStateService;
     let component: BrushComponent;
     let fixture: ComponentFixture<BrushComponent>;
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [BrushComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, LineComponent],
-            providers: [DrawStateService],
-            imports: [FormsModule, MatDialogModule],
+            declarations: [BrushComponent],
         }).compileComponents();
     }));
 
     beforeEach(() => {
-        drawStateService = TestBed.get(DrawStateService);
-        const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-        drawStateService.setCanvasRef(new ElementRef(drawPageFixture.debugElement.nativeElement.querySelector('.canvas')));
         fixture = TestBed.createComponent(BrushComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });
 
-    it('should create', (done: DoneFn) => {
-        drawStateService.canvasRefObs.subscribe(() => {
-            expect(component).toBeTruthy();
-            done();
-        });
+    it('should create', () => {
+        expect(component).toBeTruthy();
     });
 
-    it('#setTexture() should not set #texture if the input string is not a valid texture ', (done: DoneFn) => {
-        drawStateService.canvasRefObs.subscribe(() => {
-            component.setTexture('invalid');
-            expect(component.texture).toEqual('normal');
-            done();
-        });
+    it('#setTexture() should emit set #textureChange if the texture is valid ', () => {
+        let spy = spyOn(component.textureChange, 'emit');
+        component.setTexture('wave');
+
+        expect(spy).toHaveBeenCalledWith('wave');
+    });
+
+    it('#setTexture() should not emit set #textureChange if the texture is not valid ', () => {
+        let spy = spyOn(component.textureChange, 'emit');
+        component.setTexture('invalid');
+
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('#setThickness() should emit #thicknessChange', () => {
+        let spy = spyOn(component.thicknessChange, 'emit');
+        component.setThickness({ target: { value: 35 } });
+
+        expect(spy).toHaveBeenCalledWith(35);
     });
 });

@@ -1,125 +1,65 @@
 import { Injectable } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
-import { DrawStore } from 'src/app/store/draw-store';
+import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Pencil } from 'src/app/models/pencil';
 import { Coordinate } from 'src/app/models/coordinate';
-
 @Injectable({
     providedIn: 'root',
 })
-export class PencilService implements Tool {
+export class PencilService extends Tool {
     state: DrawState;
+    points: Coordinate[] = [];
+    circle: SVGCircleElement;
     constructor(private store: DrawStore) {
+        super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
-            if (this.state.canvasState.canvas) {
-                this.prepare();
-            }
         });
-        this.mouseMoveListener = this.continue.bind(this);
-        this.mouseUpListener = this.stop.bind(this);
     }
-
-    color: string;
-    lastX: number;
-    lastY: number;
-
-    private path: Coordinate[] = [];
-
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
-
-    prepare() {
-        this.color = this.state.colorState.firstColor.hex();
-
-        this.state.canvasState.ctx.lineJoin = 'round';
-        this.state.canvasState.ctx.lineCap = 'round';
-        this.state.canvasState.ctx.lineWidth = this.state.globalState.thickness;
-        this.state.canvasState.ctx.fillStyle = this.color;
-        this.state.canvasState.ctx.strokeStyle = this.color;
-    }
-
-    handleKeyDown(key: string): void {}
-
-    handleKeyUp(key: string): void {}
 
     start(event: MouseEvent) {
-        this.prepare();
-        this.state.canvasState.ctx.beginPath();
-        this.state.canvasState.ctx.arc(event.offsetX, event.offsetY, this.state.globalState.thickness / 2, 0, 2 * Math.PI);
-        this.state.canvasState.ctx.closePath();
-        this.state.canvasState.ctx.fill();
-        this.lastX = event.offsetX;
-        this.lastY = event.offsetY;
-        this.path.push(new Coordinate(this.lastX, this.lastY));
+        let x = event.offsetX;
+        let y = event.offsetY;
+        let thickness = this.state.globalState.thickness;
 
-        this.state.canvasState.canvas.addEventListener('mousemove', this.mouseMoveListener);
-        this.state.canvasState.canvas.addEventListener('mouseup', this.mouseUpListener);
+        this.drawCircle(x, y, thickness / 2);
+
+        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
+        this.svg.setAttribute('fill', 'none');
+        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+        this.svg.setAttribute('stroke-linecap', 'round');
+        this.svg.setAttribute('stroke-linejoin', 'round');
+
+        this.svg.setAttribute('d', `M ${x} ${y} `);
+        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.points.push(new Coordinate(x, y));
     }
 
-    continue(event: MouseEvent): void {
-        this.state.canvasState.ctx.beginPath();
-        this.state.canvasState.ctx.moveTo(this.lastX, this.lastY);
-        this.state.canvasState.ctx.lineTo(event.offsetX, event.offsetY);
-        this.state.canvasState.ctx.closePath();
-        this.state.canvasState.ctx.stroke();
-        this.lastX = event.offsetX;
-        this.lastY = event.offsetY;
-        this.path.push(new Coordinate(this.lastX, this.lastY));
+    continue(event: MouseEvent) {
+        let path = this.svg.getAttribute('d') as string;
+        path = path.concat(`L ${event.offsetX} ${event.offsetY} `);
+        this.svg.setAttribute('d', path);
+        this.points.push(new Coordinate(event.offsetX, event.offsetY));
     }
-
     stop() {
-        this.state.canvasState.canvas.removeEventListener('mousemove', this.mouseMoveListener);
-        this.state.canvasState.canvas.removeEventListener('mouseup', this.mouseUpListener);
-        this.store.pushShape(this.createPencilElement(this.state.globalState.thickness, this.color, this.color, this.path));
+        if (this.points.length > 1) {
+            this.store.pushSvg(this.svg);
+        } else {
+            this.store.pushSvg(this.circle);
+        }
+
+        this.points = [];
+        this.state.svgState.drawSvg.removeChild(this.circle);
+        this.state.svgState.drawSvg.removeChild(this.svg);
     }
 
-    createPencilElement(lineThickness: number, firstColor: string, secondColor: string, pencilPath: Coordinate[]): Pencil {
-        let leftMostPoint = pencilPath[0].pointX;
-        let rightMostPoint = pencilPath[0].pointX;
-        let topMostPoint = pencilPath[0].pointY;
-        let bottomMostPoint = pencilPath[0].pointY;
-
-        for (const coordinate of pencilPath) {
-            if (coordinate.pointX < leftMostPoint) {leftMostPoint = coordinate.pointX; }
-            if (coordinate.pointX > rightMostPoint) {rightMostPoint = coordinate.pointX; }
-            if (coordinate.pointY < topMostPoint) {topMostPoint = coordinate.pointY; }
-            if (coordinate.pointY > bottomMostPoint) {bottomMostPoint = coordinate.pointY; }
-        }
-
-        const pencilElement: Pencil = {
-            startSelectX: leftMostPoint,
-            startSelectY: topMostPoint,
-            endSelectX: rightMostPoint,
-            endSelectY: bottomMostPoint,
-            primaryColor: firstColor,
-            secondaryColor: secondColor,
-            thickness: lineThickness,
-            path: pencilPath
-        }
-
-        return pencilElement;
-    }
-
-    drawFromPencilElement(pencil: Pencil): void {
-        // Stroke style
-        this.state.canvasState.ctx.lineJoin = 'round';
-        this.state.canvasState.ctx.lineCap = 'round';
-        this.state.globalState.thickness = pencil.thickness;
-        this.state.canvasState.ctx.strokeStyle = pencil.primaryColor;
-        this.state.canvasState.ctx.fillStyle = pencil.primaryColor;
-        this.lastX = pencil.path[0].pointX;
-        this.lastY = pencil.path[0].pointY;
-
-        for (const coordinate of pencil.path) {
-            this.state.canvasState.ctx.beginPath();
-            this.state.canvasState.ctx.moveTo(this.lastX, this.lastY);
-            this.state.canvasState.ctx.lineTo(coordinate.pointX, coordinate.pointY);
-            this.state.canvasState.ctx.closePath();
-            this.state.canvasState.ctx.stroke();
-            this.lastX = coordinate.pointX;
-            this.lastY = coordinate.pointY;
-        }
+    drawCircle(x: number, y: number, r: number) {
+        this.circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        this.circle.setAttribute('cx', x.toString());
+        this.circle.setAttribute('cy', y.toString());
+        this.circle.setAttribute('r', r.toString());
+        this.circle.setAttribute('fill', this.state.colorState.firstColor.hex());
+        this.state.svgState.drawSvg.appendChild(this.circle);
     }
 }
