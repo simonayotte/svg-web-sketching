@@ -39,30 +39,30 @@ export class DrawingHandler {
   /*Theses functions is used when a preview of the image to be saved or exported is shown, it is used to make an image 
   with dimensions that are proportional with the canvas*/
   setPreviewImgWidth() {
-    if(this.state.canvasState.width < MAX_IMG_PREVIEW_SIZE){
-      this.previewWidth.next(this.state.canvasState.canvas.width);
+    if(this.state.svgState.width < MAX_IMG_PREVIEW_SIZE){
+      this.previewWidth.next(this.state.svgState.width);
     }
     else{
-    let width_height_ratio = this.state.canvasState.canvas.width/this.state.canvasState.canvas.height;
+    let width_height_ratio = this.state.svgState.width/this.state.svgState.height;
     width_height_ratio > 1? this.previewWidth.next(MAX_IMG_PREVIEW_SIZE):
                             this.previewWidth.next(MAX_IMG_PREVIEW_SIZE*width_height_ratio)
     }                
   }
 
   setPreviewImgHeight() {
-    if(this.state.canvasState.height < MAX_IMG_PREVIEW_SIZE){
-      this.previewHeight.next(this.state.canvasState.canvas.height);
+    if(this.state.svgState.height < MAX_IMG_PREVIEW_SIZE){
+      this.previewHeight.next(this.state.svgState.height);
     }
     else{
-    let width_height_ratio = this.state.canvasState.canvas.width/this.state.canvasState.canvas.height;
+    let width_height_ratio = this.state.svgState.width/this.state.svgState.height;
     width_height_ratio > 1? this.previewHeight.next(MAX_IMG_PREVIEW_SIZE/width_height_ratio):
                             this.previewHeight.next(MAX_IMG_PREVIEW_SIZE)                
     }
   }
-
+  
    /*We set the canvas background by modifying its css, but when calling toDataURL on the canvas, 
   the background color is not taken since its not part of the image data, only of the DOM styling
-  so in this function, a dummy canvas is created with a rectangle with the canvas color*/
+  so in this function, a dummy canvas is created with a rectangle with the canvas color
   setImgBackgroundColor(format:string, filter?:string | undefined):string{
     //Code inspired from https://stackoverflow.com/questions/18609715/html5-canvas-todataurl-image-has-no-background-color
     let destinationCanvas:HTMLCanvasElement = document.createElement("canvas");
@@ -87,8 +87,9 @@ export class DrawingHandler {
     let dataURL:string = destinationCanvas.toDataURL(`image/${format}`,1.0);
     
     return dataURL;
+  
   }
-
+  */
   applyFilter(filter:string){
     switch (filter){
       case 'invert':

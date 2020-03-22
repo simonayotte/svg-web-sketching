@@ -52,15 +52,15 @@ export class CreateDrawingComponent implements OnInit {
 
     submit(): void {
         this.dialogRef.close();
-        if(this.state.canvasState.shapes.length != 0){
-            this.state.canvasState.ctx.clearRect(0, 0, this.state.canvasState.width, this.state.canvasState.height);
-            this.state.canvasState.shapes = [];
+        if(this.state.svgState.svgs.length != 0){
+            //this.state.svgState..clearRect(0, 0, this.state.svgState.width, this.state.svgState.height);
+            this.state.svgState.svgs = [];
         }
         this.store.setCanvasColor(this.canvasColor);
         this.createDrawingForm.controls['width'].value >= window.innerWidth?
-        this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
-        this.store.setCanvasWidth(this.createDrawingForm.controls['width'].value);
-        this.store.setCanvasHeight(this.createDrawingForm.controls['height'].value);
+        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
+        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
+        this.store.setDrawHeight(this.createDrawingForm.controls['height'].value);
     }
 
     @HostListener('window:resize')
