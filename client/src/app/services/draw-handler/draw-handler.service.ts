@@ -1,4 +1,3 @@
-import { AerosolService } from './../tools/aerosol/aerosol.service';
 import { Injectable, Injector } from '@angular/core';
 import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
@@ -14,6 +13,7 @@ import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
+import { AerosolService } from './../tools/aerosol/aerosol.service';
 
 @Injectable({
     providedIn: 'root',
@@ -34,15 +34,17 @@ export class DrawHandlerService {
         this.servicesMap.set('Pipette', injector.get(PipetteService));
         this.servicesMap.set('Pinceau', injector.get(BrushService));
         this.servicesMap.set('Crayon', injector.get(PencilService));
-        this.servicesMap.set('Rectangle', injector.get(RectangleService));
-        this.servicesMap.set('Ligne', injector.get(LineService));
         this.servicesMap.set('Aérosol', injector.get(AerosolService));
+
+        /*
+        this.servicesMap.set('Rectangle', injector.get(RectangleService));
+        this.servicesMap.set('Ligne', injector.get(LineService));*/
         
+        this.keyMap.set('a', 'Aérosol');
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
         this.keyMap.set('w', 'Pinceau');
         this.keyMap.set('l', 'Ligne');
-        this.keyMap.set('a', 'Aérosol');
         this.keyMap.set('3', 'Polygone');
         this.keyMap.set('2', 'Ellipse');
         this.keyMap.set('t', 'Pipette');
