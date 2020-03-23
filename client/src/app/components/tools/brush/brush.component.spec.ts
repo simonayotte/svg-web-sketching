@@ -22,9 +22,9 @@ describe('BrushComponent', () => {
 
     it('#setTexture() should emit set #textureChange if the texture is valid ', () => {
         let spy = spyOn(component.textureChange, 'emit');
-        component.setTexture('wave');
+        component.setTexture('square');
 
-        expect(spy).toHaveBeenCalledWith('wave');
+        expect(spy).toHaveBeenCalledWith('square');
     });
 
     it('#setTexture() should not emit set #textureChange if the texture is not valid ', () => {
