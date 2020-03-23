@@ -112,7 +112,8 @@ export class SelectionService extends Tool {
     this.isSelecting = false;
     this.isDeselecting = false;
     if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
-    // this.state.svgState.drawSvg.removeChild(this.svg);
+    this.svg.remove();
+    this.state.svgState.drawSvg.removeChild(this.svg);
     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
   }
