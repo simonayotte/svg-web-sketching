@@ -20,8 +20,11 @@ export class RectangleService extends Tool {
     currentStartY: number;
     currentHeight: number;
     currentWidth: number;
+    currentMouseX: number;
+    currentMouseY: number;
     isDrawing: boolean = false;
     rectangleType: string;
+    thickness: number;
 
     constructor(private store: DrawStore) {
         super();
@@ -40,7 +43,6 @@ export class RectangleService extends Tool {
 
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-        this.setRectangleDisplay(this.state.rectangleType);
         this.state.svgState.drawSvg.appendChild(this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
@@ -48,20 +50,7 @@ export class RectangleService extends Tool {
     }
 
     continue(event: MouseEvent): void {
-        if ( event.offsetX < this.initialX ) {
-            this.currentStartX = event.offsetX;
-            this.currentWidth = this.initialX - event.offsetX;
-        } else {
-            this.currentWidth = event.offsetX - this.initialX;
-        }
-        if ( event.offsetY < this.initialY ) {
-            this.currentStartY = event.offsetY;
-            this.currentHeight = this.initialY - event.offsetY;
-        } else {
-            this.currentHeight = event.offsetY - this.initialY;
-        }
-        // if (this.)
-        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight);
+        this.draw(event.offsetX, event.offsetY);
     }
 
     stop() {
@@ -78,13 +67,24 @@ export class RectangleService extends Tool {
     handleKeyDown(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = true;
-            //this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight);
+            this.draw(this.currentMouseX, this.currentMouseY);
         }
     }
+    
     handleKeyUp(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = false;
+            this.draw(this.currentMouseX, this.currentMouseY);
         }
+    }
+
+    draw (mouseX: number, mouseY: number): void {
+        this.currentMouseX = mouseX;
+        this.currentMouseY = mouseY;
+        this.thickness = this.state.globalState.thickness;
+        this.setRectangleDisplay(this.state.rectangleType);
+        this.adjustStartPosition(mouseX, mouseY);
+        this.drawRect(this.currentStartX, this.currentStartY, this.currentWidth, this.currentHeight);
     }
 
     drawRect(startX: number, startY: number, width: number, height: number): void {
@@ -92,6 +92,78 @@ export class RectangleService extends Tool {
         this.svg.setAttributeNS(null, 'y', startY.toString());
         this.svg.setAttributeNS(null, 'height', height.toString());
         this.svg.setAttributeNS(null, 'width', width.toString());
+    }
+
+    adjustStartPosition(mousePositionX: number, mousePositionY: number): void {
+        if (this.thickness >= Math.abs(this.initialX - mousePositionX) || this.thickness >= Math.abs(this.initialY - mousePositionY)) {
+            this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
+            this.svg.setAttribute('stroke', 'transparent');
+            this.thickness = 0;
+            this.currentStartX = this.initialX;
+            this.currentStartY = this.initialY;
+            this.currentWidth = mousePositionX - this.initialX - this.thickness;
+            this.currentHeight = mousePositionY - this.initialY - this.thickness;
+            if (this.isShiftDown) {
+                if (Math.abs(this.currentWidth) < Math.abs(this.currentHeight)) {
+                    if ((this.currentWidth <= 0 && this.currentHeight >= 0) || (this.currentWidth >= 0 && this.currentHeight <= 0)) {
+                        // XOR for 1st and 3d quadrants
+                        this.currentHeight = -this.currentWidth;
+                    } else {
+                        this.currentHeight = this.currentWidth;
+                    }
+                } else {
+                    if ((this.currentWidth <= 0 && this.currentHeight >= 0) || (this.currentWidth >= 0 && this.currentHeight <= 0)) {
+                        // XOR for 2nd and 4th quadrants
+                        this.currentWidth = -this.currentHeight;
+                    } else {
+                        this.currentWidth = this.currentHeight;
+                    }
+                }
+            }
+            this.adjustWidthAndHeight();
+        } else { 
+            this.currentStartX =
+                mousePositionX > this.initialX
+                    ? this.initialX + this.thickness / 2
+                    : this.initialX - this.thickness / 2;
+            this.currentStartY =
+                mousePositionY > this.initialY
+                    ? this.initialY + this.thickness / 2
+                    : this.initialY - this.thickness / 2;
+            this.currentWidth = mousePositionX - this.initialX;
+            this.currentHeight = mousePositionY - this.initialY;
+            this.currentWidth += this.thickness < this.currentWidth ? -this.thickness : this.thickness;
+            this.currentHeight += this.thickness < this.currentHeight ? -this.thickness : this.thickness;
+            if (this.isShiftDown) {
+                if (Math.abs(this.currentWidth) < Math.abs(this.currentHeight)) {
+                    if ((this.currentWidth <= 0 && this.currentHeight >= 0) || (this.currentWidth >= 0 && this.currentHeight <= 0)) {
+                        // XOR for 1st and 3d quadrants
+                        this.currentHeight = -this.currentWidth;
+                    } else {
+                        this.currentHeight = this.currentWidth;
+                    }
+                } else {
+                    if ((this.currentWidth <= 0 && this.currentHeight >= 0) || (this.currentWidth >= 0 && this.currentHeight <= 0)) {
+                        // XOR for 2nd and 4th quadrants
+                        this.currentWidth = -this.currentHeight;
+                    } else {
+                        this.currentWidth = this.currentHeight;
+                    }
+                }
+            }
+            this.adjustWidthAndHeight();
+        }
+    }
+
+    adjustWidthAndHeight(): void {
+        if (this.currentWidth < 0) {
+            this.currentStartX = this.currentStartX + this.currentWidth;
+            this.currentWidth = Math.abs(this.currentWidth);
+        }
+        if (this.currentHeight < 0) {
+            this.currentStartY = this.currentStartY + this.currentHeight;
+            this.currentHeight = Math.abs(this.currentHeight);
+        }
     }
 
     setRectangleDisplay(rectangleType: string): void {
@@ -109,6 +181,7 @@ export class RectangleService extends Tool {
             case 'fill only':
                 this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
                 this.svg.setAttribute('stroke', 'transparent');
+                this.thickness = 0;
                 this.rectangleType = 'fill only';
                 break;
         }
