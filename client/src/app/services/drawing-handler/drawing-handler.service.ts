@@ -5,6 +5,7 @@ import { DrawState } from 'src/app/state/draw-state';
 
 //we do not want the img preview width and height to exceed 300px.
 const MAX_IMG_PREVIEW_SIZE: number = 300;
+const wait = (ms:number) => new Promise(res => setTimeout(res, ms));
 
 @Injectable({
   providedIn: 'root'
@@ -12,15 +13,23 @@ const MAX_IMG_PREVIEW_SIZE: number = 300;
 
 export class DrawingHandler {
   private state:DrawState
-  private destCtx:CanvasRenderingContext2D | null;
-  private imageData:ImageData;
-  private data:Uint8ClampedArray;
 
   private previewWidth: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   previewWidthObs: Observable<number> = this.previewWidth.asObservable();
 
   private previewHeight: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   previewHeightObs: Observable<number> = this.previewHeight.asObservable();
+
+  private dataURL: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  dataURLObs: Observable<string> = this.dataURL.asObservable();
+
+  setDataURL(dataURL:string): void{
+    this.dataURL.next(dataURL);
+  }
+
+  getDataURL():string{
+    return this.dataURL.value;
+  }
 
   constructor(private store:DrawStore) {
     this.store.stateObs.subscribe((value: DrawState) => {
@@ -35,8 +44,7 @@ export class DrawingHandler {
     return this.previewHeight.value;
   }
 
-
-  /*Theses functions is used when a preview of the image to be saved or exported is shown, it is used to make an image 
+  /*Theses functions are used when a preview of the image to be saved or exported is shown, it is used to make an image 
   with dimensions that are proportional with the canvas*/
   setPreviewImgWidth() {
     if(this.state.svgState.width < MAX_IMG_PREVIEW_SIZE){
@@ -59,113 +67,33 @@ export class DrawingHandler {
                             this.previewHeight.next(MAX_IMG_PREVIEW_SIZE)                
     }
   }
-  
-   /*We set the canvas background by modifying its css, but when calling toDataURL on the canvas, 
-  the background color is not taken since its not part of the image data, only of the DOM styling
-  so in this function, a dummy canvas is created with a rectangle with the canvas color
-  setImgBackgroundColor(format:string, filter?:string | undefined):string{
-    //Code inspired from https://stackoverflow.com/questions/18609715/html5-canvas-todataurl-image-has-no-background-color
-    let destinationCanvas:HTMLCanvasElement = document.createElement("canvas");
-    destinationCanvas.width = this.state.canvasState.canvas.width;
-    destinationCanvas.height = this.state.canvasState.canvas.height;
-    this.destCtx = destinationCanvas.getContext('2d');
 
-    //create a rectangle with the desired color
-    if(this.destCtx != null){
-      this.destCtx.fillStyle = this.state.colorState.canvasColor.hex();
-      this.destCtx.fillRect(0,0,this.state.canvasState.canvas.width,this.state.canvasState.canvas.height);
-
-      //draw the original canvas onto the destination canvas
-      this.destCtx.drawImage(this.state.canvasState.canvas, 0, 0);
-      this.imageData=this.destCtx.getImageData(0,0,destinationCanvas.width,destinationCanvas.height);
-      this.data = this.imageData.data
-      if(filter){
-        this.applyFilter(filter);
-      }
+  async prepareDrawingExportation(format:string, filter?:string | undefined){
+    if(filter){
+      console.log(filter);
+      this.store.setSVGFilter(filter);
+      //wait for filter to be applied before saving the drawing
+      await wait(10);
     }
-    //finally use the destinationCanvas.toDataURL() method to get the desired output;
-    let dataURL:string = destinationCanvas.toDataURL(`image/${format}`,1.0);
-    
-    return dataURL;
-  
-  }
-  */
-  applyFilter(filter:string){
-    switch (filter){
-      case 'invert':
-        this.invertFilter();
-        break;
-      case 'grey':
-        this.grayScaleFilter();
-        break;
-      case 'blackAndWhite':
-        this.blackAndWhiteFilter();
-        break;
-      case 'transparent':
-        this.transparentFilter();
-        break;
-      case 'bright':
-        this.brightenFilter();
-        break;
+    let xml:string = new XMLSerializer().serializeToString(this.state.svgState.drawSvg)
+    let svg64:string = btoa(xml);
+    let b64Start:string = 'data:image/svg+xml;base64,';
+    let image64:string = b64Start + svg64;
+    if(format =='svg+xml'){
+      this.setDataURL(image64);
     }
-  }
-
-  invertFilter(){
-    for (let i = 0; i < this.data.length; i += 4) {
-      this.data[i]     = 255 - this.data[i];     // rouge
-      this.data[i + 1] = 255 - this.data[i + 1]; // vert
-      this.data[i + 2] = 255 - this.data[i + 2]; // bleu
+    else{
+      let img = new Image();
+      img.src = image64;
+      img.onload = () => {
+        let canvas = document.createElement('canvas');
+        canvas.width = this.state.svgState.width;
+        canvas.height = this.state.svgState.height;
+        let ctx:CanvasRenderingContext2D = canvas.getContext('2d') as CanvasRenderingContext2D;
+        ctx.drawImage(img, 0, 0);
+        this.setDataURL(canvas.toDataURL(`image/${format}`,1.0));
+      };
     }
-    if(this.destCtx != null){
-      this.destCtx.putImageData(this.imageData, 0, 0);
-    }
-  }
-
-  grayScaleFilter(){
-    for (let i = 0; i < this.data.length; i += 4) {
-      let grey = 0.3  * this.data[i] + 0.59 * this.data[i+1] + 0.11 * this.data[i+2];
-      this.data[i]     = grey; // rouge
-      this.data[i + 1] = grey; // vert
-      this.data[i + 2] = grey; // bleu
-    }
-    if(this.destCtx != null){
-      this.destCtx.putImageData(this.imageData, 0, 0);
-    }
-  }
-
-  blackAndWhiteFilter(){
-    for (let i = 0; i < this.data.length; i += 4) {
-      let avg = (this.data[i] + this.data[i+1] + this.data[i+2])/3
-      avg > 127 ? 
-      (this.data[i]     = 255, 
-      this.data[i + 1] = 255, 
-      this.data[i + 2] = 255):
-      (this.data[i]     = 0, 
-      this.data[i + 1] = 0, 
-      this.data[i + 2] = 0)
-    }
-    if(this.destCtx != null){
-      this.destCtx.putImageData(this.imageData, 0, 0);
-    }
-  }
-
-  transparentFilter(){
-    for (let i = 0; i < this.data.length; i += 4) {
-      this.data[i+3] = 127;
-    }
-    if(this.destCtx != null){
-      this.destCtx.putImageData(this.imageData, 0, 0);
-    }
-  }
-
-  brightenFilter(){
-    for (var i=0; i<this.data.length; i+=4) {
-      this.data[i] = this.data[i] + 50; 
-      this.data[i+1] = this.data[i+1] + 50; 
-      this.data[i+2] = this.data[i+2] + 50; 
-    }
-    if(this.destCtx != null){
-      this.destCtx.putImageData(this.imageData, 0, 0);
-    }
+    this.store.setSVGFilter('');
   }
 }

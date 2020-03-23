@@ -25,7 +25,7 @@ export class CreateDrawingComponent implements OnInit {
         this.createDrawingForm.patchValue({ height: window.innerHeight });
         this.isWidthModified = false;
         this.isHeightModified = false;
-        this.canvasColor = new Color(255, 255, 255, 255);
+        this.backgroundColor = new Color(255, 255, 255, 255);
         this.state.globalState.isKeyHandlerActive = false;
     }
 
@@ -37,7 +37,7 @@ export class CreateDrawingComponent implements OnInit {
     isHeightModified = false;
     isCreateDrawColorOpen = false;
 
-    canvasColor: Color;
+    backgroundColor: Color;
 
     createDrawingForm = new FormGroup({
         width: new FormControl('width', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
@@ -53,10 +53,9 @@ export class CreateDrawingComponent implements OnInit {
     submit(): void {
         this.dialogRef.close();
         if(this.state.svgState.svgs.length != 0){
-            //this.state.svgState..clearRect(0, 0, this.state.svgState.width, this.state.svgState.height);
-            this.state.svgState.svgs = [];
+            this.store.emptySvg();
         }
-        this.store.setCanvasColor(this.canvasColor);
+        this.store.setCanvasColor(this.backgroundColor);
         this.createDrawingForm.controls['width'].value >= window.innerWidth?
         this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
         this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
@@ -74,7 +73,7 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     setCanvasColor(event: any) {
-        this.canvasColor = event;
+        this.backgroundColor = event;
     }
 
     setIsWidthChangedToTrue(): void {

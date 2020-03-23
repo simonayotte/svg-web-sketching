@@ -128,6 +128,7 @@
         [attr.height.px]="state.svgState.height"
         [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
         (drawSvgChange)="store.setDrawSvg($event)"
+        filter="url(#filter)"
     >
         <rect width="100%" height="100%" [attr.fill]="state.colorState.canvasColor.hex()"></rect>
 
@@ -135,6 +136,14 @@
             <!--Directive svg adds svg to main svg -->
             <ng-template svg [svg]="svg" [drawSvg]="state.svgState.drawSvg"></ng-template>
         </ng-container>
+
+        <filter id = 'filter' [ngSwitch] = 'state.svgState.svgFilter'>
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" *ngSwitchCase = '1'/>
+            <feColorMatrix in="SourceGraphic" type= "luminanceToAlpha" *ngSwitchCase = '2'/>
+            <feColorMatrix in="SourceGraphic" type="hueRotate" values="180" *ngSwitchCase = '3'/>
+            <feColorMatrix in="SourceGraphic" type="saturate" values="10" *ngSwitchCase = '4'/>
+            <feMorphology operator="dilate" radius="8" *ngSwitchCase = '5'/>
+        </filter>
     </svg>
 
     <canvas

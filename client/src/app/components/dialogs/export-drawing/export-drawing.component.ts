@@ -46,11 +46,7 @@ export class ExportDrawingComponent implements OnInit {
    get type() { return this.exportDrawingForm.get(TYPE_STRING) ;}
   
   submit() {
-    let dataURL: string;
-    this.exportDrawingForm.controls[FILTER_STRING].value == ''? 
-    dataURL = this.drawingHandler.setImgBackgroundColor(this.exportDrawingForm.controls[TYPE_STRING].value):
-    dataURL = this.drawingHandler.setImgBackgroundColor(this.exportDrawingForm.controls[TYPE_STRING].value,this.exportDrawingForm.controls[FILTER_STRING].value);
-    this.exportDrawingService.setDataURL(dataURL);
+    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[TYPE_STRING].value,this.exportDrawingForm.controls[FILTER_STRING].value);
     this.exportDrawingService.setExportName(this.exportDrawingForm.controls[NAME_STRING].value);
     this.exportDrawingService.setType(this.exportDrawingForm.controls[TYPE_STRING].value);
     this.dialogRef.close();

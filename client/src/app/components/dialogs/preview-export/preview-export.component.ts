@@ -25,7 +25,7 @@ export class PreviewExportComponent implements OnInit {
     public dialogRef:MatDialogRef<PreviewImageComponent>,
     private exportDrawingService:ExportDrawingService,
     private httpService:HttpService) { 
-    this.exportDrawingService.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
+    this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
     this.drawingHandler.previewWidthObs.subscribe((previewWidth: number) => (this.previewWidth = previewWidth));
     this.drawingHandler.previewHeightObs.subscribe((previewHeight: number) => (this.previewHeight = previewHeight));
     this.store.stateObs.subscribe((value: DrawState) => {
@@ -44,7 +44,7 @@ export class PreviewExportComponent implements OnInit {
 
   exportDrawing() {
     this.buttonDisabled = true;
-    let drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.exportDrawingService.getDataURL())
+    let drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL)
     this.httpService.exportDrawing(drawing).subscribe(data => alert(data.message),
     err => alert(err.message));
     this.buttonDisabled = false;

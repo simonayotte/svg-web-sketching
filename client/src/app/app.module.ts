@@ -17,6 +17,7 @@ import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-dra
 import { ExportDrawingComponent } from './components/dialogs/export-drawing/export-drawing.component';
 import { PreviewExportComponent } from './components/dialogs/preview-export/preview-export.component';
 import { DrawingGalleryComponent } from './components/dialogs/drawing-gallery/drawing-gallery.component';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
     declarations: [AppComponent, 
@@ -27,7 +28,8 @@ import { DrawingGalleryComponent } from './components/dialogs/drawing-gallery/dr
                 PreviewImageComponent, 
                 ExportDrawingComponent, 
                 PreviewExportComponent, 
-                DrawingGalleryComponent],
+                DrawingGalleryComponent,
+                SafeUrlPipe],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -38,6 +40,7 @@ import { DrawingGalleryComponent } from './components/dialogs/drawing-gallery/dr
         BrowserAnimationsModule,
         OverlayModule,
         DrawModule,
+        
     ],
     providers: [],
     entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent, ExportDrawingComponent, PreviewExportComponent, DrawingGalleryComponent],

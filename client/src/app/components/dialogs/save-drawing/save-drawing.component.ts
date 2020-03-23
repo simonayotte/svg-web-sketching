@@ -57,7 +57,7 @@ export class SaveDrawingComponent implements OnInit {
   }
   
   submit(): void {
-    this.saveDrawingService.setDataURL(this.drawingHandler.setImgBackgroundColor('png'));
+    this.drawingHandler.prepareDrawingExportation('png');
     this.saveDrawingService.setImgName(this.saveDrawingForm.controls[NAME_STRING].value);
     this.getTagsValues();
     this.saveDrawingService.setTags(this.tagStringArray);

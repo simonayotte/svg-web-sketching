@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ElementRef } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
 import { Color } from '../models/color';
@@ -31,12 +31,34 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    setSVGFilter(value: string){
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgFilter: value },
+        });
+    }
+
     pushSvg(value: SVGElement) {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
         });
     }
+
+    setSvg(value: Array<SVGElement>){
+        this.setState({
+            ...this.state,
+            svgState: {...this.state.svgState, svgs: value}
+        })
+    }
+
+    emptySvg(){
+        this.setState({
+            ...this.state,
+            svgState: {...this.state.svgState, svgs: []}
+        })
+    }
+
     popShape() {
         this.setState({
             ...this.state,

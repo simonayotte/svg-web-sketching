@@ -4,5 +4,6 @@ export class SvgState {
 
     drawSvg: SVGSVGElement;
     svgs: SVGElement[] = [];
+    svgFilter: string = ''
     constructor() {}
 }

@@ -14,19 +14,12 @@ export class ExportDrawingService {
   private type: BehaviorSubject<string> = new BehaviorSubject<string>('');
   typeObs: Observable<string> = this.type.asObservable()
 
-  private dataURL: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  dataURLObs: Observable<string> = this.dataURL.asObservable();
-
   setExportName(exportName:string):void{
     this.exportName.next(exportName);
   }
 
   setType(type:string):void{
     this.type.next(type);
-  }
-
-  setDataURL(dataURL:string): void{
-    this.dataURL.next(dataURL);
   }
 
   getExportName():string{
@@ -36,9 +29,4 @@ export class ExportDrawingService {
   getType():string{
     return this.type.value;
   }
-
-  getDataURL():string{
-    return this.dataURL.value;
-  }
-
 }

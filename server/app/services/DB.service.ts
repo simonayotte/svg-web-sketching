@@ -31,14 +31,13 @@ export class DatabaseService {
             });
     }
 
-    async addDrawingDb(name:string, tags: Array<string>,dataURL:string): Promise<void>{
-        if(!this.validateName(name)){
+    async addDrawingDb(drawing:Drawing): Promise<void>{
+        if(!this.validateName(drawing.name)){
             throw new Error('Erreur:Le nom est requis. Image non sauvegardée')
           }
-          if(!this.validateTags(tags)){
+          if(!this.validateTags(drawing.tags)){
             throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
           }
-            const drawing= new Drawing(name,tags,dataURL);
             this.collection.insertOne(drawing).catch((error:Error)=>{
                 throw error;
             });

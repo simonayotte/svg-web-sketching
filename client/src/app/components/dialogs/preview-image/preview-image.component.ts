@@ -3,9 +3,9 @@ import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-d
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { MatDialogRef } from '@angular/material';
-import { Drawing } from '../../../../../../common/models/drawing';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
+import { SavedDrawing } from 'src/app/models/saved-drawing';
 
 @Component({
   selector: 'app-preview-image',
@@ -22,7 +22,7 @@ export class PreviewImageComponent implements OnInit {
   constructor(private saveDrawingService:SaveDrawingService, private store:DrawStore, public dialogRef:MatDialogRef<PreviewImageComponent>,
     private drawingHandler: DrawingHandler,
     private httpService:HttpService) { 
-    this.saveDrawingService.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
+    this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
     this.drawingHandler.previewWidthObs.subscribe((previewWidth: number) => (this.previewWidth = previewWidth));
     this.drawingHandler.previewHeightObs.subscribe((previewHeight: number) => (this.previewHeight = previewHeight));
     this.store.stateObs.subscribe((value: DrawState) => {
@@ -42,7 +42,15 @@ export class PreviewImageComponent implements OnInit {
   
   async saveDrawing() {
     this.buttonDisabled = true;
-    let drawing = new Drawing(this.saveDrawingService.getImgName(), this.saveDrawingService.getTags(), this.saveDrawingService.getDataURL());
+    let canvasColor = this.state.colorState.canvasColor;
+    let drawing = new SavedDrawing(this.saveDrawingService.getImgName(), 
+    this.saveDrawingService.getTags(), 
+    this.dataURL, 
+    this.state.svgState.svgs, 
+    this.state.svgState.width, 
+    this.state.svgState.height,
+    [canvasColor.r,canvasColor.g,canvasColor.b,canvasColor.a]);
+    console.log(drawing.svgs);
     this.httpService.saveDrawing(drawing).toPromise().then(
     data => {
       this.dialogRef.close();

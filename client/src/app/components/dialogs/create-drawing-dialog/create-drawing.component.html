@@ -1,6 +1,6 @@
 <app-color
     *ngIf="isCreateDrawColorOpen"
-    [color]="canvasColor"
+    [color]="backgroundColor"
     [lastColors]="[]"
     (saveColor)="setCanvasColor($event)"
     (closeColor)="setIsCreateDrawColorOpen(false)"
@@ -44,7 +44,7 @@
         </label><br>
 
         <label>
-            <button [ngStyle]="{ 'background-color': canvasColor.hex() }" (click)="setIsCreateDrawColorOpen(true)">
+            <button [ngStyle]="{ 'background-color': backgroundColor.hex() }" (click)="setIsCreateDrawColorOpen(true)">
                 Couleur d'arrière plan
             </button>
         </label>

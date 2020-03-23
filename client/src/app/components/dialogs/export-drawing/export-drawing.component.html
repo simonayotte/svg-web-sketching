@@ -23,12 +23,12 @@
         <label>
           <p>Filtres:</p>
           <select id = 'filter' formControlName = 'filter'>
-            <option value = ''>Aucun Filtre</option>
-            <option value = 'invert'>Inversement de couleurs</option>
-            <option value = 'grey'>Niveau de gris</option>
-            <option value = 'blackAndWhite'>Noir et blanc</option>
-            <option value = 'transparent'>Transparent</option>
-            <option value = 'bright'>Éclairer</option>
+            <option value = ''>Aucun</option>
+            <option value = '1'>Brouiller</option>
+            <option value = '2'>Niveau de gris</option>
+            <option value = '3'>Inverser couleurs</option>
+            <option value = '4'>Saturer</option>
+            <option value = '5'>Dilater</option>
           </select>
         </label><br>
         <button (click) = 'submit()' [disabled] = '!exportDrawingForm.valid'>Confirmer</button>

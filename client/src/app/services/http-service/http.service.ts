@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from 'src/app/models/httpResponse';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { ExportedDrawing } from 'src/app/models/exported-drawing';
-import { Drawing } from '../../../../../common/models/drawing';
 
 const SERVER_URL: string = 'http://localhost:3000/'
 const SAVE_DRAWING: string = 'savedrawing';
@@ -27,7 +26,7 @@ export class HttpService {
   }
 
   getAllDrawings(){
-    return this.http.get<Array<Drawing>>(`${SERVER_URL}${GALLERY}`)
+    return this.http.get<Array<SavedDrawing>>(`${SERVER_URL}${GALLERY}`)
   }
 
   deleteDrawing(id:string){

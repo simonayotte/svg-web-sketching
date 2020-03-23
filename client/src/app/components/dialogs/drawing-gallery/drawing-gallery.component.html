@@ -5,7 +5,7 @@
     <div *ngIf = 'drawings.length == 0' class = no-drawing>
         Aucun dessin sauvegardé!
     </div>
-    <div *ngFor = 'let drawing of drawings' class = 'drawing' (click)=deleteDrawing(drawing)>
+    <div *ngFor = 'let drawing of drawings' class = 'drawing' (click)=deleteDrawing(drawing) (click)=loadDrawing(drawing)>
         <div>
             <img [src] = 'drawing.dataURL'><br>
             nom : {{drawing.name}}

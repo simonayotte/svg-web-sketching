@@ -80,7 +80,7 @@ export class DrawHandlerService {
                 service.handleKeyDown(key);
             }
 
-            if (this.keyMap.has(key)) {
+            if (this.keyMap.has(key) && !event.ctrlKey) {
                 const tool = this.keyMap.get(key) as string;
                 this.store.setTool(tool);
             } else {
@@ -93,8 +93,8 @@ export class DrawHandlerService {
                             this.state.svgState.svgs.length > 0
                                 ? this.matDialog.open(DrawingStartedDialogComponent)
                                 : this.matDialog.open(CreateDrawingComponent);
+                            break;
                         }
-                        
                     case 's':
                         if (event.ctrlKey) {
                             event.preventDefault();

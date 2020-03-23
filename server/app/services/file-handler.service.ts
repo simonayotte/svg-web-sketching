@@ -24,7 +24,6 @@ export class FileHandler {
       let data = Buffer.from(base64DataURL,'base64');
       let filename:string;
       type == 'svg+xml' ? filename = `${name}.svg`: filename = `${name}.${type}`;
-      console.log(name);
       let localPath:string = __dirname.replace("\\server\\app\\services", `\\client\\local-images\\${filename}`);
       fs.writeFileSync(localPath,data,'utf-8'); 
     }
