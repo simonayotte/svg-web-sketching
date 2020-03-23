@@ -14,69 +14,89 @@ export class AerosolService extends Tool {
   points: Coordinate[] = [];
   pixel: SVGCircleElement;
 
+  //Emission
+  //Constant emissionPeriod for getting rid of lag
+  emissionPeriod = 50;
+  sprayIntervalID: any; //Pour acceder au setInterval du spray pattern
+
+  //Mouse position
+  x: number;
+  y: number;
+  
   constructor(private store: DrawStore) { 
-      super();
-      this.store.stateObs.subscribe((value: DrawState) => {
-          this.state = value;
-      });
+    super();
+    this.store.stateObs.subscribe((value: DrawState) => {
+        this.state = value;
+    });
   }
 
   start(event: MouseEvent) {
-      let x = event.offsetX;
-      let y = event.offsetY;
+    //Update current mouse position
+    this.x = event.offsetX;
+    this.y = event.offsetY;
+    
+    //Styling for SVG
+    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
+    this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
+    this.svg.setAttribute('stroke-width', '1');
+    this.svg.setAttribute('stroke-linecap', 'round');
+    this.svg.setAttribute('stroke-linejoin', 'round');
 
-      this.drawPixel(x, y);
-      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-      this.svg.setAttribute('stroke', "");
-      this.svg.setAttribute('fill', 'none');
-      this.svg.setAttribute('stroke-width', "1");
-      this.svg.setAttribute('stroke-linecap', 'round');
-      this.svg.setAttribute('stroke-linejoin', 'round');
+    this.svg.setAttribute('d', `M ${this.x} ${this.y} `);
+    this.state.svgState.drawSvg.appendChild(this.svg);
+    this.points.push(new Coordinate(this.x, this.y));
 
-      //First point of the path
-      this.svg.setAttribute('d', `M ${x} ${y} `);
-      this.state.svgState.drawSvg.appendChild(this.svg);
-      this.points.push(new Coordinate(x, y));
+    //Function in interval for calling
+    //Interval se fait a chaque 50 pour eviter le lag
+    this.sprayIntervalID = setInterval( () => this.spray(), this.emissionPeriod);
   }
 
   continue(event: MouseEvent) {
-    for (let i = 0; i < 60; i++) {
-      this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
-      let path = this.svg.getAttribute('d') as string;
-      let point = this.generateRandomPoint(event.offsetX, event.offsetY);
-      //Move to new point and show pixel
-      path = path.concat(`M ${point.pointX} ${point.pointY} h 1`);
-      this.svg.setAttribute('d', path);
-      this.points.push(new Coordinate(event.offsetX, event.offsetY));
-    }
+    //Update current mouse position
+    this.x = event.offsetX;
+    this.y = event.offsetY;
   }
 
   stop() {
-  if (this.points.length > 1) {
+    clearInterval(this.sprayIntervalID);
+    if (this.points.length > 1)
       this.store.pushSvg(this.svg);
-  } else {
-      this.store.pushSvg(this.pixel);
-  }
 
-  this.points = [];
-  this.state.svgState.drawSvg.removeChild(this.pixel);
-  this.state.svgState.drawSvg.removeChild(this.svg);
-  }
-
-  drawPixel(x: number, y: number) {
-    this.pixel = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    this.pixel.setAttribute('cx', x.toString());
-    this.pixel.setAttribute('cy', y.toString());
-    this.pixel.setAttribute('r', '1');
-    this.pixel.setAttribute('fill', this.state.colorState.firstColor.hex());
-    this.state.svgState.drawSvg.appendChild(this.pixel);
+    this.points = [];
+    this.state.svgState.drawSvg.removeChild(this.svg);
   }
 
   //Returns random point inside the circle
   generateRandomPoint(x: number, y: number) : Coordinate {
     let angle = Math.random()*Math.PI*2;
     let r = Math.random()*Math.pow(this.state.globalState.thickness/2,2);
-    return new Coordinate(x + Math.cos(angle)*r, y + Math.sin(angle)*r);
+    let pointX = x + Math.sqrt(r) * Math.cos(angle);
+    let pointY = y + Math.sqrt(r) * Math.sin(angle);
+    return new Coordinate(pointX, pointY);
+  }
+
+  //Adds a random point inside the SVG path, genere une emission
+  generateRandomSprayPoint(x: number, y: number) {
+    let density = this.convertEmissionRate();
+    for(var i = 0; i < density; i++){
+      let path = this.svg.getAttribute('d') as string;
+      let point = this.generateRandomPoint(x, y);
+      //Move to new point and show pixel
+      path = path.concat(`M ${point.pointX} ${point.pointY} h 1`);
+      this.svg.setAttribute('d', path);
+      this.points.push(new Coordinate(x, y));
+    } 
+  }
+
+  //Conversion of emissionRate/sec in emissionRate per 50ms
+  convertEmissionRate(): number {
+    return this.state.emissionRate*0.05/1000 * 10000;
+  }
+
+  //Function for calling in setInterval, sprays with correct emissionRate
+  spray() {
+    this.generateRandomSprayPoint(this.x, this.y);
   }
 
 }
