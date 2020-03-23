@@ -70,7 +70,7 @@ export class RectangleService extends Tool {
             this.draw(this.currentMouseX, this.currentMouseY);
         }
     }
-    
+
     handleKeyUp(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = false;
@@ -78,7 +78,7 @@ export class RectangleService extends Tool {
         }
     }
 
-    draw (mouseX: number, mouseY: number): void {
+    draw(mouseX: number, mouseY: number): void {
         this.currentMouseX = mouseX;
         this.currentMouseY = mouseY;
         this.thickness = this.state.globalState.thickness;
