@@ -13,6 +13,7 @@ import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
+import { SelectionService } from '../tools/selection/selection.service';
 
 @Injectable({
     providedIn: 'root',
@@ -34,6 +35,8 @@ export class DrawHandlerService {
         this.servicesMap.set('Polygone', injector.get(PolygonService));
         this.servicesMap.set('Ellipse', injector.get(EllipsisService));
         this.servicesMap.set('Pipette', injector.get(PipetteService));
+        this.servicesMap.set('Selection', injector.get(SelectionService));
+
 
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
@@ -42,6 +45,8 @@ export class DrawHandlerService {
         this.keyMap.set('3', 'Polygone');
         this.keyMap.set('2', 'Ellipse');
         this.keyMap.set('t', 'Pipette');
+        this.keyMap.set('s', 'Selection');
+
     }
 
     startTool(event: MouseEvent) {
