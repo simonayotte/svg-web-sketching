@@ -29,7 +29,6 @@ export class GalleryController {
         });
 
         this.router.delete('/delete/:id', async (req: Request, res: Response, next: NextFunction) => {
-            console.log(req.params.id);
             this.dbService.deleteDrawingDb(req.params.id).then((result) => {
                 this.fileHandler.deleteDrawing(req.params.id.valueOf())
                 let succesMsg = {status:'200', message:'Dessin supprimé avec succès!'}
