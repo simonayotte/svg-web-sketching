@@ -96,4 +96,11 @@ export class DrawingHandler {
     }
     this.store.setSVGFilter('');
   }
+
+  clearCanvas(){
+    for(let svg of this.state.svgState.svgs){
+      this.store.popShape();
+      this.state.svgState.drawSvg.removeChild(svg);
+    }
+  }
 }

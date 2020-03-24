@@ -11,10 +11,6 @@ export class SvgDirective implements OnInit {
         this.drawSvg.appendChild(this.svg);
     }
 
-    ngOnDestroy(){
-        this.drawSvg.removeChild(this.svg);
-    }
-
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent) {
         console.log(event);

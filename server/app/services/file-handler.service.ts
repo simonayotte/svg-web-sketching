@@ -2,6 +2,7 @@ import {injectable } from 'inversify';
 import 'reflect-metadata';
 import * as fs from 'fs'
 import { ObjectId } from 'mongodb';
+import { Drawing } from '../../models/drawing';
 
 @injectable()
 export class FileHandler {
@@ -30,6 +31,17 @@ export class FileHandler {
 
     deleteDrawing(id:string): void{
       fs.unlinkSync(`${__dirname}/image-storage/${id}.png`)
+    }
+
+    checkAllDrawingsAreInServer(drawings: Array<Drawing>): Array<Drawing>{
+      let path:string;
+      for(let i = 0; i<drawings.length; i++){
+        path = `${__dirname}/image-storage/${drawings[i]._id.valueOf()}.png`
+        if(!fs.existsSync(path)){
+          drawings.splice(i,1);
+        }
+      }
+      return drawings;
     }
 
   }

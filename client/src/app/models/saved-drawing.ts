@@ -4,15 +4,15 @@ export class SavedDrawing {
     name: string;
     tags: Array<string>;
     dataURL: string;
-    svgs: Array<SVGElement>;
+    svgsHTML: Array<string>;
     width:number;
     height:number;
     RGBA: Array<number>;
-    constructor(name: string, tags: Array<string>, dataURL:string, svgs: Array<SVGElement>,width: number, height:number,RGBA: Array<number>){
+    constructor(name: string, tags: Array<string>, dataURL:string, svgsHTML: Array<string>,width: number, height:number,RGBA: Array<number>){
         this.name = name;
         this.tags = tags;
         this.dataURL = dataURL;
-        this.svgs = svgs;
+        this.svgsHTML = svgsHTML;
         this.width = width;
         this.height = height;
         this.RGBA = RGBA;

@@ -22,9 +22,9 @@ export class SaveDrawingController {
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             try{
-                let drawing = new Drawing(req.body.name,req.body.tags, req.body.dataURL, req.body.svgs, req.body.width, req.body.height, req.body.RGBA);
+                let drawing = new Drawing(req.body.name,req.body.tags, req.body.dataURL, req.body.svgsHTML, req.body.width, req.body.height, req.body.RGBA);
                 this.dbService.addDrawingDb(drawing);
-                console.log(req.body.svgs);
+                console.log(req.body.svgsHTML);
                 await wait(1000);
                 let drawing_id = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
                 await wait(1000);

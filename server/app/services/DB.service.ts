@@ -61,8 +61,8 @@ export class DatabaseService {
                 });
     }
 
-    async getDrawingsDbByTags(tag:string): Promise<Drawing[]> {
-        let filterQuery: FilterQuery<Drawing> = {tag: name};
+    async getDrawingsByTags(tagName:string): Promise<Drawing[]> {
+        let filterQuery: FilterQuery<Drawing> = {tag: tagName};
         return  this.collection.find(filterQuery).toArray()
                 .then((drawing:Drawing[])=>{
                     return drawing;

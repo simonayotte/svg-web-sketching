@@ -9,7 +9,16 @@ img{
     float:right;
 }
 
+.fa-download{
+    float:right;
+    margin-right:15px;
+}
+
 .no-drawing{
+    margin:auto;
+}
+
+.no-filter{
     margin:auto;
 }
 
@@ -31,3 +40,39 @@ h1{
     margin:10px;
     cursor: pointer;
 }
+
+.fa-plus{
+    color:green;
+}
+
+
+.fa-times{
+    color:red;
+    margin-left:5px;
+}
+
+.fa-exclamation-triangle{
+    color:orange;
+    margin-left:5px;
+}
+
+.fa-filter{
+    float:right;
+    color:lightgray;
+}
+
+.loader {
+    // taken from https://www.w3schools.com/howto/howto_css_loader.asp
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #000000; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin:auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

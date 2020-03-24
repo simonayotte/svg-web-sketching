@@ -19,6 +19,7 @@ export class PreviewImageComponent implements OnInit {
   buttonDisabled = false;
   previewHeight:number;
   previewWidth:number;
+  svgsHTML:Array<string> = [];
   constructor(private saveDrawingService:SaveDrawingService, private store:DrawStore, public dialogRef:MatDialogRef<PreviewImageComponent>,
     private drawingHandler: DrawingHandler,
     private httpService:HttpService) { 
@@ -39,18 +40,24 @@ export class PreviewImageComponent implements OnInit {
     this.state.globalState.isKeyHandlerActive = true;
   }
 
-  
+  getSvgsHTML(){
+    for (let svg of this.state.svgState.svgs){
+      this.svgsHTML.push(svg.outerHTML);
+    }
+  }
+
   async saveDrawing() {
+    this.getSvgsHTML();
+    console.log(this.svgsHTML)
     this.buttonDisabled = true;
     let canvasColor = this.state.colorState.canvasColor;
     let drawing = new SavedDrawing(this.saveDrawingService.getImgName(), 
     this.saveDrawingService.getTags(), 
     this.dataURL, 
-    this.state.svgState.svgs, 
+    this.svgsHTML, 
     this.state.svgState.width, 
     this.state.svgState.height,
     [canvasColor.r,canvasColor.g,canvasColor.b,canvasColor.a]);
-    console.log(drawing.svgs);
     this.httpService.saveDrawing(drawing).toPromise().then(
     data => {
       this.dialogRef.close();

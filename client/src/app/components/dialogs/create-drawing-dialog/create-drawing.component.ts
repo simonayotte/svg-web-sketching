@@ -4,6 +4,7 @@ import { MatDialogRef } from '@angular/material';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { Color } from 'src/app/models/color';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 
 const SIDEBAR_WIDTH = 52;
 
@@ -13,7 +14,7 @@ const SIDEBAR_WIDTH = 52;
     styleUrls: ['./create-drawing.component.scss'],
 })
 export class CreateDrawingComponent implements OnInit {
-    constructor(private store: DrawStore, public dialogRef: MatDialogRef<CreateDrawingComponent>) {
+    constructor(private store: DrawStore, public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingHandler: DrawingHandler) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
@@ -53,7 +54,7 @@ export class CreateDrawingComponent implements OnInit {
     submit(): void {
         this.dialogRef.close();
         if(this.state.svgState.svgs.length != 0){
-            this.store.emptySvg();
+            this.drawingHandler.clearCanvas();
         }
         this.store.setCanvasColor(this.backgroundColor);
         this.createDrawingForm.controls['width'].value >= window.innerWidth?

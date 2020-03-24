@@ -20,7 +20,8 @@ export class GalleryController {
         this.router.get('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
             this.dbService.getAllDrawingsDb().then((drawings: Array<Drawing>) => {
-                res.send(drawings);
+                let returnedDrawings: Array<Drawing> = this.fileHandler.checkAllDrawingsAreInServer(drawings);
+                res.send(returnedDrawings);
             },
             (err => {
                 res.send(err);
@@ -38,6 +39,11 @@ export class GalleryController {
                 let errorMsg = {status:'400', message:"Le dessin n'a pas pu être supprimé!"}
                 res.json(errorMsg)
             })
+        });
+
+        this.router.get('/filter/:tag', async (req: Request, res: Response, next: NextFunction) => {
+            // Send the request to the service and send the response
+            res.send(this.dbService.getDrawingsByTags(req.params.tag))
         });
     }
 }  
