@@ -21,6 +21,7 @@ export class SelectionService extends Tool {
   controlKey = false;
   aKey = false;
   encompassingBox: SVGElement;
+  displayEncompassingBox: boolean = true;
 
   private mouseUpListener: EventListener;
   private mouseMoveListener: EventListener;
@@ -61,30 +62,29 @@ export class SelectionService extends Tool {
       this.initialX = event.offsetX;
       this.initialY = event.offsetY;
       this.shapes = this.state.svgState.svgs;
-
-      // ---------------test
-      let test = this.shapes[0].getBoundingClientRect();
-      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-        this.state.svgState.drawSvg.appendChild(this.svg);
-        this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-        this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-        this.svg.setAttributeNS(null, 'x', (test.left).toString());
-        this.svg.setAttributeNS(null, 'y', (test.top).toString());
-        this.svg.setAttributeNS(null, 'height', test.height.toString());
-        this.svg.setAttributeNS(null, 'width', test.width.toString());
-      // ---------------test
-
-      this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
-      this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
+      
       if ( event.button == 0 ) { // left click
           this.isSelecting = true;
           this.isDeselecting = false;
+          if (this.encompassingBox) { this.encompassingBox.setAttributeNS(null, 'opacity', '0');
+        } else {
+            this.createEncompassingBox();
+          }
        } else if (event.button == 2 && !this.isDeselecting) { // right click
          this.isDeselecting = true;
          this.isSelecting = false;
          this.tempSelectedShapes = this.selectedShapes.slice();
       }
+
+      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      this.svg.setAttribute('stroke-width', '1');
+      this.svg.setAttribute('fill', this.state.colorState.firstColor.hex()); // TODO no color
+      this.svg.setAttribute('stroke', 'transparent');
+      this.svg.setAttribute('stroke-dasharray', '10');
+      this.state.svgState.drawSvg.appendChild(this.svg);
+
+      this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+      this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
   }
 
   continue(event: MouseEvent): void {
@@ -98,6 +98,8 @@ export class SelectionService extends Tool {
       this.reverseSelection(event.offsetX, event.offsetY);
     }
     if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
+    else { if (this.encompassingBox) {this.encompassingBox.setAttributeNS(null, 'opacity', '0');}
+  }
   }
 
   stop() {
@@ -113,7 +115,6 @@ export class SelectionService extends Tool {
     this.isDeselecting = false;
     if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
     this.svg.remove();
-    this.state.svgState.drawSvg.removeChild(this.svg);
     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
   }
@@ -159,32 +160,43 @@ export class SelectionService extends Tool {
   }
 
   drawSelectionRectangle(startX: number, startY: number, width: number, height: number) {
-    // this.state.canvasState.ctx.beginPath();
-    // this.state.canvasState.ctx.globalAlpha = 0.2;
-    // this.state.canvasState.ctx.setLineDash([5]);
-    // this.state.canvasState.ctx.rect(startX, startY, width, height);
-    // this.state.canvasState.ctx.fill();
-    // this.state.canvasState.ctx.globalAlpha = 1.0;1
-    // this.state.canvasState.ctx.stroke();
-    // this.state.canvasState.ctx.setLineDash([0]);
+    this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
+    this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
+    this.svg.setAttributeNS(null, 'x', startX.toString());
+    this.svg.setAttributeNS(null, 'y', startY.toString());
+    this.svg.setAttributeNS(null, 'height', height.toString());
+    this.svg.setAttributeNS(null, 'width', width.toString());
+    this.svg.setAttributeNS(null, 'fill-opacity', '0.2');
+  }
+
+  createEncompassingBox(): void {
+    this.encompassingBox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    this.encompassingBox.setAttribute('stroke-width', '1');
+    this.encompassingBox.setAttribute('fill', 'transparent');
+    this.encompassingBox.setAttribute('stroke-dasharray', '10');
+    this.encompassingBox.setAttribute('stroke', this.state.colorState.secondColor.hex()); // TODO no color
+    this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
+    this.state.svgState.drawSvg.appendChild(this.encompassingBox);
   }
 
   drawEncompassingBox(shapes: SVGElement[]) {
-    console.log(this.selectedShapes);
-  //   let startX = shapes[0].startSelectX;
-  //   let startY = shapes[0].startSelectY;
-  //   let endX = shapes[0].endSelectX;
-  //   let endY = shapes[0].endSelectY;
-  //   for (let i = 0; i < shapes.length; i++) {
-  //     if (startX > shapes[i].startSelectX) { startX = shapes[i].startSelectX; }
-  //     if (startY > shapes[i].startSelectY) { startY = shapes[i].startSelectY; }
-  //     if (endX < shapes[i].endSelectX) { endX = shapes[i].endSelectX; }
-  //     if (endY < shapes[i].endSelectY) { endY = shapes[i].endSelectY; }
-  //   }
-  //   this.state.canvasState.ctx.beginPath();
-  //   this.state.canvasState.ctx.setLineDash([5]);
-  //   this.state.canvasState.ctx.rect(startX, startY, endX - startX, endY - startY);
-  //   this.state.canvasState.ctx.stroke();
-  //   this.state.canvasState.ctx.setLineDash([0]);
+    let tempStart = shapes[0].getBoundingClientRect();
+    let startX = tempStart.left;
+    let startY = tempStart.top;
+    let endX = tempStart.right;
+    let endY = tempStart.bottom;
+    for (let i = 0; i < shapes.length; i++) {
+      let boundingRectangle = shapes[i].getBoundingClientRect();
+      if (startX > boundingRectangle.left) { startX = boundingRectangle.left; }
+      if (startY > boundingRectangle.top) { startY = boundingRectangle.top; }
+      if (endX < boundingRectangle.right) { endX = boundingRectangle.right; }
+      if (endY < boundingRectangle.bottom) { endY = boundingRectangle.bottom; }
+    }
+
+    this.encompassingBox.setAttributeNS(null, 'x', (startX).toString());
+    this.encompassingBox.setAttributeNS(null, 'y', (startY).toString());
+    this.encompassingBox.setAttributeNS(null, 'height', (endY - startY).toString());
+    this.encompassingBox.setAttributeNS(null, 'width', (endX - startX).toString());
+    this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
   }
 }
