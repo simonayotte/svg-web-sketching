@@ -3,7 +3,6 @@ import { TestBed } from '@angular/core/testing';
 import { PipetteService } from './pipette.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Color } from 'src/app/models/color';
 
 describe('PipetteService', () => {
     let service: PipetteService;
@@ -14,7 +13,7 @@ describe('PipetteService', () => {
         });
         store = TestBed.get(DrawStore);
 
-        store.setCanvasHTML(document.createElement('canvas'));
+        store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
 
         store.stateObs.subscribe((value: DrawState) => {
             service = TestBed.get(PipetteService);
@@ -27,61 +26,50 @@ describe('PipetteService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#start should call getCanvasWithBackground', () => {
+    it('#start() should call #createCanvasWithSvgs()', () => {
         const event: MouseEvent = new MouseEvent('mousedown', {
             clientX: 200,
             clientY: 200,
             button: 0,
         });
 
-        const spy = spyOn(service, 'getCanvasWithBackground');
+        const spy = spyOn(service, 'createCanvasWithSvgs');
         service.start(event);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#start should call setFirstColor store function if left click', () => {
+    it('#start() should call #drawSvgInCanvas()', () => {
         const event: MouseEvent = new MouseEvent('mousedown', {
-            clientX: 300,
-            clientY: 400,
+            clientX: 200,
+            clientY: 200,
             button: 0,
         });
 
+        const spy = spyOn(service, 'drawSvgInCanvas');
+        service.start(event);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#createCanvasWithSvgs() should return canvas context with correct height and width', () => {
+        let ctx = service.createCanvasWithSvgs(500, 500);
+        expect(ctx).toBeTruthy();
+        expect(ctx.canvas.width).toEqual(500);
+        expect(ctx.canvas.height).toEqual(500);
+    });
+
+    it('#setColor() should call #setFirstColor() store function if left click', () => {
+        service.ctx = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
+
         const spy = spyOn(store, 'setFirstColor');
-        service.start(event);
+        service.setColor(service.ctx, 100, 100, 0);
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#start should call setSecondColor store function if left click', () => {
-        const event: MouseEvent = new MouseEvent('mousedown', {
-            clientX: 300,
-            clientY: 400,
-            button: 2,
-        });
+    it('#setColor() should call #setSecondColor() store function if right click', () => {
+        service.ctx = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
+
         const spy = spyOn(store, 'setSecondColor');
-        service.start(event);
+        service.setColor(service.ctx, 100, 100, 2);
         expect(spy).toHaveBeenCalled();
-    });
-
-    it('#getCanvasWithBackground should return canvas context with changed background color', () => {
-        let ctx = service.getCanvasWithBackground(service.state.canvasState.canvas, '#ff00ffff');
-
-        //pick random pixel in canvas context with background color
-        const data: Uint8ClampedArray = ctx.getImageData(200, 100, 1, 1).data;
-        const color = new Color(data[0], data[1], data[2], data[3]);
-
-        expect(color.hex()).toEqual('#ff00ffff');
-    });
-
-    it('#getCanvasWithBackground should return canvas context with original canvas content', () => {
-        //Draw content in original canvas
-        service.state.canvasState.ctx.fillStyle = '#012345ff';
-        service.state.canvasState.ctx.fillRect(0, 0, service.state.canvasState.width, service.state.canvasState.height);
-        let ctx = service.getCanvasWithBackground(service.state.canvasState.canvas, '#ff00ffff');
-
-        //pick random pixel in canvas context with background color
-        const data: Uint8ClampedArray = ctx.getImageData(200, 100, 1, 1).data;
-        const color = new Color(data[0], data[1], data[2], data[3]);
-
-        expect(color.hex()).toEqual('#012345ff');
     });
 });

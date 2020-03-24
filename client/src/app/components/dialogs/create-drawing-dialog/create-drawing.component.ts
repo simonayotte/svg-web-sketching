@@ -30,10 +30,10 @@ export class CreateDrawingComponent implements OnInit {
         this.state.globalState.isKeyHandlerActive = false;
     }
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.state.globalState.isKeyHandlerActive = true;
     }
-    
+
     isWidthModified = false;
     isHeightModified = false;
     isCreateDrawColorOpen = false;
@@ -43,7 +43,7 @@ export class CreateDrawingComponent implements OnInit {
     createDrawingForm = new FormGroup({
         width: new FormControl('width', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
         height: new FormControl('height', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
-      })
+    });
     get width() {
         return this.createDrawingForm.get('width');
     }

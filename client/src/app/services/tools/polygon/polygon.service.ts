@@ -11,20 +11,30 @@ export class PolygonService extends Tool {
     state: DrawState;
     centerX: number;
     centerY: number;
+    isDrawing = false;
+    private mouseUpListener: EventListener;
+    private mouseMoveListener: EventListener;
+
     constructor(private store: DrawStore) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.mouseMoveListener = this.continue.bind(this);
+        this.mouseUpListener = this.stop.bind(this);
     }
 
     start(event: MouseEvent) {
+
         this.centerX = event.offsetX;
         this.centerY = event.offsetY;
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
         this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
         this.setColors(this.state.polygonType);
         this.state.svgState.drawSvg.appendChild(this.svg);
+        this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+        this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
+        this.isDrawing = true;
     }
 
     continue(event: MouseEvent) {
@@ -43,6 +53,16 @@ export class PolygonService extends Tool {
         }
         this.svg.setAttribute('points', this.pointsToString(points));
     }
+    stop() {
+        if (this.isDrawing) {
+            this.store.pushSvg(this.svg);
+            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
+            this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+            this.isDrawing = false;
+        }
+        this.stopSignal();
+    }
 
     pointsToString(points: Coordinate[]): string {
         let result: string = '';
@@ -53,11 +73,6 @@ export class PolygonService extends Tool {
             }
         }
         return result;
-    }
-
-    stop() {
-        this.store.pushSvg(this.svg);
-        this.state.svgState.drawSvg.removeChild(this.svg);
     }
 
     setColors(type: string) {

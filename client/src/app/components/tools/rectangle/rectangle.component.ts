@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-//import { RectangleService } from 'src/app/services/tools/rectangle/rectangle.service';
 
 @Component({
     selector: 'app-rectangle',

@@ -11,9 +11,9 @@ const NAME_STRING = 'name';
 const TAGS_STRING = 'tags';
 
 @Component({
-  selector: 'app-save-drawing',
-  templateUrl: './save-drawing.component.html',
-  styleUrls: ['./save-drawing.component.scss']
+    selector: 'app-save-drawing',
+    templateUrl: './save-drawing.component.html',
+    styleUrls: ['./save-drawing.component.scss'],
 })
 export class SaveDrawingComponent implements OnInit {
   tagStringArray: Array<string> = [];
@@ -26,41 +26,41 @@ export class SaveDrawingComponent implements OnInit {
   });
   };
 
-  saveDrawingForm = this.fb.group({
-    name : ['', Validators.required],
-    tags : this.fb.array([])
-   })
-  get name() { return this.saveDrawingForm.get(NAME_STRING); }
-  get tags() { return this.saveDrawingForm.get(TAGS_STRING) as FormArray;}
-  ngOnInit() {
-    this.state.globalState.isKeyHandlerActive = false;
-  }
-
-  ngOnDestroy() {
-    this.state.globalState.isKeyHandlerActive = true;
-  }
-
-  addTag(): void {
-    if(this.tags.valid){
-      this.tags.push(this.fb.control([''] ,[Validators.required, Validators.pattern('[A-Za-z0-9]+')]))
+    saveDrawingForm = this.fb.group({
+        name: ['', Validators.required],
+        tags: this.fb.array([]),
+    });
+    get name() {
+        return this.saveDrawingForm.get(NAME_STRING);
     }
-  }
-
-  removeTag(index:number): void {
-      this.tags.removeAt(index);
-  }
-
-  getTagsValues(): void{
-    for(let i = 0; i < this.tags.length; i++){
-      this.tagStringArray.push(this.tags.at(i).value)
+    get tags() {
+        return this.saveDrawingForm.get(TAGS_STRING) as FormArray;
     }
-  }
+    ngOnInit() {
+        this.state.globalState.isKeyHandlerActive = false;
+    }
+
+    addTag(): void {
+        if (this.tags.valid) {
+            this.tags.push(this.fb.control([''], [Validators.required, Validators.pattern('[A-Za-z0-9-^S*$]+')]));
+        }
+    }
+
+    removeTag(index: number): void {
+        this.tags.removeAt(index);
+    }
+    
+    getTagsValues(): void {
+      for (let i = 0; i < this.tags.length; i++) {
+          this.tagStringArray.push(this.tags.at(i).value);
+      }
+    } 
   
-  submit(): void {
+    submit(): void {
     this.drawingHandler.prepareDrawingExportation('png');
     this.saveDrawingService.setImgName(this.saveDrawingForm.controls[NAME_STRING].value);
     this.getTagsValues();
     this.saveDrawingService.setTags(this.tagStringArray);
     this.dialog.open(PreviewImageComponent);
-  }
+    }
 }

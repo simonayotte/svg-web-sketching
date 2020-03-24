@@ -2,20 +2,27 @@ import { Injectable } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Coordinate } from 'src/app/models/coordinate';
 @Injectable({
     providedIn: 'root',
 })
 export class BrushService extends Tool {
     state: DrawState;
     textureMap: Map<string, string> = new Map();
-    points: Coordinate[] = [];
+    isDrawing = false;
+    isPath = false;
     circle: SVGCircleElement;
+
+    private mouseUpListener: EventListener;
+    private mouseMoveListener: EventListener;
+
     constructor(private store: DrawStore) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+
+        this.mouseMoveListener = this.continue.bind(this);
+        this.mouseUpListener = this.stop.bind(this);
     }
 
     start(event: MouseEvent) {
@@ -34,25 +41,40 @@ export class BrushService extends Tool {
 
         this.svg.setAttribute('d', `M ${x} ${y} `);
         this.state.svgState.drawSvg.appendChild(this.svg);
-        this.points.push(new Coordinate(x, y));
+        this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+        this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
+        this.isDrawing = true;
     }
 
     continue(event: MouseEvent) {
+        this.draw(event.offsetX, event.offsetY);
+        if (!this.isPath) {
+            this.isPath = true;
+        }
+    }
+
+    draw(x: number, y: number) {
         let path = this.svg.getAttribute('d') as string;
-        path = path.concat(`L ${event.offsetX} ${event.offsetY} `);
+        path = path.concat(`L ${x} ${y} `);
         this.svg.setAttribute('d', path);
-        this.points.push(new Coordinate(event.offsetX, event.offsetY));
     }
     stop() {
-        if (this.points.length > 1) {
-            this.store.pushSvg(this.svg);
-        } else {
-            this.store.pushSvg(this.circle);
-        }
+        if (this.isDrawing) {
+            if (this.isPath) {
+                this.store.pushSvg(this.svg);
+            } else {
+                this.store.pushSvg(this.circle);
+            }
 
-        this.points = [];
-        this.state.svgState.drawSvg.removeChild(this.circle);
-        this.state.svgState.drawSvg.removeChild(this.svg);
+            this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
+            this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+
+            this.state.svgState.drawSvg.removeChild(this.circle);
+            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.isDrawing = false;
+            this.isPath = false;
+        }
+        this.stopSignal();
     }
 
     drawCircle(x: number, y: number, r: number) {

@@ -25,16 +25,6 @@ export class DrawDirective implements OnInit {
         this.drawHandler.startTool(event);
     }
 
-    @HostListener('mousemove', ['$event'])
-    mousemove(event: MouseEvent) {
-        this.drawHandler.continueTool(event);
-    }
-
-    @HostListener('mouseup')
-    onMouseUp() {
-        this.drawHandler.stopTool();
-    }
-
     @HostListener('mouseleave')
     onMouseleave() {
         this.drawHandler.stopTool();
