@@ -14,7 +14,7 @@ import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.servic
 import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
-import { PencilService } from '../tools/pencil/pencil.service';
+//import { PencilService } from '../tools/pencil/pencil.service';
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +29,7 @@ export class DrawHandlerService {
             this.state = value;
         });
 
-        this.servicesMap.set('Crayon', injector.get(PencilService));
+        //this.servicesMap.set('Crayon', injector.get(PencilService));
         this.servicesMap.set('Pinceau', injector.get(BrushService));
         this.servicesMap.set('Rectangle', injector.get(RectangleService));
         //this.servicesMap.set('Ligne', injector.get(LineService));

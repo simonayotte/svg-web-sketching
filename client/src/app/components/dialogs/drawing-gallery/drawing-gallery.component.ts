@@ -3,7 +3,7 @@ import { HttpService } from 'src/app/services/http-service/http.service';
 import { SavedDrawing } from '../../../models/saved-drawing';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { FormArray, Validators, FormBuilder } from '@angular/forms';
+import { FormArray, FormBuilder } from '@angular/forms';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
