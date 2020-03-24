@@ -3,7 +3,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
 // import { LineService } from '../tools/line/line.service';
-import { RectangleService } from '../tools/rectangle/rectangle.service';
+//import { RectangleService } from 'src/app/tools/rectangle/rectangle.service';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
@@ -31,7 +31,7 @@ export class DrawHandlerService {
 
         //this.servicesMap.set('Crayon', injector.get(PencilService));
         this.servicesMap.set('Pinceau', injector.get(BrushService));
-        this.servicesMap.set('Rectangle', injector.get(RectangleService));
+        //this.servicesMap.set('Rectangle', injector.get(RectangleService));
         //this.servicesMap.set('Ligne', injector.get(LineService));
         this.servicesMap.set('Polygone', injector.get(PolygonService));
         this.servicesMap.set('Ellipse', injector.get(EllipsisService));

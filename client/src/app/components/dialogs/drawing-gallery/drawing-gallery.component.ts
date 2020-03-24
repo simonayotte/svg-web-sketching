@@ -25,7 +25,7 @@ export class DrawingGalleryComponent implements OnInit {
   private loadActivated:boolean = false;
   private noFilteredDrawingFound:boolean = false;
   private loading:boolean = false;
-  private tagStringArray: Array<string> = []
+  private tagStringArray: Array<string> = [];
   constructor(private dialog: MatDialog, private httpService: HttpService, private store:DrawStore, private fb: FormBuilder, private galleryService: GalleryService, private dialogRef: MatDialogRef<DrawingGalleryComponent>) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;

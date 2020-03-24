@@ -22,14 +22,16 @@
   </form>
 <div mat-dialog-content class = 'container' *ngIf = '!loading'>
     <div *ngIf = 'drawingsToShow.length == 0 && !noFilteredDrawingFound' class = no-drawing>
-        Aucun dessin sauvegardé!
+        Aucun dessin sauvegardé
     </div>
     <div *ngIf = 'noFilteredDrawingFound' class = no-filter>
-        Aucun dessin ne correspond aux étiquettes rentrées!
+        Aucun dessin ne correspond aux étiquettes rentrées
     </div>
     <div *ngFor = 'let drawing of drawingsToShow' class = 'drawing' (click)=deleteDrawing(drawing) (click)=loadDrawing(drawing)>
         <div>
-            <img [src] = 'drawing.dataURL'><br>
+            <img [src] = 'drawing.dataURL' *ngIf = 'loadActivated' routerLink = '/draw'>
+            <img [src] = 'drawing.dataURL' *ngIf = '!loadActivated'>
+            <br>
             nom : {{drawing.name}}
             <br>
             étiquettes : 
