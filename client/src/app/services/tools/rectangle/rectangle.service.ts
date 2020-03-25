@@ -169,7 +169,7 @@ export class RectangleService extends Tool {
     setRectangleDisplay(rectangleType: string): void {
         switch (rectangleType) {
             case 'outline only':
-                this.svg.setAttribute('fill', 'transparent');
+                this.svg.setAttribute('fill', 'none');
                 this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
                 this.rectangleType = 'outline only';
                 break;
@@ -180,7 +180,7 @@ export class RectangleService extends Tool {
                 break;
             case 'fill only':
                 this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', 'transparent');
+                this.svg.setAttribute('stroke', 'none');
                 this.thickness = 0;
                 this.rectangleType = 'fill only';
                 break;
