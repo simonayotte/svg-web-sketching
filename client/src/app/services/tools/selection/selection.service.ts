@@ -22,6 +22,7 @@ export class SelectionService extends Tool {
   aKey = false;
   encompassingBox: SVGElement;
   displayEncompassingBox: boolean = true;
+  offset: number;
 
   private mouseUpListener: EventListener;
   private mouseMoveListener: EventListener;
@@ -63,7 +64,8 @@ export class SelectionService extends Tool {
       this.singleSelect = true;
       this.initialX = event.offsetX;
       this.initialY = event.offsetY;
-      this.shapes = <Element[]>this.state.svgState.svgs; 
+      this.shapes = <Element[]>this.state.svgState.svgs;
+      this.offset = this.offset; 
 
       if ( event.button == 0 ) { // left click
           this.isSelecting = true;
@@ -86,7 +88,7 @@ export class SelectionService extends Tool {
 
   continue(event: MouseEvent): void {
     this.singleSelect = false;
-    this.drawSelectionRectangle(this.initialX, this.initialY, event.offsetX - this.initialX, event.offsetY - this.initialY);
+    this.drawSelectionRectangle(this.initialX, this.initialY, event.offsetX, event.offsetY);
 
     if ( this.isSelecting ) {
       this.selectedShapes = this.findMultipleShapes(this.shapes, this.initialX, this.initialY, event.offsetX, event.offsetY);
@@ -104,7 +106,6 @@ export class SelectionService extends Tool {
     if ( this.singleSelect ) {
       this.findSingleShape(targetedElement);
     }
-    if (this.svg) {this.svg.remove();}
     this.drawEncompassingBox(this.selectedShapes);
     this.stop();
   }
@@ -112,6 +113,7 @@ export class SelectionService extends Tool {
   stop() {
     this.isSelecting = false;
     this.isDeselecting = false;
+    if (this.svg) {this.svg.remove();}
     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
   }
@@ -149,14 +151,16 @@ export class SelectionService extends Tool {
     let Atop    = startY > endY ? endY : startY;
     let Abottom = startY > endY ? startY : endY;
     let selectedShapes: Element[] = [];
+    this.offset = this.state.svgState.drawSvg.getBoundingClientRect().left; 
     for (let i = 0; i < shapes.length; i++) {
       let shape = shapes[i];
-      let boundingRect = shape.getBoundingClientRect()
-      let Bleft   = boundingRect.left > boundingRect.right ? boundingRect.right : boundingRect.left;
-      let Bright  = boundingRect.left > boundingRect.right ? boundingRect.left : boundingRect.right;
-      let Btop    = boundingRect.top > boundingRect.bottom ? boundingRect.bottom : boundingRect.top;
-      let Bbottom = boundingRect.top > boundingRect.bottom ? boundingRect.top : boundingRect.bottom;
-      if (Aleft < Bright && Aright > Bleft && Atop < Bbottom && Abottom > Btop) {
+      let boundingRect = shape.getBoundingClientRect();
+      let thickness = +shapes[i].getAttribute('stroke-width')!/2;
+      let Bleft   = boundingRect.left - thickness> boundingRect.right + thickness ? boundingRect.right + thickness : boundingRect.left - thickness;
+      let Bright  = boundingRect.left - thickness> boundingRect.right + thickness ? boundingRect.left - thickness : boundingRect.right + thickness;
+      let Btop    = boundingRect.top - thickness > boundingRect.bottom + thickness ? boundingRect.bottom + thickness : boundingRect.top - thickness;
+      let Bbottom = boundingRect.top - thickness > boundingRect.bottom + thickness ? boundingRect.top - thickness : boundingRect.bottom + thickness;
+      if (Aleft < Bright - this.offset && Aright > Bleft - this.offset && Atop < Bbottom && Abottom > Btop) {
         selectedShapes.push(shape);
       }
     }
@@ -199,11 +203,16 @@ export class SelectionService extends Tool {
     this.state.svgState.drawSvg.appendChild(this.svg);
   }
 
-  drawSelectionRectangle(startX: number, startY: number, width: number, height: number) {
+  drawSelectionRectangle(startX: number, startY: number, endX: number, endY: number) {
     this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
     this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-    this.svg.setAttributeNS(null, 'x', startX.toString());
-    this.svg.setAttributeNS(null, 'y', startY.toString());
+
+    let height = Math.abs(endY - startY);
+    let width = Math.abs(endX - startX);
+    let x = endX > startX ? startX : endX;
+    let y = endY > startY ? startY : endY;
+    this.svg.setAttributeNS(null, 'x', x.toString());
+    this.svg.setAttributeNS(null, 'y', y.toString());
     this.svg.setAttributeNS(null, 'height', height.toString());
     this.svg.setAttributeNS(null, 'width', width.toString());
     this.svg.setAttributeNS(null, 'fill-opacity', '0.2');
@@ -211,7 +220,7 @@ export class SelectionService extends Tool {
 
   createEncompassingBox(): void {
     this.encompassingBox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.encompassingBox.setAttribute('stroke-width', '1');
+    this.encompassingBox.setAttribute('stroke-width', '2');
     this.encompassingBox.setAttribute('fill', 'none');
     this.encompassingBox.setAttribute('stroke-dasharray', '10');
     this.encompassingBox.setAttribute('stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
@@ -224,19 +233,19 @@ export class SelectionService extends Tool {
       this.encompassingBox.setAttributeNS(null, 'opacity', '0');
       return
     };
-
+    this.offset = this.state.svgState.drawSvg.getBoundingClientRect().left; 
     let tempStart = shapes[0].getBoundingClientRect();
     let thickness = +shapes[0].getAttribute('stroke-width')!/2;
-    let startX = tempStart.left - thickness;
+    let startX = tempStart.left - thickness - this.offset;
     let startY = tempStart.top - thickness;
-    let endX = tempStart.right + thickness;
+    let endX = tempStart.right + thickness - this.offset;
     let endY = tempStart.bottom + thickness;
     for (let i = 0; i < shapes.length; i++) {
       let boundingRectangle = shapes[i].getBoundingClientRect();
       thickness = +shapes[i].getAttribute('stroke-width')!/2;
-      if (startX > boundingRectangle.left - thickness) { startX = boundingRectangle.left - thickness; }
+      if (startX > boundingRectangle.left - thickness - this.offset) { startX = boundingRectangle.left - thickness - this.offset; }
       if (startY > boundingRectangle.top - thickness) { startY = boundingRectangle.top - thickness; }
-      if (endX < boundingRectangle.right + thickness) { endX = boundingRectangle.right + thickness; }
+      if (endX < boundingRectangle.right + thickness - this.offset) { endX = boundingRectangle.right + thickness - this.offset; }
       if (endY < boundingRectangle.bottom + thickness) { endY = boundingRectangle.bottom + thickness; }
     }
 
