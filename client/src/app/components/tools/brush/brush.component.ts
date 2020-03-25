@@ -21,7 +21,6 @@ export class BrushComponent implements OnInit {
 
     setTexture(value: string) {
         if (value === 'normal' || value === 'line' || value === 'circle' || value === 'zigzag-h' || value === 'zigzag-v' || value === 'square') {
-            console.log(value);
             this.textureChange.emit(value);
         }
     }
