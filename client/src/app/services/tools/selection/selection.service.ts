@@ -43,8 +43,10 @@ export class SelectionService extends Tool {
       this.aKey = true;
     }
     if (this.controlKey && this.aKey) {
-      this.selectedShapes = this.shapes;
-      if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
+      this.selectedShapes = this.shapes.slice();
+      if (this.selectedShapes[0]) { 
+        this.drawEncompassingBox(this.selectedShapes);
+      }
     }
   }
 
@@ -61,8 +63,7 @@ export class SelectionService extends Tool {
       this.singleSelect = true;
       this.initialX = event.offsetX;
       this.initialY = event.offsetY;
-      this.shapes = <Element[]>this.state.svgState.svgs;
-      
+      this.shapes = <Element[]>this.state.svgState.svgs; 
 
       if ( event.button == 0 ) { // left click
           this.isSelecting = true;
@@ -77,25 +78,7 @@ export class SelectionService extends Tool {
          this.tempSelectedShapes = this.selectedShapes.slice();
       }
 
-      this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      this.svg.setAttribute('stroke-width', '1');
-      this.svg.setAttribute('fill', this.state.colorState.firstColor.hex()); // TODO no color
-      this.svg.setAttribute('stroke', 'transparent');
-      this.svg.setAttribute('stroke-dasharray', '10');
-      this.state.svgState.drawSvg.appendChild(this.svg);
-
-      // // ---------------test
-      // let test = this.shapes[0].getBoundingClientRect();
-      // this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      //   this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-      //   this.state.svgState.drawSvg.appendChild(this.svg);
-      //   this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-      //   this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-      //   this.svg.setAttributeNS(null, 'x', (test.left).toString());
-      //   this.svg.setAttributeNS(null, 'y', (test.top).toString());
-      //   this.svg.setAttributeNS(null, 'height', test.height.toString());
-      //   this.svg.setAttributeNS(null, 'width', test.width.toString());
-      // // ---------------test
+      this.createSelectionRectangle();
 
       this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
       this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
@@ -117,33 +100,11 @@ export class SelectionService extends Tool {
   }
 
   stopSelect(event: MouseEvent): void{
-    console.log(event.currentTarget);
     let targetedElement = <Element>event.target;
     if ( this.singleSelect ) {
-      if ( this.isSelecting ) {
-        if ( targetedElement.getAttribute('height') == '100%' ) { // Change this ? 'Hack'
-          this.selectedShapes = [];
-        }
-        else {
-          this.selectedShapes = [targetedElement];
-        }
-      } else if ( this.isDeselecting ) {
-        if ( targetedElement.getAttribute('height') != '100%' ) { // Change this ? 'Hack'
-        let isPresent = false;
-          for (let i = 0; i < this.selectedShapes.length; i++) {
-            if ( targetedElement == this.selectedShapes[i]) {
-              this.selectedShapes.splice(i, 1);
-              isPresent = true;
-              break;
-            }
-          }
-          if (!isPresent) {
-            this.selectedShapes.push(targetedElement);
-          }
-        }
-      }
+      this.findSingleShape(targetedElement);
     }
-    this.svg.remove();
+    if (this.svg) {this.svg.remove();}
     this.drawEncompassingBox(this.selectedShapes);
     this.stop();
   }
@@ -153,6 +114,32 @@ export class SelectionService extends Tool {
     this.isDeselecting = false;
     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+  }
+
+  // Check which shape is under the mouse cursor
+  findSingleShape(targetedElement: Element): void {
+    if ( this.isSelecting ) {
+      if ( this.shapes.includes(targetedElement) ) {
+        this.selectedShapes = [targetedElement];
+      }
+      else {
+        this.selectedShapes = [];
+      }
+    } else if ( this.isDeselecting ) {
+      if ( this.shapes.includes(targetedElement) ) {
+      let isPresent = false;
+        for (let i = 0; i < this.selectedShapes.length; i++) {
+          if ( targetedElement == this.selectedShapes[i]) {
+            this.selectedShapes.splice(i, 1);
+            isPresent = true;
+            break;
+          }
+        }
+        if (!isPresent) {
+          this.selectedShapes.push(targetedElement);
+        }
+      }
+    }
   }
 
   // Check which shapes are inside the given selection rectangle
@@ -176,6 +163,7 @@ export class SelectionService extends Tool {
     return selectedShapes;
   }
 
+  // Find the shapes inside the rectangle drawn by the mouse and inverse their selection state
   reverseSelection(mouseX: number, mouseY: number) {
     let shapeIsSelected;
     this.selectedShapes = this.tempSelectedShapes.slice();
@@ -202,6 +190,15 @@ export class SelectionService extends Tool {
     }
   }
 
+  createSelectionRectangle(): void {
+    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    this.svg.setAttribute('stroke-width', '1');
+    this.svg.setAttribute('fill', this.state.colorState.firstColor.hex()); // TODO no color ?
+    this.svg.setAttribute('stroke', 'transparent');
+    this.svg.setAttribute('stroke-dasharray', '10');
+    this.state.svgState.drawSvg.appendChild(this.svg);
+  }
+
   drawSelectionRectangle(startX: number, startY: number, width: number, height: number) {
     this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
     this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
@@ -217,7 +214,7 @@ export class SelectionService extends Tool {
     this.encompassingBox.setAttribute('stroke-width', '1');
     this.encompassingBox.setAttribute('fill', 'none');
     this.encompassingBox.setAttribute('stroke-dasharray', '10');
-    this.encompassingBox.setAttribute('stroke', this.state.colorState.secondColor.hex()); // TODO no color
+    this.encompassingBox.setAttribute('stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
     this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
     this.state.svgState.drawSvg.appendChild(this.encompassingBox);
   }
