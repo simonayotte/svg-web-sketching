@@ -33,7 +33,12 @@ export class BrushService extends Tool {
         this.drawCircle(x, y, thickness / 2);
 
         this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
+        if (this.state.brushTexture === 'normal') {
+            this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
+        } else {
+            this.svg.setAttribute('stroke', `url(#${this.state.brushTexture})`);
+            this.circle.setAttribute('fill', `url(#${this.state.brushTexture})`);
+        }
         this.svg.setAttribute('fill', 'none');
         this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
         this.svg.setAttribute('stroke-linecap', 'round');

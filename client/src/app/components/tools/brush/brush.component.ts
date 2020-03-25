@@ -20,7 +20,7 @@ export class BrushComponent implements OnInit {
     }
 
     setTexture(value: string) {
-        if (value === 'normal' || value === 'circle' || value === 'brick' || value === 'zigzag' || value === 'square' || value === 'wave') {
+        if (value === 'normal' || value === 'line' || value === 'circle' || value === 'zigzag-h' || value === 'zigzag-v' || value === 'square') {
             this.textureChange.emit(value);
         }
     }
