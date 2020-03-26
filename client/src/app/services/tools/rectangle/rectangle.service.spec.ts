@@ -46,12 +46,10 @@ describe('RectangleService', () => {
         const spy1 = spyOn(service, 'setRectangleDisplay');
         const spy2 = spyOn(service, 'adjustStartPosition');
         const spy3 = spyOn(service, 'drawRect');
-        const spy4 = spyOn(service, 'adjustWidthAndHeight');
         service.draw(10, 20,);
         expect(spy1).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
         expect(spy3).toHaveBeenCalled();
-        expect(spy4).toHaveBeenCalled();
     });
 
     it('#draw() should be called on mouse move after mouse down ', () => {
@@ -170,7 +168,7 @@ describe('RectangleService', () => {
         const spy = spyOn(service.svg, 'setAttribute');
 
         service.setRectangleDisplay('outline only');
-        expect(spy).toHaveBeenCalledWith('fill', 'transparent');
+        expect(spy).toHaveBeenCalledWith('fill', 'none');
         expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
     });
     it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as secondColor if polygonType is outlineFill', () => {
@@ -190,6 +188,6 @@ describe('RectangleService', () => {
 
         service.setRectangleDisplay('fill only');
         expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith('stroke', 'transparent');
+        expect(spy).toHaveBeenCalledWith('stroke', 'none');
     });
 });

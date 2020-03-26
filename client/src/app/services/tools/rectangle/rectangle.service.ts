@@ -67,14 +67,18 @@ export class RectangleService extends Tool {
     handleKeyDown(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = true;
-            this.draw(this.currentMouseX, this.currentMouseY);
+            if (this.isDrawing) {
+                this.draw(this.currentMouseX, this.currentMouseY);
+            }
         }
     }
 
     handleKeyUp(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = false;
-            this.draw(this.currentMouseX, this.currentMouseY);
+            if (this.isDrawing) {
+                this.draw(this.currentMouseX, this.currentMouseY);
+            }
         }
     }
 
@@ -96,7 +100,7 @@ export class RectangleService extends Tool {
 
     adjustStartPosition(mousePositionX: number, mousePositionY: number): void {
         if (this.thickness >= Math.abs(this.initialX - mousePositionX) || this.thickness >= Math.abs(this.initialY - mousePositionY)) {
-            this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
+            this.svg.setAttribute('fill', this.state.colorState.secondColor.hex());
             this.svg.setAttribute('stroke', 'transparent');
             this.thickness = 0;
             this.currentStartX = this.initialX;
