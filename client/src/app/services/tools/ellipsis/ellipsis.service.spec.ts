@@ -16,11 +16,10 @@ describe('EllipsisService', () => {
         });
         store = TestBed.get(DrawStore);
 
-        store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+        service = TestBed.get(EllipsisService);
+        store.setDrawSvg(service.renderer.createElement('svg', 'svg'));
 
         store.stateObs.subscribe((value: DrawState) => {
-            service = TestBed.get(EllipsisService);
-
             service.state = value;
             service.state.colorState.firstColor = new Color(255, 0, 255, 255);
             service.state.colorState.secondColor = new Color(0, 0, 255, 255);

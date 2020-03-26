@@ -13,10 +13,11 @@ describe('PipetteService', () => {
         });
         store = TestBed.get(DrawStore);
 
-        store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+        service = TestBed.get(PipetteService);
+
+        store.setDrawSvg(service.renderer.createElement('svg', 'svg'));
 
         store.stateObs.subscribe((value: DrawState) => {
-            service = TestBed.get(PipetteService);
             service.state = value;
         });
     });
@@ -58,7 +59,7 @@ describe('PipetteService', () => {
     });
 
     it('#setColor() should call #setFirstColor() store function if left click', () => {
-        service.ctx = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
+        service.ctx = service.renderer.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
 
         const spy = spyOn(store, 'setFirstColor');
         service.setColor(service.ctx, 100, 100, 0);
@@ -66,7 +67,7 @@ describe('PipetteService', () => {
     });
 
     it('#setColor() should call #setSecondColor() store function if right click', () => {
-        service.ctx = document.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
+        service.ctx = service.renderer.createElement('canvas').getContext('2d') as CanvasRenderingContext2D;
 
         const spy = spyOn(store, 'setSecondColor');
         service.setColor(service.ctx, 100, 100, 2);
