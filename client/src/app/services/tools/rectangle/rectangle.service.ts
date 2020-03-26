@@ -63,7 +63,7 @@ export class RectangleService extends Tool {
         }
         this.stopSignal();
     }
-    
+
     handleKeyDown(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = true;
@@ -97,7 +97,7 @@ export class RectangleService extends Tool {
     adjustStartPosition(mousePositionX: number, mousePositionY: number): void {
         if (this.thickness >= Math.abs(this.initialX - mousePositionX) || this.thickness >= Math.abs(this.initialY - mousePositionY)) {
             this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-            this.svg.setAttribute('stroke', 'transparent');
+            this.svg.setAttribute('stroke', 'none');
             this.thickness = 0;
             this.currentStartX = this.initialX;
             this.currentStartY = this.initialY;
@@ -121,15 +121,9 @@ export class RectangleService extends Tool {
                 }
             }
             this.adjustWidthAndHeight();
-        } else { 
-            this.currentStartX =
-                mousePositionX > this.initialX
-                    ? this.initialX + this.thickness / 2
-                    : this.initialX - this.thickness / 2;
-            this.currentStartY =
-                mousePositionY > this.initialY
-                    ? this.initialY + this.thickness / 2
-                    : this.initialY - this.thickness / 2;
+        } else {
+            this.currentStartX = mousePositionX > this.initialX ? this.initialX + this.thickness / 2 : this.initialX - this.thickness / 2;
+            this.currentStartY = mousePositionY > this.initialY ? this.initialY + this.thickness / 2 : this.initialY - this.thickness / 2;
             this.currentWidth = mousePositionX - this.initialX;
             this.currentHeight = mousePositionY - this.initialY;
             this.currentWidth += this.thickness < this.currentWidth ? -this.thickness : this.thickness;
@@ -168,21 +162,21 @@ export class RectangleService extends Tool {
 
     setRectangleDisplay(rectangleType: string): void {
         switch (rectangleType) {
-            case 'outline only':
+            case 'outline':
                 this.svg.setAttribute('fill', 'none');
                 this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-                this.rectangleType = 'outline only';
+                this.rectangleType = 'outline';
                 break;
-            case 'outline and fill':
+            case 'outlineFill':
                 this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
                 this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-                this.rectangleType = 'outline and fill';
+                this.rectangleType = 'outlineFill';
                 break;
-            case 'fill only':
+            case 'fill':
                 this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
                 this.svg.setAttribute('stroke', 'none');
                 this.thickness = 0;
-                this.rectangleType = 'fill only';
+                this.rectangleType = 'fill';
                 break;
         }
     }
