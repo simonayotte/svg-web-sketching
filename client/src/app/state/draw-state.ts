@@ -9,7 +9,7 @@ export class DrawState {
     lineHasJunction = false;
     lineJunctionThickness = 25;
     //rectangle
-    rectangleType = 'outline only';
+    rectangleType = 'outline';
     //polygon
     polygonSides = 3;
     polygonType = 'outline';

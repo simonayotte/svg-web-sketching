@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -27,13 +27,17 @@ export class SelectionService extends Tool {
   private mouseUpListener: EventListener;
   private mouseMoveListener: EventListener;
 
-  constructor(private store: DrawStore) {
+  renderer: Renderer2;
+
+  constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
     super();
     this.store.stateObs.subscribe((value: DrawState) => {
         this.state = value;
     });
     this.mouseMoveListener = this.continue.bind(this);
     this.mouseUpListener = this.stopSelect.bind(this);
+
+    this.renderer = rendererFactory.createRenderer(null, null);
 }
 
   handleKeyDown(key: string): void {
@@ -70,7 +74,7 @@ export class SelectionService extends Tool {
       if ( event.button == 0 ) { // left click
           this.isSelecting = true;
           this.isDeselecting = false;
-          if (this.encompassingBox) { this.encompassingBox.setAttributeNS(null, 'opacity', '0');
+          if (this.encompassingBox) { this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');
         } else {
             this.createEncompassingBox();
           }
@@ -97,7 +101,7 @@ export class SelectionService extends Tool {
       this.reverseSelection(event.offsetX, event.offsetY);
     }
     if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
-    else { if (this.encompassingBox) {this.encompassingBox.setAttributeNS(null, 'opacity', '0');}
+    else { if (this.encompassingBox) {this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');}
   }
   }
 
@@ -113,7 +117,7 @@ export class SelectionService extends Tool {
   stop() {
     this.isSelecting = false;
     this.isDeselecting = false;
-    if (this.svg) {this.svg.remove();}
+    if (this.svg) {this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);}
     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
   }
@@ -195,42 +199,43 @@ export class SelectionService extends Tool {
   }
 
   createSelectionRectangle(): void {
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.svg.setAttribute('stroke-width', '1');
-    this.svg.setAttribute('fill', this.state.colorState.firstColor.hex()); // TODO no color ?
-    this.svg.setAttribute('stroke', 'transparent');
-    this.svg.setAttribute('stroke-dasharray', '10');
-    this.state.svgState.drawSvg.appendChild(this.svg);
+    this.svg = this.renderer.createElement('rect','svg');
+    this.renderer.setAttribute(this.svg, 'stroke-width', '1');
+    this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex()); // TODO no color ?
+    this.renderer.setAttribute(this.svg, 'stroke', 'transparent');
+    this.renderer.setAttribute(this.svg, 'stroke-dasharray', '10');
+    this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
   }
 
   drawSelectionRectangle(startX: number, startY: number, endX: number, endY: number) {
-    this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-    this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
+    this.renderer.setAttribute(this.svg,'fill', this.state.colorState.firstColor.hex());
+    this.renderer.setAttribute(this.svg,'stroke', this.state.colorState.secondColor.hex());
 
     let height = Math.abs(endY - startY);
     let width = Math.abs(endX - startX);
     let x = endX > startX ? startX : endX;
     let y = endY > startY ? startY : endY;
-    this.svg.setAttributeNS(null, 'x', x.toString());
-    this.svg.setAttributeNS(null, 'y', y.toString());
-    this.svg.setAttributeNS(null, 'height', height.toString());
-    this.svg.setAttributeNS(null, 'width', width.toString());
-    this.svg.setAttributeNS(null, 'fill-opacity', '0.2');
+    this.renderer.setAttribute(this.svg, 'x', x.toString());
+    this.renderer.setAttribute(this.svg, 'y', y.toString());
+    this.renderer.setAttribute(this.svg, 'height', height.toString());
+    this.renderer.setAttribute(this.svg, 'width', width.toString());
+    this.renderer.setAttribute(this.svg, 'fill-opacity', '0.2');
   }
 
   createEncompassingBox(): void {
-    this.encompassingBox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    this.encompassingBox.setAttribute('stroke-width', '2');
-    this.encompassingBox.setAttribute('fill', 'none');
-    this.encompassingBox.setAttribute('stroke-dasharray', '10');
-    this.encompassingBox.setAttribute('stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
-    this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
-    this.state.svgState.drawSvg.appendChild(this.encompassingBox);
+    this.encompassingBox = this.renderer.createElement('rect','svg');
+    this.renderer.setAttribute(this.encompassingBox,'stroke-width', '2');
+    this.renderer.setAttribute(this.encompassingBox,'fill', 'none');
+    this.renderer.setAttribute(this.encompassingBox,'stroke-dasharray', '10');
+    this.renderer.setAttribute(this.encompassingBox,'stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
+    this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
+    this.renderer.appendChild(this.state.svgState.drawSvg,this.encompassingBox);
+
   }
 
   drawEncompassingBox(shapes: Element[]) {
     if (!shapes[0]) {
-      this.encompassingBox.setAttributeNS(null, 'opacity', '0');
+      this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');
       return
     };
     this.offset = this.state.svgState.drawSvg.getBoundingClientRect().left; 
@@ -249,10 +254,10 @@ export class SelectionService extends Tool {
       if (endY < boundingRectangle.bottom + thickness) { endY = boundingRectangle.bottom + thickness; }
     }
 
-    this.encompassingBox.setAttributeNS(null, 'x', (startX).toString());
-    this.encompassingBox.setAttributeNS(null, 'y', (startY).toString());
-    this.encompassingBox.setAttributeNS(null, 'height', (endY - startY).toString());
-    this.encompassingBox.setAttributeNS(null, 'width', (endX - startX).toString());
-    this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
+    this.renderer.setAttribute(this.encompassingBox, 'x', (startX).toString());
+    this.renderer.setAttribute(this.encompassingBox, 'y', (startY).toString());
+    this.renderer.setAttribute(this.encompassingBox, 'height', (endY - startY).toString());
+    this.renderer.setAttribute(this.encompassingBox, 'width', (endX - startX).toString());
+    this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
   }
 }

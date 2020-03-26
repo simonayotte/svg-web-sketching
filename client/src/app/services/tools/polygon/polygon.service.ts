@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -12,26 +12,29 @@ export class PolygonService extends Tool {
     centerX: number;
     centerY: number;
     isDrawing = false;
+
+    renderer: Renderer2;
+
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
 
-    constructor(private store: DrawStore) {
+    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     start(event: MouseEvent) {
-
         this.centerX = event.offsetX;
         this.centerY = event.offsetY;
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+        this.svg = this.renderer.createElement('polygon', 'svg');
+        this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
         this.setColors(this.state.polygonType);
-        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
         this.isDrawing = true;
@@ -51,12 +54,12 @@ export class PolygonService extends Tool {
             let pointY = centerY - size * Math.sin(angle);
             points.push(new Coordinate(pointX, pointY));
         }
-        this.svg.setAttribute('points', this.pointsToString(points));
+        this.renderer.setAttribute(this.svg, 'points', this.pointsToString(points));
     }
     stop() {
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
-            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
             this.isDrawing = false;
@@ -78,18 +81,18 @@ export class PolygonService extends Tool {
     setColors(type: string) {
         switch (type) {
             case 'outline':
-                this.svg.setAttribute('fill', 'transparent');
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
+                this.renderer.setAttribute(this.svg, 'fill', 'transparent');
+                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
 
                 break;
             case 'outlineFill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
+                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
+                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
 
                 break;
             case 'fill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', 'transparent');
+                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
+                this.renderer.setAttribute(this.svg, 'stroke', 'transparent');
                 break;
         }
     }

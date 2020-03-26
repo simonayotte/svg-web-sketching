@@ -42,7 +42,7 @@ describe('RectangleService', () => {
     });
 
     it('#draw() should call #setRectangleDisplay(), #adjustStartPosition(), #drawRect() ', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const spy1 = spyOn(service, 'setRectangleDisplay');
         const spy2 = spyOn(service, 'adjustStartPosition');
         const spy3 = spyOn(service, 'drawRect');
@@ -158,35 +158,35 @@ describe('RectangleService', () => {
 
         const spy = spyOn(service.svg, 'setAttribute');
 
-        service.setRectangleDisplay('outline only');
+        service.setRectangleDisplay('fill');
 
         expect(spy).toHaveBeenCalledTimes(2);
     });
-    it('#setRectangleDisplay() should call #setAttribute with fill as transparent and stroke as secondColor if polygonType is outline', () => {
+    it('#setRectangleDisplay() should call #setAttribute with fill as none and stroke as secondColor if rectangleType is outline', () => {
         service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
         const spy = spyOn(service.svg, 'setAttribute');
 
-        service.setRectangleDisplay('outline only');
+        service.setRectangleDisplay('outline');
         expect(spy).toHaveBeenCalledWith('fill', 'none');
         expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
     });
-    it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as secondColor if polygonType is outlineFill', () => {
+    it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as secondColor if rectangleType is outlineFill', () => {
         service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
         const spy = spyOn(service.svg, 'setAttribute');
 
-        service.setRectangleDisplay('outline and fill');
+        service.setRectangleDisplay('outlineFill');
 
         expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
         expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
     });
-    it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as transparent if polygonType is fill', () => {
+    it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as none if rectangleType is fill', () => {
         service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
 
         const spy = spyOn(service.svg, 'setAttribute');
 
-        service.setRectangleDisplay('fill only');
+        service.setRectangleDisplay('fill');
         expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
         expect(spy).toHaveBeenCalledWith('stroke', 'none');
     });

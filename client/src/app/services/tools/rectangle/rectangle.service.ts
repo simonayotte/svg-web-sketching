@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -26,13 +26,18 @@ export class RectangleService extends Tool {
     rectangleType: string;
     thickness: number;
 
-    constructor(private store: DrawStore) {
+    renderer: Renderer2;
+
+    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
+
+        this.renderer = rendererFactory.createRenderer(null, null);
+
     }
 
     start(event: MouseEvent) {
@@ -41,9 +46,9 @@ export class RectangleService extends Tool {
         this.currentStartX = this.initialX;
         this.currentStartY = this.initialY;
 
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.svg = this.renderer.createElement('rect','svg');
+        this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
+        this.renderer.appendChild(this.state.svgState.drawSvg,this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
         this.isDrawing = true;
@@ -56,14 +61,14 @@ export class RectangleService extends Tool {
     stop() {
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
-            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
             this.isDrawing = false;
         }
         this.stopSignal();
     }
-    
+
     handleKeyDown(key: string) {
         if (key === 'Shift') {
             this.isShiftDown = true;
@@ -92,16 +97,16 @@ export class RectangleService extends Tool {
     }
 
     drawRect(startX: number, startY: number, width: number, height: number): void {
-        this.svg.setAttributeNS(null, 'x', startX.toString());
-        this.svg.setAttributeNS(null, 'y', startY.toString());
-        this.svg.setAttributeNS(null, 'height', height.toString());
-        this.svg.setAttributeNS(null, 'width', width.toString());
+        this.renderer.setAttribute(this.svg, 'x', startX.toString());
+        this.renderer.setAttribute(this.svg, 'y', startY.toString());
+        this.renderer.setAttribute(this.svg, 'height', height.toString());
+        this.renderer.setAttribute(this.svg, 'width', width.toString());
     }
 
     adjustStartPosition(mousePositionX: number, mousePositionY: number): void {
         if (this.thickness >= Math.abs(this.initialX - mousePositionX) || this.thickness >= Math.abs(this.initialY - mousePositionY)) {
-            this.svg.setAttribute('fill', this.state.colorState.secondColor.hex());
-            this.svg.setAttribute('stroke', 'transparent');
+            this.renderer.setAttribute(this.svg,'fill', this.state.colorState.secondColor.hex());
+            this.renderer.setAttribute(this.svg, 'stroke', 'none');
             this.thickness = 0;
             this.currentStartX = this.initialX;
             this.currentStartY = this.initialY;
@@ -125,15 +130,9 @@ export class RectangleService extends Tool {
                 }
             }
             this.adjustWidthAndHeight();
-        } else { 
-            this.currentStartX =
-                mousePositionX > this.initialX
-                    ? this.initialX + this.thickness / 2
-                    : this.initialX - this.thickness / 2;
-            this.currentStartY =
-                mousePositionY > this.initialY
-                    ? this.initialY + this.thickness / 2
-                    : this.initialY - this.thickness / 2;
+        } else {
+            this.currentStartX = mousePositionX > this.initialX ? this.initialX + this.thickness / 2 : this.initialX - this.thickness / 2;
+            this.currentStartY = mousePositionY > this.initialY ? this.initialY + this.thickness / 2 : this.initialY - this.thickness / 2;
             this.currentWidth = mousePositionX - this.initialX;
             this.currentHeight = mousePositionY - this.initialY;
             this.currentWidth += this.thickness < this.currentWidth ? -this.thickness : this.thickness;
@@ -172,21 +171,21 @@ export class RectangleService extends Tool {
 
     setRectangleDisplay(rectangleType: string): void {
         switch (rectangleType) {
-            case 'outline only':
-                this.svg.setAttribute('fill', 'none');
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-                this.rectangleType = 'outline only';
+            case 'outline':
+                this.renderer.setAttribute(this.svg,'fill', 'none');
+                this.renderer.setAttribute(this.svg,'stroke', this.state.colorState.secondColor.hex());
+                this.rectangleType = 'outline';
                 break;
-            case 'outline and fill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-                this.rectangleType = 'outline and fill';
+            case 'outlineFill':
+                this.renderer.setAttribute(this.svg,'fill', this.state.colorState.firstColor.hex());
+                this.renderer.setAttribute(this.svg,'stroke', this.state.colorState.secondColor.hex());
+                this.rectangleType = 'outlineFill';
                 break;
-            case 'fill only':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', 'none');
+            case 'fill':
+                this.renderer.setAttribute(this.svg,'fill', this.state.colorState.firstColor.hex());
+                this.renderer.setAttribute(this.svg,'stroke', 'none');
                 this.thickness = 0;
-                this.rectangleType = 'fill only';
+                this.rectangleType = 'fill';
                 break;
         }
     }
