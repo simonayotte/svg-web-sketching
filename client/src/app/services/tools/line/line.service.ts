@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { MatGridTileHeaderCssMatStyler } from '@angular/material';
 
 
 @Injectable({
@@ -12,8 +11,11 @@ import { MatGridTileHeaderCssMatStyler } from '@angular/material';
 export class LineService extends Tool {
     state: DrawState;
 
+    //MouseEventListener
     private mouseUpListener: EventListener;
     private mouseMoveListener: EventListener;
+    private mouseDoubleClickListener: EventListener;
+
 
     //Alignement de la ligne
     isShiftDown: boolean = false;
@@ -39,15 +41,12 @@ export class LineService extends Tool {
         });
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
-
+        //this.mouseDoubleClickListener = this.stopDoubleClick.bind(this);
     }
 
     start(event: MouseEvent) {
         //Only called for first point of the line
-        this.lastX = event.offsetX;
-        this.lastY = event.offsetY;
-        this.coordinates.push(new Coordinate(this.lastX, this.lastY));
-        if (this.coordinates.length == 1){
+        if (this.coordinates.length == 0){
             //Styling & creation of SVG element
             this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
             this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
@@ -57,48 +56,74 @@ export class LineService extends Tool {
             this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
 
             //Points in polyline
-            this.svg.setAttribute('points', `${this.lastX},${this.lastY} `);
+            this.svg.setAttribute('points', `${event.offsetX},${event.offsetY} `);
 
             //Manage Event listeners
             this.state.svgState.drawSvg.appendChild(this.svg);
             this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
+            this.state.svgState.drawSvg.addEventListener('dblclick', this.mouseDoubleClickListener);
+
+            this.lastX = event.offsetX;
+            this.lastY = event.offsetY;
             
         } else {
             //Pour tout les points autres que le premier
-            this.draw(this.lastX, this.lastY);
+            if (this.isShiftDown) {
+                //Aligned line
+                let point = this.calculateAlignedPoint(event.offsetX, event.offsetY);
+                this.drawLine(point.pointX, point.pointY);
+                
+                //Add points to structures
+                this.lastX = point.pointX;
+                this.lastY = point.pointY;
+
+            } else {
+                this.drawLine(event.offsetX, event.offsetY);
+                this.lastX = event.offsetX;
+                this.lastY = event.offsetY;
+
+            }
+
         }
-       
+        this.coordinates.push(new Coordinate(this.lastX, this.lastY));
     }
 
-    draw(x: number, y: number) {
+    //Add position to SVG element to DrawLine
+    drawLine(x: number, y: number) {
         this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
         let linePoints = this.svg.getAttribute('points');
         if (linePoints != null) {
-            linePoints += `${this.lastX},${this.lastY} `;
+            linePoints += `${x},${y} `;
             this.svg.setAttribute('points', linePoints);        
         }
     }
 
-    
-
+    //Updates the currentMouse position and shows preview of the line
     continue(event: MouseEvent) {
         this.currentMouseX = event.offsetX;
         this.currentMouseY = event.offsetY;
-
-        this.previewLine(this.currentMouseX, this.currentMouseY);
+        
+        if (this.isShiftDown) {
+            const point = this.calculateAlignedPoint(this.currentMouseX, this.currentMouseY);
+            this.previewLine(point.pointX, point.pointY);
+        } else {
+            this.previewLine(this.currentMouseX, this.currentMouseY);
+        }
     }
 
-    stop() {
+    //Function bound to event listener
+    // stopDoubleClick(event: MouseEvent) {
+    //     this.stop();
+    // }
 
-    }
-
-    // addCoordinatesToPoints() {
-    //     let linePoints = "";
-    //     this.coordinates.forEach(element => {
-    //         linePoints.concat(`${element.pointX},${element.pointY} `)
-    //     });
-    //     this.svg.setAttribute('points', linePoints)
+    // stop() {
+    //     this.lastX = 0;
+    //     this.lastY = 0;
+    //     // Enlever tout les elements de l'array
+    //     this.coordinates = [];
+    //     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
+    //     this.state.svgState.drawSvg.removeEventListener('dblclick', this.mouseDoubleClickListener);
     // }
 
     previewLine(x: number, y: number) {
@@ -126,10 +151,6 @@ export class LineService extends Tool {
 
     }
 
-    //Adds small line in the polyline
-    drawLine() {
-
-    }
 
     handleKeyDown(key: string) {
         switch (key) {
@@ -161,6 +182,91 @@ export class LineService extends Tool {
 
     }
 
+
+    //Methode pour alignement du point
+    calculateAlignedPoint(positionX: number, positionY: number): Coordinate {
+        if (this.lastX && this.lastY) {
+            const adjacentLineLength = Math.abs(positionX - this.lastX);
+            const oppositeLineLength = Math.abs(positionY - this.lastY);
+            const hypothenuseLineLength = Math.sqrt(Math.pow(adjacentLineLength, 2) + Math.pow(oppositeLineLength, 2));
+            const angle = Math.atan(oppositeLineLength / adjacentLineLength);
+            return this.findCadrant(hypothenuseLineLength, angle, positionX, positionY, this.lastX, this.lastY);
+        }
+        return new Coordinate(0, 0);
+    }
+
+    calculateAngledLineEndPoint(angle: number, hypothenuse: number): Coordinate {
+        if (this.lastX && this.lastY) {
+            const x = Math.cos(angle) * hypothenuse + this.lastX; // Retourne valeur entre -1 et 1
+            const y = Math.sin(angle) * hypothenuse + this.lastY; // Retourne valeur entre -1 et 1
+            return new Coordinate(x, y);
+        } else {
+           return new Coordinate(0, 0);
+        }
+    }
+
+    findCadrant(hypothenuseLineLength: number, angle: number, positionX: number, positionY: number, lastX: number, lastY: number): Coordinate {
+        if (positionX - lastX >= 0 && positionY - lastY >= 0) {
+            if (angle >= 0 && angle < Math.PI / 6) {
+                // Retourner point avec alignement 0deg
+                return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
+            }
+            // Alignement 45deg
+            else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                return this.calculateAngledLineEndPoint(Math.PI / 4, hypothenuseLineLength);
+            }
+            // Alignement 90deg
+            else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                return this.calculateAngledLineEndPoint(Math.PI / 2, hypothenuseLineLength);
+            }
+        }
+        // Cadran 3
+        else if (positionX - lastX < 0 && positionY - lastY >= 0) {
+            if (angle >= 0 && angle < Math.PI / 6) {
+                return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
+            }
+            // Alignement 45deg
+            else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                return this.calculateAngledLineEndPoint(-Math.PI / 4, -hypothenuseLineLength);
+            }
+            // Alignement 90deg
+            else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                return this.calculateAngledLineEndPoint(Math.PI / 2, hypothenuseLineLength);
+            }
+        }
+        // Cadran 2
+        else if (positionX - lastX >= 0 && positionY - lastY < 0) {
+            if (angle >= 0 && angle < Math.PI / 6) {
+                return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
+            }
+            // Alignement 45deg
+            else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                return this.calculateAngledLineEndPoint(-Math.PI / 4, hypothenuseLineLength);
+            }
+            // Alignement 90deg
+            else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
+            }
+        }
+        // Cadran 1
+        else if (positionX - lastX < 0 && positionY - lastY < 0) {
+            if (angle >= 0 && angle < Math.PI / 6) {
+                // Retourner point avec alignement 0deg
+                return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
+            }
+            // Alignement 45deg
+            else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+                return this.calculateAngledLineEndPoint(Math.PI / 4, -hypothenuseLineLength);
+            }
+            // Alignement 90deg
+            else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+                return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
+            }
+        }
+        return new Coordinate(0, 0);
+    }
+
+    
   
 }
 
