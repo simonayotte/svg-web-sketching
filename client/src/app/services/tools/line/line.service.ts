@@ -1,3 +1,159 @@
+import { Coordinate } from 'src/app/models/coordinate';
+import { Injectable } from '@angular/core';
+import { Tool } from 'src/app/models/tool';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
+import { MatGridTileHeaderCssMatStyler } from '@angular/material';
+
+
+@Injectable({
+    providedIn: 'root',
+})
+export class LineService extends Tool {
+    state: DrawState;
+
+    private mouseUpListener: EventListener;
+    private mouseMoveListener: EventListener;
+
+    //Alignement de la ligne
+    isShiftDown: boolean = false;
+
+    //Positions
+    currentMouseX: number;
+    currentMouseY: number;
+
+    lastX: number;
+    lastY: number;
+
+    //Array de point dans la ligne
+    coordinates: Coordinate[] = [];
+    points = '';
+
+    constructor(private store: DrawStore) {
+        super();
+        this.store.stateObs.subscribe((value: DrawState) => {
+            this.state = value;
+        });
+        this.mouseMoveListener = this.continue.bind(this);
+        this.mouseUpListener = this.stop.bind(this);
+
+    }
+
+    start(event: MouseEvent) {
+        //Only called for first point of the line
+        this.lastX = event.offsetX;
+        this.lastY = event.offsetY;
+        this.coordinates.push(new Coordinate(this.lastX, this.lastY));
+        if (this.coordinates.length == 1){
+            //Styling & creation of SVG element
+            this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+            this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
+            this.svg.setAttribute('fill','none');
+            this.svg.setAttribute('stroke-linecap', 'round');
+            this.svg.setAttribute('stroke-linejoin', 'round');
+            this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+
+            //Points in polyline
+            this.svg.setAttribute('points', `${this.lastX},${this.lastY} `);
+
+            //Manage Event listeners
+            this.state.svgState.drawSvg.appendChild(this.svg);
+            this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+            this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
+            
+        } else {
+            //Pour tout les points autres que le premier
+            this.draw(this.lastX, this.lastY);
+        }
+       
+    }
+
+    draw(x: number, y: number) {
+        let linePoints = this.svg.getAttribute('points');
+        if (linePoints != null) {
+            linePoints += `${this.lastX},${this.lastY} `;
+            this.svg.setAttribute('points', linePoints);        
+        }
+    }
+
+    
+
+    continue(event: MouseEvent) {
+        if(this.coordinates.length != 1) {
+            this.currentMouseX = event.offsetX;
+            this.currentMouseY = event.offsetY;
+
+            //Remove last preview from array
+            let linePoints = "";
+            for (let i = 0; i < this.coordinates.length - 1; i++) {
+                linePoints += `${this.coordinates[i].pointX},${this.coordinates[i].pointY} `;  
+            }
+
+            //Ajoute currentMouse comme point au SVG
+            this.svg.setAttribute('points', linePoints);
+            this.previewLine(this.currentMouseX, this.currentMouseY);
+        }
+
+       
+    }
+
+    stop() {
+
+    }
+
+    // addCoordinatesToPoints() {
+    //     let linePoints = "";
+    //     this.coordinates.forEach(element => {
+    //         linePoints.concat(`${element.pointX},${element.pointY} `)
+    //     });
+    //     this.svg.setAttribute('points', linePoints)
+    // }
+
+    previewLine(x: number, y: number) {
+        //Changement de style pour illustrer le preview de ligne
+        this.svg.setAttribute('stroke-dasharray', "10 10");
+        this.draw(x,y);
+    }
+
+    //Adds small line in the polyline
+    drawLine() {
+
+    }
+
+    handleKeyDown(key: string) {
+        switch (key) {
+            case 'Escape':
+                this.deleteLine();
+                break;
+            case 'Shift':
+                this.isShiftDown = true;
+                break;
+            case 'Backspace':
+                this.deleteSegment();
+                break;
+        }
+    }
+
+    handleKeyUp(key: string) {
+        if (key === 'Shift') {
+            this.isShiftDown = false;
+        }
+    }
+    
+    //Escape -> Deletes line in whole
+    deleteLine() {
+
+    }
+
+    //Backspace -> Deletes last segment and junction of line
+    deleteSegment() {
+
+    }
+
+  
+}
+
+
 // import { Injectable } from '@angular/core';
 // import { Coordinate } from '../../../models/coordinate';
 // import { Tool } from 'src/app/models/tool';
