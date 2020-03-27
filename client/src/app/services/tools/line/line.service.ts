@@ -29,6 +29,9 @@ export class LineService extends Tool {
     coordinates: Coordinate[] = [];
     points = '';
 
+    //PreviewLine
+    tempLine: SVGElement;
+
     constructor(private store: DrawStore) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -69,6 +72,7 @@ export class LineService extends Tool {
     }
 
     draw(x: number, y: number) {
+        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
         let linePoints = this.svg.getAttribute('points');
         if (linePoints != null) {
             linePoints += `${this.lastX},${this.lastY} `;
@@ -79,22 +83,10 @@ export class LineService extends Tool {
     
 
     continue(event: MouseEvent) {
-        if(this.coordinates.length != 1) {
-            this.currentMouseX = event.offsetX;
-            this.currentMouseY = event.offsetY;
+        this.currentMouseX = event.offsetX;
+        this.currentMouseY = event.offsetY;
 
-            //Remove last preview from array
-            let linePoints = "";
-            for (let i = 0; i < this.coordinates.length - 1; i++) {
-                linePoints += `${this.coordinates[i].pointX},${this.coordinates[i].pointY} `;  
-            }
-
-            //Ajoute currentMouse comme point au SVG
-            this.svg.setAttribute('points', linePoints);
-            this.previewLine(this.currentMouseX, this.currentMouseY);
-        }
-
-       
+        this.previewLine(this.currentMouseX, this.currentMouseY);
     }
 
     stop() {
@@ -110,9 +102,28 @@ export class LineService extends Tool {
     // }
 
     previewLine(x: number, y: number) {
+        //Remove last tempLine
+        if(this.tempLine != undefined) {
+            this.state.svgState.drawSvg.removeChild(this.tempLine);
+        }
+
         //Changement de style pour illustrer le preview de ligne
-        this.svg.setAttribute('stroke-dasharray', "10 10");
-        this.draw(x,y);
+        this.tempLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        this.tempLine.setAttribute('stroke', this.state.colorState.secondColor.hex());
+        this.tempLine.setAttribute('fill', 'none');
+        this.tempLine.setAttribute('stroke-linecap', 'round');
+        this.tempLine.setAttribute('stroke-linejoin', 'round');
+        this.tempLine.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+        let dashWidth = (this.state.globalState.thickness/2).toString().concat(" 50");
+        this.tempLine.setAttribute('stroke-dasharray', dashWidth);
+
+        //Add coordinates to line, add tempLine in SVG
+        this.tempLine.setAttribute('x1', this.lastX.toString());
+        this.tempLine.setAttribute('y1', this.lastY.toString());
+        this.tempLine.setAttribute('x2', x.toString());
+        this.tempLine.setAttribute('y2', y.toString());
+        this.state.svgState.drawSvg.appendChild(this.tempLine);
+
     }
 
     //Adds small line in the polyline
@@ -166,6 +177,7 @@ export class LineService extends Tool {
 // })
 // export class LineService extends Tool<Line> {
 //     state: DrawState;
+//     canvas: Canvas
 
 //     constructor(private store: DrawStore) {
 //         super();
