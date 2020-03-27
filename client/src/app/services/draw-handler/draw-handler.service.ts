@@ -97,6 +97,17 @@ export class DrawHandlerService {
                         event.preventDefault();
                         event.stopPropagation();
                     }
+                case 'z':
+                    if (event.ctrlKey) {
+                        //TODO: Add logic for undo
+                        console.log('undo!');
+                    }
+                    break;
+                case 'Z':
+                    if (event.ctrlKey) {
+                        //TODO: Add logic for redo
+                        console.log('redo');
+                    }
             }
         }
     }
