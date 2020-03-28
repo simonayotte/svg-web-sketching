@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" _ngcontent-uwb-c1="" class="draw withPanel" draw="" filter="url(#filter)" ng-reflect-klass="draw" ng-reflect-ng-class="[object Object]" width="500" height="500"><rect _ngcontent-uwb-c1="" height="100%" width="100%" fill="#ffffffff"/><!--bindings={
+  "ng-reflect-ng-for-of": "[object SVGPathElement],[objec"
+}--><!----><!--bindings={
+  "ng-reflect-svg": "[object SVGPathElement]",
+  "ng-reflect-draw-svg": "[object SVGSVGElement]"
+}--><!----><!--bindings={
+  "ng-reflect-svg": "[object SVGCircleElement]",
+  "ng-reflect-draw-svg": "[object SVGSVGElement]"
+}--><filter _ngcontent-uwb-c1="" id="filter" ng-reflect-ng-switch="3"><!--bindings={
+  "ng-reflect-ng-switch-case": "1"
+}--><!--bindings={
+  "ng-reflect-ng-switch-case": "2"
+}--><!--bindings={
+  "ng-reflect-ng-switch-case": "3"
+}--><feColorMatrix _ngcontent-uwb-c1="" in="SourceGraphic" type="matrix" values="-1 0 0 0 1 &#10;            0 -1 0 0 1 &#10;            0 0 -1 0 1&#10;            0 0 0 1 0" class="ng-star-inserted"/><!--bindings={
+  "ng-reflect-ng-switch-case": "4"
+}--><!--bindings={
+  "ng-reflect-ng-switch-case": "5"
+}--></filter><path stroke="#000000ff" fill="none" stroke-width="25" stroke-linecap="round" stroke-linejoin="round" d="M 71 107 L 73 110 L 77 119 L 84 128 L 92 141 L 104 164 L 113 182 L 121 193 L 127 206 L 148 234 L 172 266 L 193 296 L 209 319 L 218 329 L 227 339 L 237 348 L 246 358 L 256 367 L 262 373 L 270 382 L 276 388 L 283 392 L 287 394 L 289 396 L 290 397 L 293 398 L 295 399 L 296 399 L 297 399 L 301 397 L 304 395 L 309 392 L 314 388 L 319 382 L 325 375 L 330 366 L 336 357 L 341 346 L 349 332 L 356 312 L 369 263 L 383 204 L 390 172 L 394 160 L 397 151 "/><circle cx="433" cy="124" r="12.5" fill="#000000ff"/></svg>

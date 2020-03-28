@@ -45,6 +45,13 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    emptySvg() {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: [] },
+        });
+    }
+
     popShape() {
         this.setState({
             ...this.state,

@@ -42,7 +42,7 @@ export class SaveDrawingComponent implements OnInit {
 
     addTag(): void {
         if (this.tags.valid) {
-            this.tags.push(this.fb.control([''], [Validators.required, Validators.pattern('[A-Za-z0-9-^S*$]+')]));
+            this.tags.push(this.fb.control('', [Validators.required, Validators.pattern('[A-Za-z0-9-^S*$]+')]));
         }
     }
 

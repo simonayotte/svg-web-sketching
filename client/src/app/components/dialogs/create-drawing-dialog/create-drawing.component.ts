@@ -51,18 +51,6 @@ export class CreateDrawingComponent implements OnInit {
         return this.createDrawingForm.get('height');
     }
 
-    submit(): void {
-        this.dialogRef.close();
-        if(this.state.svgState.svgs.length != 0){
-            this.drawingHandler.clearCanvas();
-        }
-        this.store.setCanvasColor(this.backgroundColor);
-        this.createDrawingForm.controls['width'].value >= window.innerWidth?
-        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
-        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
-        this.store.setDrawHeight(this.createDrawingForm.controls['height'].value);
-    }
-
     @HostListener('window:resize')
     onResize(): void {
         if (!this.isWidthModified) {
@@ -87,5 +75,17 @@ export class CreateDrawingComponent implements OnInit {
 
     setIsCreateDrawColorOpen(value: boolean): void {
         this.isCreateDrawColorOpen = value;
+    }
+
+    submit(): void {
+        if(this.state.svgState.svgs.length != 0){
+            this.drawingHandler.clearCanvas();
+        }
+        this.store.setCanvasColor(this.backgroundColor);
+        this.createDrawingForm.controls['width'].value >= window.innerWidth?
+        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
+        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
+        this.store.setDrawHeight(this.createDrawingForm.controls['height'].value);
+        this.dialogRef.close(); 
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -13,7 +13,7 @@ const wait = (ms:number) => new Promise(res => setTimeout(res, ms));
 
 export class DrawingHandler {
   private state:DrawState
-
+  private renderer2:Renderer2
   private previewWidth: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   previewWidthObs: Observable<number> = this.previewWidth.asObservable();
 
@@ -23,18 +23,11 @@ export class DrawingHandler {
   private dataURL: BehaviorSubject<string> = new BehaviorSubject<string>('');
   dataURLObs: Observable<string> = this.dataURL.asObservable();
 
-  setDataURL(dataURL:string): void{
-    this.dataURL.next(dataURL);
-  }
-
-  getDataURL():string{
-    return this.dataURL.value;
-  }
-
-  constructor(private store:DrawStore) {
+  constructor(private store:DrawStore, private renderFactory2:RendererFactory2) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
   });
+    this.renderer2 = this.renderFactory2.createRenderer(null,null)
   }
   getPreviewWidth():number{
     return this.previewWidth.value;
@@ -42,6 +35,14 @@ export class DrawingHandler {
 
   getPreviewHeight():number{
     return this.previewHeight.value;
+  }
+
+  setDataURL(dataURL:string): void{
+    this.dataURL.next(dataURL);
+  }
+
+  getDataURL():string{
+    return this.dataURL.value;
   }
 
   /*Theses functions are used when a preview of the image to be saved or exported is shown, it is used to make an image 
@@ -70,7 +71,6 @@ export class DrawingHandler {
 
   async prepareDrawingExportation(format:string, filter?:string | undefined){
     if(filter){
-      console.log(filter);
       this.store.setSVGFilter(filter);
       //wait for filter to be applied before saving the drawing
       await wait(10);
@@ -86,7 +86,7 @@ export class DrawingHandler {
       let img = new Image();
       img.src = image64;
       img.onload = () => {
-        let canvas = document.createElement('canvas');
+        let canvas = this.renderer2.createElement('canvas')
         canvas.width = this.state.svgState.width;
         canvas.height = this.state.svgState.height;
         let ctx:CanvasRenderingContext2D = canvas.getContext('2d') as CanvasRenderingContext2D;

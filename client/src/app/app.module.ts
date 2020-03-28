@@ -40,7 +40,6 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
         BrowserAnimationsModule,
         OverlayModule,
         DrawModule,
-        
     ],
     providers: [],
     entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent, ExportDrawingComponent, PreviewExportComponent, DrawingGalleryComponent],

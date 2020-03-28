@@ -21,9 +21,9 @@ export class ExportDrawingComponent implements OnInit {
   constructor(
      private drawingHandler:DrawingHandler,
      private store:DrawStore, 
-     private dialogRef:MatDialogRef<ExportDrawingComponent>, 
+     public dialogRef:MatDialogRef<ExportDrawingComponent>, 
      private fb:FormBuilder,
-     private dialog: MatDialog,
+     public dialog: MatDialog,
      private exportDrawingService:ExportDrawingService) { 
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;

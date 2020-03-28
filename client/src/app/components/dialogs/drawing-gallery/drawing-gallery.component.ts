@@ -17,16 +17,16 @@ const TAGS_STRING = 'tags'
 })
 export class DrawingGalleryComponent implements OnInit {
   private state:DrawState
-  private drawingsToShow: Array<SavedDrawing> = [];
-  private allDrawingsInDb: Array<SavedDrawing> = [];
-  private trashColor:string = 'black';
-  private loadColor:string = 'black';
-  private deleteActivated:boolean = false;
-  private loadActivated:boolean = false;
-  private noFilteredDrawingFound:boolean = false;
-  private loading:boolean = false;
-  private tagStringArray: Array<string> = [];
-  constructor(private dialog: MatDialog, private httpService: HttpService, private store:DrawStore, private fb: FormBuilder, private galleryService: GalleryService, private dialogRef: MatDialogRef<DrawingGalleryComponent>) {
+  public drawingsToShow: Array<SavedDrawing> = [];
+  public allDrawingsInDb: Array<SavedDrawing> = [];
+  public trashColor:string = 'black';
+  public loadColor:string = 'black';
+  public deleteActivated:boolean = false;
+  public loadActivated:boolean = false;
+  public noFilteredDrawingFound:boolean = false;
+  public loading:boolean = false;
+  public tagStringArray: Array<string> = [];
+  constructor(public dialog: MatDialog, private httpService: HttpService, private store:DrawStore, private fb: FormBuilder, private galleryService: GalleryService, public dialogRef: MatDialogRef<DrawingGalleryComponent>) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
     })
@@ -122,9 +122,8 @@ export class DrawingGalleryComponent implements OnInit {
 
   filterDrawings(){
     this.getTagsValues();
-    console.log(this.tagStringArray)
     if(this.tagStringArray.length>0 && !this.tagStringArray.includes('')){
-      let filteredDrawings = this.galleryService.filterDrawings(this.tagStringArray, this.allDrawingsInDb);
+      let filteredDrawings:Array<SavedDrawing> = this.galleryService.filterDrawings(this.tagStringArray, this.allDrawingsInDb);
       filteredDrawings.length == 0? this.noFilteredDrawingFound = true : this.noFilteredDrawingFound = false;
     }
     else{
