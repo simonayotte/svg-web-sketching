@@ -6,5 +6,5 @@ export abstract class Tool {
     handleKeyDown(key: string) {}
     handleKeyUp(key: string) {}
 
-    svg: SVGElement;
+    svg: SVGGraphicsElement;
 }

@@ -210,4 +210,54 @@ describe('DrawStore', () => {
             done();
         });
     });
+
+    it('#setGridOpacity() should set #gridColor ', (done: DoneFn) => {
+        store.setGridOpacity(39);
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.colorState.gridColor.a).toEqual(39);
+            //expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
+            done();
+        });
+    });
+
+    it('#setBrushTexture() should set #brushTexture ', (done: DoneFn) => {
+        store.setBrushTexture('square');
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.brushTexture).toEqual('square');
+            //expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
+            done();
+        });
+    });
+
+    it('#setRectangleType() should set #rectangleType ', (done: DoneFn) => {
+        store.setRectangleType('fill');
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.rectangleType).toEqual('fill');
+            //expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
+            done();
+        });
+    });
+
+    it('#setPolygonType() should set #polygonType ', (done: DoneFn) => {
+        store.setPolygonType('outlineFill');
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.polygonType).toEqual('outlineFill');
+            //expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
+            done();
+        });
+    });
+
+    it('#setEllipsisType() should set #ellipsisType ', (done: DoneFn) => {
+        store.setEllipsisType('fill');
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.ellipsisType).toEqual('fill');
+            //expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
+            done();
+        });
+    });
 });

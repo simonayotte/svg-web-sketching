@@ -24,6 +24,7 @@ export class DrawStore extends Store<DrawState> {
             svgState: { ...this.state.svgState, width: value },
         });
     }
+
     setDrawHeight(value: number) {
         this.setState({
             ...this.state,
@@ -31,12 +32,15 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    pushSvg(value: SVGElement) {
+    pushSvg(value: SVGGraphicsElement) {
+        let svg = this.state.svgState.svgs.concat(value);
+        console.log(svg);
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
+            svgState: { ...this.state.svgState, svgs: svg },
         });
     }
+
     popSvg() {
         this.setState({
             ...this.state,

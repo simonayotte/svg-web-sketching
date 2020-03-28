@@ -5,8 +5,6 @@ import { PencilService } from '../pencil/pencil.service';
     providedIn: 'root',
 })
 export class BrushService extends PencilService {
-    textureMap: Map<string, string> = new Map();
-
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super(store, rendererFactory);
     }

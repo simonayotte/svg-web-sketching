@@ -3,6 +3,6 @@ export class SvgState {
     height = 500;
 
     drawSvg: SVGSVGElement;
-    svgs: SVGElement[] = [];
+    svgs: SVGGraphicsElement[] = [];
     constructor() {}
 }

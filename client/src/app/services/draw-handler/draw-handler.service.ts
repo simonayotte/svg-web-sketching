@@ -37,7 +37,6 @@ export class DrawHandlerService {
         this.servicesMap.set('Pipette', injector.get(PipetteService));
         this.servicesMap.set('Selection', injector.get(SelectionService));
 
-
         this.keyMap.set('1', 'Rectangle');
         this.keyMap.set('c', 'Crayon');
         this.keyMap.set('w', 'Pinceau');
@@ -46,7 +45,6 @@ export class DrawHandlerService {
         this.keyMap.set('2', 'Ellipse');
         this.keyMap.set('t', 'Pipette');
         this.keyMap.set('s', 'Selection');
-
     }
 
     startTool(event: MouseEvent) {
