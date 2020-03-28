@@ -17,11 +17,22 @@ export class SelectionService extends Tool {
   selectMultiple = false;
   isSelecting = false;
   isDeselecting = false;
+  isMoving = false;
+  startMovementX: number;
+  startMovementY: number;
+  lastPosX: number;
+  lastPosY: number;
+  selectionRectangle = false;
   singleSelect = false;
   controlKey = false;
   aKey = false;
   encompassingBox: SVGElement;
   displayEncompassingBox: boolean = true;
+  encompassingBoxStartX: number;
+  encompassingBoxStartY: number;
+  encompassingBoxEndX: number;
+  encompassingBoxEndY: number;
+
   offset: number;
 
   private mouseUpListener: EventListener;
@@ -69,15 +80,12 @@ export class SelectionService extends Tool {
       this.initialX = event.offsetX;
       this.initialY = event.offsetY;
       this.shapes = <Element[]>this.state.svgState.svgs;
-      this.offset = this.offset; 
+      this.offset = this.offset;
 
       if ( event.button == 0 ) { // left click
-          this.isSelecting = true;
           this.isDeselecting = false;
-          if (this.encompassingBox) { this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');
-        } else {
-            this.createEncompassingBox();
-          }
+          this.isSelecting = true;
+          if (!this.encompassingBox) { this.createEncompassingBox(); }
        } else if (event.button == 2 && !this.isDeselecting) { // right click
          this.isDeselecting = true;
          this.isSelecting = false;
@@ -92,17 +100,59 @@ export class SelectionService extends Tool {
 
   continue(event: MouseEvent): void {
     this.singleSelect = false;
-    this.drawSelectionRectangle(this.initialX, this.initialY, event.offsetX, event.offsetY);
 
-    if ( this.isSelecting ) {
-      this.selectedShapes = this.findMultipleShapes(this.shapes, this.initialX, this.initialY, event.offsetX, event.offsetY);
-    } 
-    else if ( this.isDeselecting ) {
-      this.reverseSelection(event.offsetX, event.offsetY);
+    if (!this.isMoving && !this.selectionRectangle) {
+      let targetedElement = <Element>event.target;
+      if (this.shapes.includes(targetedElement) && this.selectedShapes.includes(targetedElement)) { this.isMoving = true; }
+      else if (this.shapes.includes(targetedElement) && !this.selectedShapes.includes(targetedElement)) { 
+        this.isMoving = true;
+        this.selectedShapes = [targetedElement];
+        this.drawEncompassingBox(this.selectedShapes);
+      } else if (event.offsetX > this.encompassingBoxStartX && event.offsetX < this.encompassingBoxEndX && event.offsetY > this.encompassingBoxStartY && event.offsetY < this.encompassingBoxEndY ) {
+        this.isMoving = true;
+      }
+      if (this.isMoving) {
+        this.startMovementX = event.offsetX;
+        this.startMovementY = event.offsetY;
+        this.lastPosX = event.offsetX;
+        this.lastPosY = event.offsetY;
+      }
     }
-    if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
-    else { if (this.encompassingBox) {this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');}
-  }
+
+    // Translation
+    if (this.isMoving) {
+      let translationX = event.offsetX - this.lastPosX;
+      let translationY = event.offsetY - this.lastPosY;
+      this.lastPosX = event.offsetX;
+      this.lastPosY = event.offsetY;
+      for( let i = 0; i < this.selectedShapes.length; i++) {
+        let X: number;
+        let Y: number;
+        if (this.selectedShapes[i].getAttribute('transform')) { 
+          X = +this.selectedShapes[i].getAttribute('transform')!.split(',')[0].split('translate(').reverse()[0];
+          Y = +this.selectedShapes[i].getAttribute('transform')!.split(')')[0].split(',').reverse()[0];
+        } else { 
+          X = 0;
+          Y = 0;
+        }
+        this.selectedShapes[i].setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
+      }
+      this.drawEncompassingBox(this.selectedShapes);
+    } else {
+      // Selection
+      this.selectionRectangle = true;
+      this.drawSelectionRectangle(this.initialX, this.initialY, event.offsetX, event.offsetY);
+
+      if ( !this.isDeselecting ) {
+        this.selectedShapes = this.findMultipleShapes(this.shapes, this.initialX, this.initialY, event.offsetX, event.offsetY);
+      } 
+      else {
+        this.reverseSelection(event.offsetX, event.offsetY);
+      }
+      if (this.selectedShapes[0]) { this.drawEncompassingBox(this.selectedShapes); }
+      else { if (this.encompassingBox) { this.hideEncompassingBox() }
+      }
+    }
   }
 
   stopSelect(event: MouseEvent): void{
@@ -117,6 +167,8 @@ export class SelectionService extends Tool {
   stop() {
     this.isSelecting = false;
     this.isDeselecting = false;
+    this.isMoving = false;
+    this.selectionRectangle = false;
     if (this.svg) {this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);}
     this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
@@ -235,7 +287,7 @@ export class SelectionService extends Tool {
 
   drawEncompassingBox(shapes: Element[]) {
     if (!shapes[0]) {
-      this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');
+      this.hideEncompassingBox();
       return
     };
     this.offset = this.state.svgState.drawSvg.getBoundingClientRect().left; 
@@ -254,10 +306,22 @@ export class SelectionService extends Tool {
       if (endY < boundingRectangle.bottom + thickness) { endY = boundingRectangle.bottom + thickness; }
     }
 
+    this.encompassingBoxStartX = startX;
+    this.encompassingBoxStartY = startY;
+    this.encompassingBoxEndX = endX;
+    this.encompassingBoxEndY = endY;
     this.renderer.setAttribute(this.encompassingBox, 'x', (startX).toString());
     this.renderer.setAttribute(this.encompassingBox, 'y', (startY).toString());
     this.renderer.setAttribute(this.encompassingBox, 'height', (endY - startY).toString());
     this.renderer.setAttribute(this.encompassingBox, 'width', (endX - startX).toString());
     this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
+  }
+
+  hideEncompassingBox(): void {
+    this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');
+    this.encompassingBoxStartX = 0;
+    this.encompassingBoxStartY = 0;
+    this.encompassingBoxEndX = 0;
+    this.encompassingBoxEndY = 0;
   }
 }
