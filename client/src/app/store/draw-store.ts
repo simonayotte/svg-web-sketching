@@ -9,6 +9,14 @@ export class DrawStore extends Store<DrawState> {
     constructor() {
         super(new DrawState());
     }
+    //Undo
+    undo() {
+        console.log('undo store');
+    }
+
+    redo() {
+        console.log('redo store');
+    }
 
     //Svg
     setDrawSvg(value: SVGSVGElement) {
@@ -209,4 +217,5 @@ export class DrawStore extends Store<DrawState> {
             ellipsisType: value,
         });
     }
+
 }

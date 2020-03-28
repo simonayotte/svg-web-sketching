@@ -5,6 +5,8 @@
         [isDisplayGrid]="state.globalState.isDisplayGrid"
         (toolChange)="store.setTool($event)"
         (toggleGrid)="store.toggleGrid()"
+        (undo)="store.undo()"
+        (redo)="store.redo()"
     ></app-sidebar>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">
