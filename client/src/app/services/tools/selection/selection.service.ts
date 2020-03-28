@@ -24,8 +24,14 @@ export class SelectionService extends Tool {
   lastPosY: number;
   selectionRectangle = false;
   singleSelect = false;
+
   controlKey = false;
   aKey = false;
+  arrowRightKey = false;
+  arrowLeftKey = false;
+  arrowUpKey = false;
+  arrowDownKey = false;
+
   encompassingBox: SVGElement;
   displayEncompassingBox: boolean = true;
   encompassingBoxStartX: number;
@@ -64,6 +70,30 @@ export class SelectionService extends Tool {
         this.drawEncompassingBox(this.selectedShapes);
       }
     }
+    if (key === 'ArrowRight') {
+      this.arrowRightKey = true;
+    }
+    if (this.arrowRightKey) {
+      this.moveShapes(this.selectedShapes, 3, 0);
+    }
+    if (key === 'ArrowLeft') {
+      this.arrowLeftKey = true;
+    }
+    if (this.arrowLeftKey) {
+      this.moveShapes(this.selectedShapes, -3, 0);
+    }
+    if (key === 'ArrowUp') {
+      this.arrowUpKey = true;
+    }
+    if (this.arrowUpKey) {
+      this.moveShapes(this.selectedShapes, 0, -3);
+    }
+    if (key === 'ArrowDown') {
+      this.arrowDownKey = true;
+    }
+    if (this.arrowDownKey) {
+      this.moveShapes(this.selectedShapes, 0, 3);
+    }
   }
 
   handleKeyUp(key: string): void {
@@ -72,6 +102,18 @@ export class SelectionService extends Tool {
     }
     if (key === 'a') {
       this.aKey = false;
+    }
+    if (key === 'ArrowRight') {
+      this.arrowRightKey = false;
+    }
+    if (key === 'ArrowLeft') {
+      this.arrowLeftKey = false;
+    }
+    if (key === 'ArrowUp') {
+      this.arrowUpKey = false;
+    }
+    if (key === 'ArrowDown') {
+      this.arrowDownKey = false;
     }
   }
 
@@ -125,19 +167,7 @@ export class SelectionService extends Tool {
       let translationY = event.offsetY - this.lastPosY;
       this.lastPosX = event.offsetX;
       this.lastPosY = event.offsetY;
-      for( let i = 0; i < this.selectedShapes.length; i++) {
-        let X: number;
-        let Y: number;
-        if (this.selectedShapes[i].getAttribute('transform')) { 
-          X = +this.selectedShapes[i].getAttribute('transform')!.split(',')[0].split('translate(').reverse()[0];
-          Y = +this.selectedShapes[i].getAttribute('transform')!.split(')')[0].split(',').reverse()[0];
-        } else { 
-          X = 0;
-          Y = 0;
-        }
-        this.selectedShapes[i].setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
-      }
-      this.drawEncompassingBox(this.selectedShapes);
+      this.moveShapes(this.selectedShapes, translationX, translationY);
     } else {
       // Selection
       this.selectionRectangle = true;
@@ -323,5 +353,21 @@ export class SelectionService extends Tool {
     this.encompassingBoxStartY = 0;
     this.encompassingBoxEndX = 0;
     this.encompassingBoxEndY = 0;
+  }
+
+  moveShapes(shapes: Element[], translationX:number, translationY:number): void {
+    for( let i = 0; i < this.selectedShapes.length; i++) {
+      let X: number;
+      let Y: number;
+      if (this.selectedShapes[i].getAttribute('transform')) { 
+        X = +this.selectedShapes[i].getAttribute('transform')!.split(',')[0].split('translate(').reverse()[0];
+        Y = +this.selectedShapes[i].getAttribute('transform')!.split(')')[0].split(',').reverse()[0];
+      } else { 
+        X = 0;
+        Y = 0;
+      }
+      this.selectedShapes[i].setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
+    }
+    this.drawEncompassingBox(this.selectedShapes);
   }
 }
