@@ -2,7 +2,6 @@ import { Injectable, Injector } from '@angular/core';
 import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
-// import { LineService } from '../tools/line/line.service';
 import { RectangleService } from '../tools/rectangle/rectangle.service';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
@@ -13,6 +12,8 @@ import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
+import { LineService } from '../tools/line/line.service';
+
 import { SelectionService } from '../tools/selection/selection.service';
 import { Tools, ToolButtons } from 'src/app/models/enums';
 
@@ -32,7 +33,7 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Pencil, injector.get(PencilService));
         this.servicesMap.set(Tools.Brush, injector.get(BrushService));
         this.servicesMap.set(Tools.Rectangle, injector.get(RectangleService));
-        //this.servicesMap.set('Ligne', injector.get(LineService));
+        this.servicesMap.set(Tools.Line, injector.get(LineService));
         this.servicesMap.set(Tools.Polygon, injector.get(PolygonService));
         this.servicesMap.set(Tools.Ellipsis, injector.get(EllipsisService));
         this.servicesMap.set(Tools.Pipette, injector.get(PipetteService));

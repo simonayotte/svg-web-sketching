@@ -46,12 +46,10 @@ describe('RectangleService', () => {
         const spy1 = spyOn(service, 'setRectangleDisplay');
         const spy2 = spyOn(service, 'adjustStartPosition');
         const spy3 = spyOn(service, 'drawRect');
-        const spy4 = spyOn(service, 'adjustWidthAndHeight');
-        service.draw(10, 20);
+        service.draw(10, 20,);
         expect(spy1).toHaveBeenCalled();
         expect(spy2).toHaveBeenCalled();
         expect(spy3).toHaveBeenCalled();
-        expect(spy4).toHaveBeenCalled();
     });
 
     it('#draw() should be called on mouse move after mouse down ', () => {

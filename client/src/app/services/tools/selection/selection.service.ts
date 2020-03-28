@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -10,27 +10,48 @@ export class SelectionService extends Tool {
     state: DrawState;
     initialX: number;
     initialY: number;
-    shapes: SVGGraphicsElement[] = [];
-    selectedShapes: SVGGraphicsElement[] = [];
-    tempSelectedShapes: SVGGraphicsElement[] = [];
+    shapes: Element[] = [];
+    selectedShapes: Element[] = [];
+    tempSelectedShapes: Element[] = [];
     hasSelected = false;
     selectMultiple = false;
     isSelecting = false;
     isDeselecting = false;
+    isMoving = false;
+    startMovementX: number;
+    startMovementY: number;
+    lastPosX: number;
+    lastPosY: number;
+    selectionRectangle = false;
     singleSelect = false;
+
     controlKey = false;
     aKey = false;
+    arrowRightKey = false;
+    arrowLeftKey = false;
+    arrowUpKey = false;
+    arrowDownKey = false;
+
     encompassingBox: SVGElement;
     displayEncompassingBox: boolean = true;
+    encompassingBoxStartX: number;
+    encompassingBoxStartY: number;
+    encompassingBoxEndX: number;
+    encompassingBoxEndY: number;
+
     offset: number;
 
-    constructor(private store: DrawStore) {
+    renderer: Renderer2;
+
+    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stopSelect.bind(this);
+
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     handleKeyDown(key: string): void {
@@ -46,6 +67,30 @@ export class SelectionService extends Tool {
                 this.drawEncompassingBox(this.selectedShapes);
             }
         }
+        if (key === 'ArrowRight') {
+            this.arrowRightKey = true;
+        }
+        if (this.arrowRightKey) {
+            this.moveShapes(this.selectedShapes, 3, 0);
+        }
+        if (key === 'ArrowLeft') {
+            this.arrowLeftKey = true;
+        }
+        if (this.arrowLeftKey) {
+            this.moveShapes(this.selectedShapes, -3, 0);
+        }
+        if (key === 'ArrowUp') {
+            this.arrowUpKey = true;
+        }
+        if (this.arrowUpKey) {
+            this.moveShapes(this.selectedShapes, 0, -3);
+        }
+        if (key === 'ArrowDown') {
+            this.arrowDownKey = true;
+        }
+        if (this.arrowDownKey) {
+            this.moveShapes(this.selectedShapes, 0, 3);
+        }
     }
 
     handleKeyUp(key: string): void {
@@ -55,22 +100,32 @@ export class SelectionService extends Tool {
         if (key === 'a') {
             this.aKey = false;
         }
+        if (key === 'ArrowRight') {
+            this.arrowRightKey = false;
+        }
+        if (key === 'ArrowLeft') {
+            this.arrowLeftKey = false;
+        }
+        if (key === 'ArrowUp') {
+            this.arrowUpKey = false;
+        }
+        if (key === 'ArrowDown') {
+            this.arrowDownKey = false;
+        }
     }
 
     start(event: MouseEvent) {
         this.singleSelect = true;
         this.initialX = event.offsetX;
         this.initialY = event.offsetY;
-        this.shapes = this.state.svgState.svgs;
+        this.shapes = <Element[]>this.state.svgState.svgs;
         this.offset = this.offset;
 
         if (event.button == 0) {
             // left click
-            this.isSelecting = true;
             this.isDeselecting = false;
-            if (this.encompassingBox) {
-                this.encompassingBox.setAttributeNS(null, 'opacity', '0');
-            } else {
+            this.isSelecting = true;
+            if (!this.encompassingBox) {
                 this.createEncompassingBox();
             }
         } else if (event.button == 2 && !this.isDeselecting) {
@@ -88,24 +143,60 @@ export class SelectionService extends Tool {
 
     continue(event: MouseEvent): void {
         this.singleSelect = false;
-        this.drawSelectionRectangle(this.initialX, this.initialY, event.offsetX, event.offsetY);
 
-        if (this.isSelecting) {
-            this.selectedShapes = this.findMultipleShapes(this.shapes, this.initialX, this.initialY, event.offsetX, event.offsetY);
-        } else if (this.isDeselecting) {
-            this.reverseSelection(event.offsetX, event.offsetY);
+        if (!this.isMoving && !this.selectionRectangle) {
+            let targetedElement = <Element>event.target;
+            if (this.shapes.includes(targetedElement) && this.selectedShapes.includes(targetedElement)) {
+                this.isMoving = true;
+            } else if (this.shapes.includes(targetedElement) && !this.selectedShapes.includes(targetedElement)) {
+                this.isMoving = true;
+                this.selectedShapes = [targetedElement];
+                this.drawEncompassingBox(this.selectedShapes);
+            } else if (
+                event.offsetX > this.encompassingBoxStartX &&
+                event.offsetX < this.encompassingBoxEndX &&
+                event.offsetY > this.encompassingBoxStartY &&
+                event.offsetY < this.encompassingBoxEndY
+            ) {
+                this.isMoving = true;
+            }
+            if (this.isMoving) {
+                this.startMovementX = event.offsetX;
+                this.startMovementY = event.offsetY;
+                this.lastPosX = event.offsetX;
+                this.lastPosY = event.offsetY;
+            }
         }
-        if (this.selectedShapes[0]) {
-            this.drawEncompassingBox(this.selectedShapes);
+
+        // Translation
+        if (this.isMoving) {
+            let translationX = event.offsetX - this.lastPosX;
+            let translationY = event.offsetY - this.lastPosY;
+            this.lastPosX = event.offsetX;
+            this.lastPosY = event.offsetY;
+            this.moveShapes(this.selectedShapes, translationX, translationY);
         } else {
-            if (this.encompassingBox) {
-                this.encompassingBox.setAttributeNS(null, 'opacity', '0');
+            // Selection
+            this.selectionRectangle = true;
+            this.drawSelectionRectangle(this.initialX, this.initialY, event.offsetX, event.offsetY);
+
+            if (!this.isDeselecting) {
+                this.selectedShapes = this.findMultipleShapes(this.shapes, this.initialX, this.initialY, event.offsetX, event.offsetY);
+            } else {
+                this.reverseSelection(event.offsetX, event.offsetY);
+            }
+            if (this.selectedShapes[0]) {
+                this.drawEncompassingBox(this.selectedShapes);
+            } else {
+                if (this.encompassingBox) {
+                    this.hideEncompassingBox();
+                }
             }
         }
     }
 
     stopSelect(event: MouseEvent): void {
-        let targetedElement = <SVGGraphicsElement>event.target;
+        let targetedElement = <Element>event.target;
         if (this.singleSelect) {
             this.findSingleShape(targetedElement);
         }
@@ -116,15 +207,17 @@ export class SelectionService extends Tool {
     stop() {
         this.isSelecting = false;
         this.isDeselecting = false;
+        this.isMoving = false;
+        this.selectionRectangle = false;
         if (this.svg) {
-            this.svg.remove();
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
         }
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
     }
 
     // Check which shape is under the mouse cursor
-    findSingleShape(targetedElement: SVGGraphicsElement): void {
+    findSingleShape(targetedElement: Element): void {
         if (this.isSelecting) {
             if (this.shapes.includes(targetedElement)) {
                 this.selectedShapes = [targetedElement];
@@ -149,12 +242,12 @@ export class SelectionService extends Tool {
     }
 
     // Check which shapes are inside the given selection rectangle
-    findMultipleShapes(shapes: SVGGraphicsElement[], startX: number, startY: number, endX: number, endY: number): SVGGraphicsElement[] {
+    findMultipleShapes(shapes: Element[], startX: number, startY: number, endX: number, endY: number): Element[] {
         let Aleft = startX > endX ? endX : startX;
         let Aright = startX > endX ? startX : endX;
         let Atop = startY > endY ? endY : startY;
         let Abottom = startY > endY ? startY : endY;
-        let selectedShapes: SVGGraphicsElement[] = [];
+        let selectedShapes: Element[] = [];
         this.offset = this.state.svgState.drawSvg.getBoundingClientRect().left;
         for (let i = 0; i < shapes.length; i++) {
             let shape = shapes[i];
@@ -180,7 +273,7 @@ export class SelectionService extends Tool {
         let shapeIsSelected;
         this.selectedShapes = this.tempSelectedShapes.slice();
         let shapesToRemove = this.findMultipleShapes(this.shapes, this.initialX, this.initialY, mouseX, mouseY);
-        let shapesToAdd: SVGGraphicsElement[] = [];
+        let shapesToAdd: Element[] = [];
         if (this.selectedShapes[0] && shapesToRemove[0]) {
             for (let i = 0; i < shapesToRemove.length; i++) {
                 shapeIsSelected = false;
@@ -205,42 +298,42 @@ export class SelectionService extends Tool {
     }
 
     createSelectionRectangle(): void {
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        this.svg.setAttribute('stroke-width', '1');
-        this.svg.setAttribute('fill', this.state.colorState.firstColor.hex()); // TODO no color ?
-        this.svg.setAttribute('stroke', 'transparent');
-        this.svg.setAttribute('stroke-dasharray', '10');
-        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.svg = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.svg, 'stroke-width', '1');
+        this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex()); // TODO no color ?
+        this.renderer.setAttribute(this.svg, 'stroke', 'transparent');
+        this.renderer.setAttribute(this.svg, 'stroke-dasharray', '10');
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
     }
 
     drawSelectionRectangle(startX: number, startY: number, endX: number, endY: number) {
-        this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-        this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
+        this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
+        this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
 
         let height = Math.abs(endY - startY);
         let width = Math.abs(endX - startX);
         let x = endX > startX ? startX : endX;
         let y = endY > startY ? startY : endY;
-        this.svg.setAttributeNS(null, 'x', x.toString());
-        this.svg.setAttributeNS(null, 'y', y.toString());
-        this.svg.setAttributeNS(null, 'height', height.toString());
-        this.svg.setAttributeNS(null, 'width', width.toString());
-        this.svg.setAttributeNS(null, 'fill-opacity', '0.2');
+        this.renderer.setAttribute(this.svg, 'x', x.toString());
+        this.renderer.setAttribute(this.svg, 'y', y.toString());
+        this.renderer.setAttribute(this.svg, 'height', height.toString());
+        this.renderer.setAttribute(this.svg, 'width', width.toString());
+        this.renderer.setAttribute(this.svg, 'fill-opacity', '0.2');
     }
 
     createEncompassingBox(): void {
-        this.encompassingBox = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        this.encompassingBox.setAttribute('stroke-width', '2');
-        this.encompassingBox.setAttribute('fill', 'none');
-        this.encompassingBox.setAttribute('stroke-dasharray', '10');
-        this.encompassingBox.setAttribute('stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
-        this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
-        this.state.svgState.drawSvg.appendChild(this.encompassingBox);
+        this.encompassingBox = this.renderer.createElement('rect', 'svg');
+        this.renderer.setAttribute(this.encompassingBox, 'stroke-width', '2');
+        this.renderer.setAttribute(this.encompassingBox, 'fill', 'none');
+        this.renderer.setAttribute(this.encompassingBox, 'stroke-dasharray', '10');
+        this.renderer.setAttribute(this.encompassingBox, 'stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
+        this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.encompassingBox);
     }
 
-    drawEncompassingBox(shapes: SVGGraphicsElement[]) {
+    drawEncompassingBox(shapes: Element[]) {
         if (!shapes[0]) {
-            this.encompassingBox.setAttributeNS(null, 'opacity', '0');
+            this.hideEncompassingBox();
             return;
         }
         this.offset = this.state.svgState.drawSvg.getBoundingClientRect().left;
@@ -267,10 +360,49 @@ export class SelectionService extends Tool {
             }
         }
 
-        this.encompassingBox.setAttributeNS(null, 'x', startX.toString());
-        this.encompassingBox.setAttributeNS(null, 'y', startY.toString());
-        this.encompassingBox.setAttributeNS(null, 'height', (endY - startY).toString());
-        this.encompassingBox.setAttributeNS(null, 'width', (endX - startX).toString());
-        this.encompassingBox.setAttributeNS(null, 'opacity', '0.4');
+        this.encompassingBoxStartX = startX;
+        this.encompassingBoxStartY = startY;
+        this.encompassingBoxEndX = endX;
+        this.encompassingBoxEndY = endY;
+        this.renderer.setAttribute(this.encompassingBox, 'x', startX.toString());
+        this.renderer.setAttribute(this.encompassingBox, 'y', startY.toString());
+        this.renderer.setAttribute(this.encompassingBox, 'height', (endY - startY).toString());
+        this.renderer.setAttribute(this.encompassingBox, 'width', (endX - startX).toString());
+        this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
+    }
+
+    hideEncompassingBox(): void {
+        this.renderer.setAttribute(this.encompassingBox, 'opacity', '0');
+        this.encompassingBoxStartX = 0;
+        this.encompassingBoxStartY = 0;
+        this.encompassingBoxEndX = 0;
+        this.encompassingBoxEndY = 0;
+    }
+
+    moveShapes(shapes: Element[], translationX: number, translationY: number): void {
+        for (let i = 0; i < this.selectedShapes.length; i++) {
+            let X: number;
+            let Y: number;
+            if (this.selectedShapes[i].getAttribute('transform')) {
+                X = +this.selectedShapes[i]
+                    .getAttribute('transform')!
+                    .split(',')[0]
+                    .split('translate(')
+                    .reverse()[0];
+                Y = +this.selectedShapes[i]
+                    .getAttribute('transform')!
+                    .split(')')[0]
+                    .split(',')
+                    .reverse()[0];
+            } else {
+                X = 0;
+                Y = 0;
+            }
+            this.selectedShapes[i].setAttribute(
+                'transform',
+                'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')',
+            );
+        }
+        this.drawEncompassingBox(this.selectedShapes);
     }
 }
