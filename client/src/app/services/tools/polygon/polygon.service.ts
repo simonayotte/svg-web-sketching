@@ -3,6 +3,7 @@ import { Tool } from 'src/app/models/tool';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { Coordinate } from 'src/app/models/coordinate';
+import { Types } from 'src/app/models/enums';
 
 @Injectable({
     providedIn: 'root',
@@ -14,9 +15,6 @@ export class PolygonService extends Tool {
     isDrawing = false;
 
     renderer: Renderer2;
-
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
 
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
@@ -47,7 +45,7 @@ export class PolygonService extends Tool {
 
     draw(centerX: number, centerY: number, sides: number, size: number) {
         let points: Coordinate[] = [];
-
+        //Divide 360 deg by n sides and get points with angle and polygon size
         for (let i: number = 0; i < sides; i++) {
             let angle = ((360 / sides) * (i + 1) + 90) * (Math.PI / 180);
             let pointX = centerX + size * Math.cos(angle);
@@ -78,21 +76,21 @@ export class PolygonService extends Tool {
         return result;
     }
 
-    setColors(type: string) {
+    setColors(type: Types) {
         switch (type) {
-            case 'outline':
-                this.renderer.setAttribute(this.svg, 'fill', 'transparent');
+            case Types.Outline:
+                this.renderer.setAttribute(this.svg, 'fill', 'none');
                 this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
 
                 break;
-            case 'outlineFill':
+            case Types.OutlineFill:
                 this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
                 this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
 
                 break;
-            case 'fill':
+            case Types.Fill:
                 this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-                this.renderer.setAttribute(this.svg, 'stroke', 'transparent');
+                this.renderer.setAttribute(this.svg, 'stroke', 'none');
                 break;
         }
     }

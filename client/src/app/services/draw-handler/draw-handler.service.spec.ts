@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DrawHandlerService } from './draw-handler.service';
 import { DrawStore } from '../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';

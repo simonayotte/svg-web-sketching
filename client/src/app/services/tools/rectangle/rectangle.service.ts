@@ -9,9 +9,6 @@ import { DrawStore } from 'src/app/store/draw-store';
 export class RectangleService extends Tool {
     state: DrawState;
 
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
-
     isShiftDown: boolean = false;
 
     initialX: number;

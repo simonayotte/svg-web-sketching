@@ -1,20 +1,21 @@
 import { GlobalState } from './global-state';
 import { ColorState } from './color-state';
 import { SvgState } from './svg-state';
+import { Types, BrushTextures } from '../models/enums';
 
 export class DrawState {
     //Brush
-    brushTexture = 'normal';
+    brushTexture = BrushTextures.Normal;
     //Line
     lineHasJunction = false;
     lineJunctionThickness = 25;
     //rectangle
-    rectangleType = 'outline';
+    rectangleType = Types.Outline;
     //polygon
     polygonSides = 3;
-    polygonType = 'outline';
+    polygonType = Types.Outline;
     //ellipsis
-    ellipsisType = 'outline';
+    ellipsisType = Types.Outline;
 
     colorState: ColorState;
     globalState: GlobalState;

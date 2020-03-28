@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Types } from 'src/app/models/enums';
 
 @Component({
     selector: 'app-polygon',
@@ -6,7 +7,7 @@ import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
     styleUrls: ['./polygon.component.scss'],
 })
 export class PolygonComponent implements OnInit {
-    @Input('type') type: string;
+    @Input('type') type: Types;
     @Input('thickness') thickness: number;
     @Input('polygonSides') sides: number;
     @Output() thicknessChange = new EventEmitter();
@@ -20,10 +21,8 @@ export class PolygonComponent implements OnInit {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setType(value: string) {
-        if (value === 'outline' || value === 'outlineFill' || value === 'fill') {
-            this.polygonTypeChange.emit(value);
-        }
+    setType(value: Types) {
+        this.polygonTypeChange.emit(value);
     }
 
     setSides(event: any) {

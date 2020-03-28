@@ -24,9 +24,6 @@ export class SelectionService extends Tool {
     displayEncompassingBox: boolean = true;
     offset: number;
 
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
-
     constructor(private store: DrawStore) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {

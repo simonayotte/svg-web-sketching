@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { BrushTextures } from 'src/app/models/enums';
 
 @Component({
     selector: 'app-brush',
@@ -8,7 +9,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 export class BrushComponent implements OnInit {
     constructor() {}
 
-    @Input('texture') texture: string;
+    @Input('texture') texture: BrushTextures;
     @Input('thickness') thickness: string;
 
     @Output() textureChange = new EventEmitter();
@@ -19,9 +20,7 @@ export class BrushComponent implements OnInit {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setTexture(value: string) {
-        if (value === 'normal' || value === 'line' || value === 'circle' || value === 'zigzag-h' || value === 'zigzag-v' || value === 'square') {
-            this.textureChange.emit(value);
-        }
+    setTexture(value: BrushTextures) {
+        this.textureChange.emit(value);
     }
 }

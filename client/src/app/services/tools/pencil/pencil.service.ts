@@ -9,13 +9,10 @@ export class PencilService extends Tool {
     state: DrawState;
     isDrawing = false;
     isPath = false;
-    path = '';
     circle: SVGCircleElement;
-
     renderer: Renderer2;
 
-    protected mouseUpListener: EventListener;
-    protected mouseMoveListener: EventListener;
+    protected path = '';
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super();
