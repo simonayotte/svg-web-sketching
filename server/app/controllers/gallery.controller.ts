@@ -39,11 +39,6 @@ export class GalleryController {
                 res.json(errorMsg)
             })
         });
-
-        this.router.get('/filter/:tag', async (req: Request, res: Response, next: NextFunction) => {
-            // Send the request to the service and send the response
-            res.send(this.dbService.getDrawingsByTags(req.params.tag))
-        });
     }
 }  
 

@@ -1,5 +1,5 @@
 import { injectable } from 'inversify';
-import { Collection, MongoClient, MongoClientOptions, FilterQuery, ObjectId } from 'mongodb';
+import { Collection, MongoClient, MongoClientOptions, ObjectId } from 'mongodb';
 import 'reflect-metadata';
 import { Drawing} from '../../models/drawing';
 
@@ -58,17 +58,6 @@ export class DatabaseService {
                 })
                 .catch((error: Error) => {
                     throw new Error("Failed to get all drawings");
-                });
-    }
-
-    async getDrawingsByTags(tagName:string): Promise<Drawing[]> {
-        let filterQuery: FilterQuery<Drawing> = {tag: tagName};
-        return  this.collection.find(filterQuery).toArray()
-                .then((drawing:Drawing[])=>{
-                    return drawing;
-                })
-                .catch((error: Error) => {
-                    throw new Error("Failed to get all drawings matching this tag");
                 });
     }
 

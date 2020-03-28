@@ -3,7 +3,6 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { MatDialogRef } from '@angular/material';
-import { PreviewImageComponent } from '../preview-image/preview-image.component';
 import { ExportedDrawing } from 'src/app/models/exported-drawing';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
@@ -22,7 +21,7 @@ export class PreviewExportComponent implements OnInit {
   previewWidth:number;
   constructor(private drawingHandler:DrawingHandler, 
     private store:DrawStore, 
-    public dialogRef:MatDialogRef<PreviewImageComponent>,
+    public dialogRef:MatDialogRef<PreviewExportComponent>,
     private exportDrawingService:ExportDrawingService,
     private httpService:HttpService) { 
     this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));

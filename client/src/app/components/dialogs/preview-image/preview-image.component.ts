@@ -48,7 +48,6 @@ export class PreviewImageComponent implements OnInit {
 
   async saveDrawing() {
     this.getSvgsHTML();
-    console.log(this.svgsHTML)
     this.buttonDisabled = true;
     let canvasColor = this.state.colorState.canvasColor;
     let drawing = new SavedDrawing(this.saveDrawingService.getImgName(), 

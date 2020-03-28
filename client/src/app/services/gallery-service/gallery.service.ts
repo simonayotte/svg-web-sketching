@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Color } from 'src/app/models/color';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawState } from 'src/app/state/draw-state';
@@ -11,12 +11,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class GalleryService {
 
-  private state:DrawState
+  private state:DrawState;
+  private renderer2:Renderer2;
 
-  constructor(private store:DrawStore, private drawingHandler: DrawingHandler) {
+  constructor(private store:DrawStore, private drawingHandler: DrawingHandler, public rendererFactory :RendererFactory2) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
-  })};
+    })
+    this.renderer2 = rendererFactory.createRenderer(null, null);
+  };
 
   private drawings: BehaviorSubject<Array<SavedDrawing>> = new BehaviorSubject<Array<SavedDrawing>>([]);
   drawingsObs: Observable<Array<SavedDrawing>> = this.drawings.asObservable();
@@ -39,9 +42,9 @@ export class GalleryService {
     this.didGalleryOpen.next(value);
   }
 
-  convertSvgHtmlToSvgElement(svgsHTML: Array<string>){
+  convertHtmlToSvgElement(svgsHTML: Array<string>){
     for( let svgHTML of svgsHTML){
-      let svgElement: SVGElement = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+      let svgElement: SVGElement = this.renderer2.createElement('svg','svg');
       this.state.svgState.drawSvg.appendChild(svgElement);
       svgElement.innerHTML = svgHTML;
       this.store.pushSvg(svgElement);
@@ -54,7 +57,7 @@ export class GalleryService {
     let canvasColor = new Color(drawing.RGBA[0],drawing.RGBA[1],drawing.RGBA[2],drawing.RGBA[3])
     this.store.setCanvasColor(canvasColor);
     this.drawingHandler.clearCanvas();
-    this.convertSvgHtmlToSvgElement(drawing.svgsHTML);
+    this.convertHtmlToSvgElement(drawing.svgsHTML);
   }
 
   filterDrawings(tagStringArray: Array<string>, allDrawingsInDb: Array<SavedDrawing>): Array<SavedDrawing>{

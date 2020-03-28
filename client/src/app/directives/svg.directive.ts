@@ -5,7 +5,7 @@ import { Directive, ElementRef, HostListener, OnInit, Input } from '@angular/cor
 export class SvgDirective implements OnInit {
     @Input('svg') svg: SVGElement;
     @Input('drawSvg') drawSvg: SVGSVGElement;
-    constructor(private el: ElementRef) {
+    constructor(public el: ElementRef) {
     }
     //With this directive, you already have events listeners that are going to call DrawHandler functions that will call selection services, deplacement, etc...
     ngOnInit() {

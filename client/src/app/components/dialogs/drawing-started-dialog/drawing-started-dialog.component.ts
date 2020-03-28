@@ -15,8 +15,8 @@ export class DrawingStartedDialogComponent implements OnInit {
 
     private state:DrawState;
     private didGalleryOpenDialog: boolean = false;
-    private drawingToLoad:SavedDrawing;
-    constructor(private dialogRef: MatDialogRef<DrawingStartedDialogComponent>, private dialog: MatDialog,private store:DrawStore, private galleryService:GalleryService) {
+    public drawingToLoad:SavedDrawing;
+    constructor(public dialogRef: MatDialogRef<DrawingStartedDialogComponent>, public dialog: MatDialog,private store:DrawStore, private galleryService:GalleryService) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
@@ -36,7 +36,6 @@ export class DrawingStartedDialogComponent implements OnInit {
     }
 
     continue(): void {
-        console.log(this.didGalleryOpenDialog)
         this.didGalleryOpenDialog?  this.galleryService.loadDrawing(this.drawingToLoad) : this.dialog.open(CreateDrawingComponent);
         this.dialogRef.close();
         this.galleryService.setDidGalleryOpen(false);
