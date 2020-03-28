@@ -11,11 +11,34 @@ export class DrawStore extends Store<DrawState> {
     }
     //Undo
     undo() {
+        //TODO:
         console.log('undo store');
+        //Recopie
+        let undo = this.state.undoRedoState.undoState;
+        let redo = this.state.undoRedoState.redoState;
+        let svgs = this.state.svgState.svgs;
+
+        this.setState({
+            ...this.state,
+            undoRedoState: {...this.state.undoRedoState,
+                undoState: undo.slice(0,this.state.undoRedoState.undoState.length - 1),
+                redoState: redo.concat(svgs)
+            },
+            svgState: {...this.state.svgState, svgs: undo[undo.length-1]}
+        })
     }
 
     redo() {
+        //TODO:
         console.log('redo store');
+        this.setState({
+            ...this.state,
+            undoRedoState: {...this.state.undoRedoState, undoState: this.state.undoRedoState.redoState.concat(this.state.svgState.svgs)}
+        })
+    }
+
+    clearRedo() {
+
     }
 
     //Svg
@@ -40,9 +63,11 @@ export class DrawStore extends Store<DrawState> {
     }
 
     pushSvg(value: SVGElement) {
+        let stateSVG = this.state.svgState.svgs.concat(value);
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
+            svgState: { ...this.state.svgState, svgs: stateSVG },
+            undoRedoState: { ...this.state.undoRedoState, undoState: this.state.undoRedoState.undoState.concat(stateSVG)}
         });
     }
     popSvg() {

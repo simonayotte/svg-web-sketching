@@ -20,11 +20,11 @@ export class DrawState {
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
-    undoRedo: UndoRedoState;
+    undoRedoState: UndoRedoState;
     constructor() {
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
         this.svgState = new SvgState();
-        this.undoRedo = new UndoRedoState();
+        this.undoRedoState = new UndoRedoState();
     }
 }

@@ -23,8 +23,8 @@ export class SidebarComponent implements OnInit {
     @Output() toggleGrid = new EventEmitter();
 
     //Undo-Redo
-    @Output() undoChange = new EventEmitter();
-    @Output() redoChange = new EventEmitter();
+    @Output() undo = new EventEmitter();
+    @Output() redo = new EventEmitter();
 
     constructor(private dialog: MatDialog) {}
 
@@ -36,14 +36,12 @@ export class SidebarComponent implements OnInit {
         this.toggleGrid.emit();
     }
 
-    undo() {
-        console.log('undo in sidebar component');
-        this.undoChange.emit();
+    triggerUndo() {
+        this.undo.emit();
     }
 
-    redo() {
-        console.log('redo in sidebar component');
-        this.redoChange.emit();
+    triggerRedo() {
+        this.redo.emit();
     }
 
     ngOnInit() {}
