@@ -1,34 +1,19 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
-import { Tool } from 'src/app/models/tool';
+import { FormService } from '../form/form.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class EllipsisService extends Tool {
-    state: DrawState;
-    startX: number;
-    startY: number;
-    lastX: number;
-    lastY: number;
+export class EllipsisService extends FormService {
+    startX: number = 0;
+    startY: number = 0;
+    lastX: number = 0;
+    lastY: number = 0;
     isShift = false;
-    isDrawing = false;
 
-    renderer: Renderer2;
-
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
-
-    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
-        super();
-        this.store.stateObs.subscribe((value: DrawState) => {
-            this.state = value;
-        });
-        this.mouseMoveListener = this.continue.bind(this);
-        this.mouseUpListener = this.stop.bind(this);
-
-        this.renderer = rendererFactory.createRenderer(null, null);
+    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+        super(store, rendererFactory);
     }
 
     start(event: MouseEvent) {
@@ -56,7 +41,7 @@ export class EllipsisService extends Tool {
     draw(startX: number, startY: number, lastX: number, lastY: number) {
         let dx = lastX - startX;
         let dy = lastY - startY;
-
+        //Length of square is equal to the smallest size (without changing sign)
         if (this.isShift) {
             if (Math.abs(dx) < Math.abs(dy)) {
                 dy = dy * Math.abs(dx / dy);
@@ -79,7 +64,6 @@ export class EllipsisService extends Tool {
     }
 
     stop() {
-        console.log(this.svg);
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
             this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
@@ -103,24 +87,6 @@ export class EllipsisService extends Tool {
             if (this.isDrawing) {
                 this.draw(this.startX, this.startY, this.lastX, this.lastY);
             }
-        }
-    }
-    setColors(type: string) {
-        switch (type) {
-            case 'outline':
-                this.renderer.setAttribute(this.svg, 'fill', 'none');
-                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case 'outlineFill':
-                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case 'fill':
-                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-                this.renderer.setAttribute(this.svg, 'stroke', 'none');
-                break;
         }
     }
 }

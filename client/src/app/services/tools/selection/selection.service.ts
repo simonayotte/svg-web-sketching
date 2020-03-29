@@ -22,8 +22,8 @@ export class SelectionService extends Tool {
   keys: SelectionKeys = new SelectionKeys();
   timer: NodeJS.Timer;
 
-  private mouseUpListener: EventListener;
-  private mouseMoveListener: EventListener;
+  mouseUpListener: EventListener;
+  mouseMoveListener: EventListener;
 
   renderer: Renderer2;
 

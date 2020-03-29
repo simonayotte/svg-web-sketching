@@ -3,6 +3,7 @@ import { CreateDrawingComponent } from '../../dialogs/create-drawing-dialog/crea
 import { SaveDrawingComponent } from '../../dialogs/save-drawing/save-drawing.component';
 import { MatDialog } from '@angular/material';
 import { DrawingStartedDialogComponent } from '../../dialogs/drawing-started-dialog/drawing-started-dialog.component';
+import { Tools } from 'src/app/models/enums';
 
 @Component({
     selector: 'app-sidebar',
@@ -15,7 +16,7 @@ export class SidebarComponent implements OnInit {
     private isShowToolOptions = false;
     private isShowEditOptions = false;
     private isShowSettingOptions = false;
-    @Input('tool') tool: string;
+    @Input('tool') tool: Tools;
     @Input('isStartedDrawing') isStartedDrawing: boolean;
 
     @Input('isDisplayGrid') isDisplayGrid: boolean;
@@ -24,7 +25,7 @@ export class SidebarComponent implements OnInit {
 
     constructor(private dialog: MatDialog) {}
 
-    changeTool(tool: String) {
+    changeTool(tool: Tools) {
         this.toolChange.emit(tool);
     }
 

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { EllipsisComponent } from './ellipsis.component';
+import { Types } from 'src/app/models/enums';
 
 describe('EllipsisComponent', () => {
     let component: EllipsisComponent;
@@ -31,15 +32,8 @@ describe('EllipsisComponent', () => {
 
     it('#setType() should emit #ellipsisTypeChange if type is valid', () => {
         let spy = spyOn(component.ellipsisTypeChange, 'emit');
-        component.setType('fill');
+        component.setType(Types.Fill);
 
-        expect(spy).toHaveBeenCalledWith('fill');
-    });
-
-    it('#setType() should not emit #ellipsisTypeChange if type is not valid', () => {
-        let spy = spyOn(component.ellipsisTypeChange, 'emit');
-        component.setType('invalid');
-
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(Types.Fill);
     });
 });

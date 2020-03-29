@@ -4,7 +4,6 @@ import { RectangleService } from './rectangle.service';
 
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Color } from 'src/app/models/color';
 
 describe('RectangleService', () => {
     let service: RectangleService;
@@ -15,15 +14,10 @@ describe('RectangleService', () => {
             providers: [RectangleService, DrawStore],
         });
         store = TestBed.get(DrawStore);
-
-        store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
-
+        service = TestBed.get(RectangleService);
+        store.setDrawSvg(service.renderer.createElement('svg', 'svg'));
         store.stateObs.subscribe((value: DrawState) => {
-            service = TestBed.get(RectangleService);
-
             service.state = value;
-            service.state.colorState.firstColor = new Color(255, 0, 255, 255);
-            service.state.colorState.secondColor = new Color(0, 0, 255, 255);
         });
     });
 
@@ -41,17 +35,23 @@ describe('RectangleService', () => {
         expect(service.isDrawing).toBeTruthy();
     });
 
-    it('#draw() should call #setRectangleDisplay(), #adjustStartPosition(), #drawRect() ', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const spy1 = spyOn(service, 'setRectangleDisplay');
-        const spy2 = spyOn(service, 'adjustStartPosition');
-        const spy3 = spyOn(service, 'drawRect');
-        service.draw(10, 20,);
-        expect(spy1).toHaveBeenCalled();
-        expect(spy2).toHaveBeenCalled();
-        expect(spy3).toHaveBeenCalled();
+    it('#draw() should call #drawSquare() if #isShift is true ', () => {
+        service.svg = service.renderer.createElement('rect', 'svg');
+        service.isShift = true;
+
+        const spy = spyOn(service, 'drawSquare');
+        service.draw(50, 100, 200, 300);
+
+        expect(spy).toHaveBeenCalled();
     });
 
+    it('#draw() should call #drawRect() if #isShift is false ', () => {
+        service.svg = service.renderer.createElement('rect', 'svg');
+        const spy = spyOn(service, 'drawRect');
+        service.draw(50, 100, 200, 300);
+
+        expect(spy).toHaveBeenCalled();
+    });
     it('#draw() should be called on mouse move after mouse down ', () => {
         const mouseDown: MouseEvent = new MouseEvent('mousedown', {
             clientX: 0,
@@ -151,43 +151,5 @@ describe('RectangleService', () => {
         const spy = spyOn(service, 'stopSignal');
         service.state.svgState.drawSvg.dispatchEvent(mouseUp);
         expect(spy).not.toHaveBeenCalled();
-    });
-
-    it('#setRectangleDisplay() should call #setAttribute 2 times if #type is valid', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setRectangleDisplay('fill');
-
-        expect(spy).toHaveBeenCalledTimes(2);
-    });
-    it('#setRectangleDisplay() should call #setAttribute with fill as none and stroke as secondColor if rectangleType is outline', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setRectangleDisplay('outline');
-        expect(spy).toHaveBeenCalledWith('fill', 'none');
-        expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
-    });
-    it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as secondColor if rectangleType is outlineFill', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setRectangleDisplay('outlineFill');
-
-        expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
-    });
-    it('#setRectangleDisplay() should call #setAttribute with fill as firstColor and stroke as none if rectangleType is fill', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setRectangleDisplay('fill');
-        expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith('stroke', 'none');
     });
 });

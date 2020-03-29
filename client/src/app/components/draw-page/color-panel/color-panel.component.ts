@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Color } from 'src/app/models/color';
+import { SelectedColors } from 'src/app/models/enums';
 @Component({
     selector: 'app-color-panel',
     templateUrl: './color-panel.component.html',
@@ -16,7 +17,7 @@ export class ColorPanelComponent implements OnInit {
     @Output() selectedColorChange = new EventEmitter();
     @Output() swapColor = new EventEmitter();
 
-    openColorWindow(color: string) {
+    openColorWindow(color: SelectedColors) {
         this.openColor.emit();
         this.selectedColorChange.emit(color);
     }

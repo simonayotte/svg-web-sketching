@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
 import { Color } from '../models/color';
+import { Tools, SelectedColors, BrushTextures, Types } from '../models/enums';
 @Injectable({
     providedIn: 'root',
 })
@@ -24,6 +25,7 @@ export class DrawStore extends Store<DrawState> {
             svgState: { ...this.state.svgState, width: value },
         });
     }
+
     setDrawHeight(value: number) {
         this.setState({
             ...this.state,
@@ -31,12 +33,21 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    pushSvg(value: SVGElement) {
+    deleteSvgs(value: SVGGraphicsElement[]) {
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.concat(value) },
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter(svg => !value.includes(svg)) },
         });
     }
+
+    pushSvg(value: SVGGraphicsElement) {
+        let svg = this.state.svgState.svgs.concat(value);
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: svg },
+        });
+    }
+
     popSvg() {
         this.setState({
             ...this.state,
@@ -52,7 +63,7 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, thickness: value },
         });
     }
-    setTool(value: string) {
+    setTool(value: Tools) {
         const isPanelOpen = this.state.globalState.tool == value && this.state.globalState.isPanelOpen ? false : true;
         this.setState({
             ...this.state,
@@ -124,7 +135,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    selectColor(value: string): void {
+    selectColor(value: SelectedColors): void {
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, selectedColor: value },
@@ -157,7 +168,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     //Brush
-    setBrushTexture(value: string) {
+    setBrushTexture(value: BrushTextures) {
         this.setState({
             ...this.state,
             brushTexture: value,
@@ -179,7 +190,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     //Rect
-    setRectangleType(value: string) {
+    setRectangleType(value: Types) {
         this.setState({
             ...this.state,
             rectangleType: value,
@@ -188,7 +199,7 @@ export class DrawStore extends Store<DrawState> {
 
     //Polygon
 
-    setPolygonType(value: string) {
+    setPolygonType(value: Types) {
         this.setState({
             ...this.state,
             polygonType: value,
@@ -203,7 +214,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     //Ellipsis
-    setEllipsisType(value: string) {
+    setEllipsisType(value: Types) {
         this.setState({
             ...this.state,
             ellipsisType: value,

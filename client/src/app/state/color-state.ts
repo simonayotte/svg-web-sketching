@@ -1,4 +1,5 @@
 import { Color } from '../models/color';
+import { SelectedColors } from '../models/enums';
 
 export class ColorState {
     firstColor = new Color(0, 0, 0, 255);
@@ -10,6 +11,6 @@ export class ColorState {
     isSidebarColorOpen = false;
     lastColors: (Color | null)[] = [null, null, null, null, null, null, null, null, null, null];
     lastColorsIndex = 0;
-    selectedColor = '';
+    selectedColor = SelectedColors.None;
     constructor() {}
 }
