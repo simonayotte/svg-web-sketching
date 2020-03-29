@@ -30,13 +30,6 @@ export class DrawStore extends Store<DrawState> {
         } else {
             this.state.undoRedoState.nextUndoState = [];
         }
-        //TODO: Enlever les console logs
-        console.log('UNDO');
-        console.log('UndoArray');
-        console.log(this.state.undoRedoState.undoState);  
-
-        console.log('RedoArray');
-        console.log(this.state.undoRedoState.redoState);
     }
 
     redo() {
@@ -54,14 +47,6 @@ export class DrawStore extends Store<DrawState> {
                 svgState: {...this.state.svgState, svgs: redo}
             })
         }
-        //TODO: Enlever les console logs
-        console.log('REDO');
-        console.log('UndoArray');
-        console.log(this.state.undoRedoState.undoState);  
-
-        console.log('RedoArray');
-        console.log(this.state.undoRedoState.redoState);
-        
     }
 
     clearRedo() {
@@ -100,8 +85,6 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             svgState: { ...this.state.svgState, svgs: newState},
         });
-        console.log('UndoArray');
-        console.log(this.state.undoRedoState.undoState);
     }
 
     deleteSvgs(value: SVGGraphicsElement[]) {

@@ -26,6 +26,8 @@ export class SidebarComponent implements OnInit {
     //Undo-Redo
     @Output() undo = new EventEmitter();
     @Output() redo = new EventEmitter();
+    @Input('canUndo') canUndo: boolean;
+    @Input('canRedo') canRedo: boolean;
 
     constructor(private dialog: MatDialog) {}
 

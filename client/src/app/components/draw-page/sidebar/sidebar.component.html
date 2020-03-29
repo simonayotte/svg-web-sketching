@@ -53,8 +53,8 @@
 
     <i class="sidebar-option fas fa-font" (click)="changeTool('Texte')" [ngClass]="{ active: tool == 'Texte' }"></i>
     <!-- Undo Redo -->
-    <i *ngIf="false" class="sidebar-option fas fa-undo" (click)="triggerUndo()"></i>
-    <i class="sidebar-option fas fa-redo" (click)="triggerRedo()"></i>
+    <i *ngIf="canUndo" class="sidebar-option fas fa-undo" (click)="triggerUndo()"></i>
+    <i *ngIf="canRedo" class="sidebar-option fas fa-redo" (click)="triggerRedo()"></i>
 
     <!--Will contain actions like file saving ...-->
     <div class="sidebar-option" (click)="toggleSettingOptions()">
