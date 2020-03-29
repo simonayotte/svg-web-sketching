@@ -11,20 +11,20 @@ export class DrawStore extends Store<DrawState> {
     }
     //Undo
     undo() {
-        //TODO:
+        //TODO: Fix erreur pour premier element et pour dernier element
         console.log('undo store');
-        //Recopie
-        let undo = this.state.undoRedoState.undoState;
-        let redo = this.state.undoRedoState.redoState;
+        //Get les elements a utiliser
+        let undo = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
+        this.state.undoRedoState.undoState.pop();
         let svgs = this.state.svgState.svgs;
+
+        //Add present state to redoState
+        this.state.undoRedoState.redoState.push(svgs);
 
         this.setState({
             ...this.state,
-            undoRedoState: {...this.state.undoRedoState,
-                undoState: undo.slice(0,this.state.undoRedoState.undoState.length - 1),
-                redoState: redo.concat(svgs)
-            },
-            svgState: {...this.state.svgState, svgs: undo[undo.length-1]}
+            undoRedoState: {...this.state.undoRedoState },
+            svgState: {...this.state.svgState, svgs: undo}
         })
     }
 
@@ -38,7 +38,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     clearRedo() {
-
+        //TODO: Implement method
     }
 
     //Svg
@@ -63,11 +63,13 @@ export class DrawStore extends Store<DrawState> {
     }
 
     pushSvg(value: SVGElement) {
-        let stateSVG = this.state.svgState.svgs.concat(value);
+        let newState = this.state.svgState.svgs.concat(value);
+        this.state.undoRedoState.undoState.push(newState);
+
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: stateSVG },
-            undoRedoState: { ...this.state.undoRedoState, undoState: this.state.undoRedoState.undoState.concat(stateSVG)}
+            svgState: { ...this.state.svgState, svgs: newState},
+            undoRedoState: { ...this.state.undoRedoState}
         });
     }
     popSvg() {
