@@ -1,4 +1,3 @@
-import { LineService } from './../tools/line/line.service';
 import { Injectable, Injector } from '@angular/core';
 import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
@@ -13,40 +12,44 @@ import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
+import { LineService } from '../tools/line/line.service';
+
 import { SelectionService } from '../tools/selection/selection.service';
+import { Tools, ToolButtons } from 'src/app/models/enums';
+import { EraserService } from '../tools/eraser/eraser.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class DrawHandlerService {
     state: DrawState;
-    keyMap: Map<string, string> = new Map();
-    servicesMap: Map<string, Tool> = new Map();
+    keyMap: Map<ToolButtons, Tools> = new Map();
+    servicesMap: Map<Tools, Tool> = new Map();
 
     constructor(public injector: Injector, public store: DrawStore, public matDialog: MatDialog) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
 
-        this.servicesMap.set('Crayon', injector.get(PencilService));
-        this.servicesMap.set('Pinceau', injector.get(BrushService));
-        this.servicesMap.set('Rectangle', injector.get(RectangleService));
-        this.servicesMap.set('Ligne', injector.get(LineService));
-        this.servicesMap.set('Polygone', injector.get(PolygonService));
-        this.servicesMap.set('Ellipse', injector.get(EllipsisService));
-        this.servicesMap.set('Pipette', injector.get(PipetteService));
-        this.servicesMap.set('Selection', injector.get(SelectionService));
+        this.servicesMap.set(Tools.Pencil, injector.get(PencilService));
+        this.servicesMap.set(Tools.Brush, injector.get(BrushService));
+        this.servicesMap.set(Tools.Rectangle, injector.get(RectangleService));
+        this.servicesMap.set(Tools.Line, injector.get(LineService));
+        this.servicesMap.set(Tools.Polygon, injector.get(PolygonService));
+        this.servicesMap.set(Tools.Ellipsis, injector.get(EllipsisService));
+        this.servicesMap.set(Tools.Pipette, injector.get(PipetteService));
+        this.servicesMap.set(Tools.Selection, injector.get(SelectionService));
+        this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
 
-
-        this.keyMap.set('1', 'Rectangle');
-        this.keyMap.set('c', 'Crayon');
-        this.keyMap.set('w', 'Pinceau');
-        this.keyMap.set('l', 'Ligne');
-        this.keyMap.set('3', 'Polygone');
-        this.keyMap.set('2', 'Ellipse');
-        this.keyMap.set('t', 'Pipette');
-        this.keyMap.set('s', 'Selection');
-
+        this.keyMap.set(ToolButtons.One, Tools.Rectangle);
+        this.keyMap.set(ToolButtons.C, Tools.Pencil);
+        this.keyMap.set(ToolButtons.W, Tools.Brush);
+        this.keyMap.set(ToolButtons.L, Tools.Line);
+        this.keyMap.set(ToolButtons.Three, Tools.Polygon);
+        this.keyMap.set(ToolButtons.Two, Tools.Ellipsis);
+        this.keyMap.set(ToolButtons.T, Tools.Pipette);
+        this.keyMap.set(ToolButtons.S, Tools.Selection);
+        this.keyMap.set(ToolButtons.E, Tools.Eraser);
     }
 
     startTool(event: MouseEvent) {
@@ -68,9 +71,10 @@ export class DrawHandlerService {
         if (this.state.globalState.isKeyHandlerActive) {
             const key = event.key;
 
+            const keyEnum = <ToolButtons>key;
             //handle tool selection keyboard events
-            if (this.keyMap.has(key)) {
-                const tool = this.keyMap.get(key) as string;
+            if (this.keyMap.has(keyEnum)) {
+                const tool = <Tools>this.keyMap.get(keyEnum);
                 this.store.setTool(tool);
                 return;
             }
@@ -107,7 +111,7 @@ export class DrawHandlerService {
                 case 'Z':
                     if (event.ctrlKey) {
                         //TODO: Add logic for redo
-                        this.store.undo();
+                        this.store.redo();
                     }
             }
         }

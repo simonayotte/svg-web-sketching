@@ -1,31 +1,45 @@
-import { Directive, ElementRef, HostListener, OnInit, OnDestroy, Input, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, Input, Renderer2 } from '@angular/core';
+import { SvgHandlerService } from '../services/svg-handler/svg-handler.service';
+import { Tools } from '../models/enums';
 @Directive({
     selector: '[svg]',
 })
 export class SvgDirective implements OnInit, OnDestroy {
-    @Input('svg') svg: SVGElement;
+    @Input('svg') svg: SVGGraphicsElement;
     @Input('drawSvg') drawSvg: SVGSVGElement;
-    constructor(private el: ElementRef, private renderer: Renderer2) {
-        console.log(this.el);
-    }
-    //With this directive, you already have events listeners that are going to call DrawHandler functions that will call selection services, deplacement, etc...
+    @Input('tool') tool: Tools;
+    constructor(protected el: ElementRef, private renderer: Renderer2, private svgHandler: SvgHandlerService) {}
+
     ngOnInit() {
         this.renderer.appendChild(this.drawSvg, this.svg);
+
+        this.renderer.listen(this.svg, 'mouseover', () => {
+            this.onMouseOver(this.svg);
+        });
+        this.renderer.listen(this.svg, 'mouseout', () => {
+            this.onMouseOut(this.svg);
+        });
+
+        this.renderer.listen(this.svg, 'click', () => {
+            this.onClick(this.svg);
+        });
     }
 
     ngOnDestroy() {
         this.renderer.removeChild(this.drawSvg, this.svg);
     }
 
-    @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
-        console.log(event);
+    onMouseOver(svg: SVGGraphicsElement) {
+        this.svgHandler.onMouseOver(svg);
     }
 
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent) {
-        console.log(event);
+
+    onMouseOut(svg: SVGGraphicsElement) {
+        this.svgHandler.onMouseOut(svg);
     }
-    @HostListener('mouseup')
-    onMouseUp() {}
+
+    onClick(svg: SVGGraphicsElement) {
+        this.svgHandler.onClick(svg);
+    }
+
 }

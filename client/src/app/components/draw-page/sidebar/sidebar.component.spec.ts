@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SidebarComponent } from './sidebar.component';
 import { MatDialogModule } from '@angular/material';
+import { Tools } from 'src/app/models/enums';
 
 describe('SidebarComponent', () => {
     let component: SidebarComponent;
@@ -25,7 +26,7 @@ describe('SidebarComponent', () => {
     });
 
     it('ellipsis button should be active if selected tool is Ellipse', () => {
-        component.tool = 'Ellipse';
+        component.tool = Tools.Ellipsis;
         fixture.detectChanges();
         let button = fixture.debugElement.query(By.css('.fa-circle'));
         expect(button.classes.active).toBeTruthy();
@@ -34,7 +35,7 @@ describe('SidebarComponent', () => {
     it('#changeTool should emit #toolChange ', () => {
         const spy = spyOn(component.toolChange, 'emit');
 
-        component.changeTool('Pinceau');
-        expect(spy).toHaveBeenCalledWith('Pinceau');
+        component.changeTool(Tools.Brush);
+        expect(spy).toHaveBeenCalledWith(Tools.Brush);
     });
 });

@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ColorPanelComponent } from './color-panel.component';
 import { Color } from 'src/app/models/color';
+import { SelectedColors } from 'src/app/models/enums';
 
 describe('ColorPanelComponent', () => {
     let component: ColorPanelComponent;
@@ -49,8 +50,8 @@ describe('ColorPanelComponent', () => {
         const selectedColorChangeSpy = spyOn(component.selectedColorChange, 'emit');
         const openColorSpy = spyOn(component.openColor, 'emit');
 
-        component.openColorWindow('canvas');
-        expect(selectedColorChangeSpy).toHaveBeenCalledWith('canvas');
+        component.openColorWindow(SelectedColors.Canvas);
+        expect(selectedColorChangeSpy).toHaveBeenCalledWith(SelectedColors.Canvas);
         expect(openColorSpy).toHaveBeenCalled();
     });
 });

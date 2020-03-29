@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
 import { Color } from '../models/color';
+import { Tools, SelectedColors, BrushTextures, Types } from '../models/enums';
 @Injectable({
     providedIn: 'root',
 })
@@ -11,34 +12,60 @@ export class DrawStore extends Store<DrawState> {
     }
     //Undo
     undo() {
-        //TODO: Fix erreur pour premier element et pour dernier element
-        console.log('undo store');
-        //Get les elements a utiliser
-        let undo = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
-        this.state.undoRedoState.undoState.pop();
-        let svgs = this.state.svgState.svgs;
+        this.state.undoRedoState.canRedo = true;
+        if(this.state.undoRedoState.undoState.length != 0){
+            //lock redo
+            
+            let undo = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
+            this.state.undoRedoState.undoState.pop();
+            let svgs = this.state.svgState.svgs;
 
-        //Add present state to redoState
-        this.state.undoRedoState.redoState.push(svgs);
+            //Add present state to redoState
+            this.state.undoRedoState.redoState.push(svgs);
 
-        this.setState({
-            ...this.state,
-            undoRedoState: {...this.state.undoRedoState },
-            svgState: {...this.state.svgState, svgs: undo}
-        })
+            this.setState({
+                ...this.state,
+                svgState: {...this.state.svgState, svgs: undo}
+            })
+        } else {
+            this.state.undoRedoState.nextUndoState = [];
+        }
+        //TODO: Enlever les console logs
+        console.log('UNDO');
+        console.log('UndoArray');
+        console.log(this.state.undoRedoState.undoState);  
+
+        console.log('RedoArray');
+        console.log(this.state.undoRedoState.redoState);
     }
 
     redo() {
-        //TODO:
-        console.log('redo store');
-        this.setState({
-            ...this.state,
-            undoRedoState: {...this.state.undoRedoState, undoState: this.state.undoRedoState.redoState.concat(this.state.svgState.svgs)}
-        })
+        if(this.state.undoRedoState.redoState.length != 0 && this.state.undoRedoState.canRedo){
+            //Get dernier element et enlever de l'array des states
+            let redo = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
+            this.state.undoRedoState.redoState.pop();
+            let svgs = this.state.svgState.svgs;
+
+            //Add present state to undoState 
+            this.state.undoRedoState.undoState.push(svgs);
+
+            this.setState({
+                ...this.state,
+                svgState: {...this.state.svgState, svgs: redo}
+            })
+        }
+        //TODO: Enlever les console logs
+        console.log('REDO');
+        console.log('UndoArray');
+        console.log(this.state.undoRedoState.undoState);  
+
+        console.log('RedoArray');
+        console.log(this.state.undoRedoState.redoState);
+        
     }
 
     clearRedo() {
-        //TODO: Implement method
+        this.state.undoRedoState.redoState = [];
     }
 
     //Svg
@@ -55,6 +82,7 @@ export class DrawStore extends Store<DrawState> {
             svgState: { ...this.state.svgState, width: value },
         });
     }
+
     setDrawHeight(value: number) {
         this.setState({
             ...this.state,
@@ -62,16 +90,30 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    pushSvg(value: SVGElement) {
+    pushSvg(value: SVGGraphicsElement) {
         let newState = this.state.svgState.svgs.concat(value);
+        this.state.undoRedoState.undoState.push(this.state.undoRedoState.nextUndoState);
+        this.state.undoRedoState.nextUndoState = newState;
+        //lock canRedo on new action
+        this.state.undoRedoState.canRedo = false;
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: newState},
+        });
+        console.log('UndoArray');
+        console.log(this.state.undoRedoState.undoState);
+    }
+
+    deleteSvgs(value: SVGGraphicsElement[]) {
+        let newState = this.state.svgState.svgs;
         this.state.undoRedoState.undoState.push(newState);
 
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: newState},
-            undoRedoState: { ...this.state.undoRedoState}
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter(svg => !value.includes(svg)) },
         });
     }
+
     popSvg() {
         this.setState({
             ...this.state,
@@ -87,7 +129,7 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, thickness: value },
         });
     }
-    setTool(value: string) {
+    setTool(value: Tools) {
         const isPanelOpen = this.state.globalState.tool == value && this.state.globalState.isPanelOpen ? false : true;
         this.setState({
             ...this.state,
@@ -159,7 +201,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    selectColor(value: string): void {
+    selectColor(value: SelectedColors): void {
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, selectedColor: value },
@@ -192,7 +234,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     //Brush
-    setBrushTexture(value: string) {
+    setBrushTexture(value: BrushTextures) {
         this.setState({
             ...this.state,
             brushTexture: value,
@@ -214,7 +256,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     //Rect
-    setRectangleType(value: string) {
+    setRectangleType(value: Types) {
         this.setState({
             ...this.state,
             rectangleType: value,
@@ -223,7 +265,7 @@ export class DrawStore extends Store<DrawState> {
 
     //Polygon
 
-    setPolygonType(value: string) {
+    setPolygonType(value: Types) {
         this.setState({
             ...this.state,
             polygonType: value,
@@ -238,7 +280,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     //Ellipsis
-    setEllipsisType(value: string) {
+    setEllipsisType(value: Types) {
         this.setState({
             ...this.state,
             ellipsisType: value,

@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PolygonComponent } from './polygon.component';
+import { Types } from 'src/app/models/enums';
 
 describe('PolygonComponent', () => {
     let component: PolygonComponent;
@@ -31,16 +32,9 @@ describe('PolygonComponent', () => {
 
     it('#setType() should emit #polygonTypeChange if type is valid', () => {
         let spy = spyOn(component.polygonTypeChange, 'emit');
-        component.setType('outline');
+        component.setType(Types.Outline);
 
-        expect(spy).toHaveBeenCalledWith('outline');
-    });
-
-    it('#setType() should not emit #polygonTypeChange if type is not valid', () => {
-        let spy = spyOn(component.polygonTypeChange, 'emit');
-        component.setType('invalid');
-
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(Types.Outline);
     });
 
     it('#setSides() should emit #polygonSidesChange ', () => {

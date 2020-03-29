@@ -4,7 +4,6 @@ import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 
-
 @Injectable({
     providedIn: 'root',
 })
@@ -12,10 +11,8 @@ export class LineService extends Tool {
     state: DrawState;
 
     //MouseEventListener
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
-    private mouseDoubleClickListener: EventListener;
 
+    private mouseDoubleClickListener: EventListener;
 
     //Alignement de la ligne
     isShiftDown: boolean = false;
@@ -46,11 +43,11 @@ export class LineService extends Tool {
 
     start(event: MouseEvent) {
         //Only called for first point of the line
-        if (this.coordinates.length == 0){
+        if (this.coordinates.length == 0) {
             //Styling & creation of SVG element
             this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
             this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-            this.svg.setAttribute('fill','none');
+            this.svg.setAttribute('fill', 'none');
             this.svg.setAttribute('stroke-linecap', 'round');
             this.svg.setAttribute('stroke-linejoin', 'round');
             this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
@@ -66,25 +63,21 @@ export class LineService extends Tool {
 
             this.lastX = event.offsetX;
             this.lastY = event.offsetY;
-            
         } else {
             //Pour tout les points autres que le premier
             if (this.isShiftDown) {
                 //Aligned line
                 let point = this.calculateAlignedPoint(event.offsetX, event.offsetY);
                 this.drawLine(point.pointX, point.pointY);
-                
+
                 //Add points to structures
                 this.lastX = point.pointX;
                 this.lastY = point.pointY;
-
             } else {
                 this.drawLine(event.offsetX, event.offsetY);
                 this.lastX = event.offsetX;
                 this.lastY = event.offsetY;
-
             }
-
         }
         this.coordinates.push(new Coordinate(this.lastX, this.lastY));
     }
@@ -95,7 +88,7 @@ export class LineService extends Tool {
         let linePoints = this.svg.getAttribute('points');
         if (linePoints != null) {
             linePoints += `${x},${y} `;
-            this.svg.setAttribute('points', linePoints);        
+            this.svg.setAttribute('points', linePoints);
         }
     }
 
@@ -103,7 +96,7 @@ export class LineService extends Tool {
     continue(event: MouseEvent) {
         this.currentMouseX = event.offsetX;
         this.currentMouseY = event.offsetY;
-        
+
         if (this.isShiftDown) {
             const point = this.calculateAlignedPoint(this.currentMouseX, this.currentMouseY);
             this.previewLine(point.pointX, point.pointY);
@@ -128,7 +121,7 @@ export class LineService extends Tool {
 
     previewLine(x: number, y: number) {
         //Remove last tempLine
-        if(this.tempLine != undefined) {
+        if (this.tempLine != undefined) {
             this.state.svgState.drawSvg.removeChild(this.tempLine);
         }
 
@@ -139,7 +132,7 @@ export class LineService extends Tool {
         this.tempLine.setAttribute('stroke-linecap', 'round');
         this.tempLine.setAttribute('stroke-linejoin', 'round');
         this.tempLine.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-        let dashWidth = (this.state.globalState.thickness/2).toString().concat(" 50");
+        let dashWidth = (this.state.globalState.thickness / 2).toString().concat(' 50');
         this.tempLine.setAttribute('stroke-dasharray', dashWidth);
 
         //Add coordinates to line, add tempLine in SVG
@@ -148,9 +141,7 @@ export class LineService extends Tool {
         this.tempLine.setAttribute('x2', x.toString());
         this.tempLine.setAttribute('y2', y.toString());
         this.state.svgState.drawSvg.appendChild(this.tempLine);
-
     }
-
 
     handleKeyDown(key: string) {
         switch (key) {
@@ -171,17 +162,12 @@ export class LineService extends Tool {
             this.isShiftDown = false;
         }
     }
-    
-    //Escape -> Deletes line in whole
-    deleteLine() {
 
-    }
+    //Escape -> Deletes line in whole
+    deleteLine() {}
 
     //Backspace -> Deletes last segment and junction of line
-    deleteSegment() {
-
-    }
-
+    deleteSegment() {}
 
     //Methode pour alignement du point
     calculateAlignedPoint(positionX: number, positionY: number): Coordinate {
@@ -201,7 +187,7 @@ export class LineService extends Tool {
             const y = Math.sin(angle) * hypothenuse + this.lastY; // Retourne valeur entre -1 et 1
             return new Coordinate(x, y);
         } else {
-           return new Coordinate(0, 0);
+            return new Coordinate(0, 0);
         }
     }
 
@@ -265,11 +251,7 @@ export class LineService extends Tool {
         }
         return new Coordinate(0, 0);
     }
-
-    
-  
 }
-
 
 // import { Injectable } from '@angular/core';
 // import { Coordinate } from '../../../models/coordinate';

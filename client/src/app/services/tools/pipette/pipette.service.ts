@@ -25,6 +25,7 @@ export class PipetteService extends Tool {
         this.drawSvgInCanvas(this.state.svgState.drawSvg, event);
     }
 
+    //Create canvas from current draw width and height
     createCanvasWithSvgs(width: number, height: number): CanvasRenderingContext2D {
         let canvas = this.renderer.createElement('canvas');
         canvas.width = width;
@@ -32,6 +33,8 @@ export class PipetteService extends Tool {
         let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         return ctx;
     }
+
+    //Draw all svg in created canvas
     //Source: https://stackoverflow.com/questions/3768565/drawing-an-svg-file-on-a-html5-canvas
     drawSvgInCanvas(svg: SVGSVGElement, event: MouseEvent) {
         let img = new Image();

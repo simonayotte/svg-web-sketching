@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BrushComponent } from './brush.component';
+import { BrushTextures } from 'src/app/models/enums';
 describe('BrushComponent', () => {
     let component: BrushComponent;
     let fixture: ComponentFixture<BrushComponent>;
@@ -22,16 +23,9 @@ describe('BrushComponent', () => {
 
     it('#setTexture() should emit set #textureChange if the texture is valid ', () => {
         let spy = spyOn(component.textureChange, 'emit');
-        component.setTexture('square');
+        component.setTexture(BrushTextures.Square);
 
-        expect(spy).toHaveBeenCalledWith('square');
-    });
-
-    it('#setTexture() should not emit set #textureChange if the texture is not valid ', () => {
-        let spy = spyOn(component.textureChange, 'emit');
-        component.setTexture('invalid');
-
-        expect(spy).not.toHaveBeenCalled();
+        expect(spy).toHaveBeenCalledWith(BrushTextures.Square);
     });
 
     it('#setThickness() should emit #thicknessChange', () => {

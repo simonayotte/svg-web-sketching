@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Types } from 'src/app/models/enums';
 
 @Component({
     selector: 'app-ellipsis',
@@ -6,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
     styleUrls: ['./ellipsis.component.scss'],
 })
 export class EllipsisComponent implements OnInit {
-    @Input('type') type: string;
+    @Input('type') type: Types;
     @Input('thickness') thickness: number;
     @Output() thicknessChange = new EventEmitter();
     @Output() ellipsisTypeChange = new EventEmitter();
@@ -18,9 +19,7 @@ export class EllipsisComponent implements OnInit {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setType(value: string) {
-        if (value === 'outline' || value === 'outlineFill' || value === 'fill') {
-            this.ellipsisTypeChange.emit(value);
-        }
+    setType(value: Types) {
+        this.ellipsisTypeChange.emit(value);
     }
 }

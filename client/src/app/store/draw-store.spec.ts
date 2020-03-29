@@ -1,26 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-
 import { DrawStore } from './draw-store';
 import { DrawState } from '../state/draw-state';
 import { Color } from '../models/color';
+import { BrushTextures, Tools, SelectedColors, Types } from '../models/enums';
 
-// function isEqual(oldState: any, newState: any, changed: string[]): boolean {
-//     const newKeys = Object.keys(newState);
-//     console.log(oldState);
-//     console.log(newState);
-//     for (let key of newKeys) {
-//         if (!changed.includes(key)) {
-//             if (typeof newState[key] === 'object' && !Array.isArray(newState[key])) {
-//                 if (!isEqual(oldState[key], newState[key], changed)) {
-//                     return false;
-//                 }
-//             } else if (JSON.stringify(oldState[key]) !== JSON.stringify(newState[key])) {
-//                 return false;
-//             }
-//         }
-//     }
-//     return true;
-// }
 describe('DrawStore', () => {
     let store: DrawStore;
     let state: DrawState;
@@ -45,7 +28,6 @@ describe('DrawStore', () => {
 
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.drawSvg).toEqual(drawSvg);
-            //expect(isEqual(state, value, ['drawSvg'])).toBeTruthy();
             done();
         });
     });
@@ -54,7 +36,6 @@ describe('DrawStore', () => {
         store.setDrawWidth(700);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.width).toEqual(700);
-            //expect(isEqual(state, value, ['width'])).toBeTruthy();
             done();
         });
     });
@@ -63,7 +44,6 @@ describe('DrawStore', () => {
         store.setDrawHeight(700);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.height).toEqual(700);
-            //expect(isEqual(state, value, ['height'])).toBeTruthy();
             done();
         });
     });
@@ -73,7 +53,6 @@ describe('DrawStore', () => {
         store.pushSvg(document.createElementNS('http://www.w3.org/2000/svg', 'circle'));
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.svgs.length).toEqual(2);
-            //expect(isEqual(state, value, ['svgs'])).toBeTruthy();
             done();
         });
     });
@@ -84,7 +63,6 @@ describe('DrawStore', () => {
         store.popSvg();
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.svgs.length).toEqual(1);
-            //expect(isEqual(state, value, ['svgs'])).toBeTruthy();
             done();
         });
     });
@@ -92,18 +70,16 @@ describe('DrawStore', () => {
         store.setThickness(10);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.globalState.thickness).toEqual(10);
-            //expect(isEqual(state, value, ['thickness'])).toBeTruthy();
             done();
         });
     });
 
     it('#setTool() should only change #tool and #isPanelOpen', (done: DoneFn) => {
-        store.setTool('Pinceau');
+        store.setTool(Tools.Brush);
         store.stateObs.subscribe((value: DrawState) => {
-            expect(value.globalState.tool).toEqual('Pinceau');
+            expect(value.globalState.tool).toEqual(Tools.Brush);
             expect(value.globalState.isPanelOpen).toBeTruthy();
 
-            //expect(isEqual(state, value, ['tool', 'isPanelOpen'])).toBeTruthy();
             done();
         });
     });
@@ -112,7 +88,6 @@ describe('DrawStore', () => {
         store.toggleGrid();
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.globalState.isDisplayGrid).toBeTruthy();
-            // expect(isEqual(state, value, ['isDisplayGrid'])).toBeTruthy();
             done();
         });
     });
@@ -121,7 +96,6 @@ describe('DrawStore', () => {
         store.setGridSize(70);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.globalState.gridSize).toEqual(70);
-            //expect(isEqual(state, value, ['gridSize'])).toBeTruthy();
             done();
         });
     });
@@ -130,7 +104,6 @@ describe('DrawStore', () => {
         store.setIsKeyHandlerActive(false);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.globalState.isKeyHandlerActive).toBeFalsy();
-            //expect(isEqual(state, value, ['isKeyHandlerActive'])).toBeTruthy();
             done();
         });
     });
@@ -140,7 +113,6 @@ describe('DrawStore', () => {
         store.setFirstColor(color);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.colorState.firstColor).toEqual(color);
-            //expect(isEqual(state, value, ['firstColor'])).toBeTruthy();
             done();
         });
     });
@@ -150,7 +122,6 @@ describe('DrawStore', () => {
         store.setSecondColor(color);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.colorState.secondColor).toEqual(color);
-            //expect(isEqual(state, value, ['secondColor'])).toBeTruthy();
             done();
         });
     });
@@ -160,7 +131,6 @@ describe('DrawStore', () => {
         store.setSecondColor(color);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.colorState.secondColor).toEqual(color);
-            //expect(isEqual(state, value, ['secondColor'])).toBeTruthy();
             done();
         });
     });
@@ -170,16 +140,14 @@ describe('DrawStore', () => {
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.colorState.isSidebarColorOpen).toBeTruthy();
             expect(value.globalState.isKeyHandlerActive).toBeFalsy();
-            //expect(isEqual(state, value, ['isKeyHandlerActive', 'isSidebarColorOpen'])).toBeTruthy();
             done();
         });
     });
 
     it('#selectColor() should only change #selectedColor ', (done: DoneFn) => {
-        store.selectColor('canvas');
+        store.selectColor(SelectedColors.Canvas);
         store.stateObs.subscribe((value: DrawState) => {
-            expect(value.colorState.selectedColor).toEqual('canvas');
-            //expect(isEqual(state, value, ['selectedColor'])).toBeTruthy();
+            expect(value.colorState.selectedColor).toEqual(SelectedColors.Canvas);
             done();
         });
     });
@@ -192,7 +160,6 @@ describe('DrawStore', () => {
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.colorState.firstColor).toEqual(secondColor);
             expect(value.colorState.secondColor).toEqual(firstColor);
-            //expect(isEqual(state, value, ['firstColor', 'secondColor'])).toBeTruthy();
             done();
         });
     });
@@ -206,7 +173,51 @@ describe('DrawStore', () => {
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.colorState.lastColorsIndex).toEqual(2);
             expect(value.colorState.lastColors[1]).toEqual(color2);
-            //expect(isEqual(state, value, ['lastColors', 'lastColorsIndex'])).toBeTruthy();
+            done();
+        });
+    });
+
+    it('#setGridOpacity() should set #gridColor ', (done: DoneFn) => {
+        store.setGridOpacity(39);
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.colorState.gridColor.a).toEqual(39);
+            done();
+        });
+    });
+
+    it('#setBrushTexture() should set #brushTexture ', (done: DoneFn) => {
+        store.setBrushTexture(BrushTextures.Square);
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.brushTexture).toEqual('square');
+            done();
+        });
+    });
+
+    it('#setRectangleType() should set #rectangleType ', (done: DoneFn) => {
+        store.setRectangleType(Types.Fill);
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.rectangleType).toEqual(Types.Fill);
+            done();
+        });
+    });
+
+    it('#setPolygonType() should set #polygonType ', (done: DoneFn) => {
+        store.setPolygonType(Types.OutlineFill);
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.polygonType).toEqual(Types.OutlineFill);
+            done();
+        });
+    });
+
+    it('#setEllipsisType() should set #ellipsisType ', (done: DoneFn) => {
+        store.setEllipsisType(Types.Fill);
+
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.ellipsisType).toEqual(Types.Fill);
             done();
         });
     });
