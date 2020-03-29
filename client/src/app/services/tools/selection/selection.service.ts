@@ -110,7 +110,6 @@ export class SelectionService extends Tool {
       if ( event.button == 0 ) { // left click
           this.selectionState.isDeselecting = false;
           this.selectionState.isSelecting = true;
-          if (!this.encompassingBox) { this.createEncompassingBox(); }
        } else if (event.button == 2 && !this.selectionState.isDeselecting) { // right click
          this.selectionState.isDeselecting = true;
          this.selectionState.isSelecting = false;
@@ -118,6 +117,7 @@ export class SelectionService extends Tool {
       }
 
       this.createSelectionRectangle();
+      if (!this.encompassingBox) { this.createEncompassingBox(); }
 
       this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
       this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
@@ -126,7 +126,7 @@ export class SelectionService extends Tool {
   continue(event: MouseEvent): void {
     this.selectionState.singleSelect = false;
 
-    if (!this.selectionState.isMoving && !this.selectionState.selectionRectangle) {
+    if (!this.selectionState.isMoving && !this.selectionState.selectionRectangle && !this.selectionState.isDeselecting) {
       let targetedElement = <Element>event.target;
       if (this.shapes.includes(targetedElement) && this.selectedShapes.includes(targetedElement)) { this.selectionState.isMoving = true; }
       else if (this.shapes.includes(targetedElement) && !this.selectedShapes.includes(targetedElement)) { 
@@ -251,7 +251,7 @@ export class SelectionService extends Tool {
     this.selectedShapes = this.tempSelectedShapes.slice();
     let shapesToRemove = this.findMultipleShapes(this.shapes, this.selectionState.initialX, this.selectionState.initialY, mouseX, mouseY);
     let shapesToAdd: Element[] = [];
-    if (this.selectedShapes[0] && shapesToRemove[0]) { 
+    if (shapesToRemove[0]) { 
         for (let i = 0; i < shapesToRemove.length; i++) {
           shapeIsSelected = false;
           for (let j = 0; j < this.selectedShapes.length; j++) {
