@@ -16,6 +16,7 @@ import { LineService } from '../tools/line/line.service';
 
 import { SelectionService } from '../tools/selection/selection.service';
 import { Tools, ToolButtons } from 'src/app/models/enums';
+import { EraserService } from '../tools/eraser/eraser.service';
 
 @Injectable({
     providedIn: 'root',
@@ -38,6 +39,7 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Ellipsis, injector.get(EllipsisService));
         this.servicesMap.set(Tools.Pipette, injector.get(PipetteService));
         this.servicesMap.set(Tools.Selection, injector.get(SelectionService));
+        this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
 
         this.keyMap.set(ToolButtons.One, Tools.Rectangle);
         this.keyMap.set(ToolButtons.C, Tools.Pencil);
@@ -47,6 +49,7 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.Two, Tools.Ellipsis);
         this.keyMap.set(ToolButtons.T, Tools.Pipette);
         this.keyMap.set(ToolButtons.S, Tools.Selection);
+        this.keyMap.set(ToolButtons.E, Tools.Eraser);
     }
 
     startTool(event: MouseEvent) {

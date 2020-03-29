@@ -7,6 +7,7 @@ export enum Tools {
     Polygon = 'Polygone',
     Pipette = 'Pipette',
     Selection = 'Selection',
+    Eraser = 'Efface',
     None = 'None',
 }
 
@@ -19,6 +20,7 @@ export enum ToolButtons {
     L = 'l',
     T = 't',
     S = 's',
+    E = 'e',
 }
 export enum SelectedColors {
     First = 'First',

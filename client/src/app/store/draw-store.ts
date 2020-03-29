@@ -33,9 +33,15 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    deleteSvgs(value: SVGGraphicsElement[]) {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter(svg => !value.includes(svg)) },
+        });
+    }
+
     pushSvg(value: SVGGraphicsElement) {
         let svg = this.state.svgState.svgs.concat(value);
-        console.log(svg);
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: svg },
