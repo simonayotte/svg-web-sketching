@@ -4,7 +4,6 @@ import { EllipsisService } from './ellipsis.service';
 
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Color } from 'src/app/models/color';
 
 describe('EllipsisService', () => {
     let service: EllipsisService;
@@ -21,8 +20,6 @@ describe('EllipsisService', () => {
 
         store.stateObs.subscribe((value: DrawState) => {
             service.state = value;
-            service.state.colorState.firstColor = new Color(255, 0, 255, 255);
-            service.state.colorState.secondColor = new Color(0, 0, 255, 255);
         });
     });
 
@@ -175,39 +172,5 @@ describe('EllipsisService', () => {
         const spy = spyOn(service, 'draw');
         service.handleKeyDown('Shift');
         expect(spy).toHaveBeenCalled();
-    });
-
-    it('#setColors() should call #setAttribute 2 times if #type is valid', () => {
-        service.svg = service.renderer.createElement('ellipse', 'svg');
-        const spy = spyOn(service.renderer, 'setAttribute');
-
-        service.setColors('outline');
-
-        expect(spy).toHaveBeenCalledTimes(2);
-    });
-    it('#setColors() should call #setAttribute with fill as none and stroke as secondColor if ellipsisType is outline', () => {
-        service.svg = service.renderer.createElement('ellipse', 'svg');
-        const spy = spyOn(service.renderer, 'setAttribute');
-
-        service.setColors('outline');
-        expect(spy).toHaveBeenCalledWith(service.svg, 'fill', 'none');
-        expect(spy).toHaveBeenCalledWith(service.svg, 'stroke', '#0000ffff');
-    });
-    it('#setColors() should call #setAttribute with fill as firstColor and stroke as secondColor if ellipsisType is outlineFill', () => {
-        service.svg = service.renderer.createElement('ellipse', 'svg');
-        const spy = spyOn(service.renderer, 'setAttribute');
-
-        service.setColors('outlineFill');
-
-        expect(spy).toHaveBeenCalledWith(service.svg, 'fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith(service.svg, 'stroke', '#0000ffff');
-    });
-    it('#setColors() should call #setAttribute with fill as firstColor and stroke as none if ellipsisType is fill', () => {
-        service.svg = service.renderer.createElement('ellipse', 'svg');
-        const spy = spyOn(service.renderer, 'setAttribute');
-
-        service.setColors('fill');
-        expect(spy).toHaveBeenCalledWith(service.svg, 'fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith(service.svg, 'stroke', 'none');
     });
 });

@@ -1,0 +1,44 @@
+import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { Tool } from '../../../models/tool';
+import { DrawStore } from '../../../store/draw-store';
+import { DrawState } from '../../../state/draw-state';
+import { Types } from '../../../models/enums';
+
+@Injectable({
+    providedIn: 'root',
+})
+export class FormService extends Tool {
+    state: DrawState;
+    isDrawing = false;
+
+    renderer: Renderer2;
+    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+        super();
+        this.store.stateObs.subscribe((value: DrawState) => {
+            this.state = value;
+        });
+
+        this.mouseMoveListener = this.continue.bind(this);
+        this.mouseUpListener = this.stop.bind(this);
+        this.renderer = rendererFactory.createRenderer(null, null);
+    }
+
+    setColors(type: Types) {
+        switch (type) {
+            case Types.Outline:
+                this.renderer.setAttribute(this.svg, 'fill', 'none');
+                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
+
+                break;
+            case Types.OutlineFill:
+                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
+                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
+
+                break;
+            case Types.Fill:
+                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
+                this.renderer.setAttribute(this.svg, 'stroke', 'none');
+                break;
+        }
+    }
+}

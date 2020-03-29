@@ -5,6 +5,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { PencilService } from '../tools/pencil/pencil.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { MatDialogModule } from '@angular/material';
+import { Tools } from 'src/app/models/enums';
 
 describe('DrawHandlerService', () => {
     let service: DrawHandlerService;
@@ -28,13 +29,13 @@ describe('DrawHandlerService', () => {
         expect(service).toBeTruthy();
     });
 
-    it('#startTool() should call function #start() of Pencil service if selected tool is Crayon', () => {
-        service.state.globalState.tool = 'Crayon';
+    it('#startTool() should call function #start() of Pencil service if selected tool is Pencil', () => {
+        service.state.globalState.tool = Tools.Pencil;
         const event: MouseEvent = new MouseEvent('mousedown', {
             clientX: 300,
             clientY: 400,
         });
-        const pencilService = service.servicesMap.get('Crayon') as PencilService;
+        const pencilService = service.servicesMap.get(Tools.Pencil) as PencilService;
 
         const spy = spyOn(pencilService, 'start');
 
@@ -43,8 +44,8 @@ describe('DrawHandlerService', () => {
     });
 
     it('#stopTool() should call function #stop() of Brush service if selected tool is Brush', () => {
-        service.state.globalState.tool = 'Pinceau';
-        const brushService = service.servicesMap.get('Pinceau') as BrushService;
+        service.state.globalState.tool = Tools.Brush;
+        const brushService = service.servicesMap.get(Tools.Brush) as BrushService;
 
         const spy = spyOn(brushService, 'stop');
 
@@ -70,20 +71,20 @@ describe('DrawHandlerService', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#onKeyDown() should call function #handleKeyDown() of Pencil Service if selected tool is Crayon', () => {
-        service.state.globalState.tool = 'Crayon';
+    it('#onKeyDown() should call function #handleKeyDown() of Pencil Service if selected tool is Pencil', () => {
+        service.state.globalState.tool = Tools.Pencil;
 
         const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'any',
         });
 
-        const spy = spyOn(service.servicesMap.get('Crayon') as PencilService, 'handleKeyDown');
+        const spy = spyOn(service.servicesMap.get(Tools.Pencil) as PencilService, 'handleKeyDown');
         service.onKeyDown(event);
 
         expect(spy).toHaveBeenCalled();
     });
     it('#onKeyDown() should not call store  #setTool() if key pressed is valid and #isKeyHandlerActive is false', () => {
-        service.state.globalState.tool = 'Crayon';
+        service.state.globalState.tool = Tools.Pencil;
         service.state.globalState.isKeyHandlerActive = false;
         const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'any',
@@ -96,13 +97,13 @@ describe('DrawHandlerService', () => {
     });
 
     it('#onKeyDown() should not call function #handleKeyDown() of Pencil Service if selected tool is Crayon and #isKeyHandlerActive is false', () => {
-        service.state.globalState.tool = 'Crayon';
+        service.state.globalState.tool = Tools.Pencil;
         service.state.globalState.isKeyHandlerActive = false;
         const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: 'any',
         });
 
-        const spy = spyOn(service.servicesMap.get('Crayon') as PencilService, 'handleKeyDown');
+        const spy = spyOn(service.servicesMap.get(Tools.Pencil) as PencilService, 'handleKeyDown');
         service.onKeyDown(event);
 
         expect(spy).not.toHaveBeenCalled();

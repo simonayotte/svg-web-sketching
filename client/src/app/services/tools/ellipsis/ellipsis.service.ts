@@ -1,32 +1,19 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
-import { Tool } from 'src/app/models/tool';
-import { Types } from 'src/app/models/enums';
+import { FormService } from '../form/form.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class EllipsisService extends Tool {
-    state: DrawState;
+export class EllipsisService extends FormService {
     startX: number = 0;
     startY: number = 0;
     lastX: number = 0;
     lastY: number = 0;
     isShift = false;
-    isDrawing = false;
 
-    renderer: Renderer2;
-
-    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
-        super();
-        this.store.stateObs.subscribe((value: DrawState) => {
-            this.state = value;
-        });
-        this.mouseMoveListener = this.continue.bind(this);
-        this.mouseUpListener = this.stop.bind(this);
-
-        this.renderer = rendererFactory.createRenderer(null, null);
+    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+        super(store, rendererFactory);
     }
 
     start(event: MouseEvent) {
@@ -100,24 +87,6 @@ export class EllipsisService extends Tool {
             if (this.isDrawing) {
                 this.draw(this.startX, this.startY, this.lastX, this.lastY);
             }
-        }
-    }
-    setColors(type: Types) {
-        switch (type) {
-            case Types.Outline:
-                this.renderer.setAttribute(this.svg, 'fill', 'none');
-                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case Types.OutlineFill:
-                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-                this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case Types.Fill:
-                this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-                this.renderer.setAttribute(this.svg, 'stroke', 'none');
-                break;
         }
     }
 }
