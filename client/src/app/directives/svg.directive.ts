@@ -14,4 +14,18 @@ export class SvgDirective implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.renderer.removeChild(this.drawSvg, this.svg);
     }
+
+    onMouseOver(svg: SVGGraphicsElement) {
+        this.svgHandler.onMouseOver(svg);
+    }
+
+
+    onMouseOut(svg: SVGGraphicsElement) {
+        this.svgHandler.onMouseOut(svg);
+    }
+
+    onClick(svg: SVGGraphicsElement) {
+        this.svgHandler.onClick(svg);
+    }
+
 }

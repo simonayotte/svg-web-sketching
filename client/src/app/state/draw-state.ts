@@ -1,3 +1,4 @@
+import { UndoRedoState } from './undo-redo-state';
 import { GlobalState } from './global-state';
 import { ColorState } from './color-state';
 import { SvgState } from './svg-state';
@@ -26,9 +27,11 @@ export class DrawState {
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
+    undoRedoState: UndoRedoState;
     constructor() {
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
         this.svgState = new SvgState();
+        this.undoRedoState = new UndoRedoState();
     }
 }

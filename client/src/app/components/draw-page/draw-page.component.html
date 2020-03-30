@@ -5,6 +5,10 @@
         [isDisplayGrid]="state.globalState.isDisplayGrid"
         (toolChange)="store.setTool($event)"
         (toggleGrid)="store.toggleGrid()"
+        (undo)="store.undo()"
+        (redo)="store.redo()"
+        [canUndo]="state.undoRedoState.undoState.length != 0"
+        [canRedo]="state.undoRedoState.canRedo && state.undoRedoState.redoState.length != 0"
     ></app-sidebar>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">

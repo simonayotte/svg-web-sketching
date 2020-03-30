@@ -59,6 +59,7 @@ export class DrawHandlerService {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.start(event);
         }
+        //TODO: Call fonction pour reset undo
     }
 
     stopTool() {
@@ -113,6 +114,17 @@ export class DrawHandlerService {
                             event.preventDefault();
                             this.matDialog.open(DrawingGalleryComponent);
                             break;
+                        }
+                    case 'z':
+                        if (event.ctrlKey) {
+                            //TODO: Add logic for undo
+                            this.store.undo();
+                        }
+                        break;
+                    case 'Z':
+                        if (event.ctrlKey) {
+                            //TODO: Add logic for redo
+                            this.store.redo();
                         }
                 }
             }

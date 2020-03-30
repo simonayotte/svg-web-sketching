@@ -25,6 +25,12 @@ export class SidebarComponent implements OnInit {
     @Output() toolChange = new EventEmitter();
     @Output() toggleGrid = new EventEmitter();
 
+    //Undo-Redo
+    @Output() undo = new EventEmitter();
+    @Output() redo = new EventEmitter();
+    @Input('canUndo') canUndo: boolean;
+    @Input('canRedo') canRedo: boolean;
+
     constructor(private dialog: MatDialog) {}
 
     changeTool(tool: Tools) {
@@ -34,6 +40,15 @@ export class SidebarComponent implements OnInit {
     displayGridChange() {
         this.toggleGrid.emit();
     }
+
+    triggerUndo() {
+        this.undo.emit();
+    }
+
+    triggerRedo() {
+        this.redo.emit();
+    }
+
     ngOnInit() {}
 
     toogleDrawOptions(): void {
