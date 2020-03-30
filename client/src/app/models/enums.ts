@@ -8,6 +8,7 @@ export enum Tools {
     Pipette = 'Pipette',
     Selection = 'Selection',
     Eraser = 'Efface',
+    Aerosol = 'Aerosol',
     None = 'None',
 }
 
@@ -21,6 +22,7 @@ export enum ToolButtons {
     T = 't',
     S = 's',
     E = 'e',
+    A = 'a'
 }
 export enum SelectedColors {
     First = 'First',

@@ -14,15 +14,11 @@ import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
-<<<<<<< HEAD
 import { LineService } from '../tools/line/line.service';
-
 import { SelectionService } from '../tools/selection/selection.service';
 import { Tools, ToolButtons } from 'src/app/models/enums';
 import { EraserService } from '../tools/eraser/eraser.service';
-=======
 import { AerosolService } from './../tools/aerosol/aerosol.service';
->>>>>>> aerosol
 
 @Injectable({
     providedIn: 'root',
@@ -46,6 +42,8 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Pipette, injector.get(PipetteService));
         this.servicesMap.set(Tools.Selection, injector.get(SelectionService));
         this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
+        this.servicesMap.set(Tools.Aerosol, injector.get(AerosolService));
+
 
         this.keyMap.set(ToolButtons.One, Tools.Rectangle);
         this.keyMap.set(ToolButtons.C, Tools.Pencil);
@@ -56,6 +54,7 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.T, Tools.Pipette);
         this.keyMap.set(ToolButtons.S, Tools.Selection);
         this.keyMap.set(ToolButtons.E, Tools.Eraser);
+        this.keyMap.set(ToolButtons.A, Tools.Aerosol);
     }
 
     startTool(event: MouseEvent) {
