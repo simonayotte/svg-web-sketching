@@ -73,15 +73,16 @@ export class DrawHandlerService {
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = <ToolButtons>key;
             //handle tool selection keyboard events
-            if (this.keyMap.has(keyEnum)) {
+            if (this.keyMap.has(keyEnum) && !event.ctrlKey) {
+
                 const tool = <Tools>this.keyMap.get(keyEnum);
                 this.store.setTool(tool);
-                return;
-            }
-            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
-            //handle tool keyboard events
-            if (service) {
-                service.handleKeyDown(key);
+            
+                const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+                //handle tool keyboard events
+                if (service) {
+                    service.handleKeyDown(key);
+                }
             }
             else {
                 switch (key) {
@@ -89,7 +90,6 @@ export class DrawHandlerService {
                         if (event.ctrlKey) {
                             //mat dialog display
                             event.preventDefault();
-                            event.stopPropagation();
                             this.state.svgState.svgs.length > 0
                                 ? this.matDialog.open(DrawingStartedDialogComponent)
                                 : this.matDialog.open(CreateDrawingComponent);
@@ -105,14 +105,12 @@ export class DrawHandlerService {
                     case 'e':
                         if (event.ctrlKey){
                             event.preventDefault();
-                            event.stopPropagation();
                             this.matDialog.open(ExportDrawingComponent);
                             break;
                         }
                     case 'g':
                         if (event.ctrlKey){
                             event.preventDefault();
-                            event.stopPropagation();
                             this.matDialog.open(DrawingGalleryComponent);
                             break;
                         }

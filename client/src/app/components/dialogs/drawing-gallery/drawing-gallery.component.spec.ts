@@ -209,7 +209,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is true and svgs of svgState is not empty, #loadDrawing() should call #setDrawingToLoad() of galleryService should be called', () => {
     spyOn(galleryService,'setDrawingToLoad').and.callThrough();
     component.loadActivated = true;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -219,7 +219,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is true and svgs of svgState is not empty, #loadDrawing() should call #setDidGalleryOpen() of galleryService should be called', () => {
     spyOn(galleryService,'setDidGalleryOpen').and.callThrough();
     component.loadActivated = true;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -229,7 +229,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is true and svgs of svgState is not empty, #loadDrawing() should close the dialog', () => {
     spyOn(component.dialogRef,'close').and.callThrough();
     component.loadActivated = true;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -239,7 +239,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is true and svgs of svgState is not empty, #loadDrawing() should open the drawing started dialog', () => {
     spyOn(component.dialog,'open').and.callThrough();
     component.loadActivated = true;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -267,7 +267,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is false and svgs of svgState is not empty, #loadDrawing() should not call #setDrawingToLoad() of galleryService should not be called', () => {
     spyOn(galleryService,'setDrawingToLoad').and.callThrough();
     component.loadActivated = false;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -277,7 +277,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is false and svgs of svgState is not empty, #loadDrawing() should not call #setDidGalleryOpen() of galleryService should not be called', () => {
     spyOn(galleryService,'setDidGalleryOpen').and.callThrough();
     component.loadActivated = false;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -287,7 +287,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is false and svgs of svgState is not empty, #loadDrawing() should not close the dialog', () => {
     spyOn(component.dialogRef,'close').and.callThrough();
     component.loadActivated = false;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -297,7 +297,7 @@ describe('DrawingGalleryComponent', () => {
   it('if #loadActivated is false and svgs of svgState is not empty, #loadDrawing() should not open the drawing started dialog', () => {
     spyOn(component.dialog,'open').and.callThrough();
     component.loadActivated = false;
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);

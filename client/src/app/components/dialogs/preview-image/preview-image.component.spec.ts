@@ -51,9 +51,9 @@ describe('PreviewImageComponent', () => {
   });
 
   it('#getSvgsHTML() should set #svgsHTML to be equal an array of string equal to the outerHTML of the svgs that are drawn', () => {
-    let ellipsis:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-    let rect:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
-    let line:SVGElement = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+    let ellipsis:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
+    let line:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'line')
     store.pushSvg(ellipsis);
     store.pushSvg(rect);
     store.pushSvg(line);

@@ -44,10 +44,10 @@ export class GalleryService {
 
   convertHtmlToSvgElement(svgsHTML: Array<string>){
     for( let svgHTML of svgsHTML){
-      let svgElement: SVGElement = this.renderer2.createElement('svg','svg');
-      this.state.svgState.drawSvg.appendChild(svgElement);
-      svgElement.innerHTML = svgHTML;
-      this.store.pushSvg(svgElement);
+      let SVGGraphicsElement: SVGGraphicsElement = this.renderer2.createElement('svg','svg');
+      this.state.svgState.drawSvg.appendChild(SVGGraphicsElement);
+      SVGGraphicsElement.innerHTML = svgHTML;
+      this.store.pushSvg(SVGGraphicsElement);
     }
   }
 

@@ -41,7 +41,9 @@ export class CanvasGridDirective {
     onKeyDown(event: KeyboardEvent) {
         switch (event.key) {
             case 'g':
-                this.toggleGrid.emit();
+                if(!event.ctrlKey){
+                    this.toggleGrid.emit();
+                }
                 break;
             case '+':
                 if (this.isDisplay) {

@@ -101,7 +101,7 @@ export class DrawingHandler {
 
   clearCanvas(){
     for(let svg of this.state.svgState.svgs){
-      this.store.popShape();
+      this.store.popSvg();
       this.state.svgState.drawSvg.removeChild(svg);
     }
   }
