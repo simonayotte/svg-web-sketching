@@ -57,7 +57,6 @@ export class PipetteService extends Tool {
 
     setColor(ctx: CanvasRenderingContext2D, x: number, y: number, button: number) {
         const data: Uint8ClampedArray = ctx.getImageData(x, y, 1, 1).data;
-        console.log(data);
         if (button === 0) {
             this.store.setFirstColor(new Color(data[0], data[1], data[2], data[3]));
         } else if (button === 2) {
