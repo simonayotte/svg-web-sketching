@@ -60,7 +60,7 @@ describe('SelectionService', () => {
     });
 
   it('#determineMovingState() should set #selectionState.isMoving to true when clicking and gragging an object', () => {
-    let testElement = new Element();
+    let testElement = <Element>service.renderer.createElement('rect', 'svg');
     const mouseMove: MouseEvent = new MouseEvent('mousemove', {
         clientX: 50,
         clientY: 75,
@@ -74,7 +74,8 @@ describe('SelectionService', () => {
     });
 
   it('#determineMovingState() should select the element when clicking and dragging an non selected object', () => {
-    let testElement = new Element();
+    let testElement = <Element>service.renderer.createElement('rect', 'svg');
+    service.createEncompassingBox();
     const mouseMove: MouseEvent = new MouseEvent('mousemove', {
         clientX: 50,
         clientY: 75,
@@ -86,7 +87,8 @@ describe('SelectionService', () => {
   });
 
   it('#determineMovingState() should set #selectionState.isMoving to true when clicking and dragging in an encompassing box', () => {
-    let testElement = new Element();
+    let testElement = <Element>service.renderer.createElement('rect', 'svg');
+    service.createEncompassingBox();
     const mouseMove: MouseEvent = new MouseEvent('mousemove', {
         clientX: 50,
         clientY: 75,
@@ -143,33 +145,33 @@ describe('SelectionService', () => {
     });
 
     it('#findSingleShape() should add the shape to selectedShapes', () => {
-      let testElement = new Element();
+      let testElement = <Element>service.renderer.createElement('rect', 'svg');
+
       service.shapes = [testElement];
       service.selectionState.isSelecting = true;
       service.findSingleShape(testElement);
-      expect(service.selectedShapes).toBe([testElement]);
+      expect(service.selectedShapes).toEqual([testElement]);
     });
 
     it('#findSingleShape() should reset selectedShapes', () => {
-      let testElement = new Element();
+      let testElement = <Element>service.renderer.createElement('rect', 'svg');
       service.shapes = [];
       service.selectionState.isSelecting = true;
       service.findSingleShape(testElement);
-      expect(service.selectedShapes).toBe([]);
+      expect(service.selectedShapes).toEqual([]);
     });
 
     it('#findSingleShape() should element from remove from selectedShapes', () => {
-      let testElement = new Element();
+      let testElement = <Element>service.renderer.createElement('rect', 'svg');
       service.shapes = [testElement];
       service.selectedShapes = [testElement];
       service.selectionState.isDeselecting = true;
       service.findSingleShape(testElement);
-      expect(service.selectedShapes).toBe([]);
+      expect(service.selectedShapes).toEqual([]);
     });
 
-    // TODO
     it('#findMultipleShapes() should return the selected shapes', () => {
-      let testElement = new Element();
+      let testElement = <Element>service.renderer.createElement('rect', 'svg');
       testElement.setAttribute('stroke-width', (1).toString());
       testElement.setAttribute('x', (1).toString());
       testElement.setAttribute('y', (1).toString());
@@ -179,30 +181,28 @@ describe('SelectionService', () => {
 
       service.shapes = [testElement];
       service.selectedShapes = [];
-      expect(service.findMultipleShapes([testElement],1,1,2,2)).toBe([testElement]);
+      expect(service.findMultipleShapes([testElement],0,0,2,2)).toEqual([testElement]);
     });
 
     it('#findMultipleShapes() should return the selected shapes', () => {
-      let testElement = new Element();
+      let testElement = <Element>service.renderer.createElement('rect', 'svg');
       testElement.setAttribute('stroke-width', (1).toString());
       testElement.setAttribute('x', (1).toString());
       testElement.setAttribute('y', (1).toString());
       testElement.setAttribute('height', (1).toString());
       testElement.setAttribute('width', (1).toString());
 
-
       service.shapes = [testElement];
       service.selectedShapes = [testElement];
       service.selectionState.initialX = 1;
       service.selectionState.initialY = 1;
       service.reverseSelection(2,2);
-      expect(service.selectedShapes).toBe([]);
+      expect(service.selectedShapes).toEqual([]);
     });
 
     it('#createSelectionRectangle() should create the selection rectangle element', () => {
-      const spy = spyOn(service.svg, 'setAttribute');
       service.createSelectionRectangle();
-      expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+      expect(service.svg).toBeTruthy();
   });
 
   it('#drawSelectionRectangle() should call #setAttribute()', () => {
@@ -215,62 +215,91 @@ describe('SelectionService', () => {
     expect(spy).toHaveBeenCalledWith('y', '10');
 });
 
-// TODO
 it('#createEncompassingBox() should create the encompassingBox element', () => {
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
   service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+  expect(service.encompassingBox).toBeTruthy();
 });
 
-// TODO
-it('#drawEncompassingBox() should create the encompassingBox element', () => {
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
+it('#drawEncompassingBox() should draw the encompassingBox element', () => {
+  let testElement = [<Element>service.renderer.createElement('rect', 'svg')];
+  testElement[0].setAttribute('x', '0');
+  testElement[0].setAttribute('y', '0');
+  testElement[0].setAttribute('height', '0');
+  testElement[0].setAttribute('width', '0');
+
   service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
+  service.drawEncompassingBox(testElement);
+  expect(spy).toHaveBeenCalledWith('x', '0');
+  expect(spy).toHaveBeenCalledWith('y', '0');
+  expect(spy).toHaveBeenCalledWith('height', '0');
+  expect(spy).toHaveBeenCalledWith('width', '0');
+  expect(spy).toHaveBeenCalledWith('opacity', '0.4');
 });
 
-// TODO
 it('#drawControlpoints() should set the position of controlpoint elements', () => {
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
   service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+
+  const spy = spyOn(service, 'setPosition');
+  service.drawControlPoints(service.encompassingBox);
+  expect(spy).toHaveBeenCalledTimes(4);
+});
+
+it('#setPosition() should set the attribute of given element', () => {
+  let testElement = service.renderer.createElement('rect', 'svg');
+
+  const spy = spyOn(testElement, 'setAttribute');
+  service.setPosition(testElement, 1,2,3,4);
+  expect(spy).toHaveBeenCalledWith('x', '1');
+  expect(spy).toHaveBeenCalledWith('y', '2');
+  expect(spy).toHaveBeenCalledWith('height', '3');
+  expect(spy).toHaveBeenCalledWith('width', '4');
 });
 
 // TODO
-it('#setPosition()t', () => {
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
+it('#hideEncompassingBox() should set the opacity of encompassing box to 0', () => {
   service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
-});
 
-// TODO
-it('#hideEncompassingBox()', () => {
   const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
-  service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+  const spy1 = spyOn(service.encompassingBox.controlPoint1, 'setAttribute');
+  const spy2 = spyOn(service.encompassingBox.controlPoint2, 'setAttribute');
+  const spy3 = spyOn(service.encompassingBox.controlPoint3, 'setAttribute');
+  const spy4 = spyOn(service.encompassingBox.controlPoint4, 'setAttribute');
+
+  service.hideEncompassingBox();
+  expect(spy).toHaveBeenCalledWith('opacity', '0');
+  expect(spy1).toHaveBeenCalledWith('opacity', '0');
+  expect(spy2).toHaveBeenCalledWith('opacity', '0');
+  expect(spy3).toHaveBeenCalledWith('opacity', '0');
+  expect(spy4).toHaveBeenCalledWith('opacity', '0');
+
 });
 
 // TODO
 it('#moveShapes()', () => {
+  service.createEncompassingBox();
+
   const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
   service.createEncompassingBox();
   expect(spy).toHaveBeenCalledWith('stroke-width', '1');
 });
 
   it('#handleKeyDown() should call checkKeyTimePressed()', () => {
+    const spy = spyOn(service, 'checkKeyTimePressed');
       service.handleKeyDown('');
-      const spy = spyOn(service, 'checkKeyTimePressed');
       expect(spy).toHaveBeenCalled();
   });
 
   it('#handleKeyUp() should call checkKeyTimePressed()', () => {
+    const spy = spyOn(service, 'checkKeyTimePressed');
       service.handleKeyUp('');
-      const spy = spyOn(service, 'checkKeyTimePressed');
       expect(spy).toHaveBeenCalled();;
   });
 
 // TODO
 it('#checkKeyTimePressed()', () => {
+  service.createEncompassingBox();
+
   const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
   service.createEncompassingBox();
   expect(spy).toHaveBeenCalledWith('stroke-width', '1');
@@ -278,6 +307,8 @@ it('#checkKeyTimePressed()', () => {
 
 // TODO
 it('#repeatKeyMovement()', () => {
+  service.createEncompassingBox();
+
   const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
   service.createEncompassingBox();
   expect(spy).toHaveBeenCalledWith('stroke-width', '1');
