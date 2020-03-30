@@ -24,6 +24,9 @@ export class DrawState {
     //eraser
     eraserThickness = THICKNESS_DEFAULT;
 
+    //aerosol
+    emissionRate = 30;
+
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
@@ -35,3 +38,4 @@ export class DrawState {
         this.undoRedoState = new UndoRedoState();
     }
 }
+

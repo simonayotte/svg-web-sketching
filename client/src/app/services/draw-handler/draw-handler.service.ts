@@ -14,11 +14,15 @@ import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
+<<<<<<< HEAD
 import { LineService } from '../tools/line/line.service';
 
 import { SelectionService } from '../tools/selection/selection.service';
 import { Tools, ToolButtons } from 'src/app/models/enums';
 import { EraserService } from '../tools/eraser/eraser.service';
+=======
+import { AerosolService } from './../tools/aerosol/aerosol.service';
+>>>>>>> aerosol
 
 @Injectable({
     providedIn: 'root',

@@ -1,3 +1,4 @@
+import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -40,6 +41,7 @@ import { EraserComponent } from '../components/tools/eraser/eraser.component';
         EraserComponent,
         DrawDirective,
         SvgDirective,
+        AerosolComponent
     ],
     imports: [CommonModule, FormsModule],
     exports: [
@@ -61,6 +63,7 @@ import { EraserComponent } from '../components/tools/eraser/eraser.component';
         EraserComponent,
         DrawDirective,
         SvgDirective,
+        AerosolComponent
     ],
 })
 export class DrawModule {}
