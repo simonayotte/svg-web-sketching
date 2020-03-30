@@ -1,3 +1,4 @@
+/*
 import { TestBed } from '@angular/core/testing';
 import { DrawingHandler } from './drawing-handler.service';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -161,3 +162,4 @@ describe('DrawingHandler', () => {
 
   
 });
+*/
