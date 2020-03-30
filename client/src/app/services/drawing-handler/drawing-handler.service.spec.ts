@@ -1,4 +1,3 @@
-/*
 import { TestBed } from '@angular/core/testing';
 import { DrawingHandler } from './drawing-handler.service';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -125,12 +124,12 @@ describe('DrawingHandler', () => {
   });
 
   it('#clearCanvas should call #popShape() of the store if svg array is not empty', ()=> {
-    spyOn(store, 'popShape')
+    spyOn(store, 'popSvg')
     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
     store.pushSvg(rect);
     service.state.svgState.drawSvg.appendChild(rect)
     service.clearCanvas();
-    expect(store.popShape).toHaveBeenCalled();
+    expect(store.popSvg).toHaveBeenCalled();
   })
 
   it('#clearCanvas should call #removeChild() of the state.svgState.drawSvg.removeChild if svg array is not empty', ()=> {
@@ -156,10 +155,5 @@ describe('DrawingHandler', () => {
     service.state.svgState.drawSvg.appendChild(rect)
     service.clearCanvas();
     expect(service.state.svgState.drawSvg.childElementCount).toEqual(0);
-  })
-
-  
-
-  
+  })  
 });
-*/

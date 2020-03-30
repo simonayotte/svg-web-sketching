@@ -60,7 +60,7 @@ describe('DrawStore', () => {
     it('#popSvg() should remove last element from #svgs', (done: DoneFn) => {
         store.pushSvg(document.createElementNS('http://www.w3.org/2000/svg', 'rect'));
         store.pushSvg(document.createElementNS('http://www.w3.org/2000/svg', 'circle'));
-        store.popShape();
+        store.popSvg();
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.svgs.length).toEqual(1);
             done();

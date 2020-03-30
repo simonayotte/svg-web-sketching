@@ -89,6 +89,14 @@ describe('GalleryService', () => {
     expect(service.convertHtmlToSvgElement).toHaveBeenCalledWith(drawing.svgsHTML);
   });
 
+  it('#loadDrawing() should call #resetUndoRedo() of store', ()=> {
+    spyOn(store, 'resetUndoRedo');
+    let drawing:SavedDrawing = new SavedDrawing('testdrawing',[],'url',[],1,1,[0,0,0,0])
+    service.loadDrawing(drawing);
+    expect(store.resetUndoRedo).toHaveBeenCalled();
+  })
+
+
   it('#filterDrawings(tags, drawings) should return all the drawings that contains at least one of the tags passed as a parameter', () => {
     let drawing1:SavedDrawing = new SavedDrawing('testdrawing',['blue','sea','beach'],'url',[],1,1,[0,0,0,0]);
     let drawing2:SavedDrawing = new SavedDrawing('testdrawing',['green','forest'],'url',[],1,1,[0,0,0,0]);

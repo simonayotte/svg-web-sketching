@@ -58,6 +58,7 @@ export class GalleryService {
     this.store.setCanvasColor(canvasColor);
     this.drawingHandler.clearCanvas();
     this.convertHtmlToSvgElement(drawing.svgsHTML);
+    this.store.resetUndoRedo(this.state.svgState.svgs);
   }
 
   filterDrawings(tagStringArray: Array<string>, allDrawingsInDb: Array<SavedDrawing>): Array<SavedDrawing>{

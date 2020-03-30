@@ -19,7 +19,8 @@ export class DrawStore extends Store<DrawState> {
             let undo = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
             this.state.undoRedoState.undoState.pop();
             let svgs = this.state.svgState.svgs;
-
+            console.log('undo'+undo);
+            console.log('svgs'+svgs)
             //Add present state to redoState
             this.state.undoRedoState.redoState.push(svgs);
 
@@ -52,6 +53,14 @@ export class DrawStore extends Store<DrawState> {
     clearRedo() {
         this.state.undoRedoState.redoState = [];
     }
+
+    resetUndoRedo(svgs: Array<SVGGraphicsElement>){
+        this.state.undoRedoState.canRedo = false;
+        this.state.undoRedoState.nextUndoState = svgs;
+        this.state.undoRedoState.redoState = [];
+        this.state.undoRedoState.undoState = [];
+    }
+
 
     //Svg
     setDrawSvg(value: SVGSVGElement) {

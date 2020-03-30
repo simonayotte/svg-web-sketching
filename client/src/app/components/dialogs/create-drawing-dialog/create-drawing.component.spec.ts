@@ -41,9 +41,9 @@ describe('CreateDrawingComponent', () => {
     });
 
     it('#onResize() should be called whent theres a resize event', () => {
-        const spyOnResize = spyOn(component, 'onResize');
+        spyOn(component, 'onResize');
         window.dispatchEvent(new Event('resize'));
-        expect(spyOnResize).toHaveBeenCalled();
+        expect(component.onResize).toHaveBeenCalled();
     });
 
     it('#onResize() should modify the width value of the FormGroup', () => {
