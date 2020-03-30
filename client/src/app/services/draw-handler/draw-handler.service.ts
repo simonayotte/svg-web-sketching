@@ -112,4 +112,12 @@ export class DrawHandlerService {
             service.handleKeyUp(key);
         }
     }
+
+    onMouseMove(event: MouseEvent) {
+        this.store.setMousePosition(event.offsetX - this.state.eraserThickness / 2, event.offsetY - this.state.eraserThickness / 2);
+        if (this.state.globalState.tool === Tools.Eraser) {
+            const service = this.servicesMap.get(this.state.globalState.tool) as EraserService;
+            service.move(event.offsetX, event.offsetY);
+        }
+    }
 }

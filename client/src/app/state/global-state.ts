@@ -10,5 +10,8 @@ export class GlobalState {
     tool = Tools.None;
     isDisplayGrid = false;
     gridSize = GRID_SIZE_DEFAULT;
+
+    cursorX = 0;
+    cursorY = 0;
     constructor() {}
 }

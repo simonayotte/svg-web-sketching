@@ -7,5 +7,6 @@ export class SvgState {
 
     drawSvg: SVGSVGElement;
     svgs: SVGGraphicsElement[] = [];
+
     constructor() {}
 }

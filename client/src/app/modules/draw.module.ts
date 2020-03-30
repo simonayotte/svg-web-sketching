@@ -16,6 +16,8 @@ import { CanvasGridDirective } from '../directives/canvas-grid.directive';
 import { GridPanelComponent } from '../components/draw-page/grid-panel/grid-panel.component';
 import { SvgDirective } from '../directives/svg.directive';
 import { DrawDirective } from '../directives/draw.directive';
+import { SelectionComponent } from '../components/tools/selection/selection.component';
+import { EraserComponent } from '../components/tools/eraser/eraser.component';
 
 @NgModule({
     declarations: [
@@ -33,6 +35,9 @@ import { DrawDirective } from '../directives/draw.directive';
         CanvasGridDirective,
         PolygonComponent,
         EllipsisComponent,
+        SelectionComponent,
+
+        EraserComponent,
         DrawDirective,
         SvgDirective,
     ],
@@ -52,6 +57,8 @@ import { DrawDirective } from '../directives/draw.directive';
         CanvasGridDirective,
         PolygonComponent,
         EllipsisComponent,
+        SelectionComponent,
+        EraserComponent,
         DrawDirective,
         SvgDirective,
     ],
