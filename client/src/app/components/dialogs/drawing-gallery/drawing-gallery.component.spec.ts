@@ -108,13 +108,13 @@ describe('DrawingGalleryComponent', () => {
   });
 
   it('#updateGallery() should call #getAllDrawings() of httpService', () => {
-    spyOn(httpService, 'getAllDrawings').and.callThrough();
+    spyOn(httpService, 'getAllDrawings');
     component.updateGallery();
     expect(httpService.getAllDrawings).toHaveBeenCalled();
   });
 
   it('#updateGallery() should call #setDrawings() of galleryService', () => {
-    spyOn(galleryService, 'setDrawings').and.callThrough();
+    spyOn(galleryService, 'setDrawings');
     component.updateGallery().then(()=>{
       expect(galleryService.setDrawings).toHaveBeenCalled();
     });
@@ -317,12 +317,12 @@ describe('DrawingGalleryComponent', () => {
     component.deleteActivated = true;
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.deleteDrawing(drawing).then(()=>{
-      expect(component.updateGallery).toHaveBeenCalled();
+    expect(component.updateGallery).toHaveBeenCalled();
     })
   })
 
   it('if #deletedActivated is false, #deleteDrawing should not call #deleteDrawing() of httpService', ()=>{
-    spyOn(httpService,'deleteDrawing').and.callThrough();
+    spyOn(httpService,'deleteDrawing');
     component.deleteActivated = false;
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.deleteDrawing(drawing);
@@ -330,11 +330,11 @@ describe('DrawingGalleryComponent', () => {
   })
 
   it('if #deletedActivated is false, #deleteDrawing should mot call #updateGallery', ()=>{
-    spyOn(component,'updateGallery').and.callThrough();
+    spyOn(component,'updateGallery')
     component.deleteActivated = false;
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.deleteDrawing(drawing).then(()=>{
-      expect(component.updateGallery).not.toHaveBeenCalled();
+    expect(component.updateGallery).not.toHaveBeenCalled();
     })
   })
 

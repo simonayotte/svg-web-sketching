@@ -70,8 +70,8 @@ export class DrawingGalleryComponent implements OnInit {
       this.galleryService.setDrawings(data);
       this.allDrawingsInDb = data;
       this.loading=false;
-    },
-    err => {
+    })
+    .catch(err => {
     alert(err.message),
     this.loading=false;
     });
@@ -112,8 +112,8 @@ export class DrawingGalleryComponent implements OnInit {
       this.httpService.deleteDrawing(drawing._id).toPromise().then(data => {
         this.updateGallery();
         alert(data.message);
-      },
-      err => {
+      })
+      .catch(err => {
       this.updateGallery();
       alert(err.message)
       });

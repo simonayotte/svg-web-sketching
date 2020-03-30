@@ -8,6 +8,7 @@ import { MatDialogTitle, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material
 import { DrawStore } from 'src/app/store/draw-store';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
+import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
 
 describe('PreviewExportComponent', () => {
   let component: PreviewExportComponent;
@@ -23,7 +24,7 @@ describe('PreviewExportComponent', () => {
  
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        declarations: [PreviewExportComponent],
+        declarations: [PreviewExportComponent, SafeUrlPipe],
         imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule, BrowserAnimationsModule],
         providers: [
               {provide: MatDialogTitle, useValue: {}},

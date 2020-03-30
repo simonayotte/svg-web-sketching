@@ -9,6 +9,8 @@ import { GalleryService } from 'src/app/services/gallery-service/gallery.service
 import { CreateDrawingComponent } from '../create-drawing-dialog/create-drawing.component';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
+import { ColorComponent } from '../../tools/color/color.component';
+import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 describe('DrawingStartedDialogComponent', () => {
   let component: DrawingStartedDialogComponent;
@@ -24,7 +26,7 @@ describe('DrawingStartedDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-        declarations: [DrawingStartedDialogComponent],
+        declarations: [DrawingStartedDialogComponent, CreateDrawingComponent, ColorComponent],
         imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule,OverlayModule, MatDialogModule,BrowserModule,BrowserAnimationsModule],
         providers: [
               {provide: MatDialogTitle, useValue: {}},
@@ -33,7 +35,11 @@ describe('DrawingStartedDialogComponent', () => {
             DrawStore,
             GalleryService,
         ],
-    }).compileComponents();
+    }).overrideModule(BrowserDynamicTestingModule, {
+      set: {
+      entryComponents: [CreateDrawingComponent],
+      },
+      }).compileComponents();
     store = TestBed.get(DrawStore);
     store.setDrawSvg(document.createElementNS("http://www.w3.org/2000/svg", "svg"));
   }));
@@ -56,13 +62,6 @@ describe('DrawingStartedDialogComponent', () => {
     expect(component.dialog.open).toHaveBeenCalledWith(CreateDrawingComponent);
   })
 
-  it('#continue should call #loadDrawing of galleryService if didGalleryOpen is true', ()=> {
-    spyOn(galleryService, 'loadDrawing').and.callThrough();
-    galleryService.setDidGalleryOpen(true);
-    component.continue();
-    expect(galleryService.loadDrawing).toHaveBeenCalledWith(component.drawingToLoad);
-  });
-
   it('continue should close the dialog', ()=> {
     spyOn(component.dialogRef, 'close').and.callThrough();
     component.continue();
@@ -73,5 +72,12 @@ describe('DrawingStartedDialogComponent', () => {
     spyOn(galleryService, 'setDidGalleryOpen').and.callThrough();
     component.continue();
     expect(galleryService.setDidGalleryOpen).toHaveBeenCalledWith(false);
+  });
+
+  it('#continue should call #loadDrawing of galleryService if didGalleryOpen is true', ()=> {
+    spyOn(galleryService, 'loadDrawing').and.callThrough();
+    galleryService.setDidGalleryOpen(true);
+    component.continue();
+    expect(galleryService.loadDrawing).toHaveBeenCalledWith(component.drawingToLoad);
   });
 });

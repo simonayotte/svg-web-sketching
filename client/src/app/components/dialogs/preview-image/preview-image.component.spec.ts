@@ -87,7 +87,7 @@ describe('PreviewImageComponent', () => {
   });
 
   it('#saveDrawing() should close the dialog in the promise', () => {
-    spyOn(component.dialogRef, 'close').and.callThrough();
+    spyOn(component.dialogRef, 'close');
     component.saveDrawing().then(()=>{
       expect(component.dialogRef.close).toHaveBeenCalled();
     })

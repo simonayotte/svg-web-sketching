@@ -35,11 +35,11 @@ export class DatabaseService {
         if(!this.validateName(drawing.name)){
             throw new Error('Erreur:Le nom est requis. Image non sauvegardée')
           }
-          if(!this.validateTags(drawing.tags)){
+        if(!this.validateTags(drawing.tags)){
             throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
           }
-            this.collection.insertOne(drawing).catch((error:Error)=>{
-                throw error;
+        this.collection.insertOne(drawing).catch((error:Error)=>{
+            throw error;
             });
     }
     async deleteDrawingDb(id:string){

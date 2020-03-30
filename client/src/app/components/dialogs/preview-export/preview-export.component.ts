@@ -44,8 +44,8 @@ export class PreviewExportComponent implements OnInit {
   exportDrawing() {
     this.buttonDisabled = true;
     let drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL)
-    this.httpService.exportDrawing(drawing).subscribe(data => alert(data.message),
-    err => alert(err.message));
+    this.httpService.exportDrawing(drawing).toPromise().then(data => alert(data.message))
+    .catch(err => alert(err.message));
     this.buttonDisabled = false;
     this.dialogRef.close();
   }

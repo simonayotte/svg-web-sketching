@@ -11,7 +11,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class GalleryService {
 
-  private state:DrawState;
+  public state:DrawState;
   private renderer2:Renderer2;
 
   constructor(private store:DrawStore, private drawingHandler: DrawingHandler, public rendererFactory :RendererFactory2) {

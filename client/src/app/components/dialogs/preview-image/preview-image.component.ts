@@ -63,7 +63,7 @@ export class PreviewImageComponent implements OnInit {
       alert(data.message)
       this.buttonDisabled = false;
 
-    },
+    }).catch(
     err => {
       this.dialogRef.close();
       alert(err.message)

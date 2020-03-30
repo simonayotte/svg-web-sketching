@@ -12,7 +12,7 @@ const wait = (ms:number) => new Promise(res => setTimeout(res, ms));
 })
 
 export class DrawingHandler {
-  private state:DrawState
+  public state:DrawState
   private renderer2:Renderer2
   private previewWidth: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   previewWidthObs: Observable<number> = this.previewWidth.asObservable();
@@ -73,7 +73,7 @@ export class DrawingHandler {
     if(filter){
       this.store.setSVGFilter(filter);
       //wait for filter to be applied before saving the drawing
-      await wait(10);
+      await wait(1);
     }
     let xml:string = new XMLSerializer().serializeToString(this.state.svgState.drawSvg)
     let svg64:string = btoa(xml);
@@ -94,6 +94,8 @@ export class DrawingHandler {
         this.setDataURL(canvas.toDataURL(`image/${format}`,1.0));
       };
     }
+    //wait for dataURL to be set
+    await wait(1);
     this.store.setSVGFilter('');
   }
 

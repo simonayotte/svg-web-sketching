@@ -3,10 +3,23 @@ import { ExportDrawingService } from './export-drawing.service';
 
 
 describe('ExportDrawingServiceService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let service:ExportDrawingService;
+  beforeEach(() => {
+      TestBed.configureTestingModule({})
+      service = TestBed.get(ExportDrawingService);
+    });
 
   it('should be created', () => {
-    const service: ExportDrawingService = TestBed.get(ExportDrawingService);
     expect(service).toBeTruthy();
+  });
+
+  it('#setExportName(name) should set the #imgName to the given name', () => {
+    service.setExportName('Image');
+    expect(service.getExportName()).toBe('Image');
+  });
+
+  it('#setType(tags) should set the #tags to the given name', () => {
+    service.setType('png');
+    expect(service.getType()).toEqual('png');
   });
 });
