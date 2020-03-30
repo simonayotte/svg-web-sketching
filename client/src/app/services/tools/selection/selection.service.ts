@@ -38,68 +38,6 @@ export class SelectionService extends Tool {
     this.renderer = rendererFactory.createRenderer(null, null);
 }
 
-  handleKeyDown(key: string): void {
-    if (key === 'Control') {
-      this.keys.controlKey = true;
-    }
-    if (key === 'a') {
-      this.keys.aKey = true;
-    }
-    if (this.keys.controlKey && this.keys.aKey) {
-      this.selectedShapes = this.shapes.slice();
-      if (this.selectedShapes[0]) { 
-        this.drawEncompassingBox(this.selectedShapes);
-      }
-    }
-    if (key === 'ArrowRight') {
-      this.keys.arrowRightKey = true;
-    }
-    if (this.keys.arrowRightKey) {
-      this.moveShapes(this.selectedShapes, 3, 0);
-    }
-    if (key === 'ArrowLeft') {
-      this.keys.arrowLeftKey = true;
-    }
-    if (this.keys.arrowLeftKey) {
-      this.moveShapes(this.selectedShapes, -3, 0);
-    }
-    if (key === 'ArrowUp') {
-      this.keys.arrowUpKey = true;
-    }
-    if (this.keys.arrowUpKey) {
-      this.moveShapes(this.selectedShapes, 0, -3);
-    }
-    if (key === 'ArrowDown') {
-      this.keys.arrowDownKey = true;
-    }
-    if (this.keys.arrowDownKey) {
-      this.moveShapes(this.selectedShapes, 0, 3);
-    }
-    this.checkKeyTimePressed();
-  }
-
-  handleKeyUp(key: string): void {
-    if (key === 'Control') {
-      this.keys.controlKey = false;
-    }
-    if (key === 'a') {
-      this.keys.aKey = false;
-    }
-    if (key === 'ArrowRight') {
-      this.keys.arrowRightKey = false;
-    }
-    if (key === 'ArrowLeft') {
-      this.keys.arrowLeftKey = false;
-    }
-    if (key === 'ArrowUp') {
-      this.keys.arrowUpKey = false;
-    }
-    if (key === 'ArrowDown') {
-      this.keys.arrowDownKey = false;
-    }
-    this.checkKeyTimePressed();
-  }
-
   start(event: MouseEvent) {
       this.selectionState.singleSelect = true;
       this.selectionState.initialX = event.offsetX;
@@ -128,12 +66,26 @@ export class SelectionService extends Tool {
 
     if (!this.selectionState.isMoving && !this.selectionState.selectionRectangle && !this.selectionState.isDeselecting) {
       let targetedElement = <Element>event.target;
-      if (this.shapes.includes(targetedElement) && this.selectedShapes.includes(targetedElement)) { this.selectionState.isMoving = true; }
-      else if (this.shapes.includes(targetedElement) && !this.selectedShapes.includes(targetedElement)) { 
+      this.determineMovingState(event, targetedElement);
+    }
+
+    if (this.selectionState.isMoving) {
+      this.applyTranslation(event.offsetX, event.offsetY);
+    } else {
+      this.applySelection(event.offsetX, event.offsetY);
+    }
+  }
+
+  determineMovingState(event: MouseEvent, target: Element): void {
+      if (this.shapes.includes(target) && this.selectedShapes.includes(target)) { this.selectionState.isMoving = true; }
+      else if (this.shapes.includes(target) && !this.selectedShapes.includes(target)) { 
         this.selectionState.isMoving = true;
-        this.selectedShapes = [targetedElement];
+        this.selectedShapes = [target];
         this.drawEncompassingBox(this.selectedShapes);
-      } else if (event.offsetX > this.encompassingBox.startX && event.offsetX < this.encompassingBox.endX && event.offsetY > this.encompassingBox.startY && event.offsetY < this.encompassingBox.endY ) {
+      } else if (event.offsetX > this.encompassingBox.startX &&
+                 event.offsetX < this.encompassingBox.endX &&
+                 event.offsetY > this.encompassingBox.startY &&
+                 event.offsetY < this.encompassingBox.endY ) {
         this.selectionState.isMoving = true;
       }
       if (this.selectionState.isMoving) {
@@ -142,13 +94,6 @@ export class SelectionService extends Tool {
         this.movementState.lastPosX = event.offsetX;
         this.movementState.lastPosY = event.offsetY;
       }
-    }
-
-    if (this.selectionState.isMoving) {
-      this.applyTranslation(event.offsetX, event.offsetY);
-    } else {
-      this.applySelection(event.offsetX, event.offsetY);
-    }
   }
 
   applyTranslation(mouseX: number, mouseY: number): void {
@@ -196,7 +141,7 @@ export class SelectionService extends Tool {
     this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
   }
 
-  // Check which shape is under the mouse cursor
+  // Add or remove the targetedElement depending on the type of selection/deselection
   findSingleShape(targetedElement: Element): void {
     if ( this.selectionState.isSelecting ) {
       if ( this.shapes.includes(targetedElement) ) {
@@ -396,6 +341,68 @@ export class SelectionService extends Tool {
     this.drawEncompassingBox(this.selectedShapes);
   }
 
+  handleKeyDown(key: string): void {
+    if (key === 'Control') {
+      this.keys.controlKey = true;
+    }
+    if (key === 'a') {
+      this.keys.aKey = true;
+    }
+    if (this.keys.controlKey && this.keys.aKey) {
+      this.selectedShapes = this.shapes.slice();
+      if (this.selectedShapes[0]) { 
+        this.drawEncompassingBox(this.selectedShapes);
+      }
+    }
+    if (key === 'ArrowRight') {
+      this.keys.arrowRightKey = true;
+    }
+    if (this.keys.arrowRightKey) {
+      this.moveShapes(this.selectedShapes, 3, 0);
+    }
+    if (key === 'ArrowLeft') {
+      this.keys.arrowLeftKey = true;
+    }
+    if (this.keys.arrowLeftKey) {
+      this.moveShapes(this.selectedShapes, -3, 0);
+    }
+    if (key === 'ArrowUp') {
+      this.keys.arrowUpKey = true;
+    }
+    if (this.keys.arrowUpKey) {
+      this.moveShapes(this.selectedShapes, 0, -3);
+    }
+    if (key === 'ArrowDown') {
+      this.keys.arrowDownKey = true;
+    }
+    if (this.keys.arrowDownKey) {
+      this.moveShapes(this.selectedShapes, 0, 3);
+    }
+    this.checkKeyTimePressed();
+  }
+
+  handleKeyUp(key: string): void {
+    if (key === 'Control') {
+      this.keys.controlKey = false;
+    }
+    if (key === 'a') {
+      this.keys.aKey = false;
+    }
+    if (key === 'ArrowRight') {
+      this.keys.arrowRightKey = false;
+    }
+    if (key === 'ArrowLeft') {
+      this.keys.arrowLeftKey = false;
+    }
+    if (key === 'ArrowUp') {
+      this.keys.arrowUpKey = false;
+    }
+    if (key === 'ArrowDown') {
+      this.keys.arrowDownKey = false;
+    }
+    this.checkKeyTimePressed();
+  }
+
   checkKeyTimePressed() {
     if ((this.keys.arrowDownKey || this.keys.arrowLeftKey || this.keys.arrowRightKey || this.keys.arrowUpKey) && !this.keys.keepLooping) {
         this.keys.keepLooping = true;
@@ -425,4 +432,5 @@ export class SelectionService extends Tool {
       }
     }
   }
+
 }
