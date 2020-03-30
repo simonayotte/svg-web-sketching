@@ -1,37 +1,26 @@
-import { Injectable } from '@angular/core';
-import { Tool } from 'src/app/models/tool';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { Coordinate } from 'src/app/models/coordinate';
+import { FormService } from '../form/form.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class PolygonService extends Tool {
-    state: DrawState;
-    centerX: number;
-    centerY: number;
-    isDrawing = false;
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
+export class PolygonService extends FormService {
+    centerX: number = 0;
+    centerY: number = 0;
 
-    constructor(private store: DrawStore) {
-        super();
-        this.store.stateObs.subscribe((value: DrawState) => {
-            this.state = value;
-        });
-        this.mouseMoveListener = this.continue.bind(this);
-        this.mouseUpListener = this.stop.bind(this);
+    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+        super(store, rendererFactory);
     }
 
     start(event: MouseEvent) {
-
         this.centerX = event.offsetX;
         this.centerY = event.offsetY;
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
-        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+        this.svg = this.renderer.createElement('polygon', 'svg');
+        this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
         this.setColors(this.state.polygonType);
-        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
         this.isDrawing = true;
@@ -44,19 +33,19 @@ export class PolygonService extends Tool {
 
     draw(centerX: number, centerY: number, sides: number, size: number) {
         let points: Coordinate[] = [];
-
+        //Divide 360 deg by n sides and get points with angle and polygon size
         for (let i: number = 0; i < sides; i++) {
             let angle = ((360 / sides) * (i + 1) + 90) * (Math.PI / 180);
             let pointX = centerX + size * Math.cos(angle);
             let pointY = centerY - size * Math.sin(angle);
             points.push(new Coordinate(pointX, pointY));
         }
-        this.svg.setAttribute('points', this.pointsToString(points));
+        this.renderer.setAttribute(this.svg, 'points', this.pointsToString(points));
     }
     stop() {
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
-            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
             this.isDrawing = false;
@@ -73,24 +62,5 @@ export class PolygonService extends Tool {
             }
         }
         return result;
-    }
-
-    setColors(type: string) {
-        switch (type) {
-            case 'outline':
-                this.svg.setAttribute('fill', 'transparent');
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case 'outlineFill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case 'fill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', 'transparent');
-                break;
-        }
     }
 }

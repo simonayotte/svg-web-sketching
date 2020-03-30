@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
@@ -10,11 +10,14 @@ import { Color } from 'src/app/models/color';
 export class PipetteService extends Tool {
     state: DrawState;
     ctx: CanvasRenderingContext2D;
-    constructor(private store: DrawStore) {
+
+    renderer: Renderer2;
+    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     start(event: MouseEvent) {
@@ -22,13 +25,16 @@ export class PipetteService extends Tool {
         this.drawSvgInCanvas(this.state.svgState.drawSvg, event);
     }
 
+    //Create canvas from current draw width and height
     createCanvasWithSvgs(width: number, height: number): CanvasRenderingContext2D {
-        let canvas = document.createElement('canvas');
+        let canvas = this.renderer.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
         let ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
         return ctx;
     }
+
+    //Draw all svg in created canvas
     //Source: https://stackoverflow.com/questions/3768565/drawing-an-svg-file-on-a-html5-canvas
     drawSvgInCanvas(svg: SVGSVGElement, event: MouseEvent) {
         let img = new Image();

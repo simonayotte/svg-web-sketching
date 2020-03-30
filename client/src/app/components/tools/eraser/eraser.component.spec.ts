@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SvgComponent } from './svg.component';
+import { EraserComponent } from './eraser.component';
 
-describe('SvgComponent', () => {
-  let component: SvgComponent;
-  let fixture: ComponentFixture<SvgComponent>;
+describe('EraserComponent', () => {
+  let component: EraserComponent;
+  let fixture: ComponentFixture<EraserComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SvgComponent ]
+      declarations: [ EraserComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SvgComponent);
+    fixture = TestBed.createComponent(EraserComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

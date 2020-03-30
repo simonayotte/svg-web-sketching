@@ -4,13 +4,21 @@
     <button mat-raised-button (click)="openGalleryDialog()">Ouvrir la galerie</button><br>
     <button type="button" data-toggle="modal" data-target="#userGuide">Afficher le guide d'utilisation</button><br>
     <button type="button" disabled>Continuer dessin</button><br>
+<div class="page">
+    <div class="title">Bienvenue à Poly Dessin</div>
+    <div class="actions">
+        <div class="action shadow" (click)="openDialog()">Créer Dessin</div>
+        <div class="action shadow">Ouvrir Galerie</div>
+        <div class="action shadow" data-toggle="modal" data-target="#userGuide">Afficher Guide</div>
+        <div class="action shadow">Continuer Dessin</div>
+    </div>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">
-    <div class="modal-dialog modal-xl">
-      <!-- Modal content-->
-      <div class="modal-content">
-        <app-guide></app-guide>
-      </div>
-    </div>
+        <div class="modal-dialog modal-xl">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <app-guide></app-guide>
+            </div>
+        </div>
     </div>
 </div>

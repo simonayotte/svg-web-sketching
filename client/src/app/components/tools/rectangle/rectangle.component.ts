@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Types } from 'src/app/models/enums';
 
 @Component({
     selector: 'app-rectangle',
@@ -6,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
     styleUrls: ['./rectangle.component.scss'],
 })
 export class RectangleComponent implements OnInit {
-    @Input('rectangleType') rectangleType: string;
+    @Input('rectangleType') rectangleType: Types;
     @Input('thickness') thickness: number;
     @Output() thicknessChange = new EventEmitter();
     @Output() rectangleTypeChange = new EventEmitter();
@@ -19,7 +20,7 @@ export class RectangleComponent implements OnInit {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setRectangleType(value: string) {
+    setRectangleType(value: Types) {
         this.rectangleTypeChange.emit(value);
     }
 }

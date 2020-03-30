@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -10,11 +10,11 @@ export class PencilService extends Tool {
     isDrawing = false;
     isPath = false;
     circle: SVGCircleElement;
+    renderer: Renderer2;
 
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
+    protected path = '';
 
-    constructor(private store: DrawStore) {
+    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
@@ -22,6 +22,8 @@ export class PencilService extends Tool {
 
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
+
+        this.renderer = rendererFactory.createRenderer(null, null);
     }
 
     start(event: MouseEvent) {
@@ -31,15 +33,15 @@ export class PencilService extends Tool {
 
         this.drawCircle(x, y, thickness / 2);
 
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
-        this.svg.setAttribute('fill', 'none');
-        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
-        this.svg.setAttribute('stroke-linecap', 'round');
-        this.svg.setAttribute('stroke-linejoin', 'round');
-
-        this.svg.setAttribute('d', `M ${x} ${y} `);
-        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.svg = this.renderer.createElement('path', 'svg');
+        this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.firstColor.hex());
+        this.renderer.setAttribute(this.svg, 'fill', 'none');
+        this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
+        this.renderer.setAttribute(this.svg, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(this.svg, 'stroke-linejoin', 'round');
+        this.path = `M ${x} ${y} `;
+        this.renderer.setAttribute(this.svg, 'd', this.path);
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
         this.isDrawing = true;
@@ -53,9 +55,8 @@ export class PencilService extends Tool {
     }
 
     draw(x: number, y: number) {
-        let path = this.svg.getAttribute('d') as string;
-        path = path.concat(`L ${x} ${y} `);
-        this.svg.setAttribute('d', path);
+        this.path = this.path.concat(`L ${x} ${y} `);
+        this.renderer.setAttribute(this.svg, 'd', this.path);
     }
     stop() {
         if (this.isDrawing) {
@@ -68,8 +69,8 @@ export class PencilService extends Tool {
             this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
 
-            this.state.svgState.drawSvg.removeChild(this.circle);
-            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.circle);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.isDrawing = false;
             this.isPath = false;
         }
@@ -77,11 +78,13 @@ export class PencilService extends Tool {
     }
 
     drawCircle(x: number, y: number, r: number) {
-        this.circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        this.circle.setAttribute('cx', x.toString());
-        this.circle.setAttribute('cy', y.toString());
-        this.circle.setAttribute('r', r.toString());
-        this.circle.setAttribute('fill', this.state.colorState.firstColor.hex());
-        this.state.svgState.drawSvg.appendChild(this.circle);
+        this.circle = this.renderer.createElement('circle', 'svg');
+        this.renderer.setAttribute(this.circle, 'cx', x.toString());
+
+        this.renderer.setAttribute(this.circle, 'cy', y.toString());
+        this.renderer.setAttribute(this.circle, 'r', r.toString());
+        this.renderer.setAttribute(this.circle, 'fill', this.state.colorState.firstColor.hex());
+
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.circle);
     }
 }

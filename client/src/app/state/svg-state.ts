@@ -1,9 +1,12 @@
-export class SvgState {
-    width = 500;
-    height = 500;
+const WIDTH_DEFAULT = 500;
+const HEIGHT_DEFAULT = 500;
 
+export class SvgState {
+    width = WIDTH_DEFAULT;
+    height = HEIGHT_DEFAULT;
     drawSvg: SVGSVGElement;
-    svgs: SVGElement[] = [];
     svgFilter: string = ''
+    svgs: SVGGraphicsElement[] = [];
+
     constructor() {}
 }

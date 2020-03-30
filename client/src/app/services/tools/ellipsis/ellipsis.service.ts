@@ -1,42 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
-import { Tool } from 'src/app/models/tool';
+import { FormService } from '../form/form.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class EllipsisService extends Tool {
-    state: DrawState;
-
-    startX: number;
-    startY: number;
-    lastX: number;
-    lastY: number;
+export class EllipsisService extends FormService {
+    startX: number = 0;
+    startY: number = 0;
+    lastX: number = 0;
+    lastY: number = 0;
     isShift = false;
-    isDrawing = false;
 
-    private mouseUpListener: EventListener;
-    private mouseMoveListener: EventListener;
-
-    constructor(private store: DrawStore) {
-        super();
-        this.store.stateObs.subscribe((value: DrawState) => {
-            this.state = value;
-        });
-        this.mouseMoveListener = this.continue.bind(this);
-        this.mouseUpListener = this.stop.bind(this);
+    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+        super(store, rendererFactory);
     }
 
     start(event: MouseEvent) {
         this.startX = event.offsetX;
         this.startY = event.offsetY;
-        this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-        this.svg.setAttribute('cx', this.startX.toString());
-        this.svg.setAttribute('cy', this.startY.toString());
-        this.svg.setAttribute('stroke-width', this.state.globalState.thickness.toString());
+        this.svg = this.renderer.createElement('ellipse', 'svg');
+        this.renderer.setAttribute(this.svg, 'cx', this.startX.toString());
+        this.renderer.setAttribute(this.svg, 'cy', this.startY.toString());
+        this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
+
         this.setColors(this.state.ellipsisType);
-        this.state.svgState.drawSvg.appendChild(this.svg);
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
 
@@ -52,7 +41,7 @@ export class EllipsisService extends Tool {
     draw(startX: number, startY: number, lastX: number, lastY: number) {
         let dx = lastX - startX;
         let dy = lastY - startY;
-
+        //Length of square is equal to the smallest size (without changing sign)
         if (this.isShift) {
             if (Math.abs(dx) < Math.abs(dy)) {
                 dy = dy * Math.abs(dx / dy);
@@ -66,18 +55,18 @@ export class EllipsisService extends Tool {
         let cx = this.startX + dx / 2;
         let cy = this.startY + dy / 2;
 
-        this.svg.setAttribute('cx', cx.toString());
-        this.svg.setAttribute('cy', cy.toString());
+        this.renderer.setAttribute(this.svg, 'cx', cx.toString());
+        this.renderer.setAttribute(this.svg, 'cy', cy.toString());
 
-        this.svg.setAttribute('rx', rx.toString());
+        this.renderer.setAttribute(this.svg, 'rx', rx.toString());
 
-        this.svg.setAttribute('ry', ry.toString());
+        this.renderer.setAttribute(this.svg, 'ry', ry.toString());
     }
 
     stop() {
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
-            this.state.svgState.drawSvg.removeChild(this.svg);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
             this.isDrawing = false;
@@ -98,24 +87,6 @@ export class EllipsisService extends Tool {
             if (this.isDrawing) {
                 this.draw(this.startX, this.startY, this.lastX, this.lastY);
             }
-        }
-    }
-    setColors(type: string) {
-        switch (type) {
-            case 'outline':
-                this.svg.setAttribute('fill', 'transparent');
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case 'outlineFill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', this.state.colorState.secondColor.hex());
-
-                break;
-            case 'fill':
-                this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-                this.svg.setAttribute('stroke', 'transparent');
-                break;
         }
     }
 }

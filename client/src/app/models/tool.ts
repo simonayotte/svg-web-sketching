@@ -6,5 +6,8 @@ export abstract class Tool {
     handleKeyDown(key: string) {}
     handleKeyUp(key: string) {}
 
-    svg: SVGElement;
+    protected mouseUpListener: EventListener;
+    protected mouseMoveListener: EventListener;
+
+    svg: SVGGraphicsElement;
 }

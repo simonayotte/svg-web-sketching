@@ -1,24 +1,17 @@
-import { Directive, ElementRef, HostListener, OnInit, Input } from '@angular/core';
+import { Directive, ElementRef, OnInit, OnDestroy, Input, Renderer2 } from '@angular/core';
 @Directive({
     selector: '[svg]',
 })
-export class SvgDirective implements OnInit {
-    @Input('svg') svg: SVGElement;
+export class SvgDirective implements OnInit, OnDestroy {
+    @Input('svg') svg: SVGGraphicsElement;
     @Input('drawSvg') drawSvg: SVGSVGElement;
-    constructor(public el: ElementRef) {
-    }
-    //With this directive, you already have events listeners that are going to call DrawHandler functions that will call selection services, deplacement, etc...
+    constructor(protected el: ElementRef, private renderer: Renderer2) {}
+
     ngOnInit() {
-        this.drawSvg.appendChild(this.svg);
+        this.renderer.appendChild(this.drawSvg, this.svg);
     }
 
-    @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    ngOnDestroy() {
+        this.renderer.removeChild(this.drawSvg, this.svg);
     }
-
-    @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent) {
-    }
-    @HostListener('mouseup')
-    onMouseUp() {}
 }

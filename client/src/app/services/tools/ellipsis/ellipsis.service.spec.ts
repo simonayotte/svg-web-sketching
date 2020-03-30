@@ -4,7 +4,6 @@ import { EllipsisService } from './ellipsis.service';
 
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
-import { Color } from 'src/app/models/color';
 
 describe('EllipsisService', () => {
     let service: EllipsisService;
@@ -16,14 +15,11 @@ describe('EllipsisService', () => {
         });
         store = TestBed.get(DrawStore);
 
-        store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+        service = TestBed.get(EllipsisService);
+        store.setDrawSvg(service.renderer.createElement('svg', 'svg'));
 
         store.stateObs.subscribe((value: DrawState) => {
-            service = TestBed.get(EllipsisService);
-
             service.state = value;
-            service.state.colorState.firstColor = new Color(255, 0, 255, 255);
-            service.state.colorState.secondColor = new Color(0, 0, 255, 255);
         });
     });
 
@@ -42,8 +38,7 @@ describe('EllipsisService', () => {
     });
 
     it('#draw() should call #setAttribute() with rx === ry if #isShift is true', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-
+        service.svg = service.renderer.createElement('ellipse', 'svg');
         service.isShift = true;
 
         const spy = spyOn(service.svg, 'setAttribute');
@@ -155,66 +150,27 @@ describe('EllipsisService', () => {
     });
 
     it('#handleKeyDown() should set #isShift to true if shift key is pressed', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-
+        service.svg = service.renderer.createElement('ellipse', 'svg');
         service.handleKeyDown('Shift');
         expect(service.isShift).toBeTruthy();
     });
     it('#handleKeyUp() should set  #isShift to false if shift key is released', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        service.svg = service.renderer.createElement('ellipse', 'svg');
         service.handleKeyUp('Shift');
         expect(service.isShift).toBeFalsy();
     });
 
     it('#handleKeyDown() should call #draw() to true if shift key is pressed', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        service.svg = service.renderer.createElement('ellipse', 'svg');
         const spy = spyOn(service, 'draw');
         service.handleKeyDown('Shift');
         expect(spy).toHaveBeenCalled();
     });
     it('#handleKeyUp() should call #draw() to true if shift key is pressed and if #isDrawing is true', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        service.svg = service.renderer.createElement('ellipse', 'svg');
         service.isDrawing = true;
         const spy = spyOn(service, 'draw');
         service.handleKeyDown('Shift');
         expect(spy).toHaveBeenCalled();
-    });
-
-    it('#setColors() should call #setAttribute 2 times if #type is valid', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setColors('outline');
-
-        expect(spy).toHaveBeenCalledTimes(2);
-    });
-    it('#setColors() should call #setAttribute with fill as transparent and stroke as secondColor if ellipsisType is outline', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setColors('outline');
-        expect(spy).toHaveBeenCalledWith('fill', 'transparent');
-        expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
-    });
-    it('#setColors() should call #setAttribute with fill as firstColor and stroke as secondColor if ellipsisType is outlineFill', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setColors('outlineFill');
-
-        expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith('stroke', '#0000ffff');
-    });
-    it('#setColors() should call #setAttribute with fill as firstColor and stroke as transparent if ellipsisType is fill', () => {
-        service.svg = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-
-        const spy = spyOn(service.svg, 'setAttribute');
-
-        service.setColors('fill');
-        expect(spy).toHaveBeenCalledWith('fill', '#ff00ffff');
-        expect(spy).toHaveBeenCalledWith('stroke', 'transparent');
     });
 });
