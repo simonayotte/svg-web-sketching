@@ -5,6 +5,7 @@ import { Types, BrushTextures } from '../models/enums';
 
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
+const THICKNESS_DEFAULT = 25;
 
 export class DrawState {
     //Brush
@@ -19,6 +20,8 @@ export class DrawState {
     polygonType = Types.Outline;
     //ellipsis
     ellipsisType = Types.Outline;
+    //eraser
+    eraserThickness = THICKNESS_DEFAULT;
 
     colorState: ColorState;
     globalState: GlobalState;

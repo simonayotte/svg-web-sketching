@@ -5,6 +5,7 @@ import { DrawHandlerService } from '../services/draw-handler/draw-handler.servic
 })
 export class DrawDirective implements OnInit {
     constructor(private el: ElementRef, private drawHandler: DrawHandlerService) {}
+
     @Output() drawSvgChange = new EventEmitter();
 
     ngOnInit() {
@@ -28,5 +29,10 @@ export class DrawDirective implements OnInit {
     @HostListener('mouseleave')
     onMouseleave() {
         this.drawHandler.stopTool();
+    }
+
+    @HostListener('mousemove', ['$event'])
+    onMouseMove(event: MouseEvent) {
+        this.drawHandler.onMouseMove(event);
     }
 }

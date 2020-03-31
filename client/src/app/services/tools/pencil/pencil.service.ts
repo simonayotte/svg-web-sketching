@@ -84,6 +84,7 @@ export class PencilService extends Tool {
         this.renderer.setAttribute(this.circle, 'cy', y.toString());
         this.renderer.setAttribute(this.circle, 'r', r.toString());
         this.renderer.setAttribute(this.circle, 'fill', this.state.colorState.firstColor.hex());
+
         this.renderer.appendChild(this.state.svgState.drawSvg, this.circle);
     }
 }

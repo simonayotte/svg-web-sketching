@@ -89,6 +89,12 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    setMousePosition(x: number, y: number) {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
+        });
+    }
     //Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({
@@ -218,6 +224,14 @@ export class DrawStore extends Store<DrawState> {
         this.setState({
             ...this.state,
             ellipsisType: value,
+        });
+    }
+
+    //Eraser
+    setEraserThickness(value: number) {
+        this.setState({
+            ...this.state,
+            eraserThickness: value,
         });
     }
 }
