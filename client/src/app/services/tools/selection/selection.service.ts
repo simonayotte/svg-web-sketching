@@ -326,19 +326,19 @@ export class SelectionService extends Tool {
   }
 
   moveShapes(shapes: Element[], translationX:number, translationY:number): void {
-    for( let i = 0; i < this.selectedShapes.length; i++) {
+    for( let i = 0; i < shapes.length; i++) {
       let X: number;
       let Y: number;
-      if (this.selectedShapes[i].getAttribute('transform')) { 
-        X = +this.selectedShapes[i].getAttribute('transform')!.split(',')[0].split('translate(').reverse()[0];
-        Y = +this.selectedShapes[i].getAttribute('transform')!.split(')')[0].split(',').reverse()[0];
+      if (shapes[i].getAttribute('transform')) { 
+        X = +shapes[i].getAttribute('transform')!.split(',')[0].split('translate(').reverse()[0];
+        Y = +shapes[i].getAttribute('transform')!.split(')')[0].split(',').reverse()[0];
       } else { 
         X = 0;
         Y = 0;
       }
-      this.selectedShapes[i].setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
+      shapes[i].setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
     }
-    this.drawEncompassingBox(this.selectedShapes);
+    this.drawEncompassingBox(shapes);
   }
 
   handleKeyDown(key: string): void {

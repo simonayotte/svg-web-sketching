@@ -256,7 +256,6 @@ it('#setPosition() should set the attribute of given element', () => {
   expect(spy).toHaveBeenCalledWith('width', '4');
 });
 
-// TODO
 it('#hideEncompassingBox() should set the opacity of encompassing box to 0', () => {
   service.createEncompassingBox();
 
@@ -272,16 +271,15 @@ it('#hideEncompassingBox() should set the opacity of encompassing box to 0', () 
   expect(spy2).toHaveBeenCalledWith('opacity', '0');
   expect(spy3).toHaveBeenCalledWith('opacity', '0');
   expect(spy4).toHaveBeenCalledWith('opacity', '0');
-
 });
 
-// TODO
-it('#moveShapes()', () => {
+it('#moveShapes() should apply movement to given shapes', () => {
+  let testElement = [service.renderer.createElement('rect', 'svg')];
   service.createEncompassingBox();
 
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
-  service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+  const spy = spyOn(testElement[0], 'setAttribute');
+  service.moveShapes(testElement, 1,1);
+  expect(spy).toHaveBeenCalledWith('transform', 'translate(1,1)');
 });
 
   it('#handleKeyDown() should call checkKeyTimePressed()', () => {
@@ -296,22 +294,29 @@ it('#moveShapes()', () => {
       expect(spy).toHaveBeenCalled();;
   });
 
-// TODO
-it('#checkKeyTimePressed()', () => {
-  service.createEncompassingBox();
-
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
-  service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+it('#checkKeyTimePressed() should start the timer when a movement key is pressed', () => {
+  service.keys.arrowDownKey = true;
+  service.keys.keepLooping = false;
+  service.checkKeyTimePressed();
+  expect(service.timer).toBeTruthy();
 });
 
-// TODO
-it('#repeatKeyMovement()', () => {
-  service.createEncompassingBox();
+it('#checkKeyTimePressed() should stop the timer when no movement key is pressed', () => {
+  service.keys.arrowDownKey = true;
+  service.keys.keepLooping = false;
+  service.checkKeyTimePressed();
+  service.keys.arrowDownKey = false;
+  service.checkKeyTimePressed();
+  expect(service.keys.keepLooping).toBeFalsy();
+});
 
-  const spy = spyOn(service.encompassingBox.encompassingBox, 'setAttribute');
-  service.createEncompassingBox();
-  expect(spy).toHaveBeenCalledWith('stroke-width', '1');
+it('#repeatKeyMovement() should call #moveShspes() when a movement key is pressed', () => {
+  service.keys.repeat = true;
+  service.keys.arrowRightKey = true;
+  service.selectedShapes = [];
+  const spy = spyOn(service, 'moveShapes');
+  service.repeatKeyMovement();
+  expect(spy).toHaveBeenCalled();
 });
 });
 
