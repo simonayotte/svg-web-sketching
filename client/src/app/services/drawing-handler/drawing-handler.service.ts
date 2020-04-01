@@ -97,9 +97,6 @@ export class DrawingHandler {
   }
 
   clearCanvas() {
-    for (const svg of this.state.svgState.svgs) {
-      this.store.popSvg();
-      this.state.svgState.drawSvg.removeChild(svg);
-    }
+    this.store.emptySvg();
   }
 }

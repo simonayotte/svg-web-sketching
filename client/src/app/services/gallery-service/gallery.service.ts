@@ -43,10 +43,19 @@ export class GalleryService {
   }
 
   convertHtmlToSvgElement(svgsHTML: string[]) {
-    for ( const svgHTML of svgsHTML) {
-      const SVGGraphicsElement: SVGGraphicsElement = this.renderer2.createElement('svg', 'svg');
-      SVGGraphicsElement.innerHTML = svgHTML;
-      this.store.pushSvg(SVGGraphicsElement);
+    let parser: DOMParser = new DOMParser();
+    for (let svgHTML of svgsHTML) {
+        let htmlElement = parser.parseFromString(svgHTML, 'image/svg+xml').documentElement;
+        let svg: SVGGraphicsElement = this.renderer2.createElement(htmlElement.tagName, 'svg');
+
+        for (let i = 0; i < htmlElement.attributes.length; i++) {
+            let attribute = htmlElement.attributes.item(i);
+            if (attribute) {
+                this.renderer2.setAttribute(svg, attribute.name, attribute.value);
+            }
+        }
+        console.log(svg)
+        this.store.pushSvg(svg);
     }
   }
 

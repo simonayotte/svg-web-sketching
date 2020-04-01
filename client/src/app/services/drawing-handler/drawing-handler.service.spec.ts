@@ -123,13 +123,13 @@ describe('DrawingHandler', () => {
     expect(store.setSVGFilter).toHaveBeenCalledWith('1');
   });
 
-  it('#clearCanvas should call #popShape() of the store if svg array is not empty', ()=> {
-    spyOn(store, 'popSvg')
+  it('#clearCanvas should call #empySvg() of the store if svg array is not empty', ()=> {
+    spyOn(store, 'emptySvg')
     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
     store.pushSvg(rect);
     service.state.svgState.drawSvg.appendChild(rect)
     service.clearCanvas();
-    expect(store.popSvg).toHaveBeenCalled();
+    expect(store.emptySvg).toHaveBeenCalled();
   })
 
   it('#clearCanvas should call #removeChild() of the state.svgState.drawSvg.removeChild if svg array is not empty', ()=> {
@@ -149,11 +149,4 @@ describe('DrawingHandler', () => {
     expect(service.state.svgState.svgs).toEqual([]);
   })
 
-  it('#clearCanvas should remove all the children of drawSvg', ()=> {
-    let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-    store.pushSvg(rect);
-    service.state.svgState.drawSvg.appendChild(rect)
-    service.clearCanvas();
-    expect(service.state.svgState.drawSvg.childElementCount).toEqual(0);
-  })  
 });
