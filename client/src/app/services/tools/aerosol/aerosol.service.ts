@@ -9,20 +9,18 @@ import { Coordinate } from 'src/app/models/coordinate';
 })
 export class AerosolService extends Tool {
     state: DrawState;
-    points: Coordinate[] = [];
-
+    renderer: Renderer2;
+    protected path = '';
     //Emission
     //Constant emissionPeriod for getting rid of lag
     emissionPeriod = 50;
     sprayIntervalID: any; //Pour acceder au setInterval du spray pattern
 
     //Mouse position
-    x: number = 0;
-    y: number = 0;
+    x: number;
+    y: number;
 
-    renderer: Renderer2;
-
-    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
@@ -30,7 +28,6 @@ export class AerosolService extends Tool {
 
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
-
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -46,10 +43,11 @@ export class AerosolService extends Tool {
         this.renderer.setAttribute(this.svg, 'stroke-width', '1');
         this.renderer.setAttribute(this.svg, 'stroke-linecap', 'round');
         this.renderer.setAttribute(this.svg, 'stroke-linejoin', 'round');
-
-        this.renderer.setAttribute(this.svg, 'd', `M ${this.x} ${this.y} `);
-        this.state.svgState.drawSvg.appendChild(this.svg);
-        this.points.push(new Coordinate(this.x, this.y));
+        this.path = `M ${this.x} ${this.y} `;
+        this.renderer.setAttribute(this.svg, 'd', this.path);
+        this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
+        this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+        this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
 
         //Function in interval for calling
         //Interval se fait a chaque 50 pour eviter le lag
@@ -64,10 +62,9 @@ export class AerosolService extends Tool {
 
     stop() {
         clearInterval(this.sprayIntervalID);
-        if (this.points.length > 1) this.store.pushSvg(this.svg);
+        if (this.path) this.store.pushSvg(this.svg);
 
-        this.points = [];
-        this.state.svgState.drawSvg.removeChild(this.svg);
+        this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
     }
 
     //Returns random point inside the circle
@@ -83,12 +80,10 @@ export class AerosolService extends Tool {
     generateRandomSprayPoint(x: number, y: number) {
         let density = this.convertEmissionRate();
         for (var i = 0; i < density; i++) {
-            let path = this.svg.getAttribute('d') as string;
             let point = this.generateRandomPoint(x, y);
             //Move to new point and show pixel
-            path = path.concat(`M ${point.pointX} ${point.pointY} h 1`);
-            this.renderer.setAttribute(this.svg, 'd', path);
-            this.points.push(new Coordinate(x, y));
+            this.path = this.path.concat(`M ${point.pointX} ${point.pointY} h 1`);
+            this.renderer.setAttribute(this.svg, 'd', this.path);
         }
     }
 
