@@ -16,7 +16,7 @@ export class EraserService extends Tool {
     oldStrokeColor: string = '';
     touchedSvgIndex: number = -1;
     deletedSvgs: SVGGraphicsElement[] = [];
-    constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
+    constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
@@ -29,27 +29,51 @@ export class EraserService extends Tool {
     }
 
     start() {
-        if (this.touchedSvgIndex >= 0) {
-            this.deletedSvgs.push(this.state.svgState.svgs[this.touchedSvgIndex]);
-            this.renderer.removeChild(this.state.svgState.drawSvg, this.state.svgState.svgs[this.touchedSvgIndex]);
-            this.touchedSvgIndex = -1;
-        }
+        this.deleteTouchedSvg();
 
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
     }
 
     continue() {
-        if (this.touchedSvgIndex >= 0) {
+        this.deleteTouchedSvg();
+    }
+
+    stop() {
+        if (this.deletedSvgs.length > 0) {
+            this.store.deleteSvgs(this.deletedSvgs);
+            this.deletedSvgs = [];
+        }
+
+        this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
+        this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+        this.stopSignal();
+    }
+
+    move(x: number, y: number) {
+        let svgs = this.state.svgState.svgs;
+        if (this.touchedSvgIndex === -1) {
+            //if eraser is not touching any svg
+            this.touchedSvgIndex = this.verifyMouseOver(x, y, svgs);
+        } else {
+            this.verifyMouseOut(x, y, svgs[this.touchedSvgIndex]);
+        }
+    }
+
+    deleteTouchedSvg() {
+        if (this.touchedSvgIndex >= 0 && this.renderer) {
+            this.renderer.setAttribute(this.state.svgState.svgs[this.touchedSvgIndex], 'stroke', this.oldStrokeColor);
             this.deletedSvgs.push(this.state.svgState.svgs[this.touchedSvgIndex]);
             this.renderer.removeChild(this.state.svgState.drawSvg, this.state.svgState.svgs[this.touchedSvgIndex]);
             this.touchedSvgIndex = -1;
         }
     }
-    verifyTouching(x: number, y: number, svgs: SVGGraphicsElement[]): number {
+
+    verifyMouseOver(x: number, y: number, svgs: SVGGraphicsElement[]): number {
         for (let i = svgs.length - 1; i >= 0; i--) {
             let box = svgs[i].getBBox();
             let thickness = parseInt(<string>svgs[i].getAttribute('stroke-width'));
+
             if (this.isEraseTouching(x, y, box, thickness)) {
                 this.oldStrokeColor = <string>svgs[i].getAttribute('stroke');
                 if (this.oldStrokeColor === RED.hex()) {
@@ -70,16 +94,6 @@ export class EraserService extends Tool {
         if (!this.isEraseTouching(x, y, box, thickness)) {
             this.renderer.setAttribute(svg, 'stroke', this.oldStrokeColor);
             this.touchedSvgIndex = -1;
-        }
-    }
-
-    move(x: number, y: number) {
-        let svgs = this.state.svgState.svgs;
-        if (this.touchedSvgIndex === -1) {
-            //if eraser is not touching any svg
-            this.touchedSvgIndex = this.verifyTouching(x, y, svgs);
-        } else {
-            this.verifyMouseOut(x, y, svgs[this.touchedSvgIndex]);
         }
     }
 
@@ -123,14 +137,5 @@ export class EraserService extends Tool {
         let isYTouching = isTopInside || isBottomInside;
 
         return isXTouching && isYTouching;
-    }
-    stop() {
-        if (this.deletedSvgs.length > 0) {
-            this.store.deleteSvgs(this.deletedSvgs);
-            this.deletedSvgs = [];
-        }
-
-        this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
-        this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
     }
 }

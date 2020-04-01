@@ -1,5 +1,8 @@
 <div class="sidebar">
     <i class="sidebar-option fas fa-mouse-pointer" (click)="changeTool('Selection')" [ngClass]="{ active: tool == 'Selection' }"></i>
+    <!-- Undo Redo -->
+    <i class="sidebar-option fas fa-undo" (click)="triggerUndo()" [ngClass]="{ disabled: !canUndo }"></i>
+    <i class="sidebar-option fas fa-redo" (click)="triggerRedo()" [ngClass]="{ disabled: !canRedo }"></i>
     <i class="sidebar-option fas fa-border-all" (click)="displayGridChange()" [ngClass]="{ active: isDisplayGrid }"></i>
 
     <div class="sidebar-option" (click)="toogleDrawOptions()">
@@ -52,9 +55,6 @@
     <i class="sidebar-option fas fa-palette" (click)="changeTool('Couleur')" [ngClass]="{ active: tool == 'Couleur' }"></i>
 
     <i class="sidebar-option fas fa-font" (click)="changeTool('Texte')" [ngClass]="{ active: tool == 'Texte' }"></i>
-    <!-- Undo Redo -->
-    <i *ngIf="canUndo" class="sidebar-option fas fa-undo" (click)="triggerUndo()"></i>
-    <i *ngIf="canRedo" class="sidebar-option fas fa-redo" (click)="triggerRedo()"></i>
 
     <!--Will contain actions like file saving ...-->
     <div class="sidebar-option" (click)="toggleSettingOptions()">

@@ -10,6 +10,7 @@ export class DrawStore extends Store<DrawState> {
     constructor() {
         super(new DrawState());
     }
+<<<<<<< HEAD
     // Undo
     undo() {
         this.state.undoRedoState.canRedo = true;
@@ -30,10 +31,28 @@ export class DrawStore extends Store<DrawState> {
             });
         } else {
             this.state.undoRedoState.nextUndoState = [];
-        }
-    }
+=======
 
+    //undoRedo
+    undo() {
+        if (this.state.undoRedoState.undoState.length === 0) {
+            return;
+>>>>>>> f9eeec2fd7e525fa37d46f7851b3afef831cef95
+        }
+        let next = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
+
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: next },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.slice(0, this.state.undoRedoState.undoState.length - 1),
+                redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
+            },
+        });
+    }
     redo() {
+<<<<<<< HEAD
         if (this.state.undoRedoState.redoState.length != 0 && this.state.undoRedoState.canRedo) {
             // Get dernier element et enlever de l'array des states
             const redo = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
@@ -47,21 +66,32 @@ export class DrawStore extends Store<DrawState> {
                 ...this.state,
                 svgState: {...this.state.svgState, svgs: redo}
             });
+=======
+        if (this.state.undoRedoState.redoState.length === 0) {
+            return;
+>>>>>>> f9eeec2fd7e525fa37d46f7851b3afef831cef95
         }
+        let next = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
+
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: next },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                redoState: this.state.undoRedoState.redoState.slice(0, this.state.undoRedoState.redoState.length - 1),
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+            },
+        });
     }
 
-    clearRedo() {
-        this.state.undoRedoState.redoState = [];
+    resetUndoRedo() {
+        this.setState({
+            ...this.state,
+            undoRedoState: { ...this.state.undoRedoState, redoState: [], undoState: [] },
+        });
     }
 
-    resetUndoRedo(svgs: SVGGraphicsElement[]) {
-        this.state.undoRedoState.canRedo = false;
-        this.state.undoRedoState.nextUndoState = svgs;
-        this.state.undoRedoState.redoState = [];
-        this.state.undoRedoState.undoState = [];
-    }
-
-    // Svg
+    //Svg
     setDrawSvg(value: SVGSVGElement) {
         this.setState({
             ...this.state,
@@ -91,24 +121,27 @@ export class DrawStore extends Store<DrawState> {
     }
 
     pushSvg(value: SVGGraphicsElement) {
-        const newState = this.state.svgState.svgs.concat(value);
-        this.state.undoRedoState.undoState.push(this.state.undoRedoState.nextUndoState);
-        this.state.undoRedoState.nextUndoState = newState;
-        // lock canRedo on new action
-        this.state.undoRedoState.canRedo = false;
+        let newState = this.state.svgState.svgs.concat(value);
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: newState},
+            svgState: { ...this.state.svgState, svgs: newState },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
         });
     }
 
     deleteSvgs(value: SVGGraphicsElement[]) {
-        const newState = this.state.svgState.svgs;
-        this.state.undoRedoState.undoState.push(newState);
-
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter((svg) => !value.includes(svg)) },
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter(svg => !value.includes(svg)) },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
         });
     }
 
