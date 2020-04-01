@@ -22,6 +22,90 @@ describe('DrawStore', () => {
         expect(store).toBeTruthy();
     });
 
+    //undoRedo
+    it('#undo() should set #svgs with last index of #undoState ', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        state.undoRedoState.undoState = [[], [rect], [rect, circle]];
+
+        store.undo();
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.svgState.svgs).toEqual([rect, circle]);
+            done();
+        });
+    });
+
+    it('#undo() should remove last index of #undoState', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        state.undoRedoState.undoState = [[], [rect], [rect, circle]];
+
+        store.undo();
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.undoState).toEqual([[], [rect]]);
+            done();
+        });
+    });
+
+    it('#undo() should set #redoState with current state of #svgs ', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        state.undoRedoState.undoState = [[], [rect], [rect, circle]];
+
+        state.svgState.svgs = [rect, circle, rect, circle];
+
+        store.undo();
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.redoState).toEqual([[rect, circle, rect, circle]]);
+            done();
+        });
+    });
+
+    it('#redo() should set #svgs with last index of #redoState ', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        state.undoRedoState.redoState = [[], [rect], [rect, circle]];
+
+        store.redo();
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.svgState.svgs).toEqual([rect, circle]);
+            done();
+        });
+    });
+
+    it('#redo() should remove last index of #redoState', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        state.undoRedoState.redoState = [[], [rect], [rect, circle]];
+
+        store.redo();
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.redoState).toEqual([[], [rect]]);
+            done();
+        });
+    });
+
+    it('#redo() should set #undoState with current state of #svgs ', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+        state.undoRedoState.redoState = [[], [rect], [rect, circle]];
+
+        state.svgState.svgs = [rect, circle, rect, circle];
+
+        store.redo();
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.undoState).toEqual([[rect, circle, rect, circle]]);
+            done();
+        });
+    });
+
+    //svg
     it('#setDrawSvg() should only change #drawSvg', (done: DoneFn) => {
         const drawSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         store.setDrawSvg(drawSvg);
@@ -44,6 +128,29 @@ describe('DrawStore', () => {
         store.setDrawHeight(700);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.svgState.height).toEqual(700);
+            done();
+        });
+    });
+    it('#pushSvg() should set #undoState to old state of #svgs', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+
+        state.svgState.svgs = [circle];
+        store.pushSvg(rect);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.undoState).toEqual([[circle]]);
+            done();
+        });
+    });
+
+    it('#pushSvg() should set #redoState to []', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        state.undoRedoState.redoState = [[], [rect, circle]];
+
+        store.pushSvg(rect);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.redoState).toEqual([]);
             done();
         });
     });
