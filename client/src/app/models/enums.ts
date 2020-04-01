@@ -8,7 +8,7 @@ export enum Tools {
     Pipette = 'Pipette',
     Selection = 'Selection',
     Eraser = 'Efface',
-    Aerosol = 'Aerosol',
+    Aerosol = 'Aérosol',
     None = 'None',
 }
 

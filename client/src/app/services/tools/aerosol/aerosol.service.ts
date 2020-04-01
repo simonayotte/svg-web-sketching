@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -11,9 +11,8 @@ import { Coordinate } from 'src/app/models/coordinate';
 export class AerosolService extends Tool {
 
   state: DrawState;
-  points: Coordinate[] = [];
-  pixel: SVGCircleElement;
-
+  renderer: Renderer2;
+  protected path = '';
   //Emission
   //Constant emissionPeriod for getting rid of lag
   emissionPeriod = 50;
@@ -22,12 +21,17 @@ export class AerosolService extends Tool {
   //Mouse position
   x: number;
   y: number;
+
   
-  constructor(private store: DrawStore) { 
+  constructor(private store: DrawStore, rendererFactory: RendererFactory2) { 
     super();
     this.store.stateObs.subscribe((value: DrawState) => {
         this.state = value;
     });
+
+    this.mouseMoveListener = this.continue.bind(this);
+    this.mouseUpListener = this.stop.bind(this);
+    this.renderer = rendererFactory.createRenderer(null, null);
   }
 
   start(event: MouseEvent) {
@@ -36,16 +40,17 @@ export class AerosolService extends Tool {
     this.y = event.offsetY;
     
     //Styling for SVG
-    this.svg = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-    this.svg.setAttribute('stroke', this.state.colorState.firstColor.hex());
-    this.svg.setAttribute('fill', this.state.colorState.firstColor.hex());
-    this.svg.setAttribute('stroke-width', '1');
-    this.svg.setAttribute('stroke-linecap', 'round');
-    this.svg.setAttribute('stroke-linejoin', 'round');
-
-    this.svg.setAttribute('d', `M ${this.x} ${this.y} `);
-    this.state.svgState.drawSvg.appendChild(this.svg);
-    this.points.push(new Coordinate(this.x, this.y));
+    this.svg = this.renderer.createElement('path', 'svg');
+    this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.firstColor.hex());
+    this.renderer.setAttribute(this.svg,'fill', this.state.colorState.firstColor.hex());
+    this.renderer.setAttribute(this.svg,'stroke-width', '1');
+    this.renderer.setAttribute(this.svg,'stroke-linecap', 'round');
+    this.renderer.setAttribute(this.svg,'stroke-linejoin', 'round');
+    this.path = `M ${this.x} ${this.y} `;
+    this.renderer.setAttribute(this.svg,'d', this.path);
+    this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
+    this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
+    this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
 
     //Function in interval for calling
     //Interval se fait a chaque 50 pour eviter le lag
@@ -60,11 +65,10 @@ export class AerosolService extends Tool {
 
   stop() {
     clearInterval(this.sprayIntervalID);
-    if (this.points.length > 1)
+    if (this.path)
       this.store.pushSvg(this.svg);
 
-    this.points = [];
-    this.state.svgState.drawSvg.removeChild(this.svg);
+    this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
   }
 
   //Returns random point inside the circle
@@ -80,12 +84,10 @@ export class AerosolService extends Tool {
   generateRandomSprayPoint(x: number, y: number) {
     let density = this.convertEmissionRate();
     for(var i = 0; i < density; i++){
-      let path = this.svg.getAttribute('d') as string;
       let point = this.generateRandomPoint(x, y);
       //Move to new point and show pixel
-      path = path.concat(`M ${point.pointX} ${point.pointY} h 1`);
-      this.svg.setAttribute('d', path);
-      this.points.push(new Coordinate(x, y));
+      this.path = this.path.concat(`M ${point.pointX} ${point.pointY} h 1`);
+      this.renderer.setAttribute(this.svg, 'd', this.path);
     } 
   }
 
