@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
-import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { MatDialogRef } from '@angular/material';
+import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
-import { SavedDrawing } from 'src/app/models/saved-drawing';
+import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
 
 @Component({
   selector: 'app-preview-image',
@@ -15,14 +15,14 @@ import { SavedDrawing } from 'src/app/models/saved-drawing';
 
 export class PreviewImageComponent implements OnInit {
   dataURL: string;
-  state:DrawState;
+  state: DrawState;
   buttonDisabled = false;
-  previewHeight:number;
-  previewWidth:number;
-  svgsHTML:Array<string> = [];
-  constructor(private saveDrawingService:SaveDrawingService, private store:DrawStore, public dialogRef:MatDialogRef<PreviewImageComponent>,
-    private drawingHandler: DrawingHandler,
-    private httpService:HttpService) { 
+  previewHeight: number;
+  previewWidth: number;
+  svgsHTML: string[] = [];
+  constructor(private saveDrawingService: SaveDrawingService, private store: DrawStore, public dialogRef: MatDialogRef<PreviewImageComponent>,
+              private drawingHandler: DrawingHandler,
+              private httpService: HttpService) {
     this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
     this.drawingHandler.previewWidthObs.subscribe((previewWidth: number) => (this.previewWidth = previewWidth));
     this.drawingHandler.previewHeightObs.subscribe((previewHeight: number) => (this.previewHeight = previewHeight));
@@ -33,15 +33,15 @@ export class PreviewImageComponent implements OnInit {
   ngOnInit() {
     this.drawingHandler.setPreviewImgWidth();
     this.drawingHandler.setPreviewImgHeight();
-    this.state.globalState.isKeyHandlerActive = false;
+    this.store.setIsKeyHandlerActive(false);
   }
 
   ngOnDestroy() {
-    this.state.globalState.isKeyHandlerActive = true;
+    this.store.setIsKeyHandlerActive(true);
   }
 
-  getSvgsHTML(){
-    for (let svg of this.state.svgState.svgs){
+  getSvgsHTML() {
+    for (const svg of this.state.svgState.svgs) {
       this.svgsHTML.push(svg.outerHTML);
     }
   }
@@ -49,25 +49,25 @@ export class PreviewImageComponent implements OnInit {
   async saveDrawing() {
     this.getSvgsHTML();
     this.buttonDisabled = true;
-    let canvasColor = this.state.colorState.canvasColor;
-    let drawing = new SavedDrawing(this.saveDrawingService.getImgName(), 
-    this.saveDrawingService.getTags(), 
-    this.dataURL, 
-    this.svgsHTML, 
-    this.state.svgState.width, 
+    const canvasColor = this.state.colorState.canvasColor;
+    const drawing = new SavedDrawing(this.saveDrawingService.getImgName(),
+    this.saveDrawingService.getTags(),
+    this.dataURL,
+    this.svgsHTML,
+    this.state.svgState.width,
     this.state.svgState.height,
-    [canvasColor.r,canvasColor.g,canvasColor.b,canvasColor.a]);
+    [canvasColor.r, canvasColor.g, canvasColor.b, canvasColor.a]);
     this.httpService.saveDrawing(drawing).toPromise().then(
-    data => {
+    (data) => {
       this.dialogRef.close();
-      alert(data.message)
+      alert(data.message);
       this.buttonDisabled = false;
 
     }).catch(
-    err => {
+    (err) => {
       this.dialogRef.close();
-      alert(err.message)
+      alert(err.message);
       this.buttonDisabled = false;
-    })
+    });
   }
 }

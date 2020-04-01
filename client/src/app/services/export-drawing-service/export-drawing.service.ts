@@ -12,21 +12,21 @@ export class ExportDrawingService {
   exportNameObs: Observable<string> = this.exportName.asObservable();
 
   private type: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  typeObs: Observable<string> = this.type.asObservable()
+  typeObs: Observable<string> = this.type.asObservable();
 
-  setExportName(exportName:string):void{
+  setExportName(exportName: string): void {
     this.exportName.next(exportName);
   }
 
-  setType(type:string):void{
+  setType(type: string): void {
     this.type.next(type);
   }
 
-  getExportName():string{
+  getExportName(): string {
     return this.exportName.value;
   }
 
-  getType():string{
+  getType(): string {
     return this.type.value;
   }
 }

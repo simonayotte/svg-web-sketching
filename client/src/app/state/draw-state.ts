@@ -1,30 +1,30 @@
-import { UndoRedoState } from './undo-redo-state';
-import { GlobalState } from './global-state';
+import { BrushTextures, Types } from '../models/enums';
 import { ColorState } from './color-state';
+import { GlobalState } from './global-state';
 import { SvgState } from './svg-state';
-import { Types, BrushTextures } from '../models/enums';
+import { UndoRedoState } from './undo-redo-state';
 
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
 const THICKNESS_DEFAULT = 25;
 
 export class DrawState {
-    //Brush
+    // Brush
     brushTexture = BrushTextures.Normal;
-    //Line
+    // Line
     lineHasJunction = false;
     lineJunctionThickness = LINE_JUNCTION_THICKNESS_DEFAULT;
-    //rectangle
+    // rectangle
     rectangleType = Types.Outline;
-    //polygon
+    // polygon
     polygonSides = POLYGON_SIDES_DEFAULT;
     polygonType = Types.Outline;
-    //ellipsis
+    // ellipsis
     ellipsisType = Types.Outline;
-    //eraser
+    // eraser
     eraserThickness = THICKNESS_DEFAULT;
 
-    //aerosol
+    // aerosol
     emissionRate = 30;
 
     colorState: ColorState;
@@ -38,4 +38,3 @@ export class DrawState {
         this.undoRedoState = new UndoRedoState();
     }
 }
-

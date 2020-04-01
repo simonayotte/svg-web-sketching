@@ -1,7 +1,7 @@
 export class UndoRedoState {
-    undoState: Array<SVGGraphicsElement[]> = [];
-    redoState: Array<SVGGraphicsElement[]> = [];
+    undoState: SVGGraphicsElement[][] = [];
+    redoState: SVGGraphicsElement[][] = [];
     nextUndoState: SVGGraphicsElement[] = [];
-    canRedo: boolean = false;
+    canRedo = false;
     constructor() {}
 }

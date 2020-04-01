@@ -72,7 +72,7 @@ export class RectangleService extends FormService {
     draw(startX: number, startY: number, lastX: number, lastY: number) {
         let dx = lastX - startX;
         let dy = lastY - startY;
-        //Length of square is equal to the smallest size (without changing sign)
+        // Length of square is equal to the smallest size (without changing sign)
         if (this.isShift) {
             if (Math.abs(dx) < Math.abs(dy)) {
                 dy = dy * Math.abs(dx / dy);

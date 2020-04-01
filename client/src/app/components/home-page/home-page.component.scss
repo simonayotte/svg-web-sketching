@@ -2,12 +2,13 @@
     width: 100%;
     height: 100%;
     padding-top: 60px;
-    background-color: white;
+    background-color: #363636;
 }
 .title {
     font-size: 30px;
     margin-bottom: 30px;
     text-align: center;
+    color:white
 }
 
 .actions {
@@ -34,5 +35,5 @@
 
 .action:hover {
     color: white;
-    background-color: #363636;
+    background-color: #ff8c00;
 }

@@ -11,22 +11,22 @@ export class SaveDrawingService {
   private imgName: BehaviorSubject<string> = new BehaviorSubject<string>('');
   imgNameObs: Observable<string> = this.imgName.asObservable();
 
-  private tags: BehaviorSubject<Array<string>> = new BehaviorSubject<Array<string>>([]);
-  tagsObs: Observable<Array<string>> = this.tags.asObservable()
+  private tags: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  tagsObs: Observable<string[]> = this.tags.asObservable();
 
-  setImgName(imgName:string): void{
+  setImgName(imgName: string): void {
     this.imgName.next(imgName);
   }
 
-  setTags(tags:Array<string>): void{
+  setTags(tags: string[]): void {
     this.tags.next(tags);
   }
 
-  getImgName():string{
+  getImgName(): string {
     return this.imgName.value;
   }
 
-  getTags():Array<string>{
+  getTags(): string[] {
     return this.tags.value;
   }
 }

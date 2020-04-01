@@ -55,6 +55,7 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.S, Tools.Selection);
         this.keyMap.set(ToolButtons.E, Tools.Eraser);
         this.keyMap.set(ToolButtons.A, Tools.Aerosol);
+        
     }
 
     startTool(event: MouseEvent) {
@@ -102,7 +103,6 @@ export class DrawHandlerService {
                     case 's':
                         if (event.ctrlKey) {
                             event.preventDefault();
-                            event.stopPropagation();
                             this.matDialog.open(SaveDrawingComponent);
                             break;
                         }
