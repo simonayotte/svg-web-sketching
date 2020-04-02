@@ -86,10 +86,11 @@ describe('PreviewImageComponent', () => {
     expect(saveDrawingService.getTags).toHaveBeenCalled()
   });
 
-  it('#saveDrawing() should close the dialog in the promise', () => {
+  it('#saveDrawing() should close the dialog in the promise', async (done:DoneFn) => {
     spyOn(component.dialogRef, 'close');
     component.saveDrawing().then(()=>{
       expect(component.dialogRef.close).toHaveBeenCalled();
+      done();
     })
   });
 

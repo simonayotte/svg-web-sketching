@@ -80,7 +80,6 @@ export class CreateDrawingComponent implements OnInit {
     submit(): void {
         if (this.state.svgState.svgs.length != 0) {
             this.drawingHandler.clearCanvas();
-            this.store.resetUndoRedo();
         }
         this.store.setCanvasColor(this.backgroundColor);
         this.createDrawingForm.controls.width.value >= window.innerWidth ?

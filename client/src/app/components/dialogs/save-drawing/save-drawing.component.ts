@@ -36,6 +36,7 @@ export class SaveDrawingComponent implements OnInit {
     get tags() {
         return this.saveDrawingForm.get(TAGS_STRING) as FormArray;
     }
+    
     ngOnInit() {
         this.store.setIsKeyHandlerActive(false);
     }

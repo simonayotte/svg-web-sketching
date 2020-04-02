@@ -29,8 +29,8 @@
     </div>
     <div *ngFor = 'let drawing of drawingsToShow' class = 'drawing' (click)=deleteDrawing(drawing) (click)=loadDrawing(drawing)>
         <div>
-            <img [src] = 'drawing.dataURL' *ngIf = 'loadActivated' routerLink = '/draw'>
-            <img [src] = 'drawing.dataURL' *ngIf = '!loadActivated'>
+            <img [src] = 'drawing.dataURL' *ngIf = "loadColor == '#ff8c00'"routerLink = '/draw'>
+            <img [src] = 'drawing.dataURL' *ngIf = "loadColor == 'black'">
             <br>
             nom : {{drawing.name}}
             <br>

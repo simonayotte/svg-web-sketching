@@ -16,6 +16,14 @@ const TAGS_STRING = 'tags';
   styleUrls: ['./drawing-gallery.component.scss']
 })
 export class DrawingGalleryComponent implements OnInit {
+  private state: DrawState;
+  drawingsToShow: SavedDrawing[] = [];
+  allDrawingsInDb: SavedDrawing[] = [];
+  tagStringArray: string[] = [];
+  trashColor = 'black';
+  loadColor = 'black';
+  noFilteredDrawingFound = false;
+  loading = false;
   constructor(public dialog: MatDialog, private httpService: HttpService, private store: DrawStore, private fb: FormBuilder, private galleryService: GalleryService, public dialogRef: MatDialogRef<DrawingGalleryComponent>) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
@@ -26,16 +34,7 @@ export class DrawingGalleryComponent implements OnInit {
   }
 
    get tags() { return this.filterDrawingForm.get(TAGS_STRING) as FormArray; }
-  private state: DrawState;
-  drawingsToShow: SavedDrawing[] = [];
-  allDrawingsInDb: SavedDrawing[] = [];
-  trashColor = 'black';
-  loadColor = 'black';
-  deleteActivated = false;
-  loadActivated = false;
-  noFilteredDrawingFound = false;
-  loading = false;
-  tagStringArray: string[] = [];
+  
 
   filterDrawingForm = this.fb.group({
     tags : this.fb.array([])
@@ -80,21 +79,19 @@ export class DrawingGalleryComponent implements OnInit {
   }
 
   toggleTrashColor() {
-    this.trashColor == 'black' ? (this.trashColor = '#ff8c00', this.deleteActivated = true)
-                        : (this.trashColor = 'black', this.deleteActivated = false);
-    this.loadActivated = false;
+    this.trashColor == 'black' ? (this.trashColor = '#ff8c00')
+                        : (this.trashColor = 'black');
     this.loadColor = 'black';
   }
 
   toggleLoadColor() {
-    this.loadColor == 'black' ? (this.loadColor = '#ff8c00', this.loadActivated = true)
-                        : (this.loadColor = 'black', this.loadActivated = false);
-    this.deleteActivated = false;
+    this.loadColor == 'black' ? (this.loadColor = '#ff8c00')
+                        : (this.loadColor = 'black');
     this.trashColor = 'black';
   }
 
   loadDrawing(drawing: SavedDrawing) {
-    if (this.loadActivated) {
+    if (this.loadColor == '#ff8c00') {
       if (this.state.svgState.svgs.length > 0) {
         this.galleryService.setDrawingToLoad(drawing);
         this.galleryService.setDidGalleryOpen(true);
@@ -108,7 +105,7 @@ export class DrawingGalleryComponent implements OnInit {
   }
 
   async deleteDrawing(drawing: SavedDrawing) {
-    if (this.deleteActivated) {
+    if (this.trashColor == '#ff8c00') {
       this.loading = true;
       this.httpService.deleteDrawing(drawing._id).toPromise().then((data) => {
         this.updateGallery();

@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material';
+import { MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material';
 import { DrawingStartedDialogComponent } from './drawing-started-dialog.component';
 import { DrawStore } from 'src/app/store/draw-store';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -10,7 +10,6 @@ import { CreateDrawingComponent } from '../create-drawing-dialog/create-drawing.
 import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
 import { ColorComponent } from '../../tools/color/color.component';
-import { BrowserDynamicTestingModule } from '@angular/platform-browser-dynamic/testing';
 
 describe('DrawingStartedDialogComponent', () => {
     let component: DrawingStartedDialogComponent;
@@ -18,6 +17,9 @@ describe('DrawingStartedDialogComponent', () => {
     let store: DrawStore;
     let galleryService: GalleryService;
     const dialogMock = {
+        open: () =>{
+            
+        },
         close: () => {
             /*empty function*/
         },
@@ -25,7 +27,7 @@ describe('DrawingStartedDialogComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            declarations: [DrawingStartedDialogComponent, CreateDrawingComponent, ColorComponent],
+            declarations: [DrawingStartedDialogComponent, ColorComponent],
             imports: [
                 FormsModule,
                 ReactiveFormsModule,
@@ -38,17 +40,12 @@ describe('DrawingStartedDialogComponent', () => {
             providers: [
                 { provide: MatDialogTitle, useValue: {} },
                 { provide: MatDialogRef, useValue: dialogMock },
+                {provide: MatDialog, useValue: dialogMock},
                 { provide: MAT_DIALOG_DATA, useValue: [] },
                 DrawStore,
                 GalleryService,
             ],
-        })
-            .overrideModule(BrowserDynamicTestingModule, {
-                set: {
-                    entryComponents: [CreateDrawingComponent],
-                },
-            })
-            .compileComponents();
+        }).compileComponents();
         store = TestBed.get(DrawStore);
         store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
     }));

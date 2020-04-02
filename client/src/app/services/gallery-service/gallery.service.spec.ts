@@ -21,11 +21,11 @@ describe('GalleryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('convertHtmlToSvgElement() should take an array of html, convert them into an SVGelement an push then in the svg array', ()=>{
-    let svg1:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svg2:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svg3:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svgHTML = [svg1.innerHTML, svg2.innerHTML, svg3.innerHTML];
+  it('convertHtmlToSvgElement() should take an array of html, convert them into an SVGGraphicsElement an push then in the svg array', ()=>{
+    let svg1:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg2:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg3:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svgHTML = [svg1.outerHTML, svg2.outerHTML, svg3.outerHTML];
     let svgs = [svg1,svg2,svg3];
     service.convertHtmlToSvgElement(svgHTML);
     expect(svgs).toEqual(service.state.svgState.svgs);
@@ -33,9 +33,9 @@ describe('GalleryService', () => {
 
   it('convertHtmlToSvgElement() should call #pushSvg of store', ()=>{
     spyOn(store, 'pushSvg')
-    let svg1:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svg2:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svg3:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg1:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg2:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg3:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let svgHTML = [svg1.innerHTML, svg2.innerHTML, svg3.innerHTML];
     service.convertHtmlToSvgElement(svgHTML);
     expect(store.pushSvg).toHaveBeenCalled();
@@ -80,22 +80,14 @@ describe('GalleryService', () => {
 
   it('#loadDrawing() should call #convertHtmlToSvgElement()', () => {
     spyOn(service, 'convertHtmlToSvgElement');
-    let svg1:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svg2:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    let svg3:SVGElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg1:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg2:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    let svg3:SVGGraphicsElement = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let svgHTML = [svg1.innerHTML, svg2.innerHTML, svg3.innerHTML];
     let drawing:SavedDrawing = new SavedDrawing('testdrawing',[],'url',svgHTML,1,1,[0,0,0,0])
     service.loadDrawing(drawing);
     expect(service.convertHtmlToSvgElement).toHaveBeenCalledWith(drawing.svgsHTML);
   });
-
-  it('#loadDrawing() should call #resetUndoRedo() of store', ()=> {
-    spyOn(store, 'resetUndoRedo');
-    let drawing:SavedDrawing = new SavedDrawing('testdrawing',[],'url',[],1,1,[0,0,0,0])
-    service.loadDrawing(drawing);
-    expect(store.resetUndoRedo).toHaveBeenCalled();
-  })
-
 
   it('#filterDrawings(tags, drawings) should return all the drawings that contains at least one of the tags passed as a parameter', () => {
     let drawing1:SavedDrawing = new SavedDrawing('testdrawing',['blue','sea','beach'],'url',[],1,1,[0,0,0,0]);
