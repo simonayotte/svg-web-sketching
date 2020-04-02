@@ -14,7 +14,7 @@ export class AerosolService extends Tool {
     isDrawing = false;
     //Emission
     //Constant emissionPeriod for getting rid of lag
-    emissionPeriod = 50;
+    emissionPeriod = 0;
     sprayIntervalID: any; //Pour acceder au setInterval du spray pattern
 
     //Mouse position

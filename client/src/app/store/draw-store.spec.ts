@@ -12,9 +12,7 @@ describe('DrawStore', () => {
 
         store = new DrawStore();
         store.stateObs.subscribe((value: DrawState) => {
-            if (!state) {
-                state = value;
-            }
+            state = value;
         });
     });
 
@@ -41,7 +39,6 @@ describe('DrawStore', () => {
         let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
-
         store.undo();
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.undoRedoState.undoState).toEqual([[], [rect]]);
@@ -92,15 +89,15 @@ describe('DrawStore', () => {
 
     it('#redo() should set #undoState with current state of #svgs ', (done: DoneFn) => {
         let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        let path: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
-        state.undoRedoState.redoState = [[], [rect], [rect, circle]];
+        state.undoRedoState.redoState = [[], [rect], [rect, path]];
 
-        state.svgState.svgs = [rect, circle, rect, circle];
+        state.svgState.svgs = [rect, path, rect, path];
 
         store.redo();
         store.stateObs.subscribe((value: DrawState) => {
-            expect(value.undoRedoState.undoState).toEqual([[rect, circle, rect, circle]]);
+            expect(value.undoRedoState.undoState).toEqual([[rect, path, rect, path]]);
             done();
         });
     });
@@ -173,6 +170,19 @@ describe('DrawStore', () => {
             done();
         });
     });
+
+    it('#saveSvgsState() should add state to #undoState and set #redoState to []', (done: DoneFn) => {
+        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
+        store.saveSvgsState([rect, circle]);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.undoRedoState.undoState).toEqual([[rect, circle]]);
+            expect(value.undoRedoState.redoState).toEqual([]);
+            done();
+        });
+    });
+
     it('#setThickness() should only change #thickness', (done: DoneFn) => {
         store.setThickness(10);
         store.stateObs.subscribe((value: DrawState) => {

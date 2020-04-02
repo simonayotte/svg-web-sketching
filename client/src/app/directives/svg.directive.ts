@@ -14,5 +14,4 @@ export class SvgDirective implements OnInit, OnDestroy {
     ngOnDestroy() {
         this.renderer.removeChild(this.drawSvg, this.svg);
     }
-
 }

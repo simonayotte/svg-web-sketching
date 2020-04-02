@@ -2,8 +2,9 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { Tools } from 'src/app/models/enums';
+import { Tools, SelectionButtons } from 'src/app/models/enums';
 
+//copier les svg avec create element avec les attributs, apres deplacement, save les svg copiees
 @Injectable({
     providedIn: 'root',
 })
@@ -14,6 +15,7 @@ export class SelectionService extends Tool {
     shapes: Element[] = [];
     selectedShapes: Element[] = [];
     tempSelectedShapes: Element[] = [];
+    oldSvgsState: SVGGraphicsElement[] = [];
     hasSelected = false;
     selectMultiple = false;
     isSelecting = false;
@@ -61,10 +63,10 @@ export class SelectionService extends Tool {
     }
 
     handleKeyDown(key: string): void {
-        if (key === 'Control') {
+        if (key === SelectionButtons.Control) {
             this.controlKey = true;
         }
-        if (key === 'a') {
+        if (key === SelectionButtons.a) {
             this.aKey = true;
         }
         if (this.controlKey && this.aKey) {
@@ -73,49 +75,49 @@ export class SelectionService extends Tool {
                 this.drawEncompassingBox(this.selectedShapes);
             }
         }
-        if (key === 'ArrowRight') {
+        if (key === SelectionButtons.ArrowRight) {
             this.arrowRightKey = true;
         }
         if (this.arrowRightKey) {
-            this.moveShapes(this.selectedShapes, 3, 0);
+            this.moveShapes(3, 0);
         }
-        if (key === 'ArrowLeft') {
+        if (key === SelectionButtons.ArrowLeft) {
             this.arrowLeftKey = true;
         }
         if (this.arrowLeftKey) {
-            this.moveShapes(this.selectedShapes, -3, 0);
+            this.moveShapes(-3, 0);
         }
-        if (key === 'ArrowUp') {
+        if (key === SelectionButtons.ArrowUp) {
             this.arrowUpKey = true;
         }
         if (this.arrowUpKey) {
-            this.moveShapes(this.selectedShapes, 0, -3);
+            this.moveShapes(0, -3);
         }
-        if (key === 'ArrowDown') {
+        if (key === SelectionButtons.ArrowDown) {
             this.arrowDownKey = true;
         }
         if (this.arrowDownKey) {
-            this.moveShapes(this.selectedShapes, 0, 3);
+            this.moveShapes(0, 3);
         }
     }
 
     handleKeyUp(key: string): void {
-        if (key === 'Control') {
+        if (key === SelectionButtons.Control) {
             this.controlKey = false;
         }
-        if (key === 'a') {
+        if (key === SelectionButtons.a) {
             this.aKey = false;
         }
-        if (key === 'ArrowRight') {
+        if (key === SelectionButtons.ArrowRight) {
             this.arrowRightKey = false;
         }
-        if (key === 'ArrowLeft') {
+        if (key === SelectionButtons.ArrowLeft) {
             this.arrowLeftKey = false;
         }
-        if (key === 'ArrowUp') {
+        if (key === SelectionButtons.ArrowUp) {
             this.arrowUpKey = false;
         }
-        if (key === 'ArrowDown') {
+        if (key === SelectionButtons.ArrowDown) {
             this.arrowDownKey = false;
         }
     }
@@ -126,7 +128,7 @@ export class SelectionService extends Tool {
         this.initialY = event.offsetY;
         this.shapes = <Element[]>this.state.svgState.svgs;
         this.offset = this.offset;
-
+        this.oldSvgsState = this.copyState(this.state.svgState.svgs);
         if (event.button == 0) {
             // left click
             this.isDeselecting = false;
@@ -181,7 +183,7 @@ export class SelectionService extends Tool {
             let translationY = event.offsetY - this.lastPosY;
             this.lastPosX = event.offsetX;
             this.lastPosY = event.offsetY;
-            this.moveShapes(this.selectedShapes, translationX, translationY);
+            this.moveShapes(translationX, translationY);
         } else {
             // Selection
             this.selectionRectangle = true;
@@ -202,6 +204,22 @@ export class SelectionService extends Tool {
         }
     }
 
+    stop() {
+        if (this.svg) {
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
+        }
+        if (this.isMoving) {
+            this.store.saveSvgsState(this.oldSvgsState);
+        }
+        this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
+        this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+
+        this.isSelecting = false;
+        this.isDeselecting = false;
+
+        this.isMoving = false;
+        this.selectionRectangle = false;
+    }
     stopSelect(event: MouseEvent): void {
         let targetedElement = <Element>event.target;
         if (this.singleSelect) {
@@ -209,18 +227,6 @@ export class SelectionService extends Tool {
         }
         this.drawEncompassingBox(this.selectedShapes);
         this.stop();
-    }
-
-    stop() {
-        this.isSelecting = false;
-        this.isDeselecting = false;
-        this.isMoving = false;
-        this.selectionRectangle = false;
-        if (this.svg) {
-            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
-        }
-        this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
-        this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
     }
 
     // Check which shape is under the mouse cursor
@@ -305,18 +311,17 @@ export class SelectionService extends Tool {
     }
 
     createSelectionRectangle(): void {
-        console.log('create');
         this.svg = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svg, 'stroke-width', '3');
+        this.renderer.setAttribute(this.svg, 'stroke-width', '6');
         this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex()); // TODO no color ?
-        this.renderer.setAttribute(this.svg, 'stroke', 'transparent');
+        this.renderer.setAttribute(this.svg, 'stroke', `#${this.state.colorState.gridColor.colorHex()}`);
         this.renderer.setAttribute(this.svg, 'stroke-dasharray', '10');
         this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
     }
 
     drawSelectionRectangle(startX: number, startY: number, endX: number, endY: number) {
         this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-        this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.gridColor.hex());
+        this.renderer.setAttribute(this.svg, 'stroke', `#${this.state.colorState.gridColor.colorHex()}`);
 
         let height = Math.abs(endY - startY);
         let width = Math.abs(endX - startX);
@@ -331,10 +336,10 @@ export class SelectionService extends Tool {
 
     createEncompassingBox(): void {
         this.encompassingBox = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.encompassingBox, 'stroke-width', '3');
+        this.renderer.setAttribute(this.encompassingBox, 'stroke-width', '6');
         this.renderer.setAttribute(this.encompassingBox, 'fill', 'none');
         this.renderer.setAttribute(this.encompassingBox, 'stroke-dasharray', '10');
-        this.renderer.setAttribute(this.encompassingBox, 'stroke', this.state.colorState.gridColor.hex()); // TODO no color ?
+        this.renderer.setAttribute(this.encompassingBox, 'stroke', `#${this.state.colorState.gridColor.colorHex()}`); // TODO no color ?
         this.renderer.setAttribute(this.encompassingBox, 'opacity', '1');
         this.renderer.appendChild(this.state.svgState.drawSvg, this.encompassingBox);
     }
@@ -387,7 +392,7 @@ export class SelectionService extends Tool {
         this.encompassingBoxEndY = 0;
     }
 
-    moveShapes(shapes: Element[], translationX: number, translationY: number): void {
+    moveShapes(translationX: number, translationY: number): void {
         for (let i = 0; i < this.selectedShapes.length; i++) {
             let X: number;
             let Y: number;
@@ -406,7 +411,8 @@ export class SelectionService extends Tool {
                 X = 0;
                 Y = 0;
             }
-            this.selectedShapes[i].setAttribute(
+            this.renderer.setAttribute(
+                this.selectedShapes[i],
                 'transform',
                 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')',
             );

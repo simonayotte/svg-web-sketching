@@ -17,7 +17,6 @@ export class DrawStore extends Store<DrawState> {
             return;
         }
         let next = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
-
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: next },
@@ -92,7 +91,6 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
-        console.log(this.state);
     }
 
     deleteSvgs(value: SVGGraphicsElement[]) {
@@ -105,6 +103,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        console.log(this.state.undoRedoState);
     }
 
     emptySvg() {
@@ -114,13 +113,23 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    saveSvgsState(value: SVGGraphicsElement[]) {
+        this.setState({
+            ...this.state,
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([value]),
+                redoState: [],
+            },
+        });
+    }
+
     popSvg() {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
         });
     }
-
     //Global
 
     setThickness(value: number) {
