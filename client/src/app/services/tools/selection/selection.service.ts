@@ -2,12 +2,13 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { Tools } from 'src/app/models/enums';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SelectionService extends Tool {
-    state: DrawState;
+    state: DrawState = new DrawState();
     initialX: number;
     initialY: number;
     shapes: Element[] = [];
@@ -32,7 +33,7 @@ export class SelectionService extends Tool {
     arrowUpKey = false;
     arrowDownKey = false;
 
-    encompassingBox: SVGElement;
+    encompassingBox: SVGGraphicsElement;
     displayEncompassingBox: boolean = true;
     encompassingBoxStartX: number;
     encompassingBoxStartY: number;
@@ -46,12 +47,17 @@ export class SelectionService extends Tool {
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
+            if (this.state.globalState.tool === Tools.Selection && value.globalState.tool !== Tools.Selection) {
+                this.renderer.setAttribute(this.encompassingBox, 'width', '0');
+                this.renderer.setAttribute(this.encompassingBox, 'height', '0');
+            }
             this.state = value;
         });
-        this.mouseMoveListener = this.continue.bind(this);
-        this.mouseUpListener = this.stopSelect.bind(this);
 
         this.renderer = rendererFactory.createRenderer(null, null);
+
+        this.mouseMoveListener = this.continue.bind(this);
+        this.mouseUpListener = this.stopSelect.bind(this);
     }
 
     handleKeyDown(key: string): void {
@@ -146,6 +152,7 @@ export class SelectionService extends Tool {
 
         if (!this.isMoving && !this.selectionRectangle) {
             let targetedElement = <Element>event.target;
+
             if (this.shapes.includes(targetedElement) && this.selectedShapes.includes(targetedElement)) {
                 this.isMoving = true;
             } else if (this.shapes.includes(targetedElement) && !this.selectedShapes.includes(targetedElement)) {
@@ -298,8 +305,9 @@ export class SelectionService extends Tool {
     }
 
     createSelectionRectangle(): void {
+        console.log('create');
         this.svg = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.svg, 'stroke-width', '1');
+        this.renderer.setAttribute(this.svg, 'stroke-width', '3');
         this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex()); // TODO no color ?
         this.renderer.setAttribute(this.svg, 'stroke', 'transparent');
         this.renderer.setAttribute(this.svg, 'stroke-dasharray', '10');
@@ -308,7 +316,7 @@ export class SelectionService extends Tool {
 
     drawSelectionRectangle(startX: number, startY: number, endX: number, endY: number) {
         this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
-        this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
+        this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.gridColor.hex());
 
         let height = Math.abs(endY - startY);
         let width = Math.abs(endX - startX);
@@ -323,11 +331,11 @@ export class SelectionService extends Tool {
 
     createEncompassingBox(): void {
         this.encompassingBox = this.renderer.createElement('rect', 'svg');
-        this.renderer.setAttribute(this.encompassingBox, 'stroke-width', '2');
+        this.renderer.setAttribute(this.encompassingBox, 'stroke-width', '3');
         this.renderer.setAttribute(this.encompassingBox, 'fill', 'none');
         this.renderer.setAttribute(this.encompassingBox, 'stroke-dasharray', '10');
-        this.renderer.setAttribute(this.encompassingBox, 'stroke', this.state.colorState.secondColor.hex()); // TODO no color ?
-        this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
+        this.renderer.setAttribute(this.encompassingBox, 'stroke', this.state.colorState.gridColor.hex()); // TODO no color ?
+        this.renderer.setAttribute(this.encompassingBox, 'opacity', '1');
         this.renderer.appendChild(this.state.svgState.drawSvg, this.encompassingBox);
     }
 
@@ -368,7 +376,7 @@ export class SelectionService extends Tool {
         this.renderer.setAttribute(this.encompassingBox, 'y', startY.toString());
         this.renderer.setAttribute(this.encompassingBox, 'height', (endY - startY).toString());
         this.renderer.setAttribute(this.encompassingBox, 'width', (endX - startX).toString());
-        this.renderer.setAttribute(this.encompassingBox, 'opacity', '0.4');
+        this.renderer.setAttribute(this.encompassingBox, 'opacity', '1');
     }
 
     hideEncompassingBox(): void {

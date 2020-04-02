@@ -131,6 +131,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        console.log(this.state);
     }
 
     deleteSvgs(value: SVGGraphicsElement[]) {

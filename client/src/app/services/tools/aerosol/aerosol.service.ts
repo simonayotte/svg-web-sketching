@@ -10,7 +10,8 @@ import { Coordinate } from 'src/app/models/coordinate';
 export class AerosolService extends Tool {
     state: DrawState;
     renderer: Renderer2;
-    protected path = '';
+    path = '';
+    isDrawing = false;
     //Emission
     //Constant emissionPeriod for getting rid of lag
     emissionPeriod = 50;
@@ -52,6 +53,8 @@ export class AerosolService extends Tool {
         //Function in interval for calling
         //Interval se fait a chaque 50 pour eviter le lag
         this.sprayIntervalID = setInterval(() => this.spray(), this.emissionPeriod);
+
+        this.isDrawing = true;
     }
 
     continue(event: MouseEvent) {
@@ -62,9 +65,13 @@ export class AerosolService extends Tool {
 
     stop() {
         clearInterval(this.sprayIntervalID);
-        if (this.path) this.store.pushSvg(this.svg);
 
-        this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
+        if (this.isDrawing) {
+            this.store.pushSvg(this.svg);
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
+            this.isDrawing = false;
+        }
+        this.stopSignal();
     }
 
     //Returns random point inside the circle
