@@ -71,6 +71,7 @@ export class AerosolService extends Tool {
             this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.isDrawing = false;
         }
+        this.stopSignal();
     }
 
     //Returns random point inside the circle
