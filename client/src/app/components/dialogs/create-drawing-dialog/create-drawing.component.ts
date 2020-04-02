@@ -83,17 +83,10 @@ export class CreateDrawingComponent implements OnInit {
             this.store.resetUndoRedo();
         }
         this.store.setCanvasColor(this.backgroundColor);
-<<<<<<< HEAD
         this.createDrawingForm.controls.width.value >= window.innerWidth ?
         this.store.setDrawWidth(this.createDrawingForm.controls.width.value - SIDEBAR_WIDTH) :
         this.store.setDrawWidth(this.createDrawingForm.controls.width.value);
         this.store.setDrawHeight(this.createDrawingForm.controls.height.value);
-=======
-        this.createDrawingForm.controls['width'].value >= window.innerWidth
-            ? this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH)
-            : this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
-        this.store.setDrawHeight(this.createDrawingForm.controls['height'].value);
->>>>>>> f9eeec2fd7e525fa37d46f7851b3afef831cef95
         this.dialogRef.close();
     }
 }
