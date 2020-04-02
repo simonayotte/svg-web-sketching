@@ -1,13 +1,13 @@
 export class EncompassingBox {
-    encompassingBox: SVGElement;
+    encompassingBox: SVGGraphicsElement;
     display: boolean = true;
-    startX: number;
-    startY: number;
-    endX: number;
-    endY: number;
-    controlPoint1: SVGElement;
-    controlPoint2: SVGElement;
-    controlPoint3: SVGElement;
-    controlPoint4: SVGElement;
-    controlPointWidth: number;
+    startX: number = 0;
+    startY: number = 0;
+    endX: number = 0;
+    endY: number = 0;
+    controlPoint1: SVGGraphicsElement;
+    controlPoint2: SVGGraphicsElement;
+    controlPoint3: SVGGraphicsElement;
+    controlPoint4: SVGGraphicsElement;
+    controlPointWidth: number = 0;
 }

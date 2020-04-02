@@ -1,3 +1,6 @@
+const TIMER_DEFAULT = 500;
+const LOOP_DEFAULT = 100;
+
 export class SelectionKeys {
     controlKey = false;
     aKey = false;
@@ -7,6 +10,6 @@ export class SelectionKeys {
     arrowDownKey = false;
     keepLooping = true;
     repeat = false;
-    timer = 500;
-    loop = 100;
+    timer = TIMER_DEFAULT;
+    loop = LOOP_DEFAULT;
 }

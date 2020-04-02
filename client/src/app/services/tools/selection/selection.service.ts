@@ -6,16 +6,18 @@ import { EncompassingBox } from './encompassingBox';
 import { SelectionState } from './selectionState';
 import { SelectionKeys } from './selectionKeys';
 import { MovementState } from './movementState';
+import { SelectionButtons, Tools } from 'src/app/models/enums';
 
 //copier les svg avec create element avec les attributs, apres deplacement, save les svg copiees
 @Injectable({
     providedIn: 'root',
 })
 export class SelectionService extends Tool {
-    state: DrawState;
+    state: DrawState = new DrawState();
     shapes: Element[] = [];
     selectedShapes: Element[] = [];
     tempSelectedShapes: Element[] = [];
+    oldSvgsState: SVGGraphicsElement[] = [];
 
     movementState: MovementState = new MovementState();
     selectionState: SelectionState = new SelectionState();
@@ -31,6 +33,11 @@ export class SelectionService extends Tool {
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
+            if (this.state.globalState.tool === Tools.Selection && value.globalState.tool !== Tools.Selection) {
+                this.renderer.setAttribute(this.encompassingBox.encompassingBox, 'width', '0');
+                this.renderer.setAttribute(this.encompassingBox.encompassingBox, 'height', '0');
+            }
+
             this.state = value;
         });
         this.mouseMoveListener = this.continue.bind(this);
@@ -45,6 +52,8 @@ export class SelectionService extends Tool {
         this.selectionState.initialY = event.offsetY;
         this.shapes = <Element[]>this.state.svgState.svgs;
         this.selectionState.offset = this.selectionState.offset;
+
+        this.oldSvgsState = this.copyState(this.state.svgState.svgs); //Copy state for undo
 
         if (event.button == 0) {
             // left click
@@ -141,8 +150,9 @@ export class SelectionService extends Tool {
 
     stop() {
         if (this.selectionState.isMoving) {
-            // TODO UNDO REDO STATE HERE
+            this.store.saveSvgsState(this.oldSvgsState);
         }
+
         this.selectionState.isSelecting = false;
         this.selectionState.isDeselecting = false;
         this.selectionState.isMoving = false;
@@ -319,10 +329,10 @@ export class SelectionService extends Tool {
         this.renderer.setAttribute(this.encompassingBox.encompassingBox, 'opacity', '0.4');
 
         this.encompassingBox.controlPointWidth = 10;
-        this.drawControlPoints(this.encompassingBox);
+        this.drawControlPoints();
     }
 
-    drawControlPoints(encompassingBox: EncompassingBox): void {
+    drawControlPoints(): void {
         let width = this.encompassingBox.controlPointWidth;
         this.setPosition(
             this.encompassingBox.controlPoint1,
@@ -400,10 +410,10 @@ export class SelectionService extends Tool {
     }
 
     handleKeyDown(key: string): void {
-        if (key === 'Control') {
+        if (key === SelectionButtons.Control) {
             this.keys.controlKey = true;
         }
-        if (key === 'a') {
+        if (key === SelectionButtons.a) {
             this.keys.aKey = true;
         }
         if (this.keys.controlKey && this.keys.aKey) {
@@ -412,25 +422,25 @@ export class SelectionService extends Tool {
                 this.drawEncompassingBox(this.selectedShapes);
             }
         }
-        if (key === 'ArrowRight') {
+        if (key === SelectionButtons.ArrowRight) {
             this.keys.arrowRightKey = true;
         }
         if (this.keys.arrowRightKey) {
             this.moveShapes(this.selectedShapes, 3, 0);
         }
-        if (key === 'ArrowLeft') {
+        if (key === SelectionButtons.ArrowLeft) {
             this.keys.arrowLeftKey = true;
         }
         if (this.keys.arrowLeftKey) {
             this.moveShapes(this.selectedShapes, -3, 0);
         }
-        if (key === 'ArrowUp') {
+        if (key === SelectionButtons.ArrowUp) {
             this.keys.arrowUpKey = true;
         }
         if (this.keys.arrowUpKey) {
             this.moveShapes(this.selectedShapes, 0, -3);
         }
-        if (key === 'ArrowDown') {
+        if (key === SelectionButtons.ArrowDown) {
             this.keys.arrowDownKey = true;
         }
         if (this.keys.arrowDownKey) {
@@ -440,22 +450,22 @@ export class SelectionService extends Tool {
     }
 
     handleKeyUp(key: string): void {
-        if (key === 'Control') {
+        if (key === SelectionButtons.Control) {
             this.keys.controlKey = false;
         }
-        if (key === 'a') {
+        if (key === SelectionButtons.a) {
             this.keys.aKey = false;
         }
-        if (key === 'ArrowRight') {
+        if (key === SelectionButtons.ArrowRight) {
             this.keys.arrowRightKey = false;
         }
-        if (key === 'ArrowLeft') {
+        if (key === SelectionButtons.ArrowLeft) {
             this.keys.arrowLeftKey = false;
         }
-        if (key === 'ArrowUp') {
+        if (key === SelectionButtons.ArrowUp) {
             this.keys.arrowUpKey = false;
         }
-        if (key === 'ArrowDown') {
+        if (key === SelectionButtons.ArrowDown) {
             this.keys.arrowDownKey = false;
         }
         this.checkKeyTimePressed();
@@ -474,7 +484,6 @@ export class SelectionService extends Tool {
             if (this.timer) {
                 clearInterval(this.timer);
             }
-            // TODO UNDO REDO STATE HERE
         }
     }
 
