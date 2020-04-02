@@ -15,7 +15,7 @@ export class AerosolService extends Tool {
   protected path = '';
   //Emission
   //Constant emissionPeriod for getting rid of lag
-  emissionPeriod = 50;
+  readonly emissionPeriod: number = 50;
   sprayIntervalID: any; //Pour acceder au setInterval du spray pattern
 
   //Mouse position
@@ -69,6 +69,7 @@ export class AerosolService extends Tool {
       this.store.pushSvg(this.svg);
 
     this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
+    this.stopSignal();
   }
 
   //Returns random point inside the circle
