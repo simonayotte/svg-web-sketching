@@ -1,3 +1,6 @@
+import { Renderer2 } from '@angular/core';
+import { DrawState } from '../state/draw-state';
+
 export abstract class Tool {
     start(event: MouseEvent) {}
     continue(event: MouseEvent) {}
@@ -10,6 +13,9 @@ export abstract class Tool {
     protected mouseMoveListener: EventListener;
 
     svg: SVGGraphicsElement;
+    state = new DrawState();
+
+    renderer: Renderer2;
 
     copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
         let newSvgs = [];

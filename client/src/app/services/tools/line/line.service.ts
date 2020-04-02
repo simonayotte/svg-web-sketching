@@ -8,8 +8,6 @@ import { DrawStore } from 'src/app/store/draw-store';
     providedIn: 'root',
 })
 export class LineService extends Tool {
-    state: DrawState;
-
     //MouseEventListener
 
     private mouseDoubleClickListener: EventListener;

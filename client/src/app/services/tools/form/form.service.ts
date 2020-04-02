@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from '../../../models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from '../../../state/draw-state';
@@ -8,10 +8,8 @@ import { Types } from '../../../models/enums';
     providedIn: 'root',
 })
 export class FormService extends Tool {
-    state: DrawState;
     isDrawing = false;
 
-    renderer: Renderer2;
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {

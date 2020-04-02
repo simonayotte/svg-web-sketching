@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -6,11 +6,9 @@ import { DrawState } from 'src/app/state/draw-state';
     providedIn: 'root',
 })
 export class PencilService extends Tool {
-    state: DrawState;
     isDrawing = false;
     isPath = false;
     circle: SVGCircleElement;
-    renderer: Renderer2;
 
     protected path = '';
 

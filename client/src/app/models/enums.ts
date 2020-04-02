@@ -9,6 +9,7 @@ export enum Tools {
     Selection = 'Selection',
     Eraser = 'Efface',
     Aerosol = 'Aérosol',
+    Applicator = 'Applicateur',
     None = 'None',
 }
 
@@ -23,11 +24,12 @@ export enum ToolButtons {
     S = 's',
     E = 'e',
     A = 'a',
+    R = 'r',
 }
 
 export enum SelectionButtons {
     Control = 'Control',
-    a = 'a',
+    A = 'a',
     ArrowLeft = 'ArrowLeft',
     ArrowRight = 'ArrowRight',
     ArrowUp = 'ArrowUp',
