@@ -52,11 +52,7 @@ export class EraserService extends Tool {
 
     move(x: number, y: number) {
         let svgs = this.state.svgState.svgs;
-        //if eraser is not touching any svg
         this.touchedSvgIndex = this.verifyMouseOver(x, y, svgs);
-        /*if (this.touchedSvgIndex >= 0) {
-            
-        }*/
     }
 
     deleteTouchedSvg() {
@@ -72,6 +68,7 @@ export class EraserService extends Tool {
         for (let i = svgs.length - 1; i >= 0; i--) {
             let box = svgs[i].getBBox();
             let thickness = parseInt(<string>svgs[i].getAttribute('stroke-width'));
+
             if (this.isEraseTouching(x, y, box, thickness)) {
                 if (this.touchedSvgIndex === i) {
                     return i;
