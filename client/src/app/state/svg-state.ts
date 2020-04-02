@@ -5,7 +5,7 @@ export class SvgState {
     width = WIDTH_DEFAULT;
     height = HEIGHT_DEFAULT;
     drawSvg: SVGSVGElement;
-    svgFilter = '';
+    svgFilter: string = '';
     svgs: SVGGraphicsElement[] = [];
 
     constructor() {}

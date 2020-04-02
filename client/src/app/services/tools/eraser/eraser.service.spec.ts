@@ -91,13 +91,6 @@ describe('EraserService', () => {
         expect(spy).toHaveBeenCalled();
     });
 
-    it('#move() should call #verifyMouseOut() if #touchedSvgIndex is bigger than -1', () => {
-        service.touchedSvgIndex = 0;
-        const spy = spyOn(service, 'verifyMouseOut');
-        service.move(100, 200);
-        expect(spy).toHaveBeenCalled();
-    });
-
     it('#verifyMouseOver() should return index of rectangle svg if eraser is touching it ', () => {
         expect(service.verifyMouseOver(250, 250, [rect])).toEqual(0);
     });
@@ -114,25 +107,6 @@ describe('EraserService', () => {
 
     it('#verifyMouseOver() should return index of most recent svg if two svg are one over another', () => {
         expect(service.verifyMouseOver(250, 250, [rect, rect])).toEqual(1);
-    });
-
-    it('#verifyMouseOut() should not set #touchedSvgIndex if eraser is still touching svg', () => {
-        service.touchedSvgIndex = 0;
-        service.verifyMouseOut(230, 230, rect);
-        expect(service.touchedSvgIndex).toEqual(0);
-    });
-
-    it('#verifyMouseOut() should  set #touchedSvgIndex to -1 if eraser is not touching svg anymore', () => {
-        service.touchedSvgIndex = 0;
-        service.verifyMouseOut(90, 90, rect);
-        expect(service.touchedSvgIndex).toEqual(-1);
-    });
-
-    it('#verifyMouseOut() should call #setAttribute() of stroke of svg with #oldStrokeColor if eraser is not touching it ', () => {
-        service.oldStrokeColor = '#ffffffff';
-        const spy = spyOn(service.renderer, 'setAttribute');
-        service.verifyMouseOut(90, 90, rect);
-        expect(spy).toHaveBeenCalledWith(rect, 'stroke', '#ffffffff');
     });
 
     it('#deleteTouchedSvg() should call renderer #removeChild() and #setAttribute() if #touchedSvgIndex is bigger than -1', () => {

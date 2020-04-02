@@ -44,7 +44,6 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
         this.servicesMap.set(Tools.Aerosol, injector.get(AerosolService));
 
-
         this.keyMap.set(ToolButtons.One, Tools.Rectangle);
         this.keyMap.set(ToolButtons.C, Tools.Pencil);
         this.keyMap.set(ToolButtons.W, Tools.Brush);
@@ -77,58 +76,46 @@ export class DrawHandlerService {
         const key = event.key;
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = <ToolButtons>key;
+            const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
+            //handle tool keyboard events
+            if (service) {
+                service.handleKeyDown(key);
+            }
             //handle tool selection keyboard events
             if (this.keyMap.has(keyEnum) && !event.ctrlKey) {
-
                 const tool = <Tools>this.keyMap.get(keyEnum);
                 this.store.setTool(tool);
-            
-                const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
-                //handle tool keyboard events
-                if (service) {
-                    service.handleKeyDown(key);
-                }
-            }
-            else {
+            } else if (event.ctrlKey) {
                 switch (key) {
                     case 'o':
-                        if (event.ctrlKey) {
-                            //mat dialog display
-                            event.preventDefault();
-                            this.state.svgState.svgs.length > 0
-                                ? this.matDialog.open(DrawingStartedDialogComponent)
-                                : this.matDialog.open(CreateDrawingComponent);
-                            break;
-                        }
+                        //mat dialog display
+                        event.preventDefault();
+                        this.state.svgState.svgs.length > 0
+                            ? this.matDialog.open(DrawingStartedDialogComponent)
+                            : this.matDialog.open(CreateDrawingComponent);
+                        break;
                     case 's':
-                        if (event.ctrlKey) {
-                            event.preventDefault();
-                            this.matDialog.open(SaveDrawingComponent);
-                            break;
-                        }
+                        event.preventDefault();
+                        event.stopPropagation();
+                        this.matDialog.open(SaveDrawingComponent);
+                        break;
+
                     case 'e':
-                        if (event.ctrlKey){
-                            event.preventDefault();
-                            this.matDialog.open(ExportDrawingComponent);
-                            break;
-                        }
+                        event.preventDefault();
+                        this.matDialog.open(ExportDrawingComponent);
+                        break;
+
                     case 'g':
-                        if (event.ctrlKey){
-                            event.preventDefault();
-                            this.matDialog.open(DrawingGalleryComponent);
-                            break;
-                        }
+                        event.preventDefault();
+                        this.matDialog.open(DrawingGalleryComponent);
+                        break;
+
                     case 'z':
-                        if (event.ctrlKey) {
-                            //TODO: Add logic for undo
-                            this.store.undo();
-                        }
+                        this.store.undo();
                         break;
                     case 'Z':
-                        if (event.ctrlKey) {
-                            //TODO: Add logic for redo
-                            this.store.redo();
-                        }
+                        this.store.redo();
+                        break;
                 }
             }
         }

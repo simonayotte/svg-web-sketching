@@ -1,10 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { DrawPageComponent } from './draw-page.component';
-
-
 import { DrawModule } from 'src/app/modules/draw.module';
 import { MatDialogModule } from '@angular/material';
-
 
 describe('DrawPageComponent', () => {
     let component: DrawPageComponent;

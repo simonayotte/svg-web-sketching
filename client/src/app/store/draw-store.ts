@@ -10,37 +10,13 @@ export class DrawStore extends Store<DrawState> {
     constructor() {
         super(new DrawState());
     }
-<<<<<<< HEAD
-    // Undo
-    undo() {
-        this.state.undoRedoState.canRedo = true;
-        if (this.state.undoRedoState.undoState.length != 0) {
-            // lock redo
-
-            const undo = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
-            this.state.undoRedoState.undoState.pop();
-            const svgs = this.state.svgState.svgs;
-            console.log('undo' + undo);
-            console.log('svgs' + svgs);
-            // Add present state to redoState
-            this.state.undoRedoState.redoState.push(svgs);
-
-            this.setState({
-                ...this.state,
-                svgState: {...this.state.svgState, svgs: undo}
-            });
-        } else {
-            this.state.undoRedoState.nextUndoState = [];
-=======
 
     //undoRedo
     undo() {
         if (this.state.undoRedoState.undoState.length === 0) {
             return;
->>>>>>> f9eeec2fd7e525fa37d46f7851b3afef831cef95
         }
         let next = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
-
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: next },
@@ -52,24 +28,8 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     redo() {
-<<<<<<< HEAD
-        if (this.state.undoRedoState.redoState.length != 0 && this.state.undoRedoState.canRedo) {
-            // Get dernier element et enlever de l'array des states
-            const redo = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
-            this.state.undoRedoState.redoState.pop();
-            const svgs = this.state.svgState.svgs;
-
-            // Add present state to undoState
-            this.state.undoRedoState.undoState.push(svgs);
-
-            this.setState({
-                ...this.state,
-                svgState: {...this.state.svgState, svgs: redo}
-            });
-=======
         if (this.state.undoRedoState.redoState.length === 0) {
             return;
->>>>>>> f9eeec2fd7e525fa37d46f7851b3afef831cef95
         }
         let next = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
 
@@ -131,7 +91,6 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
-        console.log(this.state);
     }
 
     deleteSvgs(value: SVGGraphicsElement[]) {
@@ -144,6 +103,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        console.log(this.state.undoRedoState);
     }
 
     emptySvg() {
@@ -153,14 +113,24 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    saveSvgsState(value: SVGGraphicsElement[]) {
+        this.setState({
+            ...this.state,
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([value]),
+                redoState: [],
+            },
+        });
+    }
+
     popSvg() {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
         });
     }
-
-    // Global
+    //Global
 
     setThickness(value: number) {
         this.setState({

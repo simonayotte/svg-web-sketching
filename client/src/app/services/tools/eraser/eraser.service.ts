@@ -52,16 +52,11 @@ export class EraserService extends Tool {
 
     move(x: number, y: number) {
         let svgs = this.state.svgState.svgs;
-        if (this.touchedSvgIndex === -1) {
-            //if eraser is not touching any svg
-            this.touchedSvgIndex = this.verifyMouseOver(x, y, svgs);
-        } else {
-            this.verifyMouseOut(x, y, svgs[this.touchedSvgIndex]);
-        }
+        this.touchedSvgIndex = this.verifyMouseOver(x, y, svgs);
     }
 
     deleteTouchedSvg() {
-        if (this.touchedSvgIndex >= 0 && this.renderer) {
+        if (this.touchedSvgIndex >= 0) {
             this.renderer.setAttribute(this.state.svgState.svgs[this.touchedSvgIndex], 'stroke', this.oldStrokeColor);
             this.deletedSvgs.push(this.state.svgState.svgs[this.touchedSvgIndex]);
             this.renderer.removeChild(this.state.svgState.drawSvg, this.state.svgState.svgs[this.touchedSvgIndex]);
@@ -75,26 +70,26 @@ export class EraserService extends Tool {
             let thickness = parseInt(<string>svgs[i].getAttribute('stroke-width'));
 
             if (this.isEraseTouching(x, y, box, thickness)) {
+                if (this.touchedSvgIndex === i) {
+                    return i;
+                }
+                if (this.touchedSvgIndex >= 0) {
+                    this.renderer.setAttribute(svgs[this.touchedSvgIndex], 'stroke', this.oldStrokeColor);
+                }
+
                 this.oldStrokeColor = <string>svgs[i].getAttribute('stroke');
+
                 if (this.oldStrokeColor === RED.hex()) {
                     this.renderer.setAttribute(svgs[i], 'stroke', DARK_RED.hex());
                 } else {
                     this.renderer.setAttribute(svgs[i], 'stroke', RED.hex());
                 }
                 return i;
+            } else if (this.touchedSvgIndex === i) {
+                this.renderer.setAttribute(svgs[this.touchedSvgIndex], 'stroke', this.oldStrokeColor);
             }
         }
         return -1;
-    }
-
-    verifyMouseOut(x: number, y: number, svg: SVGGraphicsElement) {
-        let box = svg.getBBox();
-        let thickness = parseInt(<string>svg.getAttribute('stroke-width'));
-
-        if (!this.isEraseTouching(x, y, box, thickness)) {
-            this.renderer.setAttribute(svg, 'stroke', this.oldStrokeColor);
-            this.touchedSvgIndex = -1;
-        }
     }
 
     isEraseTouching(x: number, y: number, box: DOMRect, thickness: number): boolean {

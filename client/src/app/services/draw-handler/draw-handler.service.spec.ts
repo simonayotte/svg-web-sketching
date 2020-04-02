@@ -6,6 +6,8 @@ import { PencilService } from '../tools/pencil/pencil.service';
 import { BrushService } from '../tools/brush/brush.service';
 import { MatDialogModule } from '@angular/material';
 import { Tools } from 'src/app/models/enums';
+import { RectangleService } from '../tools/rectangle/rectangle.service';
+import { EraserService } from '../tools/eraser/eraser.service';
 
 describe('DrawHandlerService', () => {
     let service: DrawHandlerService;
@@ -75,7 +77,7 @@ describe('DrawHandlerService', () => {
         service.state.globalState.tool = Tools.Pencil;
 
         const event: KeyboardEvent = new KeyboardEvent('keydown', {
-            key: 'any',
+            key: 'c',
         });
 
         const spy = spyOn(service.servicesMap.get(Tools.Pencil) as PencilService, 'handleKeyDown');
@@ -117,6 +119,81 @@ describe('DrawHandlerService', () => {
 
         const spy = spyOn(service.matDialog, 'open');
         service.onKeyDown(event);
+
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#onKeyDown() should call MatDialog #open() if key pressed is CTRL + o ', () => {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
+            key: 'o',
+            ctrlKey: true,
+        });
+
+        const spy = spyOn(service.matDialog, 'open');
+        service.onKeyDown(event);
+
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#onKeyDown() should call MatDialog #open() if key pressed is CTRL + s ', () => {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
+            key: 's',
+            ctrlKey: true,
+        });
+
+        const spy = spyOn(service.matDialog, 'open');
+        service.onKeyDown(event);
+
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#onKeyDown() should call MatDialog #open() if key pressed is CTRL + e ', () => {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
+            key: 'e',
+            ctrlKey: true,
+        });
+
+        const spy = spyOn(service.matDialog, 'open');
+        service.onKeyDown(event);
+
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#onKeyDown() should call MatDialog #open() if key pressed is CTRL + g ', () => {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
+            key: 'g',
+            ctrlKey: true,
+        });
+
+        const spy = spyOn(service.matDialog, 'open');
+        service.onKeyDown(event);
+
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#onKeyUp() should call function #handleKeyUp() of Rectangle Service if selected tool is Rectangle', () => {
+        service.state.globalState.tool = Tools.Rectangle;
+
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
+            key: 'Shift',
+        });
+
+        const spy = spyOn(service.servicesMap.get(Tools.Rectangle) as RectangleService, 'handleKeyUp');
+        service.onKeyUp(event);
+
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#onMouseMove() should call function #move() of Eraser Service if selected tool is Eraser', () => {
+        service.state.globalState.tool = Tools.Eraser;
+
+        const event: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 100,
+            clientY: 100,
+        });
+
+        const spy = spyOn(service.servicesMap.get(Tools.Eraser) as EraserService, 'move');
+        service.onMouseMove(event);
 
         expect(spy).toHaveBeenCalled();
     });

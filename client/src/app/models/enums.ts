@@ -22,7 +22,16 @@ export enum ToolButtons {
     T = 't',
     S = 's',
     E = 'e',
-    A = 'a'
+    A = 'a',
+}
+
+export enum SelectionButtons {
+    Control = 'Control',
+    a = 'a',
+    ArrowLeft = 'ArrowLeft',
+    ArrowRight = 'ArrowRight',
+    ArrowUp = 'ArrowUp',
+    ArrowDown = 'ArrowDown',
 }
 export enum SelectedColors {
     First = 'First',
