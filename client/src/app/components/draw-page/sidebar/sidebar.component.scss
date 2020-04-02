@@ -70,3 +70,8 @@
     color: white;
     margin-left: 3px;
 }
+
+.sidebar-option.disabled {
+    pointer-events: none;
+    color: #2b2b2b;
+}

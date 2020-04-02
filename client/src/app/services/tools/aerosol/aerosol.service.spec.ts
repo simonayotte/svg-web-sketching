@@ -84,25 +84,20 @@ describe('AerosolService', () => {
     expect(spy).not.toHaveBeenCalled();
   });
 
-  it('#stop should call store #pushSvg() if path is not empty', () => {
+  it('#stop should not call store #pushSvg() if #isDrawing is false', () => {
     const event: MouseEvent = new MouseEvent('mouseup', {
       clientX: 20,
       clientY: 45,
     });
-    jasmine.clock().tick(51);
-    const click: MouseEvent = new MouseEvent('mouseup', {
-      clientX: 20,
-      clientY: 45,
-    });
-
-    service.start(click);
+    
     service.start(event);
+    service.isDrawing = false;
     const spy = spyOn(store, 'pushSvg');
     service.stop();
-    expect(spy).toHaveBeenCalled();
+    expect(spy).not.toHaveBeenCalled();
   });
 
-  it('#stop should not call store #pushSvg() if path is empty', () => {
+  it('#stop should call store #pushSvg() if #isDrawing is true', () => {
     const event: MouseEvent = new MouseEvent('mouseup', {
       clientX: 20,
       clientY: 45,
@@ -161,5 +156,6 @@ describe('AerosolService', () => {
     expect(spy).not.toHaveBeenCalled();
   });
   
+
 
 });

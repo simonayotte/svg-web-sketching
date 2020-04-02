@@ -78,15 +78,15 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     submit(): void {
-        if(this.state.svgState.svgs.length != 0){
+        if (this.state.svgState.svgs.length != 0) {
             this.drawingHandler.clearCanvas();
-            this.store.resetUndoRedo(this.state.svgState.svgs);
+            this.store.resetUndoRedo();
         }
         this.store.setCanvasColor(this.backgroundColor);
-        this.createDrawingForm.controls['width'].value >= window.innerWidth?
-        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH): 
-        this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
+        this.createDrawingForm.controls['width'].value >= window.innerWidth
+            ? this.store.setDrawWidth(this.createDrawingForm.controls['width'].value - SIDEBAR_WIDTH)
+            : this.store.setDrawWidth(this.createDrawingForm.controls['width'].value);
         this.store.setDrawHeight(this.createDrawingForm.controls['height'].value);
-        this.dialogRef.close(); 
+        this.dialogRef.close();
     }
 }
