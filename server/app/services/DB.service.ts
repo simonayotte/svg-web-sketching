@@ -60,10 +60,10 @@ export class DatabaseService {
     }
 
     async getIdsOfDrawing(name:string, tags:Array<string>){
-        let ids: Array<ObjectId> = []
+        let ids: Array<string> = []
         return this.collection.find({name: name, tags: tags}).toArray().then((drawings:Drawing[]) => {
             for(let drawing of drawings){
-                ids.push(drawing._id);
+                ids.push(drawing._id.toHexString());
             }
             return ids;
           })
