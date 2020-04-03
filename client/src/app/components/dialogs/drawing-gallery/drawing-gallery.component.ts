@@ -33,7 +33,6 @@ export class DrawingGalleryComponent implements OnInit {
         public dialogRef: MatDialogRef<DrawingGalleryComponent>,
         ) 
         {
-        this.galleryState = new GalleryState();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
@@ -81,7 +80,6 @@ export class DrawingGalleryComponent implements OnInit {
           this.galleryState.loading = false;
         })
       .catch(() => {
-          this.galleryService.setDrawings([]);
           this.galleryState.loading = false;
         });
       }
