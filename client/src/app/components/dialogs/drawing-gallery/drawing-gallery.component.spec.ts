@@ -301,11 +301,11 @@ describe('DrawingGalleryComponent', () => {
     });
 
     it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', (done: DoneFn) => {
-        const spy = spyOn(component, 'updateGallery');
+        spyOn(component, 'updateGallery');
         component.trashColor = '#ff8c00';
         let drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.deleteDrawing(drawing).then(() => {
-            expect(spy).toHaveBeenCalled();
+            expect(component.updateGallery).toHaveBeenCalled();
             done();
         });
     });
