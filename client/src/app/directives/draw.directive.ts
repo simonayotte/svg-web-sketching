@@ -15,10 +15,12 @@ export class DrawDirective implements OnInit {
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent) {
         this.drawHandler.onKeyDown(event);
+        event.preventDefault();
     }
     @HostListener('document:keyup', ['$event'])
     onKeyUp(event: KeyboardEvent) {
         this.drawHandler.onKeyUp(event);
+        event.preventDefault();
     }
 
     @HostListener('mousedown', ['$event'])
