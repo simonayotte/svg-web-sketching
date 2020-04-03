@@ -9,12 +9,14 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 
 describe('PreviewExportComponent', () => {
   let component: PreviewExportComponent;
   let fixture: ComponentFixture<PreviewExportComponent>;
   let store:DrawStore;
   let httpService:HttpService;
+  let drawingHandler:DrawingHandler;
   let exportDrawingService:ExportDrawingService
   const dialogMock = {
     close: () => {
@@ -42,14 +44,39 @@ describe('PreviewExportComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PreviewExportComponent);
     component = fixture.componentInstance;
-    httpService = TestBed.get(HttpService)
-    exportDrawingService = TestBed.get(ExportDrawingService)
+    httpService = TestBed.get(HttpService);
+    drawingHandler = TestBed.get(DrawingHandler);
+    exportDrawingService = TestBed.get(ExportDrawingService);
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('#ngOnInit() should call #setIsKeyHandlerActive() of the store', () => {
+    spyOn(store,'setIsKeyHandlerActive');
+    component.ngOnInit();
+    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(false);
+  });
+
+  it('#ngOnInit() should call #setPreviewImgWidth() of drawingHandler', () => {
+    spyOn(drawingHandler,'setPreviewImgWidth');
+    component.ngOnInit();
+    expect(drawingHandler.setPreviewImgWidth)
+  });
+
+  it('#ngOnInit() should call #setPreviewImgHeight() of drawingHandler', () => {
+    spyOn(drawingHandler,'setPreviewImgHeight');
+    component.ngOnInit();
+    expect(drawingHandler.setPreviewImgHeight)
+  });
+
+  it('#ngOnDestroy() should call #setIsKeyHandlerActive() of the store', () => {
+    spyOn(store,'setIsKeyHandlerActive');
+    component.ngOnDestroy();
+    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(true);
+  })
 
   it('#exportDrawing() should call #getExportName() of exportDrawingService', ()=> {
     spyOn(exportDrawingService,'getExportName').and.callThrough();
@@ -68,4 +95,6 @@ describe('PreviewExportComponent', () => {
     component.exportDrawing()
     expect(httpService.exportDrawing).toHaveBeenCalled();
   })
+
+  
 });

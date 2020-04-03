@@ -11,23 +11,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
-import { defer } from 'rxjs';
 
-
-export function fakeAsyncResponse<T>(data: T) {
-  return defer(() => Promise.resolve(data));
-}
-
-const httpServiceStub = {
-  deleteDrawing() {
-    return fakeAsyncResponse({status: '200', message:'Dessin supprimé avec succès!'});
-  },
-  getAllDrawings() {
-    return fakeAsyncResponse([]);
-  }
-};
-
-describe('DrawingGalleryComponent', () => {
+fdescribe('DrawingGalleryComponent', () => {
   let component: DrawingGalleryComponent;
   let fixture: ComponentFixture<DrawingGalleryComponent>;
   let fb:FormBuilder = new FormBuilder();
@@ -49,7 +34,7 @@ describe('DrawingGalleryComponent', () => {
         providers: [
             {provide: MatDialogRef, useValue:  dialogMock },
             {provide: MatDialog, useValue: dialogMock},
-            {provide: HttpService, useValue: httpServiceStub},
+            HttpService,
             DrawStore,
             GalleryService
         ],
@@ -64,6 +49,7 @@ describe('DrawingGalleryComponent', () => {
     httpService = TestBed.get(HttpService);
     galleryService = TestBed.get(GalleryService);
     fixture.detectChanges();
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     //clear the tags array before each test
     for(let i = 0; i < component.tags.length; i++){
       component.tags.removeAt(i);
@@ -73,6 +59,24 @@ describe('DrawingGalleryComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('#ngOnInit() should call #setIsKeyHandlerActive() of the store', () => {
+    spyOn(store,'setIsKeyHandlerActive');
+    component.ngOnInit();
+    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(false);
+  });
+
+  it('#ngOnInit() should call #updateGallery()', () => {
+    spyOn(component,'updateGallery');
+    component.ngOnInit();
+    expect(component.updateGallery)
+  });
+
+  it('#ngOnDestroy() should call #setIsKeyHandlerActive() of the store', () => {
+    spyOn(store,'setIsKeyHandlerActive');
+    component.ngOnDestroy();
+    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(true);
+  })
 
   it('#addTag() should increase the size of #tags form array from 0 to 1', () => {
     component.addTag();
@@ -128,7 +132,7 @@ describe('DrawingGalleryComponent', () => {
     expect(httpService.getAllDrawings).toHaveBeenCalled();
   });
 
-  it('#updateGallery() should call #setDrawings() of galleryService', async (done:DoneFn) => {
+  it('#updateGallery() should call #setDrawings() of galleryService', (done:DoneFn) => {
     spyOn(galleryService, 'setDrawings');
     component.updateGallery().then(()=>{
       expect(galleryService.setDrawings).toHaveBeenCalled();
@@ -293,26 +297,28 @@ describe('DrawingGalleryComponent', () => {
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.deleteDrawing(drawing);
     expect(httpService.deleteDrawing).toHaveBeenCalledWith(drawing._id);
-  })
+  });
 
-  it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', async (async()=>{
-    spyOn(component,'updateGallery')
-    component.trashColor = '#ff8c00'
-    let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
-    component.deleteDrawing(drawing).then(()=>{
-      expect(component.updateGallery).toHaveBeenCalled();
-      })
-    }))
+  it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', (done: DoneFn) => {
+    const spy = spyOn(component, 'updateGallery');
+    component.trashColor = '#ff8c00';
+    let drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
+    component.deleteDrawing(drawing).then(() => {
+        expect(spy).toHaveBeenCalled();
+        done();
+    });
+});
 
-  it('if #trashColor is black, #deleteDrawing should not call #deleteDrawing() of httpService', ()=>{
+
+  it('if #trashColor is black, #deleteDrawing should not call #deleteDrawing() of httpService', () =>{
     spyOn(httpService,'deleteDrawing');
     component.trashColor = '#black'
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
-    component.deleteDrawing(drawing);
+    component.deleteDrawing
     expect(httpService.deleteDrawing).not.toHaveBeenCalledWith(drawing);
-  })
+  });
 
-  it('if #trashColor is black, #deleteDrawing should mot call #updateGallery', async (done:DoneFn)=>{
+  it('if #trashColor is black, #deleteDrawing should mot call #updateGallery', (done:DoneFn)=>{
     spyOn(component,'updateGallery')
     component.trashColor = '#black'
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])

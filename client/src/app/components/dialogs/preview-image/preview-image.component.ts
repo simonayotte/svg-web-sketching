@@ -57,7 +57,9 @@ export class PreviewImageComponent implements OnInit {
     this.state.svgState.width,
     this.state.svgState.height,
     [canvasColor.r, canvasColor.g, canvasColor.b, canvasColor.a]);
-    this.httpService.saveDrawing(drawing).toPromise().then(
+    return this.httpService.saveDrawing(drawing)
+    .toPromise()
+    .then(
     (data) => {
       this.dialogRef.close();
       alert(data.message);

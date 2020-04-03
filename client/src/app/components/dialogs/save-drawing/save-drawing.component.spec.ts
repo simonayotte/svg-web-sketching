@@ -60,6 +60,18 @@ describe('SaveDrawingComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('#ngOnInit() should call #setIsKeyHandlerActive() of the store', () => {
+    spyOn(store,'setIsKeyHandlerActive');
+    component.ngOnInit();
+    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(false);
+  });
+
+  it('#ngOnDestroy() should call #setIsKeyHandlerActive() of the store', () => {
+    spyOn(store,'setIsKeyHandlerActive');
+    component.ngOnDestroy();
+    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(true);
+  })
+
   it('#addTag() should increase the size of #tags form array from 0 to 1', () => {
     component.addTag();
     expect(component.tags.length).toEqual(1);

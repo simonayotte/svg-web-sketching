@@ -65,9 +65,11 @@ export class DrawingGalleryComponent implements OnInit {
     }
   }
 
-  async updateGallery() {
+  async updateGallery(): Promise<void> {
     this.loading = true;
-    this.httpService.getAllDrawings().toPromise().then((data) => {
+    return this.httpService.getAllDrawings()
+    .toPromise()
+    .then((data) => {
       this.galleryService.setDrawings(data);
       this.allDrawingsInDb = data;
       this.loading = false;
@@ -104,10 +106,12 @@ export class DrawingGalleryComponent implements OnInit {
     }
   }
 
-  async deleteDrawing(drawing: SavedDrawing) {
+  async deleteDrawing(drawing: SavedDrawing): Promise<void> {
     if (this.trashColor == '#ff8c00') {
       this.loading = true;
-      this.httpService.deleteDrawing(drawing._id).toPromise().then((data) => {
+      return this.httpService.deleteDrawing(drawing._id)
+      .toPromise()
+      .then((data) => {
         this.updateGallery();
         alert(data.message);
       })
