@@ -6,7 +6,7 @@ import { ExportDrawingService } from 'src/app/services/export-drawing-service/ex
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewExportComponent } from '../preview-export/preview-export.component';
-import { FormValuesName } from 'src/app/models/enums';
+import { FormValuesName, Tools } from 'src/app/models/enums';
 
 @Component({
   selector: 'app-export-drawing',
@@ -43,6 +43,7 @@ export class ExportDrawingComponent implements OnInit {
   }
 
   submit(): void {
+    this.store.setTool(Tools.None);
     this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[FormValuesName.Type].value, this.exportDrawingForm.controls[FormValuesName.Filter].value);
     this.exportDrawingService.setExportName(this.exportDrawingForm.controls[FormValuesName.Name].value);
     this.exportDrawingService.setType(this.exportDrawingForm.controls[FormValuesName.Type].value);
