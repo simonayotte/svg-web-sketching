@@ -27,6 +27,15 @@ export enum ToolButtons {
     R = 'r',
 }
 
+export enum OtherButtons {
+    O = 'o',
+    S = 's',
+    E = 'e',
+    G = 'g',
+    Z = 'z',
+    ShiftZ = 'Z',
+}
+
 export enum SelectionButtons {
     Control = 'Control',
     A = 'a',
@@ -56,5 +65,3 @@ export enum BrushTextures {
     Square = 'square',
     Circle = 'circle',
 }
-
-

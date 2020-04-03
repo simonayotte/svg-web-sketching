@@ -27,6 +27,7 @@ describe('CanvasGridDirective', () => {
         directive.size = 50;
         directive.color = new Color(70, 70, 70, 255);
         directive.isDisplay = true;
+        directive.isKeyHandlerActive = true;
     });
 
     it('should create an instance', () => {
@@ -96,6 +97,16 @@ describe('CanvasGridDirective', () => {
         expect(spy).toHaveBeenCalled();
     });
 
+    it('#onKeyDown() should emit #toggleGrid output if key is g and #isKeyHandlerActive is false', () => {
+        const event: KeyboardEvent = new KeyboardEvent('keydown', {
+            key: 'g',
+        });
+
+        directive.isKeyHandlerActive = false;
+        let spy = spyOn(directive.toggleGrid, 'emit');
+        directive.onKeyDown(event);
+        expect(spy).not.toHaveBeenCalled();
+    });
     it('#onKeyDown() should emit #gridSizeChange output if key is +', () => {
         const event: KeyboardEvent = new KeyboardEvent('keydown', {
             key: '+',

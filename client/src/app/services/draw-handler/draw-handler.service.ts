@@ -16,7 +16,7 @@ import { BrushService } from '../tools/brush/brush.service';
 import { PencilService } from '../tools/pencil/pencil.service';
 import { LineService } from '../tools/line/line.service';
 import { SelectionService } from '../tools/selection/selection.service';
-import { Tools, ToolButtons } from 'src/app/models/enums';
+import { Tools, ToolButtons, OtherButtons } from 'src/app/models/enums';
 import { EraserService } from '../tools/eraser/eraser.service';
 import { AerosolService } from './../tools/aerosol/aerosol.service';
 import { ApplicatorService } from '../tools/applicator/applicator.service';
@@ -89,33 +89,33 @@ export class DrawHandlerService {
                 this.store.setTool(tool);
             } else if (event.ctrlKey) {
                 switch (key) {
-                    case 'o':
+                    case OtherButtons.O:
                         //mat dialog display
                         event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
-                    case 's':
+                    case OtherButtons.S:
                         event.preventDefault();
                         event.stopPropagation();
                         this.matDialog.open(SaveDrawingComponent);
                         break;
 
-                    case 'e':
+                    case OtherButtons.E:
                         event.preventDefault();
                         this.matDialog.open(ExportDrawingComponent);
                         break;
 
-                    case 'g':
+                    case OtherButtons.G:
                         event.preventDefault();
                         this.matDialog.open(DrawingGalleryComponent);
                         break;
 
-                    case 'z':
+                    case OtherButtons.Z:
                         this.store.undo();
                         break;
-                    case 'Z':
+                    case OtherButtons.ShiftZ:
                         this.store.redo();
                         break;
                 }
