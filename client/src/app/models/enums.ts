@@ -85,3 +85,4 @@ export enum GalleryButtonColors {
     Black = 'black',
     Orange = '#ff8c00'
 }
+

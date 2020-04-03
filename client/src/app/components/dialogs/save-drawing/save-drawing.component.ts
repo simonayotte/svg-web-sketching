@@ -6,7 +6,7 @@ import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { FormValuesName, FileTypes} from 'src/app/models/enums';
+import { FormValuesName, FileTypes, Tools} from 'src/app/models/enums';
 
 @Component({
     selector: 'app-save-drawing',
@@ -60,6 +60,7 @@ export class SaveDrawingComponent implements OnInit {
     }
 
     submit(): void {
+    this.store.setTool(Tools.None);
     this.drawingHandler.prepareDrawingExportation(FileTypes.Png);
     this.saveDrawingService.setImgName(this.saveDrawingForm.controls[FormValuesName.Name].value);
     this.getTagsValues();

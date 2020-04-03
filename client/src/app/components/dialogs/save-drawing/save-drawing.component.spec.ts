@@ -10,7 +10,7 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
-import { FormValuesName } from 'src/app/models/enums';
+import { FormValuesName, Tools } from 'src/app/models/enums';
 
 describe('SaveDrawingComponent', () => {
   let component: SaveDrawingComponent;
@@ -143,5 +143,11 @@ describe('SaveDrawingComponent', () => {
     spyOn(component.dialog,'open').and.callThrough();
     component.submit();
     expect(component.dialog.open).toHaveBeenCalledWith(PreviewImageComponent)
+  });
+
+  it('#submit should call the #setTool() of the store', () => {
+    spyOn(store, 'setTool').and.callThrough();
+    component.submit();
+    expect(store.setTool).toHaveBeenCalledWith(Tools.None);
   });
 });

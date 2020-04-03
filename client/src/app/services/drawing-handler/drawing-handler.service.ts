@@ -46,7 +46,7 @@ export class DrawingHandler {
     return this.dataURL.value;
   }
 
-  /*Theses functions are used when a preview of the image to be saved or exported is shown, it is used to make an image
+  /*Functions are used when a preview of the image to be saved or exported is shown, it is used to make an image
   with dimensions that are proportional with the canvas*/
   setPreviewImgWidth() {
     if (this.state.svgState.width < MAX_IMG_PREVIEW_SIZE) {
