@@ -20,15 +20,13 @@ export class SaveDrawingController {
         this.router = Router();
 
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
-            // Send the request to the service and send the response
-            
             let drawing = new Drawing(req.body.name,req.body.tags, req.body.dataURL, req.body.svgsHTML, req.body.width, req.body.height, req.body.RGBA);
-            this.dbService.addDrawingDb(drawing).catch(err => {
+            this.dbService.addDrawingDb(drawing).catch((err:Error) => {
                 let errorMsg = {status:'400', message: err.message}
                 res.json(errorMsg)});
-            await wait(1000);
+            await wait(100);
             let drawing_id = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
-            await wait(1000);
+            await wait(100);
             this.fileHandler.saveDrawing(drawing_id, drawing.dataURL);
             let succesMsg = {status:'200', message:'Image sauvegardée avec succès!'}
             res.json(succesMsg)

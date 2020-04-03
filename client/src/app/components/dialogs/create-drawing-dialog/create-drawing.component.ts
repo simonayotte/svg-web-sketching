@@ -5,6 +5,7 @@ import { Color } from 'src/app/models/color';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { FormValuesName } from 'src/app/models/enums';
 
 const SIDEBAR_WIDTH = 52;
 
@@ -14,18 +15,6 @@ const SIDEBAR_WIDTH = 52;
     styleUrls: ['./create-drawing.component.scss'],
 })
 export class CreateDrawingComponent implements OnInit {
-    constructor(private store: DrawStore, public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingHandler: DrawingHandler) {
-        this.store.stateObs.subscribe((value: DrawState) => {
-            this.state = value;
-        });
-    }
-    get width() {
-        return this.createDrawingForm.get('width');
-    }
-    get height() {
-        return this.createDrawingForm.get('height');
-    }
-
     state: DrawState;
 
     isWidthModified = false;
@@ -35,9 +24,21 @@ export class CreateDrawingComponent implements OnInit {
     backgroundColor: Color;
 
     createDrawingForm = new FormGroup({
-        width: new FormControl('width', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
-        height: new FormControl('height', [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
+        width: new FormControl(FormValuesName.Width, [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
+        height: new FormControl(FormValuesName.Height, [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
     });
+    constructor(private store: DrawStore, public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingHandler: DrawingHandler) {
+        this.store.stateObs.subscribe((value: DrawState) => {
+            this.state = value;
+        });
+    }
+    get width() {
+        return this.createDrawingForm.get(FormValuesName.Width);
+    }
+    get height() {
+        return this.createDrawingForm.get(FormValuesName.Height);
+    }
+
     ngOnInit() {
         this.createDrawingForm.patchValue({ width: window.innerWidth });
         this.createDrawingForm.patchValue({ height: window.innerHeight });

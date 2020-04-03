@@ -10,14 +10,13 @@ import { OverlayModule } from '@angular/cdk/overlay';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
+import { FormValuesName } from 'src/app/models/enums';
 
 describe('SaveDrawingComponent', () => {
   let component: SaveDrawingComponent;
   let fixture: ComponentFixture<SaveDrawingComponent>;
   let fb:FormBuilder = new FormBuilder();
   let store:DrawStore;
-  const NAME_STRING = 'name';
-  const TAGS_STRING = 'tags';
   let drawingHandler:DrawingHandler
   let saveDrawingService:SaveDrawingService
   const dialogMock = {
@@ -60,18 +59,6 @@ describe('SaveDrawingComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('#ngOnInit() should call #setIsKeyHandlerActive() of the store', () => {
-    spyOn(store,'setIsKeyHandlerActive');
-    component.ngOnInit();
-    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(false);
-  });
-
-  it('#ngOnDestroy() should call #setIsKeyHandlerActive() of the store', () => {
-    spyOn(store,'setIsKeyHandlerActive');
-    component.ngOnDestroy();
-    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(true);
-  })
-
   it('#addTag() should increase the size of #tags form array from 0 to 1', () => {
     component.addTag();
     expect(component.tags.length).toEqual(1);
@@ -83,10 +70,10 @@ describe('SaveDrawingComponent', () => {
   });
 
   it('#addTag() should not add a tag if #tags is invalid', () => {
-    component.saveDrawingForm.controls[TAGS_STRING].setErrors({'incorrect': true});
+    component.saveDrawingForm.controls[FormValuesName.Tags].setErrors({'incorrect': true});
     component.addTag();
     expect(component.tags.length).toEqual(0);
-    component.saveDrawingForm.controls[TAGS_STRING].setErrors(null);
+    component.saveDrawingForm.controls[FormValuesName.Tags].setErrors(null);
   });
 
   it('#getTagsValues() should set #tagStringArray to be contain all the values in the #tags form array', () => {
@@ -136,7 +123,7 @@ describe('SaveDrawingComponent', () => {
   it('#submit() should call #setImgName of  saveDrawingService', () => {
     spyOn(saveDrawingService,'setImgName').and.callThrough();
     component.submit();
-    expect(saveDrawingService.setImgName).toHaveBeenCalledWith(component.saveDrawingForm.controls[NAME_STRING].value);
+    expect(saveDrawingService.setImgName).toHaveBeenCalledWith(component.saveDrawingForm.controls[FormValuesName.Name].value);
   });
 
   it('#submit() should call #getTagsValues()', () => {

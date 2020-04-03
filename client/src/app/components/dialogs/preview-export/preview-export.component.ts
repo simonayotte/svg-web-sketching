@@ -6,6 +6,7 @@ import { ExportDrawingService } from 'src/app/services/export-drawing-service/ex
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { HttpResponse } from 'src/app/models/httpResponse';
 
 @Component({
   selector: 'app-preview-export',
@@ -45,8 +46,7 @@ export class PreviewExportComponent implements OnInit {
     this.dialogRef.close();
     return this.httpService.exportDrawing(drawing)
     .toPromise()
-    .then((data) => alert(data.message))
-    .catch((err) => alert(err.message));
- 
+    .then((data:HttpResponse) => alert(data.message))
+    .catch((err:HttpResponse) => alert(err))
   }
 }

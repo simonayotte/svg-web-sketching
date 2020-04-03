@@ -23,13 +23,14 @@ export class GalleryController {
                 let returnedDrawings: Array<Drawing> = this.fileHandler.checkAllDrawingsAreInServer(drawings);
                 res.send(returnedDrawings);
             })
-            .catch(err => {
-                res.send([]);
+            .catch((error:Error) => {
+                let errorMsg = {status:'400', message:"Le dessins n'ont pas pu être récupérer"}
+                res.json(errorMsg);
             });
         });
 
         this.router.delete('/delete/:id', async (req: Request, res: Response, next: NextFunction) => {
-            this.dbService.deleteDrawingDb(req.params.id).then((result) => {
+            this.dbService.deleteDrawingDb(req.params.id).then(() => {
                 this.fileHandler.deleteDrawing(req.params.id)
                 let succesMsg = {status:'200', message:'Dessin supprimé avec succès!'}
                 res.json(succesMsg)

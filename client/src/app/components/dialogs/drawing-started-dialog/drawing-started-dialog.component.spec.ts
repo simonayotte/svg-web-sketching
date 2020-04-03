@@ -61,18 +61,6 @@ describe('DrawingStartedDialogComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    it('#ngOnInit() should call #setIsKeyHandlerActive() of the store', () => {
-        spyOn(store,'setIsKeyHandlerActive');
-        component.ngOnInit();
-        expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(false);
-      });
-    
-      it('#ngOnDestroy() should call #setIsKeyHandlerActive() of the store', () => {
-        spyOn(store,'setIsKeyHandlerActive');
-        component.ngOnDestroy();
-        expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(true);
-      });
-
     it('#continue should open the create drawing dialog if didGalleryOpen is false', () => {
         spyOn(component.dialog, 'open').and.callThrough();
         galleryService.setDidGalleryOpen(false);

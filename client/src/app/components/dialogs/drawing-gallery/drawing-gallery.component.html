@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>Galeries des dessins
-    <i class="fas fa-trash" (click)=toggleTrashColor() [style.color] = 'trashColor' title = 'Supprimer un dessin'></i>
-    <i class="fas fa-download" (click)=toggleLoadColor() [style.color] = 'loadColor' title = 'Charger un dessin'></i>
+    <i class="fas fa-trash" (click)=toggleTrashColor() [style.color] = 'galleryState.trashColor' title = 'Supprimer un dessin'></i>
+    <i class="fas fa-download" (click)=toggleLoadColor() [style.color] = 'galleryState.loadColor' title = 'Charger un dessin'></i>
 </h1>
 <form [formGroup]='filterDrawingForm'>
     <div formArrayName="tags">
@@ -20,17 +20,17 @@
         </div>
     </div>
   </form>
-<div mat-dialog-content class = 'container' *ngIf = '!loading'>
-    <div *ngIf = 'drawingsToShow.length == 0 && !noFilteredDrawingFound' class = no-drawing>
+<div mat-dialog-content class = 'container' *ngIf = '!galleryState.loading'>
+    <div *ngIf = 'galleryState.drawingsToShow.length == 0 && !galleryState.noFilteredDrawingFound' class = no-drawing>
         Aucun dessin sauvegardé
     </div>
-    <div *ngIf = 'noFilteredDrawingFound' class = no-filter>
+    <div *ngIf = 'galleryState.noFilteredDrawingFound' class = no-filter>
         Aucun dessin ne correspond aux étiquettes rentrées
     </div>
-    <div *ngFor = 'let drawing of drawingsToShow' class = 'drawing' (click)=deleteDrawing(drawing) (click)=loadDrawing(drawing)>
+    <div *ngFor = 'let drawing of galleryState.drawingsToShow' class = 'drawing' (click)=deleteDrawing(drawing) (click)=loadDrawing(drawing)>
         <div>
-            <img [src] = 'drawing.dataURL' *ngIf = "loadColor == '#ff8c00'"routerLink = '/draw'>
-            <img [src] = 'drawing.dataURL' *ngIf = "loadColor == 'black'">
+            <img [src] = 'drawing.dataURL' *ngIf = "galleryState.loadColor == '#ff8c00'"routerLink = '/draw'>
+            <img [src] = 'drawing.dataURL' *ngIf = "galleryState.loadColor == 'black'">
             <br>
             nom : {{drawing.name}}
             <br>
@@ -41,6 +41,6 @@
          </div>
     </div>
 </div><br>
-<div class="loader" *ngIf = 'loading'></div>
+<div class="loader" *ngIf = 'galleryState.loading'></div>
 
 <button mat-dialog-close>Fermer</button>

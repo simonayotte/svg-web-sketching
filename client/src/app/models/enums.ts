@@ -65,3 +65,23 @@ export enum BrushTextures {
     Square = 'square',
     Circle = 'circle',
 }
+
+export enum FormValuesName {
+    Width = 'width',
+    Height = 'height',
+    Tags = 'tags',
+    Name = 'name',
+    Type = 'type',
+    Filter = 'filter'
+}
+
+export enum FileTypes {
+    Png = 'png',
+    Jpeg = 'jpeg',
+    Svg = 'svg+xml'
+}
+
+export enum GalleryButtonColors {
+    Black = 'black',
+    Orange = '#ff8c00'
+}

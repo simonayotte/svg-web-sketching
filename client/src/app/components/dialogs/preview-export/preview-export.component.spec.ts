@@ -9,14 +9,23 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
-import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
+import { defer } from 'rxjs';
+
+export function fakeAsyncResponse<T>(data: T) {
+    return defer(() => Promise.resolve(data));
+}
+
+const httpServiceStub = {
+    exportDrawing() {
+        return fakeAsyncResponse({ status: '200', message: 'Image exportée avec succès!' });
+    },
+};
 
 describe('PreviewExportComponent', () => {
   let component: PreviewExportComponent;
   let fixture: ComponentFixture<PreviewExportComponent>;
   let store:DrawStore;
   let httpService:HttpService;
-  let drawingHandler:DrawingHandler;
   let exportDrawingService:ExportDrawingService
   const dialogMock = {
     close: () => {
@@ -32,9 +41,9 @@ describe('PreviewExportComponent', () => {
               {provide: MatDialogTitle, useValue: {}},
               {provide: MatDialogRef, useValue: dialogMock},
               {provide: MAT_DIALOG_DATA, useValue: []},
+              {provide: HttpService, useValue: httpServiceStub},
             DrawStore,
             ExportDrawingService,
-            HttpService
         ],
     }).compileComponents();
     store = TestBed.get(DrawStore);
@@ -45,7 +54,6 @@ describe('PreviewExportComponent', () => {
     fixture = TestBed.createComponent(PreviewExportComponent);
     component = fixture.componentInstance;
     httpService = TestBed.get(HttpService);
-    drawingHandler = TestBed.get(DrawingHandler);
     exportDrawingService = TestBed.get(ExportDrawingService);
     fixture.detectChanges();
   });
@@ -53,30 +61,6 @@ describe('PreviewExportComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('#ngOnInit() should call #setIsKeyHandlerActive() of the store', () => {
-    spyOn(store,'setIsKeyHandlerActive');
-    component.ngOnInit();
-    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(false);
-  });
-
-  it('#ngOnInit() should call #setPreviewImgWidth() of drawingHandler', () => {
-    spyOn(drawingHandler,'setPreviewImgWidth');
-    component.ngOnInit();
-    expect(drawingHandler.setPreviewImgWidth)
-  });
-
-  it('#ngOnInit() should call #setPreviewImgHeight() of drawingHandler', () => {
-    spyOn(drawingHandler,'setPreviewImgHeight');
-    component.ngOnInit();
-    expect(drawingHandler.setPreviewImgHeight)
-  });
-
-  it('#ngOnDestroy() should call #setIsKeyHandlerActive() of the store', () => {
-    spyOn(store,'setIsKeyHandlerActive');
-    component.ngOnDestroy();
-    expect(store.setIsKeyHandlerActive).toHaveBeenCalledWith(true);
-  })
 
   it('#exportDrawing() should call #getExportName() of exportDrawingService', ()=> {
     spyOn(exportDrawingService,'getExportName').and.callThrough();
@@ -94,6 +78,18 @@ describe('PreviewExportComponent', () => {
     spyOn(httpService,'exportDrawing').and.callThrough();
     component.exportDrawing()
     expect(httpService.exportDrawing).toHaveBeenCalled();
+  })
+
+  it('#exportDrawing() should call #window.alert() in the promise', (done:DoneFn)=> {
+    let message:string;
+    httpServiceStub.exportDrawing().subscribe((data)=>{
+      message = data.message;
+    })
+    spyOn(window,'alert')
+    component.exportDrawing().then(()=>{
+      expect(window.alert).toHaveBeenCalledWith(message);
+      done();
+    })
   })
 
   
