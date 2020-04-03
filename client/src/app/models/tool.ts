@@ -1,9 +1,14 @@
-export abstract class Tool {
+import { Renderer2 } from '@angular/core';
+import { DrawState } from '../state/draw-state';
 
+export abstract class Tool {
     protected mouseUpListener: EventListener;
     protected mouseMoveListener: EventListener;
 
     svg: SVGGraphicsElement;
+    state = new DrawState();
+
+    renderer: Renderer2;
     start(event: MouseEvent) {}
     continue(event: MouseEvent) {}
     stop() {}

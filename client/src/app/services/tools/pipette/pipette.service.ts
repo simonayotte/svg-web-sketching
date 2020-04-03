@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
 import { Tool } from 'src/app/models/tool';
@@ -8,10 +8,8 @@ import { Color } from 'src/app/models/color';
     providedIn: 'root',
 })
 export class PipetteService extends Tool {
-    state: DrawState;
     ctx: CanvasRenderingContext2D;
 
-    renderer: Renderer2;
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {

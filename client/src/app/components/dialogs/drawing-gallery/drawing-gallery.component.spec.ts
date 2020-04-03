@@ -12,7 +12,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
 
-fdescribe('DrawingGalleryComponent', () => {
   let component: DrawingGalleryComponent;
   let fixture: ComponentFixture<DrawingGalleryComponent>;
   let fb:FormBuilder = new FormBuilder();

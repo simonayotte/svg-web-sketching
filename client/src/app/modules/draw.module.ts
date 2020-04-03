@@ -37,11 +37,10 @@ import { EraserComponent } from '../components/tools/eraser/eraser.component';
         PolygonComponent,
         EllipsisComponent,
         SelectionComponent,
-
+        AerosolComponent,
         EraserComponent,
         DrawDirective,
         SvgDirective,
-        AerosolComponent
     ],
     imports: [CommonModule, FormsModule],
     exports: [
@@ -61,9 +60,9 @@ import { EraserComponent } from '../components/tools/eraser/eraser.component';
         EllipsisComponent,
         SelectionComponent,
         EraserComponent,
+        AerosolComponent,
         DrawDirective,
         SvgDirective,
-        AerosolComponent
     ],
 })
 export class DrawModule {}

@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -8,8 +8,6 @@ import { Coordinate } from 'src/app/models/coordinate';
     providedIn: 'root',
 })
 export class AerosolService extends Tool {
-    state: DrawState;
-    renderer: Renderer2;
     path = '';
     isDrawing = false;
     //Emission
