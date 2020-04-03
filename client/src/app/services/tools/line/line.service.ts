@@ -1,5 +1,5 @@
 import { Coordinate } from 'src/app/models/coordinate';
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -29,9 +29,6 @@ export class LineService extends Tool {
     //PreviewLine
     tempLine: SVGElement;
 
-    renderer: Renderer2;
-
-
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -39,7 +36,7 @@ export class LineService extends Tool {
         });
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseDoubleClickListener = this.stop.bind(this);
-    
+
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
@@ -49,31 +46,31 @@ export class LineService extends Tool {
             //Styling & creation of SVG element
             this.svg = this.renderer.createElement('polyline', 'svg');
             this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.secondColor.hex());
-            this.renderer.setAttribute(this.svg,'fill', 'none');
-            this.renderer.setAttribute(this.svg,'stroke-linecap', 'round');
-            this.renderer.setAttribute(this.svg,'stroke-linejoin', 'round');
-            this.renderer.setAttribute(this.svg,'stroke-width', this.state.globalState.thickness.toString());
+            this.renderer.setAttribute(this.svg, 'fill', 'none');
+            this.renderer.setAttribute(this.svg, 'stroke-linecap', 'round');
+            this.renderer.setAttribute(this.svg, 'stroke-linejoin', 'round');
+            this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
 
             //Points in polyline
-            this.renderer.setAttribute(this.svg,'points', `${event.offsetX},${event.offsetY} `);
+            this.renderer.setAttribute(this.svg, 'points', `${event.offsetX},${event.offsetY} `);
 
             if (this.state.lineHasJunction) {
                 let marker = this.renderer.createElement('marker', 'svg');
-                this.renderer.setAttribute(marker, 'markerWidth', (this.state.lineJunctionThickness*2/25).toString());
-                this.renderer.setAttribute(marker, 'markerHeight', (this.state.lineJunctionThickness*2/25).toString());
-                this.renderer.setAttribute(marker, 'refX', (this.state.lineJunctionThickness/25).toString());
-                this.renderer.setAttribute(marker, 'refY', (this.state.lineJunctionThickness/25).toString());
-                this.renderer.setAttribute(marker, 'id',  (this.state.lineJunctionThickness/25).toString());
+                this.renderer.setAttribute(marker, 'markerWidth', ((this.state.lineJunctionThickness * 2) / 25).toString());
+                this.renderer.setAttribute(marker, 'markerHeight', ((this.state.lineJunctionThickness * 2) / 25).toString());
+                this.renderer.setAttribute(marker, 'refX', (this.state.lineJunctionThickness / 25).toString());
+                this.renderer.setAttribute(marker, 'refY', (this.state.lineJunctionThickness / 25).toString());
+                this.renderer.setAttribute(marker, 'id', (this.state.lineJunctionThickness / 25).toString());
 
                 let circle = this.renderer.createElement('circle', 'svg');
-                this.renderer.setAttribute(circle, 'cx', (this.state.lineJunctionThickness/25).toString());
-                this.renderer.setAttribute(circle, 'cy', (this.state.lineJunctionThickness/25).toString());
-                this.renderer.setAttribute(circle, 'r', (this.state.lineJunctionThickness/25).toString());
+                this.renderer.setAttribute(circle, 'cx', (this.state.lineJunctionThickness / 25).toString());
+                this.renderer.setAttribute(circle, 'cy', (this.state.lineJunctionThickness / 25).toString());
+                this.renderer.setAttribute(circle, 'r', (this.state.lineJunctionThickness / 25).toString());
                 marker.appendChild(circle);
                 this.renderer.appendChild(this.state.svgState.drawSvg, marker);
-                this.renderer.setAttribute(this.svg, 'marker-start', 'url(#' +  (this.state.lineJunctionThickness/25).toString() +')');
-                this.renderer.setAttribute(this.svg, 'marker-mid', 'url(#' +  (this.state.lineJunctionThickness/25).toString() +')');
-                this.renderer.setAttribute(this.svg, 'marker-end', 'url(#' +  (this.state.lineJunctionThickness/25).toString() +')');
+                this.renderer.setAttribute(this.svg, 'marker-start', 'url(#' + (this.state.lineJunctionThickness / 25).toString() + ')');
+                this.renderer.setAttribute(this.svg, 'marker-mid', 'url(#' + (this.state.lineJunctionThickness / 25).toString() + ')');
+                this.renderer.setAttribute(this.svg, 'marker-end', 'url(#' + (this.state.lineJunctionThickness / 25).toString() + ')');
             }
             //Manage Event listeners
             this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
@@ -104,11 +101,11 @@ export class LineService extends Tool {
 
     //Add position to SVG element to DrawLine
     drawLine(x: number, y: number) {
-        this.renderer.setAttribute(this.svg,'stroke-width', this.state.globalState.thickness.toString());
+        this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
         let linePoints = this.svg.getAttribute('points');
         if (linePoints != null) {
             linePoints += `${x},${y} `;
-            this.renderer.setAttribute(this.svg,'points', linePoints);
+            this.renderer.setAttribute(this.svg, 'points', linePoints);
         }
     }
 
@@ -136,7 +133,9 @@ export class LineService extends Tool {
         }
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('dblclick', this.mouseDoubleClickListener);
-        if (this.tempLine) {this.renderer.removeChild(this.state.svgState.drawSvg, this.tempLine);}
+        if (this.tempLine) {
+            this.renderer.removeChild(this.state.svgState.drawSvg, this.tempLine);
+        }
     }
 
     previewLine(x: number, y: number) {
@@ -149,18 +148,18 @@ export class LineService extends Tool {
         this.tempLine = this.renderer.createElement('line', 'svg');
 
         this.renderer.setAttribute(this.tempLine, 'stroke', this.state.colorState.secondColor.hex());
-        this.renderer.setAttribute(this.tempLine,'fill', 'none');
-        this.renderer.setAttribute(this.tempLine,'stroke-linecap', 'round');
-        this.renderer.setAttribute(this.tempLine,'stroke-linejoin', 'round');
-        this.renderer.setAttribute(this.tempLine,'stroke-width', this.state.globalState.thickness.toString());
+        this.renderer.setAttribute(this.tempLine, 'fill', 'none');
+        this.renderer.setAttribute(this.tempLine, 'stroke-linecap', 'round');
+        this.renderer.setAttribute(this.tempLine, 'stroke-linejoin', 'round');
+        this.renderer.setAttribute(this.tempLine, 'stroke-width', this.state.globalState.thickness.toString());
         let dashWidth = (this.state.globalState.thickness / 2).toString().concat(' 50');
-        this.renderer.setAttribute(this.tempLine,'stroke-dasharray', dashWidth);
+        this.renderer.setAttribute(this.tempLine, 'stroke-dasharray', dashWidth);
 
         //Add coordinates to line, add tempLine in SVG
-        this.renderer.setAttribute(this.tempLine,'x1', this.lastX.toString());
-        this.renderer.setAttribute(this.tempLine,'y1', this.lastY.toString());
-        this.renderer.setAttribute(this.tempLine,'x2', x.toString());
-        this.renderer.setAttribute(this.tempLine,'y2', y.toString());
+        this.renderer.setAttribute(this.tempLine, 'x1', this.lastX.toString());
+        this.renderer.setAttribute(this.tempLine, 'y1', this.lastY.toString());
+        this.renderer.setAttribute(this.tempLine, 'x2', x.toString());
+        this.renderer.setAttribute(this.tempLine, 'y2', y.toString());
         this.renderer.appendChild(this.state.svgState.drawSvg, this.tempLine);
     }
 
@@ -187,7 +186,7 @@ export class LineService extends Tool {
     //Escape -> Deletes line in whole
     deleteLine() {
         if (this.coordinates[0]) {
-            this.renderer.setAttribute(this.svg,'points', '');
+            this.renderer.setAttribute(this.svg, 'points', '');
             this.stop();
         }
     }
@@ -197,11 +196,11 @@ export class LineService extends Tool {
         if (this.coordinates.length > 1) {
             this.coordinates.pop();
             this.setPoints(this.coordinates);
-            if (this.tempLine) { 
+            if (this.tempLine) {
                 this.lastX = this.coordinates[this.coordinates.length - 1].pointX;
                 this.lastY = this.coordinates[this.coordinates.length - 1].pointY;
-                this.renderer.setAttribute(this.tempLine,'x1', this.lastX.toString());
-                this.renderer.setAttribute(this.tempLine,'y1', this.lastY.toString());
+                this.renderer.setAttribute(this.tempLine, 'x1', this.lastX.toString());
+                this.renderer.setAttribute(this.tempLine, 'y1', this.lastY.toString());
             }
         }
     }
@@ -211,7 +210,7 @@ export class LineService extends Tool {
         for (let i = 0; i < points.length; i++) {
             tempString += `${points[i].pointX},${points[i].pointY} `;
         }
-        this.renderer.setAttribute(this.svg,'points', tempString);
+        this.renderer.setAttribute(this.svg, 'points', tempString);
     }
 
     //Methode pour alignement du point

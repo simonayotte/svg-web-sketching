@@ -40,23 +40,23 @@ export class CanvasGridDirective {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent) {
-    if (this.isKeyHandlerActive) {
-        switch (event.key) {
-            case 'g':
-                if (!event.ctrlKey) {
-                    this.toggleGrid.emit();
-                }
-                break;
-            case '+':
-                if (this.isDisplay) {
-                    this.gridSizeChange.emit(this.setSize(this.size, 5));
-                }
-                break;
-            case '-':
-                if (this.isDisplay) {
-                    this.gridSizeChange.emit(this.setSize(this.size, -5));
-                }
-                break;
+        if (this.isKeyHandlerActive) {
+            switch (event.key) {
+                case 'g':
+                    if (!event.ctrlKey) {
+                        this.toggleGrid.emit();
+                    }
+                    break;
+                case '+':
+                    if (this.isDisplay) {
+                        this.gridSizeChange.emit(this.setSize(this.size, 5));
+                    }
+                    break;
+                case '-':
+                    if (this.isDisplay) {
+                        this.gridSizeChange.emit(this.setSize(this.size, -5));
+                    }
+                    break;
             }
         }
     }
