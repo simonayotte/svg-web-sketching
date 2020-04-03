@@ -28,6 +28,44 @@
                 <div class="item">
                     <div class="subject" id="rectangle" (click)="displayTextSubject('rectangle')" [ngClass]="{ active: currentText == 'rectangle'}">Rectangle</div>
                 </div>
+                <div class="item">
+                    <div class="subject" id="ellipse" (click)="displayTextSubject('ellipse')" [ngClass]="{ active: currentText == 'ellipse'}">Ellipse</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="polygone" (click)="displayTextSubject('polygone')" [ngClass]="{ active: currentText == 'polygone'}">Polygone</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="efface" (click)="displayTextSubject('efface')" [ngClass]="{ active: currentText == 'efface'}">Efface</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="aerosol" (click)="displayTextSubject('aerosol')" [ngClass]="{ active: currentText == 'aerosol'}">Aérosol</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="pipette" (click)="displayTextSubject('pipette')" [ngClass]="{ active: currentText == 'pipette'}">Pipette</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="applicateur" (click)="displayTextSubject('applicateur')" [ngClass]="{ active: currentText == 'applicateur'}">Applicateur</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="selection" (click)="displayTextSubject('selection')" [ngClass]="{ active: currentText == 'selection'}">Sélection</div>
+                </div>
+            </div>
+            <div class="item">
+                <div class="category" id="param" (click)="displayCategory('param')">Paramètres de dessin</div>
+            </div>
+            <div class="category-items" id="param-list" [ngClass]="{ active: currentCategory == 'param'}">
+                <div class="item">
+                    <div class="subject" id="sauvegarder" (click)="displayTextSubject('sauvegarder')" [ngClass]="{ active: currentText == 'sauvegarder'}">Sauvegarder</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="exporter" (click)="displayTextSubject('exporter')" [ngClass]="{ active: currentText == 'exporter'}">Exporter</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="undoredo" (click)="displayTextSubject('undoredo')" [ngClass]="{ active: currentText == 'undoredo'}">Annuler-Refaire</div>
+                </div>
+                <div class="item">
+                    <div class="subject" id="grille" (click)="displayTextSubject('grille')" [ngClass]="{ active: currentText == 'grille'}">Grille</div>
+                </div>
             </div>
         </div>
     </div>
@@ -61,7 +99,13 @@
         </div>
         <div class="subject-text" id="page-galerie" *ngSwitchCase="'galerie'">
             <h1>Galerie</h1>
-            <p>La page de Galerie peut-être accédée en appuyant sur le bouton "Ouvrir la galerie" sur la page d'acceuil.<br /> La page de Galerie n'est pas encore implémentée.</p>
+            <p>La fenêtre modale de Galerie peut-être accédée en appuyant sur le bouton "Ouvrir la galerie" sur la page d'acceuil ou l'icone (<i class="sidebar-dropdown-option fas fas fa-images"></i>) dans la page de dessin.
+            <br />Celle-ci contient la liste de tous les fichiers sauvegardés sur le serveur.
+            <br />Chaque élément de la liste comporte un nom, des étiquettes (s’il y en a), et une représentation du dessin en format réduit.
+            <br />Il est possible de filtrer les dessins par étiquettes (option ajouter un filtre).
+            <br />Il est possible de charger un dessin en pesant sur le bouton de chargement (<i class="fas fa-download"></i>).
+            <br />Il est possible de supprimer un dessin en pesant sur le bouton de corbeille (<i class="fas fa-trash"></i>).
+            </p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('dessin')"><span>Précédent</span></button>
                 <button class="button right" (click)="displayTextSubject('crayon')"><span>Suivant</span></button>
@@ -113,7 +157,7 @@
             <br />Une fois l'outils séléctionné, un glisser-déposer permet de dessiner un rectangle.
             </p>
             <h4>Épaisseur</h4>
-            <p>L'épaisseur du contour du rectangle peut-être modifée avec la glissière "Épaisseur".</p>
+            <p>L'épaisseur du contour du rectangle peut-être modifiée avec la glissière "Épaisseur".</p>
             <h4>Styles</h4>
             <p>3 styles de rectangles sont disponibles:
             <br />  - Contour: seul les contours du rectangle sont dessinés. (<i class="far fa-square"></i>)
@@ -129,6 +173,155 @@
             </p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('ligne')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('ellipse')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-polygone" *ngSwitchCase="'polygone'">
+            <h1>Polygone</h1>
+            <p>L'outils polygone permet de dessiner des polygones avec un glisser-déposer.
+            <br />Pour ce faire, séléctionnez l'option polygone dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-draw-polygon"></i>) ou pesez sur la touche "3".
+            </p>
+            <h4>Paramètres</h4>
+            <p>L'épaisseur du contour du polygone peut-être modifiée avec la glissière "Épaisseur".
+            <br />3 styles de polygones sont disponibles:
+            <br />  - Contour: seul les contours du polygone sont dessinés. (<i class="far fa-square"></i>)
+            <br />  - Plein avec contour: l'intérieur et les contours du polygone sont dessinés. (<i class="fas fa-square"></i>)
+            <br />  - Plein: seul l'intérieur du polygone est dessiné. (<i class="fas fa-fill-drip"></i>)
+            <br />Le nombre de côtés du polygone peut-être modifiée avec la glissière "Côtés".
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('ellipse')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('efface')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-ellipse" *ngSwitchCase="'ellipse'">
+            <h1>Ellipse</h1>
+            <p>L'outils ellipse permet de dessiner des ellipses avec un glisser-déposer.
+            <br />Pour ce faire, séléctionnez l'option ellipse dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-circle"></i>) ou pesez sur la touche "2".
+            </p>
+            <h4>Paramètres</h4>
+            <p>L'épaisseur de l'ellipse peut-être modifiée avec la glissière "Épaisseur".
+            <br />3 styles d'ellipse sont disponibles:
+            <br />  - Contour: seul les contours de l'ellipse sont dessinés. (<i class="far fa-square"></i>)
+            <br />  - Plein avec contour: l'intérieur et les contours de l'ellipse sont dessinés. (<i class="fas fa-square"></i>)
+            <br />  - Plein: seul l'intérieur de l'ellipse est dessiné. (<i class="fas fa-fill-drip"></i>)
+            <br />Il est possible d'en faire un cercle en pesant sur la touche "Shift".
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('rectangle')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('polygone')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-efface" *ngSwitchCase="'efface'">
+            <h1>Efface</h1>
+            <p>L'outils efface permet de supprimer des formes du canvas.
+            <br />Pour ce faire, séléctionnez l'option efface dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-eraser"></i>) ou pesez sur la touche "E".
+            <br />Une fois l'outils séléctionné, un simple clic ou un glisser-déposer permet d'effacer les formes. (les formes a effacer sont entourées de rouge)
+            </p>
+            <h4>Taille</h4>
+            <p>Il est possible de définir la taille de l'efface avec la glissière "Épaisseur".</p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('ellipse')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('aerosol')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-aerosol" *ngSwitchCase="'aerosol'">
+            <h1>Aérosol</h1>
+            <p>L'outils efface permet de dessinner un jet de peinture vaporisé.
+            <br />Pour ce faire, séléctionnez l'option aérosol dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-spray-can"></i>) ou pesez sur la touche "A".
+            <br />Une fois l'outils séléctionné, maintenir le bouton gauche de la souris enfoncé permet de vaporiser.
+            </p>
+            <h4>Paramètres</h4>
+            <p>Il est possible de définir le diamètre du jet de l'aérosol avec la glissière "Épaisseur".</p>
+            <p>Il est possible de définir le nombres d'émissions par seconde du jet de l'aérosol avec la glissière "Taux d'émission".</p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('efface')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('pipette')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-pipette" *ngSwitchCase="'pipette'">
+            <h1>Pipette</h1>
+            <p>L'outils pipette permet de choisir une couleur déja présente sur le dessin.
+            <br />Pour ce faire, séléctionnez l'option pipette dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-eye-dropper"></i>) ou pesez sur la touche "I".
+            <br />Une fois l'outils séléctionné, appuyer sur le clic gauche permet d'assigner la couleur principale et clic droit la couleur secondaire.
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('aerosol')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('applicateur')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-applicateur" *ngSwitchCase="'applicateur'">
+            <h1>Applicateur de couleur</h1>
+            <p>L'outils applicateur de couleur permet de changer la couleur d'un objet déja dessiné.
+            <br />Pour ce faire, séléctionnez l'option applicateur de couleur dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-eye-dropper"></i>) ou pesez sur la touche "R".
+            <br />Une fois l'outils séléctionné, appuyer sur le clic gauche sur un objet permet de colorier l'intérieur avec la couleur principale et l'extérieur avec la couleur secondaire actuelle.
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('pipette')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('selection')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-selection" *ngSwitchCase="'selection'">
+            <h1>Sélection</h1>
+            <p>L'outils selection permet de selectionner les objets déja dessinés et de les déplacer.
+            <br />Pour ce faire, séléctionnez l'option selection dans la barre d'outils (<i class="sidebar-option fas fa-mouse-pointer"></i>) ou pesez sur la touche "S".
+            <br />Une fois l'outils séléctionné, appuyer sur le clic gauche sur un objet permet de le sélectionner.
+            <br />Il est possible de sélectionner plusieurs objets avec un glisser-déposer, tous les objets touchant le réctangle de sélection ainsi dessiné seront selectionnés.
+            <br />Appuyer sur clic droit plutôt que clic gauche permet d'inverser la selection.
+            <br />Il est possible de sélectionner tous les objets a l'écran en pesant sur "Ctrl + A".
+            </p>
+            <h4>Déplacement</h4>
+            <p>Il est possible de déplacer une sélection en faisant un glisser déposer en partant de l'intérieur de la boîte englobante des objets sélectionnés.
+            <br />Il est possible de déplacer une sélection en pesant sur les flèches directionelles du clavier.
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('applicateur')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('sauvegarder')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-sauvegarder" *ngSwitchCase="'sauvegarder'">
+            <h1>Sauvegarder</h1>
+            <p>Il est possible de sauvegarder un dessin.
+            <br />Pour ce faire, séléctionnez l'option sauvegarder dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-save"></i>) ou pesez sur les touches "Ctrl + S".
+            <br />Il est ensuite possible de rentrer un nom ainsi que plusieurs étiquettes, ces dernières sont optionelles.
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('selection')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('exporter')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-exporter" *ngSwitchCase="'exporter'">
+            <h1>Exporter</h1>
+            <p>Il est possible d'exporter localement un dessin.
+            <br />Pour ce faire, séléctionnez l'option exporter dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-file-export"></i>) ou pesez sur les touches "Ctrl + E".
+            <br />Il est possible d'exporter l'image dans les formats JPG, PNG et SVG.
+            <br />Il est possible de rentrer le nom du fichier ainsi que d'appliquer un filtre au dessin avant de l'exporter.
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('sauvegarder')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('undoredo')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-undoredo" *ngSwitchCase="'undoredo'">
+            <h1>Annuler-refaire</h1>
+            <p>Il est possible d'annuler ou refaire les dernières actions effectuées sur un dessin.
+            <br />Pour ce faire, séléctionnez l'option annuler dans la barre d'outils (<i class="sidebar-option fas fa-undo"></i>) ou pesez sur les touches "Ctrl + Z".
+            <br />Pour ce faire, séléctionnez l'option refaire dans la barre d'outils (<i class="sidebar-option fas fa-redo"></i>) ou pesez sur les touches "Ctrl + Shift + Z".
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('exporter')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('grille')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-grille" *ngSwitchCase="'grille'">
+            <h1>Grille</h1>
+            <p>Il est possible d'afficher une grille sur la surface de dessin.
+            <br />Pour ce faire, séléctionnez l'option grille dans la barre d'outils (<i class="sidebar-option fas fa-border-all"></i>) ou pesez sur la touche "G".
+            <br />il est possible de définir la taille de la grille avec le champ "Taille Grille".
+            <br />il est possible de définir l'opacité de la grille avec la glissière "Opacité Grille".
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('undoredo')"><span>Précédent</span></button>
             </div>
         </div>
     </div>
