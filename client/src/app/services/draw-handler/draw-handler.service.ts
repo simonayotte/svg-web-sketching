@@ -1,25 +1,25 @@
 import { Injectable, Injector } from '@angular/core';
-import { DrawState } from 'src/app/state/draw-state';
-import { Tool } from 'src/app/models/tool';
-import { DrawStore } from 'src/app/store/draw-store';
-import { RectangleService } from '../tools/rectangle/rectangle.service';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
-import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
+import { DrawingGalleryComponent } from 'src/app/components/dialogs/drawing-gallery/drawing-gallery.component';
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from 'src/app/components/dialogs/export-drawing/export-drawing.component';
-import { DrawingGalleryComponent } from 'src/app/components/dialogs/drawing-gallery/drawing-gallery.component';
+import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
+import { OtherButtons, ToolButtons, Tools } from 'src/app/models/enums';
+import { Tool } from 'src/app/models/tool';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
-import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
-import { BrushService } from '../tools/brush/brush.service';
-import { PencilService } from '../tools/pencil/pencil.service';
-import { LineService } from '../tools/line/line.service';
-import { SelectionService } from '../tools/selection/selection.service';
-import { Tools, ToolButtons, OtherButtons } from 'src/app/models/enums';
-import { EraserService } from '../tools/eraser/eraser.service';
-import { AerosolService } from './../tools/aerosol/aerosol.service';
+import { PolygonService } from 'src/app/services/tools/polygon/polygon.service';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
 import { ApplicatorService } from '../tools/applicator/applicator.service';
+import { BrushService } from '../tools/brush/brush.service';
+import { EraserService } from '../tools/eraser/eraser.service';
+import { LineService } from '../tools/line/line.service';
+import { PencilService } from '../tools/pencil/pencil.service';
+import { RectangleService } from '../tools/rectangle/rectangle.service';
+import { SelectionService } from '../tools/selection/selection.service';
+import { AerosolService } from './../tools/aerosol/aerosol.service';
 
 @Injectable({
     providedIn: 'root',
@@ -64,7 +64,6 @@ export class DrawHandlerService {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.start(event);
         }
-        //TODO: Call fonction pour reset undo
     }
 
     stopTool() {
