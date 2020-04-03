@@ -1,4 +1,4 @@
-import { Directive, ElementRef, OnInit, OnDestroy, Input, Renderer2 } from '@angular/core';
+import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 @Directive({
     selector: '[svg]',
 })

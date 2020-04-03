@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
-import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
-import { MatDialogRef, MatDialog } from '@angular/material';
 import { FormBuilder, Validators } from '@angular/forms';
-import { PreviewExportComponent } from '../preview-export/preview-export.component';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
+import { PreviewExportComponent } from '../preview-export/preview-export.component';
 
-const NAME_STRING: string = 'name';
-const TYPE_STRING: string = 'type';
-const FILTER_STRING: string = 'filter';
+const NAME_STRING = 'name';
+const TYPE_STRING = 'type';
+const FILTER_STRING = 'filter';
 
 @Component({
   selector: 'app-export-drawing',
@@ -17,42 +17,40 @@ const FILTER_STRING: string = 'filter';
   styleUrls: ['./export-drawing.component.scss']
 })
 export class ExportDrawingComponent implements OnInit {
-  state:DrawState;
   constructor(
-     private drawingHandler:DrawingHandler,
-     private store:DrawStore, 
-     public dialogRef:MatDialogRef<ExportDrawingComponent>, 
-     private fb:FormBuilder,
+     private drawingHandler: DrawingHandler,
+     private store: DrawStore,
+     public dialogRef: MatDialogRef<ExportDrawingComponent>,
+     private fb: FormBuilder,
      public dialog: MatDialog,
-     private exportDrawingService:ExportDrawingService) { 
+     private exportDrawingService: ExportDrawingService) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
-  })};
-  ngOnInit() {
-    this.state.globalState.isKeyHandlerActive = false;
-  }
+  }); }
 
-  ngOnDestroy() {
-    this.state.globalState.isKeyHandlerActive = true;
-  }
+   get name() { return this.exportDrawingForm.get(NAME_STRING); }
+   get type() { return this.exportDrawingForm.get(TYPE_STRING) ; }
+  state: DrawState;
 
   exportDrawingForm = this.fb.group({
     name : ['', Validators.required],
     type : ['', Validators.required],
     filter: ['']
-   })
+   });
+  ngOnInit() {
+    this.store.setIsKeyHandlerActive(false);
+  }
 
-   get name() { return this.exportDrawingForm.get(NAME_STRING); }
-   get type() { return this.exportDrawingForm.get(TYPE_STRING) ;}
-  
+  ngOnDestroy() {
+    this.store.setIsKeyHandlerActive(true);
+  }
+
   submit() {
-    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[TYPE_STRING].value,this.exportDrawingForm.controls[FILTER_STRING].value);
+    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[TYPE_STRING].value, this.exportDrawingForm.controls[FILTER_STRING].value);
     this.exportDrawingService.setExportName(this.exportDrawingForm.controls[NAME_STRING].value);
     this.exportDrawingService.setType(this.exportDrawingForm.controls[TYPE_STRING].value);
     this.dialogRef.close();
-    this.dialog.open(PreviewExportComponent)
+    this.dialog.open(PreviewExportComponent);
   }
-  
-
 
 }

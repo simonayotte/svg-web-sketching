@@ -238,6 +238,7 @@
         class="canvas-grid"
         [width]="state.svgState.width"
         [height]="state.svgState.height"
+        [isKeyHandlerActive]="state.globalState.isKeyHandlerActive"
         [ngClass]="{ withPanel: state.globalState.isPanelOpen }"
         [gridSize]="state.globalState.gridSize"
         [isDisplayGrid]="state.globalState.isDisplayGrid"

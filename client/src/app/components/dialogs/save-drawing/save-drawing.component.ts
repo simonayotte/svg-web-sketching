@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, Validators } from '@angular/forms';
-import { MatDialog } from '@angular/material'
-import { PreviewImageComponent } from 'src/app/components/dialogs/preview-image/preview-image.component'
-import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service'
-import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
+import { MatDialog } from '@angular/material';
+import { PreviewImageComponent } from 'src/app/components/dialogs/preview-image/preview-image.component';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
+import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
 
 const NAME_STRING = 'name';
 const TAGS_STRING = 'tags';
@@ -16,15 +16,15 @@ const TAGS_STRING = 'tags';
     styleUrls: ['./save-drawing.component.scss'],
 })
 export class SaveDrawingComponent implements OnInit {
-  tagStringArray: Array<string> = [];
-  isPreviewWindowOpened: boolean = false;
-  state:DrawState;
-   
-  constructor(private fb:FormBuilder, private saveDrawingService:SaveDrawingService, public dialog: MatDialog, private store:DrawStore, private drawingHandler:DrawingHandler) {
+  tagStringArray: string[] = [];
+  isPreviewWindowOpened = false;
+  state: DrawState;
+
+  constructor(private fb: FormBuilder, private saveDrawingService: SaveDrawingService, public dialog: MatDialog, private store: DrawStore, private drawingHandler: DrawingHandler) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
   });
-  };
+  }
 
     saveDrawingForm = this.fb.group({
         name: ['', Validators.required],
@@ -36,8 +36,13 @@ export class SaveDrawingComponent implements OnInit {
     get tags() {
         return this.saveDrawingForm.get(TAGS_STRING) as FormArray;
     }
+    
     ngOnInit() {
-        this.state.globalState.isKeyHandlerActive = false;
+        this.store.setIsKeyHandlerActive(false);
+    }
+
+    ngOnDestroy() {
+        this.store.setIsKeyHandlerActive(true);
     }
 
     addTag(): void {
@@ -49,13 +54,13 @@ export class SaveDrawingComponent implements OnInit {
     removeTag(index: number): void {
         this.tags.removeAt(index);
     }
-    
+
     getTagsValues(): void {
       for (let i = 0; i < this.tags.length; i++) {
           this.tagStringArray.push(this.tags.at(i).value);
       }
-    } 
-  
+    }
+
     submit(): void {
     this.drawingHandler.prepareDrawingExportation('png');
     this.saveDrawingService.setImgName(this.saveDrawingForm.controls[NAME_STRING].value);

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Color } from '../models/color';
+import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
-import { Color } from '../models/color';
-import { Tools, SelectedColors, BrushTextures, Types } from '../models/enums';
 @Injectable({
     providedIn: 'root',
 })
@@ -170,7 +170,7 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
         });
     }
-    //Color
+    // Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({
             ...this.state,
@@ -231,7 +231,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     addLastColor(value: Color): void {
-        let lastColors: (Color | null)[] = this.state.colorState.lastColors;
+        const lastColors: (Color | null)[] = this.state.colorState.lastColors;
         lastColors[this.state.colorState.lastColorsIndex] = value;
         const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
 
@@ -248,7 +248,7 @@ export class DrawStore extends Store<DrawState> {
             colorState: { ...this.state.colorState, gridColor: new Color(gridColor.r, gridColor.g, gridColor.b, value) },
         });
     }
-    //Brush
+    // Brush
     setBrushTexture(value: BrushTextures) {
         this.setState({
             ...this.state,
@@ -256,7 +256,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    //Line
+    // Line
     setLineJunctionThickness(value: number) {
         this.setState({
             ...this.state,
@@ -270,21 +270,21 @@ export class DrawStore extends Store<DrawState> {
             lineHasJunction: value,
         });
     }
-    //Rect
+    // Rect
     setRectangleType(value: Types) {
         this.setState({
             ...this.state,
             rectangleType: value,
         });
     }
-    //Aerosol
+    // Aerosol
     setEmissionRate(value: number) {
         this.setState({
             ...this.state,
             emissionRate: value,
         });
     }
-    //Polygon
+    // Polygon
 
     setPolygonType(value: Types) {
         this.setState({
@@ -300,7 +300,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    //Ellipsis
+    // Ellipsis
     setEllipsisType(value: Types) {
         this.setState({
             ...this.state,
@@ -308,7 +308,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    //Eraser
+    // Eraser
     setEraserThickness(value: number) {
         this.setState({
             ...this.state,

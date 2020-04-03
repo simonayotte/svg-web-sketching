@@ -5,7 +5,7 @@ export class Color {
     a: number;
     RGBHex: string;
     RGBAHex: string;
-    isHexValid: boolean = true;
+    isHexValid = true;
 
     private RGBHexPattern = new RegExp('[a-fA-F0-9]{6}');
 

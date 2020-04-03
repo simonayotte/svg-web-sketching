@@ -2,13 +2,6 @@ import { Renderer2 } from '@angular/core';
 import { DrawState } from '../state/draw-state';
 
 export abstract class Tool {
-    start(event: MouseEvent) {}
-    continue(event: MouseEvent) {}
-    stop() {}
-    stopSignal() {} //for testing purpose
-    handleKeyDown(key: string) {}
-    handleKeyUp(key: string) {}
-
     protected mouseUpListener: EventListener;
     protected mouseMoveListener: EventListener;
 
@@ -16,6 +9,12 @@ export abstract class Tool {
     state = new DrawState();
 
     renderer: Renderer2;
+    start(event: MouseEvent) {}
+    continue(event: MouseEvent) {}
+    stop() {}
+    stopSignal() {} // for testing purpose
+    handleKeyDown(key: string) {}
+    handleKeyUp(key: string) {}
 
     copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
         let newSvgs = [];

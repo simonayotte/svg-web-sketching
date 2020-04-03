@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
     selector: 'app-grid-panel',
@@ -12,7 +12,7 @@ export class GridPanelComponent implements OnInit {
     @Output() gridOpacityChange = new EventEmitter();
     @Output() gridSizeChange = new EventEmitter();
     @Output() keyHandlerChange = new EventEmitter();
-    isSizeError: boolean = false;
+    isSizeError = false;
     sizeErrorMsg: string;
     readonly MIN_SQUARE_SIZE = 30;
     readonly MAX_SQUARE_SIZE = 500;

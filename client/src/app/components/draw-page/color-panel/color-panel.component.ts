@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Color } from 'src/app/models/color';
 import { SelectedColors } from 'src/app/models/enums';
 @Component({

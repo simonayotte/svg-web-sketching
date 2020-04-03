@@ -1,8 +1,8 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Tool } from '../../../models/tool';
-import { DrawStore } from '../../../store/draw-store';
-import { DrawState } from '../../../state/draw-state';
 import { Types } from '../../../models/enums';
+import { Tool } from '../../../models/tool';
+import { DrawState } from '../../../state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 @Injectable({
     providedIn: 'root',

@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { FormArray, FormBuilder } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
-import { SavedDrawing } from '../../../models/saved-drawing';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { FormArray, FormBuilder } from '@angular/forms';
-import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
-import { MatDialogRef, MatDialog } from '@angular/material';
+import { SavedDrawing } from '../../../models/saved-drawing';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
 
-const TAGS_STRING = 'tags'
+const TAGS_STRING = 'tags';
 
 @Component({
   selector: 'app-drawing-gallery',
@@ -16,117 +16,114 @@ const TAGS_STRING = 'tags'
   styleUrls: ['./drawing-gallery.component.scss']
 })
 export class DrawingGalleryComponent implements OnInit {
-  private state:DrawState
-  public drawingsToShow: Array<SavedDrawing> = [];
-  public allDrawingsInDb: Array<SavedDrawing> = [];
-  public trashColor:string = 'black';
-  public loadColor:string = 'black';
-  public deleteActivated:boolean = false;
-  public loadActivated:boolean = false;
-  public noFilteredDrawingFound:boolean = false;
-  public loading:boolean = false;
-  public tagStringArray: Array<string> = [];
-  constructor(public dialog: MatDialog, private httpService: HttpService, private store:DrawStore, private fb: FormBuilder, private galleryService: GalleryService, public dialogRef: MatDialogRef<DrawingGalleryComponent>) {
+  private state: DrawState;
+  drawingsToShow: SavedDrawing[] = [];
+  allDrawingsInDb: SavedDrawing[] = [];
+  tagStringArray: string[] = [];
+  trashColor = 'black';
+  loadColor = 'black';
+  noFilteredDrawingFound = false;
+  loading = false;
+  constructor(public dialog: MatDialog, private httpService: HttpService, private store: DrawStore, private fb: FormBuilder, private galleryService: GalleryService, public dialogRef: MatDialogRef<DrawingGalleryComponent>) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
-    })
-    this.galleryService.drawingsObs.subscribe((value: Array<SavedDrawing>) => {
+    });
+    this.galleryService.drawingsObs.subscribe((value: SavedDrawing[]) => {
       this.drawingsToShow = value;
-    })
-  };
+    });
+  }
+
+   get tags() { return this.filterDrawingForm.get(TAGS_STRING) as FormArray; }
+  
+
+  filterDrawingForm = this.fb.group({
+    tags : this.fb.array([])
+   });
 
   async ngOnInit() {
-    this.state.globalState.isKeyHandlerActive = false;
+    this.store.setIsKeyHandlerActive(false);
     this.updateGallery();
   }
 
   ngOnDestroy() {
-    this.state.globalState.isKeyHandlerActive = true;
+    this.store.setIsKeyHandlerActive(true);
   }
-  filterDrawingForm = this.fb.group({
-    tags : this.fb.array([])
-   })
-  get tags() { return this.filterDrawingForm.get(TAGS_STRING) as FormArray;}
-  
+
   addTag(): void {
       this.tags.push(this.fb.control(''));
   }
 
-  removeTag(index:number): void {
+  removeTag(index: number): void {
       this.tags.removeAt(index);
       this.filterDrawings();
   }
 
-  getTagsValues(): void{
+  getTagsValues(): void {
     this.tagStringArray = [];
-    for(let i = 0; i < this.tags.length; i++){
-      this.tagStringArray.push(this.tags.at(i).value)
+    for (let i = 0; i < this.tags.length; i++) {
+      this.tagStringArray.push(this.tags.at(i).value);
     }
   }
 
-  async updateGallery(){
-    this.loading=true;
-    this.httpService.getAllDrawings().toPromise().then(data => {
+  async updateGallery() {
+    this.loading = true;
+    this.httpService.getAllDrawings().toPromise().then((data) => {
       this.galleryService.setDrawings(data);
       this.allDrawingsInDb = data;
-      this.loading=false;
+      this.loading = false;
     })
-    .catch(err => {
+    .catch((err) => {
     alert(err.message),
-    this.loading=false;
+    this.loading = false;
     });
   }
 
-  toggleTrashColor(){
-    this.trashColor == 'black' ? (this.trashColor = 'red', this.deleteActivated=true)
-                        : (this.trashColor = 'black', this.deleteActivated=false);
-    this.loadActivated = false;
-    this.loadColor ='black';
+  toggleTrashColor() {
+    this.trashColor == 'black' ? (this.trashColor = '#ff8c00')
+                        : (this.trashColor = 'black');
+    this.loadColor = 'black';
   }
 
-  toggleLoadColor(){
-    this.loadColor == 'black' ? (this.loadColor = 'red', this.loadActivated=true)
-                        : (this.loadColor = 'black', this.loadActivated=false);                 
-    this.deleteActivated = false;
+  toggleLoadColor() {
+    this.loadColor == 'black' ? (this.loadColor = '#ff8c00')
+                        : (this.loadColor = 'black');
     this.trashColor = 'black';
   }
 
-  loadDrawing(drawing: SavedDrawing){
-    if(this.loadActivated){
-      if (this.state.svgState.svgs.length > 0){
+  loadDrawing(drawing: SavedDrawing) {
+    if (this.loadColor == '#ff8c00') {
+      if (this.state.svgState.svgs.length > 0) {
         this.galleryService.setDrawingToLoad(drawing);
         this.galleryService.setDidGalleryOpen(true);
         this.dialogRef.close();
         this.dialog.open(DrawingStartedDialogComponent);
-      }
-      else{
+      } else {
       this.galleryService.loadDrawing(drawing);
       this.dialogRef.close();
       }
     }
   }
 
-  async deleteDrawing(drawing:SavedDrawing){
-    if(this.deleteActivated){
-      this.loading=true;
-      this.httpService.deleteDrawing(drawing._id).toPromise().then(data => {
+  async deleteDrawing(drawing: SavedDrawing) {
+    if (this.trashColor == '#ff8c00') {
+      this.loading = true;
+      this.httpService.deleteDrawing(drawing._id).toPromise().then((data) => {
         this.updateGallery();
         alert(data.message);
       })
-      .catch(err => {
+      .catch((err) => {
       this.updateGallery();
-      alert(err.message)
+      alert(err.message);
       });
     }
   }
 
-  filterDrawings(){
+  filterDrawings() {
     this.getTagsValues();
-    if(this.tagStringArray.length>0 && !this.tagStringArray.includes('')){
-      let filteredDrawings:Array<SavedDrawing> = this.galleryService.filterDrawings(this.tagStringArray, this.allDrawingsInDb);
-      filteredDrawings.length == 0? this.noFilteredDrawingFound = true : this.noFilteredDrawingFound = false;
-    }
-    else{
+    if (this.tagStringArray.length > 0 && !this.tagStringArray.includes('')) {
+      const filteredDrawings: SavedDrawing[] = this.galleryService.filterDrawings(this.tagStringArray, this.allDrawingsInDb);
+      filteredDrawings.length == 0 ? this.noFilteredDrawingFound = true : this.noFilteredDrawingFound = false;
+    } else {
       this.galleryService.setDrawings(this.allDrawingsInDb);
       this.noFilteredDrawingFound = false;
     }

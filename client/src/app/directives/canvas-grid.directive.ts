@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Input, Output, EventEmitter } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Color } from '../models/color';
 
 @Directive({
@@ -10,6 +10,7 @@ export class CanvasGridDirective {
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
     @Input('gridSize') size: number;
+    @Input('isKeyHandlerActive') isKeyHandlerActive: boolean;
     @Input('isDisplayGrid') isDisplay: boolean;
     @Input('gridColor') color: Color;
 
@@ -24,7 +25,7 @@ export class CanvasGridDirective {
     }
 
     ngOnChanges(changes: any) {
-        if (!this.ctx) {
+        if (!this.ctx || changes.isKeyHandlerActive) {
             return;
         }
 
@@ -39,6 +40,7 @@ export class CanvasGridDirective {
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent) {
+    if (this.isKeyHandlerActive) {
         switch (event.key) {
             case 'g':
                 if (!event.ctrlKey) {
@@ -55,6 +57,7 @@ export class CanvasGridDirective {
                     this.gridSizeChange.emit(this.setSize(this.size, -5));
                 }
                 break;
+            }
         }
     }
 

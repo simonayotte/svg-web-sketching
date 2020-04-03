@@ -96,7 +96,6 @@ export class DrawHandlerService {
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
-
                     case 's':
                         event.preventDefault();
                         event.stopPropagation();

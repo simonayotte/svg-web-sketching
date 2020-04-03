@@ -123,37 +123,38 @@ describe('DrawingHandler', () => {
     expect(store.setSVGFilter).toHaveBeenCalledWith('1');
   });
 
-  it('#clearCanvas should call #popShape() of the store if svg array is not empty', ()=> {
-    spyOn(store, 'popSvg')
-    let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-    store.pushSvg(rect);
-    service.state.svgState.drawSvg.appendChild(rect)
+  it('#clearCanvas should call #empySvg() of the store', ()=> {
+    spyOn(store, 'emptySvg')
     service.clearCanvas();
-    expect(store.popSvg).toHaveBeenCalled();
+    expect(store.emptySvg).toHaveBeenCalled();
   })
 
-  it('#clearCanvas should call #removeChild() of the state.svgState.drawSvg.removeChild if svg array is not empty', ()=> {
-    spyOn(service.state.svgState.drawSvg, 'removeChild')
-    let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
-    store.pushSvg(rect);
-    service.state.svgState.drawSvg.appendChild(rect)
+  it('#clearCanvas should call #resetUndoRedo() of the store', ()=> {
+    spyOn(store, 'resetUndoRedo')
     service.clearCanvas();
-    expect(service.state.svgState.drawSvg.removeChild).toHaveBeenCalled();
+    expect(store.resetUndoRedo).toHaveBeenCalled();
   })
 
   it('#clearCanvas should empty the svg array', ()=> {
     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
     store.pushSvg(rect);
-    service.state.svgState.drawSvg.appendChild(rect)
     service.clearCanvas();
     expect(service.state.svgState.svgs).toEqual([]);
   })
 
-  it('#clearCanvas should remove all the children of drawSvg', ()=> {
+  it('#clearCanvas should empty redo array', ()=> {
     let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
     store.pushSvg(rect);
-    service.state.svgState.drawSvg.appendChild(rect)
     service.clearCanvas();
-    expect(service.state.svgState.drawSvg.childElementCount).toEqual(0);
-  })  
+    expect(service.state.undoRedoState.redoState).toEqual([]);
+  })
+
+  it('#clearCanvas should empty undo array', ()=> {
+    let rect = document.createElementNS("http://www.w3.org/2000/svg", "rect")
+    store.pushSvg(rect);
+    service.clearCanvas();
+    expect(service.state.undoRedoState.undoState).toEqual([]);
+  })
+  
+
 });

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { DrawStore } from 'src/app/store/draw-store';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
+import { DrawStore } from 'src/app/store/draw-store';
 
 @Component({
     selector: 'app-draw-page',
@@ -12,7 +12,7 @@ export class DrawPageComponent implements OnInit {
 
     ngOnInit() {}
 
-    ngOnDestroy(){
+    ngOnDestroy() {
         this.drawingHandler.clearCanvas();
     }
 

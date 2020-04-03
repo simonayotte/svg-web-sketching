@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, EventEmitter, Output, Input } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Color } from 'src/app/models/color';
 
 @Component({

@@ -19,7 +19,7 @@ export class HomePageComponent implements OnInit {
         const dialogRef = this.dialog.open(CreateDrawingComponent);
         this.isCreateDrawingOpen = true;
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
             this.isCreateDrawingOpen = false;
         });
     }
@@ -28,7 +28,7 @@ export class HomePageComponent implements OnInit {
         const dialogRef = this.dialog.open(DrawingGalleryComponent);
         this.isGalleryOpen = true;
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
             this.isGalleryOpen = false;
         });
     }
@@ -41,8 +41,7 @@ export class HomePageComponent implements OnInit {
             if (!this.isCreateDrawingOpen) {
                 this.openCreateDrawingDialog();
             }
-        }
-        else if(event.code === 'KeyG' && event.ctrlKey){
+        } else if (event.code === 'KeyG' && event.ctrlKey) {
             event.preventDefault();
             event.stopPropagation();
             if (!this.isGalleryOpen) {
