@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { AerosolService } from './aerosol.service';
-import { DrawStore } from '../../../store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { Color } from 'src/app/models/color';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
+import { AerosolService } from './aerosol.service';
 
 describe('AerosolService', () => {
     let service: AerosolService;
@@ -23,8 +23,7 @@ describe('AerosolService', () => {
         });
     });
 
-    //SetInterval testing clock
-    afterEach(function() {
+    afterEach(() => {
         jasmine.clock().uninstall();
     });
 
@@ -118,7 +117,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).toHaveBeenCalled();
           done();
-        })    
+        })
     });
 
     it('#stop() should not be called on mouse up before mouse down', (done: DoneFn) => {
@@ -164,10 +163,10 @@ describe('AerosolService', () => {
           done();
         })
     });
-    
+
     it('#generateRandomPoint should return random value', (done: DoneFn) => {
       service.state.globalState.thickness = 20;
-      let point = service.generateRandomPoint(0, 0);
+      const point = service.generateRandomPoint(0, 0);
       store.stateObs.subscribe((value: DrawState) => {
         expect(point.pointX <= 10 || point.pointX >= -10).toBeTruthy();
         expect(point.pointY <= 10 || point.pointX >= -10).toBeTruthy();
@@ -175,8 +174,8 @@ describe('AerosolService', () => {
       })
     });
 
-    it('#spray should call generateRandomSprayPoint ', (done: DoneFn) => {
-      const spy = spyOn(service, 'generateRandomSprayPoint');
+    it('#spray should call generateRandomSpray ', (done: DoneFn) => {
+      const spy = spyOn(service, 'generateRandomSpray');
       service.x = 20;
       service.y = 20;
       service.spray();
@@ -186,7 +185,7 @@ describe('AerosolService', () => {
       })
     });
 
-    it('#generateRandomSprayPoint should add point to path', (done: DoneFn) => {
+    it('#generateRandomSpray should add point to path', (done: DoneFn) => {
       const mouseDown: MouseEvent = new MouseEvent('mousedown', {
         clientX: 100,
         clientY: 10,
@@ -194,10 +193,10 @@ describe('AerosolService', () => {
       service.start(mouseDown);
       service.state.emissionRate = 20;
       service.path = `M ${3} ${2} h 1`;
-      let length = service.path.length;
-      service.generateRandomSprayPoint(30, 20);
+      const length = service.path.length;
+      service.generateRandomSpray(30, 20);
       store.stateObs.subscribe((value: DrawState) => {
-        expect(service.path.length != length).toBeTruthy();
+        expect(service.path.length !== length).toBeTruthy();
         done();
       })
     });
@@ -205,10 +204,8 @@ describe('AerosolService', () => {
     it('#convertEmissionRate should return correct values', (done: DoneFn) => {
       service.state.emissionRate = 20000;
       store.stateObs.subscribe((value: DrawState) => {
-        expect(service.convertEmissionRate()==10000).toBeTruthy();
+        expect(service.convertEmissionRate() === 10000).toBeTruthy();
         done();
       })
     });
-
-
 });
