@@ -18,7 +18,6 @@ export class ApplicatorService extends Tool {
     }
 
     start(event: MouseEvent) {
-        console.log(event.target);
         let svg = <SVGGraphicsElement>event.target;
         if (this.state.svgState.svgs.includes(svg)) {
             this.applyColor(svg, event.button);
