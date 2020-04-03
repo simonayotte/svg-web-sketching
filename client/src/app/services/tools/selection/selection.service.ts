@@ -1,4 +1,4 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -13,7 +13,6 @@ import { SelectionButtons, Tools } from 'src/app/models/enums';
     providedIn: 'root',
 })
 export class SelectionService extends Tool {
-    state: DrawState = new DrawState();
     shapes: Element[] = [];
     selectedShapes: Element[] = [];
     tempSelectedShapes: Element[] = [];
@@ -28,14 +27,15 @@ export class SelectionService extends Tool {
     mouseUpListener: EventListener;
     mouseMoveListener: EventListener;
 
-    renderer: Renderer2;
-
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
-            if (this.state.globalState.tool === Tools.Selection && value.globalState.tool !== Tools.Selection) {
+            if (this.state.globalState.tool === Tools.Selection && value.globalState.tool !== Tools.Selection && this.encompassingBox) {
                 this.renderer.setAttribute(this.encompassingBox.encompassingBox, 'width', '0');
-                this.renderer.setAttribute(this.encompassingBox.encompassingBox, 'height', '0');
+                this.renderer.setAttribute(this.encompassingBox.controlPoint1, 'width', '0');
+                this.renderer.setAttribute(this.encompassingBox.controlPoint2, 'width', '0');
+                this.renderer.setAttribute(this.encompassingBox.controlPoint3, 'width', '0');
+                this.renderer.setAttribute(this.encompassingBox.controlPoint4, 'width', '0');
             }
 
             this.state = value;
@@ -414,7 +414,7 @@ export class SelectionService extends Tool {
         if (key === SelectionButtons.Control) {
             this.keys.controlKey = true;
         }
-        if (key === SelectionButtons.a) {
+        if (key === SelectionButtons.A) {
             this.keys.aKey = true;
         }
         if (this.keys.controlKey && this.keys.aKey) {
@@ -455,7 +455,7 @@ export class SelectionService extends Tool {
         if (key === SelectionButtons.Control) {
             this.keys.controlKey = false;
         }
-        if (key === SelectionButtons.a) {
+        if (key === SelectionButtons.A) {
             this.keys.aKey = false;
         }
         if (key === SelectionButtons.ArrowRight) {

@@ -6,9 +6,7 @@ import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-
-const NAME_STRING = 'name';
-const TAGS_STRING = 'tags';
+import { FormValuesName, FileTypes} from 'src/app/models/enums';
 
 @Component({
     selector: 'app-save-drawing',
@@ -31,12 +29,12 @@ export class SaveDrawingComponent implements OnInit {
         tags: this.fb.array([]),
     });
     get name() {
-        return this.saveDrawingForm.get(NAME_STRING);
+        return this.saveDrawingForm.get(FormValuesName.Name);
     }
     get tags() {
-        return this.saveDrawingForm.get(TAGS_STRING) as FormArray;
+        return this.saveDrawingForm.get(FormValuesName.Tags) as FormArray;
     }
-    
+
     ngOnInit() {
         this.store.setIsKeyHandlerActive(false);
     }
@@ -62,8 +60,8 @@ export class SaveDrawingComponent implements OnInit {
     }
 
     submit(): void {
-    this.drawingHandler.prepareDrawingExportation('png');
-    this.saveDrawingService.setImgName(this.saveDrawingForm.controls[NAME_STRING].value);
+    this.drawingHandler.prepareDrawingExportation(FileTypes.Png);
+    this.saveDrawingService.setImgName(this.saveDrawingForm.controls[FormValuesName.Name].value);
     this.getTagsValues();
     this.saveDrawingService.setTags(this.tagStringArray);
     this.dialog.open(PreviewImageComponent);

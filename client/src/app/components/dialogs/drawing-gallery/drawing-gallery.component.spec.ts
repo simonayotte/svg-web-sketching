@@ -12,20 +12,22 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
 import { defer } from 'rxjs';
-
+import { GalleryButtonColors } from 'src/app/models/enums';
 
 export function fakeAsyncResponse<T>(data: T) {
-  return defer(() => Promise.resolve(data));
+    return defer(() => Promise.resolve(data));
 }
 
 const httpServiceStub = {
-  deleteDrawing() {
-    return fakeAsyncResponse({status: '200', message:'Dessin supprimé avec succès!'});
-  },
-  getAllDrawings() {
-    return fakeAsyncResponse([]);
-  }
+    deleteDrawing() {
+        return fakeAsyncResponse({ status: '200', message: 'Dessin supprimé avec succès!' });
+    },
+    getAllDrawings() {
+        let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
+        return fakeAsyncResponse([drawing]);
+    },
 };
+
 
 describe('DrawingGalleryComponent', () => {
   let component: DrawingGalleryComponent;
@@ -64,6 +66,7 @@ describe('DrawingGalleryComponent', () => {
     httpService = TestBed.get(HttpService);
     galleryService = TestBed.get(GalleryService);
     fixture.detectChanges();
+    jasmine.DEFAULT_TIMEOUT_INTERVAL = 1000000;
     //clear the tags array before each test
     for(let i = 0; i < component.tags.length; i++){
       component.tags.removeAt(i);
@@ -89,7 +92,7 @@ describe('DrawingGalleryComponent', () => {
     component.tags.push(fb.control('Dog'));
     component.tags.push(fb.control('Park'));
     component.getTagsValues();
-    expect(component.tagStringArray).toEqual(['Cat','Dog','Park'])
+    expect(component.galleryState.tagStringArray).toEqual(['Cat','Dog','Park'])
   });
   
   it('#removeTags(2) should remove the third tag of tags', () => {
@@ -98,7 +101,7 @@ describe('DrawingGalleryComponent', () => {
     component.tags.push(fb.control('Park'));
     component.removeTag(2);
     component.getTagsValues();
-    expect(component.tagStringArray).toEqual(['Cat','Dog'])
+    expect(component.galleryState.tagStringArray).toEqual(['Cat','Dog'])
   });
 
   it('#removeTags(0) should remove the first tag of tags', () => {
@@ -108,7 +111,7 @@ describe('DrawingGalleryComponent', () => {
     component.tags.push(fb.control('Orange'));
     component.removeTag(0);
     component.getTagsValues();
-    expect(component.tagStringArray).toEqual(['Cloud','Red','Orange'])
+    expect(component.galleryState.tagStringArray).toEqual(['Cloud','Red','Orange'])
   });
 
   it('after adding 5 tags in #tags, calling #removeTags(3) should set the length of #tags to 4', () => {
@@ -123,12 +126,12 @@ describe('DrawingGalleryComponent', () => {
   });
 
   it('#updateGallery() should call #getAllDrawings() of httpService', () => {
-    spyOn(httpService, 'getAllDrawings');
+    spyOn(httpService, 'getAllDrawings').and.callThrough();
     component.updateGallery();
     expect(httpService.getAllDrawings).toHaveBeenCalled();
   });
 
-  it('#updateGallery() should call #setDrawings() of galleryService', async (done:DoneFn) => {
+  it('#updateGallery() should call #setDrawings() of galleryService', (done:DoneFn) => {
     spyOn(galleryService, 'setDrawings');
     component.updateGallery().then(()=>{
       expect(galleryService.setDrawings).toHaveBeenCalled();
@@ -136,44 +139,62 @@ describe('DrawingGalleryComponent', () => {
     });
   });
 
+  it('#updateGallery() should set() of #allDrawingsInDb to be equal to the drawings in the db', (done:DoneFn) => {
+    let drawingsInDb:Array<SavedDrawing>
+    httpServiceStub.getAllDrawings().subscribe((data)=>{
+      drawingsInDb = data;
+    });
+    component.updateGallery().then(()=>{
+      expect(component.galleryState.allDrawingsInDb).toEqual(drawingsInDb);
+      done();
+    });
+  });
+
+  it('#updateGallery() should set #loading to false', (done:DoneFn) => {
+    component.updateGallery().then(()=>{
+      expect(component.galleryState.loading).toEqual(false);
+      done();
+    });
+  });
+
   it('#toggleTrashColor() should set #trashColor to #ff8c00 if #trashColor is black', () => {
-    component.trashColor = 'black';
+    component.galleryState.trashColor = GalleryButtonColors.Black;
     component.toggleTrashColor();
-    expect(component.trashColor).toEqual('#ff8c00');
+    expect(component.galleryState.trashColor).toEqual(GalleryButtonColors.Orange);
   });
 
   it('#toggleTrashColor() should set #trashColor to black if #trashColor is #ff8c00', () => {
-    component.trashColor = '#ff8c00';
+    component.galleryState.trashColor = GalleryButtonColors.Orange;
     component.toggleTrashColor();
-    expect(component.trashColor).toEqual('black');
+    expect(component.galleryState.trashColor).toEqual(GalleryButtonColors.Black);
   });
 
   it('#toggleTrashColor() should set #loadColor to black', () => {
     component.toggleTrashColor();
-    expect(component.loadColor).toEqual('black');
+    expect(component.galleryState.loadColor).toEqual(GalleryButtonColors.Black);
   })
 
   it('#toggleLoadColor() should set #loadColor to #ff8c00 if #loadColor is black', () => {
-    component.loadColor = 'black';
+    component.galleryState.loadColor = GalleryButtonColors.Black;
     component.toggleLoadColor();
-    expect(component.loadColor).toEqual('#ff8c00');
+    expect(component.galleryState.loadColor).toEqual(GalleryButtonColors.Orange);
   });
 
   it('#toggleLoadColor() should set #loadColor to black if #loadColor is #ff8c00', () => {
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     component.toggleLoadColor();
-    expect(component.loadColor).toEqual('black');
+    expect(component.galleryState.loadColor).toEqual(GalleryButtonColors.Black);
   });
 
 
   it('#toggleLoadColor() should set #trashColor to black', () => {
     component.toggleLoadColor();
-    expect(component.trashColor).toEqual('black');
+    expect(component.galleryState.trashColor).toEqual(GalleryButtonColors.Black);
   });
 
   it('if #loadColor is #ff8c00 and svgs of svgState is empty, #loadDrawing() should call #loadDrawing() of galleryService should be called', () => {
     spyOn(galleryService,'loadDrawing').and.callThrough();
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     store.emptySvg();
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -182,7 +203,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is #ff8c00 and svgs of svgState is empty,calling #loadDrawing() should close the dialog', () => {
     spyOn(component.dialogRef,'close').and.callThrough();
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     store.emptySvg();
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -191,7 +212,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is #ff8c00 and svgs of svgState is not empty, #loadDrawing() should call #setDrawingToLoad() of galleryService should be called', () => {
     spyOn(galleryService,'setDrawingToLoad').and.callThrough();
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -201,7 +222,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is #ff8c00 and svgs of svgState is not empty, #loadDrawing() should call #setDidGalleryOpen() of galleryService should be called', () => {
     spyOn(galleryService,'setDidGalleryOpen').and.callThrough();
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -211,7 +232,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is #ff8c00 and svgs of svgState is not empty, #loadDrawing() should close the dialog', () => {
     spyOn(component.dialogRef,'close').and.callThrough();
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -221,7 +242,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is #ff8c00 and svgs of svgState is not empty, #loadDrawing() should open the drawing started dialog', () => {
     spyOn(component.dialog,'open').and.callThrough();
-    component.loadColor = '#ff8c00';
+    component.galleryState.loadColor = GalleryButtonColors.Orange;
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -231,7 +252,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is black and svgs of svgState is empty, #loadDrawing() should not call #loadDrawing() of galleryService should not be called', () => {
     spyOn(galleryService,'loadDrawing').and.callThrough();
-    component.loadColor = 'black'
+    component.galleryState.loadColor = GalleryButtonColors.Black
     store.emptySvg();
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -240,7 +261,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is black and svgs of svgState is empty, #loadDrawing() should not close the dialog', () => {
     spyOn(component.dialogRef,'close').and.callThrough();
-    component.loadColor = 'black'
+    component.galleryState.loadColor = GalleryButtonColors.Black
     store.emptySvg();
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.loadDrawing(drawing);
@@ -249,7 +270,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is black and svgs of svgState is not empty, #loadDrawing() should not call #setDrawingToLoad() of galleryService should not be called', () => {
     spyOn(galleryService,'setDrawingToLoad').and.callThrough();
-    component.loadColor = 'black'
+    component.galleryState.loadColor = GalleryButtonColors.Black
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -259,7 +280,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is black and svgs of svgState is not empty, #loadDrawing() should not call #setDidGalleryOpen() of galleryService should not be called', () => {
     spyOn(galleryService,'setDidGalleryOpen').and.callThrough();
-    component.loadColor = 'black'
+    component.galleryState.loadColor = GalleryButtonColors.Black
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -269,7 +290,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is black and svgs of svgState is not empty, #loadDrawing() should not close the dialog', () => {
     spyOn(component.dialogRef,'close').and.callThrough();
-    component.loadColor = 'black'
+    component.galleryState.loadColor = GalleryButtonColors.Black
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -279,7 +300,7 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #loadColor is black and svgs of svgState is not empty, #loadDrawing() should not open the drawing started dialog', () => {
     spyOn(component.dialog,'open').and.callThrough();
-    component.loadColor = 'black'
+    component.galleryState.loadColor = GalleryButtonColors.Black
     let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
     store.pushSvg(rect);
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
@@ -289,32 +310,48 @@ describe('DrawingGalleryComponent', () => {
 
   it('if #trashColor is #ff8c00, #deleteDrawing should call #deleteDrawing() of httpService', ()=>{
     spyOn(httpService,'deleteDrawing').and.callThrough();
-    component.trashColor = '#ff8c00'
+    component.galleryState.trashColor = GalleryButtonColors.Orange
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.deleteDrawing(drawing);
     expect(httpService.deleteDrawing).toHaveBeenCalledWith(drawing._id);
-  })
+  });
 
-  it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', async (async()=>{
-    spyOn(component,'updateGallery')
-    component.trashColor = '#ff8c00'
-    let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
-    component.deleteDrawing(drawing).then(()=>{
-      expect(component.updateGallery).toHaveBeenCalled();
-      })
-    }))
+  it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', (done: DoneFn) => {
+    spyOn(component, 'updateGallery');
+    component.galleryState.trashColor = GalleryButtonColors.Orange;
+    let drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
+    component.deleteDrawing(drawing).then(() => {
+        expect(component.updateGallery).toHaveBeenCalled();
+        done();
+    });
+  });
 
-  it('if #trashColor is black, #deleteDrawing should not call #deleteDrawing() of httpService', ()=>{
+  it('if #trashColor is #ff8c00, #deleteDrawing should call window.alert', (done: DoneFn) => {
+    let message:string;
+    httpServiceStub.deleteDrawing().subscribe((data)=>{
+      message = data.message;
+    })
+    spyOn(window, 'alert');
+    component.galleryState.trashColor = GalleryButtonColors.Orange;
+    let drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
+    component.deleteDrawing(drawing).then(() => {
+        expect(window.alert).toHaveBeenCalledWith(message)
+        done();
+    });
+  });
+
+
+  it('if #trashColor is black, #deleteDrawing should not call #deleteDrawing() of httpService', () =>{
     spyOn(httpService,'deleteDrawing');
-    component.trashColor = '#black'
+    component.galleryState.trashColor = GalleryButtonColors.Black
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
-    component.deleteDrawing(drawing);
+    component.deleteDrawing
     expect(httpService.deleteDrawing).not.toHaveBeenCalledWith(drawing);
-  })
+  });
 
-  it('if #trashColor is black, #deleteDrawing should mot call #updateGallery', async (done:DoneFn)=>{
+  it('if #trashColor is black, #deleteDrawing should mot call #updateGallery', (done:DoneFn)=>{
     spyOn(component,'updateGallery')
-    component.trashColor = '#black'
+    component.galleryState.trashColor = GalleryButtonColors.Black
     let drawing = new SavedDrawing('test',['testtag'],'testdataurl',[],100,100,[1,2,3])
     component.deleteDrawing(drawing).then(()=>{
       expect(component.updateGallery).not.toHaveBeenCalled()
@@ -332,33 +369,33 @@ describe('DrawingGalleryComponent', () => {
     spyOn(galleryService,'filterDrawings').and.callThrough();
     component.tags.push(fb.control('tagtest'));
     component.filterDrawings();
-    expect(galleryService.filterDrawings).toHaveBeenCalledWith(component.tagStringArray, component.allDrawingsInDb);
+    expect(galleryService.filterDrawings).toHaveBeenCalledWith(component.galleryState.tagStringArray, component.galleryState.allDrawingsInDb);
   });
 
   it('#if #filterDrawings() of galleryService return an empty array, #noFilteredDrawingFound should be true', ()=>{
     component.tags.push(fb.control('notagfound'));
     component.filterDrawings();
-    expect(component.noFilteredDrawingFound).toBe(true);
+    expect(component.galleryState.noFilteredDrawingFound).toBe(true);
   });
 
   it('#if #filterDrawings() of galleryService does not return an empty array, #noFilteredDrawingFound should be false', ()=>{
     let drawing = new SavedDrawing('test',['tag'],'testdataurl',[],100,100,[1,2,3])
     component.tags.push(fb.control('tag'));
-    component.allDrawingsInDb.push(drawing);
+    component.galleryState.allDrawingsInDb.push(drawing);
     component.filterDrawings();
-    component.allDrawingsInDb.pop();
-    expect(component.noFilteredDrawingFound).toBe(false);
+    component.galleryState.allDrawingsInDb.pop();
+    expect(component.galleryState.noFilteredDrawingFound).toBe(false);
   });
 
   it('if #tagStringArray is empty, #setDrawings() of galleryService should be called', ()=> {
     spyOn(galleryService,'setDrawings').and.callThrough();
     component.filterDrawings();
-    expect(galleryService.setDrawings).toHaveBeenCalledWith(component.allDrawingsInDb);
+    expect(galleryService.setDrawings).toHaveBeenCalledWith(component.galleryState.allDrawingsInDb);
   });
 
   it('if #tagStringArray is empty, #noFilteredDrawingFound should be false', ()=> {
     component.filterDrawings();
-    expect(component.noFilteredDrawingFound).toEqual(false);
+    expect(component.galleryState.noFilteredDrawingFound).toEqual(false);
   });
 
   it('if #tagStringArray contains an empty string, #setDrawings() of galleryService should be called', ()=> {
@@ -366,13 +403,13 @@ describe('DrawingGalleryComponent', () => {
     component.tags.push(fb.control(''));
     component.tags.push(fb.control('truck'));
     component.filterDrawings();
-    expect(galleryService.setDrawings).toHaveBeenCalledWith(component.allDrawingsInDb);
+    expect(galleryService.setDrawings).toHaveBeenCalledWith(component.galleryState.allDrawingsInDb);
   });
 
   it('if #tagStringArray contains an empty string, #noFilteredDrawingFound should be false', ()=> {
     component.tags.push(fb.control(''));
     component.tags.push(fb.control('blue'));
     component.filterDrawings();
-    expect(component.noFilteredDrawingFound).toEqual(false);
+    expect(component.galleryState.noFilteredDrawingFound).toEqual(false);
   });
 });

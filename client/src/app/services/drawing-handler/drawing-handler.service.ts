@@ -2,6 +2,7 @@ import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { FileTypes } from 'src/app/models/enums';
 
 // we do not want the img preview width and height to exceed 300px.
 const MAX_IMG_PREVIEW_SIZE = 300;
@@ -77,7 +78,7 @@ export class DrawingHandler {
     const svg64: string = btoa(xml);
     const b64Start = 'data:image/svg+xml;base64,';
     const image64: string = b64Start + svg64;
-    if (format == 'svg+xml') {
+    if (format == FileTypes.Svg) {
       this.setDataURL(image64);
     } else {
       const img = new Image();

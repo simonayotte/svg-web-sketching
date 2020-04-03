@@ -1,4 +1,4 @@
-import { Injectable, RendererFactory2, Renderer2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
@@ -11,8 +11,6 @@ const RED = new Color(200, 0, 0, 255);
     providedIn: 'root',
 })
 export class EraserService extends Tool {
-    state: DrawState;
-    renderer: Renderer2;
     oldStrokeColor: string = '';
     touchedSvgIndex: number = -1;
     deletedSvgs: SVGGraphicsElement[] = [];

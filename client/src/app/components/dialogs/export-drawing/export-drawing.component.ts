@@ -6,10 +6,7 @@ import { ExportDrawingService } from 'src/app/services/export-drawing-service/ex
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewExportComponent } from '../preview-export/preview-export.component';
-
-const NAME_STRING = 'name';
-const TYPE_STRING = 'type';
-const FILTER_STRING = 'filter';
+import { FormValuesName } from 'src/app/models/enums';
 
 @Component({
   selector: 'app-export-drawing',
@@ -28,8 +25,8 @@ export class ExportDrawingComponent implements OnInit {
       this.state = value;
   }); }
 
-   get name() { return this.exportDrawingForm.get(NAME_STRING); }
-   get type() { return this.exportDrawingForm.get(TYPE_STRING) ; }
+   get name() { return this.exportDrawingForm.get(FormValuesName.Name); }
+   get type() { return this.exportDrawingForm.get(FormValuesName.Type) ; }
   state: DrawState;
 
   exportDrawingForm = this.fb.group({
@@ -45,10 +42,10 @@ export class ExportDrawingComponent implements OnInit {
     this.store.setIsKeyHandlerActive(true);
   }
 
-  submit() {
-    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[TYPE_STRING].value, this.exportDrawingForm.controls[FILTER_STRING].value);
-    this.exportDrawingService.setExportName(this.exportDrawingForm.controls[NAME_STRING].value);
-    this.exportDrawingService.setType(this.exportDrawingForm.controls[TYPE_STRING].value);
+  submit(): void {
+    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[FormValuesName.Type].value, this.exportDrawingForm.controls[FormValuesName.Filter].value);
+    this.exportDrawingService.setExportName(this.exportDrawingForm.controls[FormValuesName.Name].value);
+    this.exportDrawingService.setType(this.exportDrawingForm.controls[FormValuesName.Type].value);
     this.dialogRef.close();
     this.dialog.open(PreviewExportComponent);
   }

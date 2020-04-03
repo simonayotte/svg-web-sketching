@@ -9,6 +9,17 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
+import { defer } from 'rxjs';
+
+export function fakeAsyncResponse<T>(data: T) {
+    return defer(() => Promise.resolve(data));
+}
+
+const httpServiceStub = {
+    exportDrawing() {
+        return fakeAsyncResponse({ status: '200', message: 'Image exportée avec succès!' });
+    },
+};
 
 describe('PreviewExportComponent', () => {
   let component: PreviewExportComponent;
@@ -30,9 +41,9 @@ describe('PreviewExportComponent', () => {
               {provide: MatDialogTitle, useValue: {}},
               {provide: MatDialogRef, useValue: dialogMock},
               {provide: MAT_DIALOG_DATA, useValue: []},
+              {provide: HttpService, useValue: httpServiceStub},
             DrawStore,
             ExportDrawingService,
-            HttpService
         ],
     }).compileComponents();
     store = TestBed.get(DrawStore);
@@ -42,8 +53,8 @@ describe('PreviewExportComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(PreviewExportComponent);
     component = fixture.componentInstance;
-    httpService = TestBed.get(HttpService)
-    exportDrawingService = TestBed.get(ExportDrawingService)
+    httpService = TestBed.get(HttpService);
+    exportDrawingService = TestBed.get(ExportDrawingService);
     fixture.detectChanges();
   });
 
@@ -68,4 +79,18 @@ describe('PreviewExportComponent', () => {
     component.exportDrawing()
     expect(httpService.exportDrawing).toHaveBeenCalled();
   })
+
+  it('#exportDrawing() should call #window.alert() in the promise', (done:DoneFn)=> {
+    let message:string;
+    httpServiceStub.exportDrawing().subscribe((data)=>{
+      message = data.message;
+    })
+    spyOn(window,'alert')
+    component.exportDrawing().then(()=>{
+      expect(window.alert).toHaveBeenCalledWith(message);
+      done();
+    })
+  })
+
+  
 });
