@@ -6,6 +6,7 @@ import { ExportDrawingService } from 'src/app/services/export-drawing-service/ex
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { HttpResponse } from 'src/app/models/httpResponse';
 
 @Component({
   selector: 'app-preview-export',
@@ -16,7 +17,6 @@ export class PreviewExportComponent implements OnInit {
 
   dataURL: string;
   state: DrawState;
-  buttonDisabled = false;
   previewHeight: number;
   previewWidth: number;
   constructor(private drawingHandler: DrawingHandler,
@@ -42,11 +42,11 @@ export class PreviewExportComponent implements OnInit {
   }
 
   exportDrawing() {
-    this.buttonDisabled = true;
     const drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL);
-    this.httpService.exportDrawing(drawing).toPromise().then((data) => alert(data.message))
-    .catch((err) => alert(err.message));
-    this.buttonDisabled = false;
     this.dialogRef.close();
+    return this.httpService.exportDrawing(drawing)
+    .toPromise()
+    .then((data:HttpResponse) => alert(data.message))
+    .catch((err:HttpResponse) => alert(err))
   }
 }

@@ -7,13 +7,23 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpService } from 'src/app/services/http-service/http.service';
+import { defer } from 'rxjs';
 
+export function fakeAsyncResponse<T>(data: T) {
+    return defer(() => Promise.resolve(data));
+}
+
+const httpServiceStub = {
+    saveDrawing() {
+        return fakeAsyncResponse({ status: '200', message: 'Image sauvegardée avec succès!' });
+    },
+};
 describe('PreviewImageComponent', () => {
   let component: PreviewImageComponent;
   let store:DrawStore;
   let fixture: ComponentFixture<PreviewImageComponent>;
   let httpService: HttpService;
-  let saveDrawingService: SaveDrawingService
+  let saveDrawingService: SaveDrawingService;
   const dialogMock = {
     close: () => {
         /*empty function*/
@@ -29,9 +39,9 @@ describe('PreviewImageComponent', () => {
               {provide: MatDialogTitle, useValue: {}},
               {provide: MatDialogRef, useValue: dialogMock},
               {provide: MAT_DIALOG_DATA, useValue: []},
+              {provide: HttpService, useValue: httpServiceStub},
             DrawStore,
             SaveDrawingService,
-            HttpService
         ],
     }).compileComponents();
     store = TestBed.get(DrawStore);
@@ -86,12 +96,31 @@ describe('PreviewImageComponent', () => {
     expect(saveDrawingService.getTags).toHaveBeenCalled()
   });
 
-  it('#saveDrawing() should close the dialog in the promise', async (done:DoneFn) => {
+  it('#saveDrawing() should close the dialog in the promise', (done:DoneFn) => {
     spyOn(component.dialogRef, 'close');
     component.saveDrawing().then(()=>{
       expect(component.dialogRef.close).toHaveBeenCalled();
       done();
     })
+  });
+
+  it('#saveDrawing() should set #buttonDisabled to false in the promise', (done:DoneFn) => {
+    component.saveDrawing().then(()=>{
+      expect(component.buttonDisabled).toEqual(false);
+      done();
+    });
+  });
+
+  it('#saveDrawing() should call #window.alert in the promise', (done:DoneFn) => {
+    let message:string;
+    httpServiceStub.saveDrawing().subscribe((data)=>{
+      message = data.message;
+    })
+    spyOn(window,'alert');
+    component.saveDrawing().then(()=>{
+      expect(window.alert).toHaveBeenCalledWith(message);
+      done();
+    });
   });
 
   it('saveDrawing() should set #buttonDisabled to true', () => {

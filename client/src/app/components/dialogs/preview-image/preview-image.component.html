@@ -8,5 +8,5 @@
     </div>
     <p>Êtes vous certain de vouloir sauvegarder l'image?</p>
     <button (click) = 'saveDrawing()' [disabled] = 'buttonDisabled'>Confirmer</button>
-    <button mat-dialog-close>Annuler</button>
+    <button mat-dialog-close [disabled] = 'buttonDisabled'>Annuler</button>
 </div>

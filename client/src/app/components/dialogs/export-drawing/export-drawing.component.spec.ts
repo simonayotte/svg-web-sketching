@@ -11,14 +11,12 @@ import { MatDialogModule, MatDialogRef, MatDialog } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PreviewExportComponent } from '../preview-export/preview-export.component';
+import { FormValuesName } from 'src/app/models/enums';
 
 describe('ExportDrawingComponent', () => {
   let component: ExportDrawingComponent;
   let fixture: ComponentFixture<ExportDrawingComponent>;
   let store:DrawStore;
-  const NAME_STRING = 'name';
-  const TYPE_STRING = 'type';
-  const FILTER_STRING = 'filter';
   let drawingHandler:DrawingHandler
   let exportDrawingService:ExportDrawingService
   const dialogMock = {
@@ -61,19 +59,19 @@ describe('ExportDrawingComponent', () => {
   it('#submit should call #prepareDrawingExportation() of drawingHandler', () => {
     spyOn(drawingHandler, 'prepareDrawingExportation').and.callThrough();
     component.submit();
-    expect(drawingHandler.prepareDrawingExportation).toHaveBeenCalledWith(component.exportDrawingForm.controls[TYPE_STRING].value, component.exportDrawingForm.controls[FILTER_STRING].value)
+    expect(drawingHandler.prepareDrawingExportation).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Type].value, component.exportDrawingForm.controls[FormValuesName.Filter].value)
   });
 
   it('#submit should call #setExportName() of exportDrawingService', () => {
     spyOn(exportDrawingService, 'setExportName').and.callThrough();
     component.submit();
-    expect(exportDrawingService.setExportName).toHaveBeenCalledWith(component.exportDrawingForm.controls[NAME_STRING].value)
+    expect(exportDrawingService.setExportName).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Name].value)
   });
 
   it('#submit should call #setType() of exportDrawingService', () => {
     spyOn(exportDrawingService, 'setType').and.callThrough();
     component.submit();
-    expect(exportDrawingService.setType).toHaveBeenCalledWith(component.exportDrawingForm.controls[TYPE_STRING].value)
+    expect(exportDrawingService.setType).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Type].value)
   });
 
   it('#submit should close the dialog', () => {

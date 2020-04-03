@@ -6,6 +6,7 @@ import { HttpService } from 'src/app/services/http-service/http.service';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { HttpResponse } from 'src/app/models/httpResponse';
 
 @Component({
   selector: 'app-preview-image',
@@ -57,14 +58,16 @@ export class PreviewImageComponent implements OnInit {
     this.state.svgState.width,
     this.state.svgState.height,
     [canvasColor.r, canvasColor.g, canvasColor.b, canvasColor.a]);
-    this.httpService.saveDrawing(drawing).toPromise().then(
-    (data) => {
+    return this.httpService.saveDrawing(drawing)
+    .toPromise()
+    .then(
+    (data:HttpResponse) => {
       this.dialogRef.close();
       alert(data.message);
       this.buttonDisabled = false;
 
     }).catch(
-    (err) => {
+    (err:HttpResponse) => {
       this.dialogRef.close();
       alert(err.message);
       this.buttonDisabled = false;

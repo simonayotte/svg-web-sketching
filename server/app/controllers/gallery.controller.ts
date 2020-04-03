@@ -23,18 +23,18 @@ export class GalleryController {
                 let returnedDrawings: Array<Drawing> = this.fileHandler.checkAllDrawingsAreInServer(drawings);
                 res.send(returnedDrawings);
             })
-            .catch(err => {
+            .catch((err:Error)=> {
                 res.send([]);
             });
         });
 
         this.router.delete('/delete/:id', async (req: Request, res: Response, next: NextFunction) => {
-            this.dbService.deleteDrawingDb(req.params.id).then((result) => {
+            this.dbService.deleteDrawingDb(req.params.id).then(() => {
                 this.fileHandler.deleteDrawing(req.params.id)
                 let succesMsg = {status:'200', message:'Dessin supprimé avec succès!'}
                 res.json(succesMsg)
-            },
-            (err) => {
+            })
+            .catch((err:Error) => {
                 let errorMsg = {status:'400', message:"Le dessin n'a pas pu être supprimé!"}
                 res.json(errorMsg)
             })

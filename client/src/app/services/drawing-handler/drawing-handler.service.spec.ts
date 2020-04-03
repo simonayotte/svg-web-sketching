@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { DrawingHandler } from './drawing-handler.service';
 import { DrawStore } from 'src/app/store/draw-store';
+import { FileTypes } from 'src/app/models/enums';
 
 describe('DrawingHandler', () => {
   let service: DrawingHandler;
@@ -91,35 +92,35 @@ describe('DrawingHandler', () => {
   });
 
   it('#prepareDrawingExportation(png) should set #dataURL to be equal to a png data url', async ()=> {
-    await service.prepareDrawingExportation('png');
-    expect(service.getDataURL().includes('png')).toBeTruthy();
+    await service.prepareDrawingExportation(FileTypes.Png);
+    expect(service.getDataURL().includes(FileTypes.Png)).toBeTruthy();
   });
 
   it('#prepareDrawingExportation(jpeg) should set #dataURL to be equal to a jpeg data url', async ()=> {
-    await service.prepareDrawingExportation('jpeg');
-    expect(service.getDataURL().includes('jpeg')).toBeTruthy();
+    await service.prepareDrawingExportation(FileTypes.Jpeg);
+    expect(service.getDataURL().includes(FileTypes.Jpeg)).toBeTruthy();
   });
 
   it('#prepareDrawingExportation(svg+xml) should set #dataURL to be equal to a svg+xml data url', async ()=> {
-    await service.prepareDrawingExportation('svg+xml');
-    expect(service.getDataURL().includes('svg+xml')).toBeTruthy();
+    await service.prepareDrawingExportation(FileTypes.Svg);
+    expect(service.getDataURL().includes(FileTypes.Svg)).toBeTruthy();
   });
 
   it('#prepareDrawingExportation(png) should call #setDataURL() ', async ()=> {
     spyOn(service, 'setDataURL')
-    await service.prepareDrawingExportation('png');
+    await service.prepareDrawingExportation(FileTypes.Png);
     expect(service.setDataURL).toHaveBeenCalled();
   });
 
   it('#prepareDrawingExportation(svg+xml) should call #setDataURL()', async ()=> {
     spyOn(service, 'setDataURL')
-    await service.prepareDrawingExportation('svg+xml');
+    await service.prepareDrawingExportation(FileTypes.Svg);
     expect(service.setDataURL).toHaveBeenCalled();
   });
 
   it('#prepareDrawingExportation() should call #setSvgFilter() of the store if a filter is passed as an argument', async ()=> {
     spyOn(store, 'setSVGFilter');
-    await service.prepareDrawingExportation('png','1');
+    await service.prepareDrawingExportation(FileTypes.Png,'1');
     expect(store.setSVGFilter).toHaveBeenCalledWith('1');
   });
 

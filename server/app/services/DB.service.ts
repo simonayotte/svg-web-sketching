@@ -3,8 +3,6 @@ import { Collection, MongoClient, MongoClientOptions, ObjectId } from 'mongodb';
 import 'reflect-metadata';
 import { Drawing} from '../../models/drawing';
 
-// CHANGE the URL for your database information
-//const DATABASE_URL = 'mongodb+srv://Admin:admin1234@cluster0-nxhwj.gcp.mongodb.net/test?retryWrites=true&w=majority';
 const DATABASE_URL = 'mongodb+srv://Tarik:log2990@cluster0-pgvib.mongodb.net/test?retryWrites=true&w=majority';
 const DATABASE_NAME = 'Drawings-LOG2990-106';
 const DATABASE_COLLECTION = 'drawings';
@@ -39,15 +37,15 @@ export class DatabaseService {
             throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée")
           }
         this.collection.insertOne(drawing).catch((error:Error)=>{
-            throw error;
+            throw new Error(`Erreur: Le dessin n'a pas pu être sauvegardé: \n ${error}`);
             });
     }
     async deleteDrawingDb(id:string){
         
         return this.collection.findOneAndDelete({_id :  new ObjectId(id)})
-        .then((deletedDocument) => {})
+        .then(() => {})
         .catch((error: Error) => {
-            throw new Error("Failed to delete course");
+            throw new Error(`Failed to delete course: \n ${error}`);
         });
     }
 
@@ -57,20 +55,20 @@ export class DatabaseService {
                     return drawing;
                 })
                 .catch((error: Error) => {
-                    throw new Error("Failed to get all drawings");
+                    throw new Error(`Failed to get all drawings: \n ${error}`);
                 });
     }
 
     async getIdsOfDrawing(name:string, tags:Array<string>){
-        let ids: Array<ObjectId> = []
+        let ids: Array<string> = []
         return this.collection.find({name: name, tags: tags}).toArray().then((drawings:Drawing[]) => {
             for(let drawing of drawings){
-                ids.push(drawing._id);
+                ids.push(drawing._id.toHexString());
             }
             return ids;
           })
-          .catch(err => {
-              throw err;
+          .catch((error: Error ) => {
+              throw new Error(`Failed to get the ids of the drawings: \n ${error}`)
           });
         ;
     }
