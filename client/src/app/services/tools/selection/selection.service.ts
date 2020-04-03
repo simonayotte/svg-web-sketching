@@ -141,6 +141,7 @@ export class SelectionService extends Tool {
 
     stopSelect(event: MouseEvent): void {
         let targetedElement = <Element>event.target;
+        event.preventDefault();
         if (this.selectionState.singleSelect) {
             this.findSingleShape(targetedElement);
         }
@@ -424,6 +425,7 @@ export class SelectionService extends Tool {
         }
         if (key === SelectionButtons.ArrowRight) {
             this.keys.arrowRightKey = true;
+            
         }
         if (this.keys.arrowRightKey) {
             this.moveShapes(this.selectedShapes, 3, 0);
