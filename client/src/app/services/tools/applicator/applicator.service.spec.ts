@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { ApplicatorService } from './applicator.service';
 
-import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
 
 describe('ApplicatorService', () => {
     let service: ApplicatorService;
@@ -29,7 +29,7 @@ describe('ApplicatorService', () => {
     });
 
     it('#start() should call #applyColor() if clicked on svg that is in store', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.state.svgState.svgs = [svg];
 
         const event: MouseEvent = new MouseEvent('mousedown', {
@@ -44,7 +44,7 @@ describe('ApplicatorService', () => {
     });
 
     it('#start() should not call #applyColor() if clicked on svg that is not in store', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.state.svgState.svgs = [];
         const event: MouseEvent = new MouseEvent('mousedown', {
             clientX: 200,
@@ -59,7 +59,7 @@ describe('ApplicatorService', () => {
     });
 
     it('#applyColor() should  call #setFillColor() if left click (0)', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
 
         const spy = spyOn(service, 'setFillColor');
         service.applyColor(svg, 0);
@@ -67,14 +67,14 @@ describe('ApplicatorService', () => {
     });
 
     it('#applyColor() should  call #setBorderColor() if right click (2)', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         const spy = spyOn(service, 'setBorderColor');
         service.applyColor(svg, 2);
         expect(spy).toHaveBeenCalledWith(svg, service.state.colorState.secondColor.hex());
     });
 
     it('#setFillColor() should call #setAttribute() of svg if fill attribute is valid', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.renderer.setAttribute(svg, 'fill', '#ffffffff');
         const spy = spyOn(service.renderer, 'setAttribute');
         service.setFillColor(svg, '#12345678');
@@ -82,7 +82,7 @@ describe('ApplicatorService', () => {
     });
 
     it('#setFillColor() should not call #setAttribute() of svg if fill attribute is not valid', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.renderer.setAttribute(svg, 'fill', 'none');
         const spy = spyOn(service.renderer, 'setAttribute');
         service.setFillColor(svg, '#12345678');
@@ -90,7 +90,7 @@ describe('ApplicatorService', () => {
     });
 
     it('#setBorderColor() should call #setAttribute() of svg if stroke attribute is valid', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.renderer.setAttribute(svg, 'stroke', '#ffffffff');
         const spy = spyOn(service.renderer, 'setAttribute');
         service.setBorderColor(svg, '#12345678');
@@ -98,7 +98,7 @@ describe('ApplicatorService', () => {
     });
 
     it('#setBorderColor() should not call #setAttribute() of svg if stroke attribute is not valid', () => {
-        let svg = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.renderer.setAttribute(svg, 'stroke', 'none');
         const spy = spyOn(service.renderer, 'setAttribute');
         service.setBorderColor(svg, '#12345678');

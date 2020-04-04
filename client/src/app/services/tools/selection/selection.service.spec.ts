@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 import { SelectionService } from './selection.service';
 
@@ -60,7 +60,7 @@ describe('SelectionService', () => {
     });
 
     it('#determineMovingState() should set #selectionState.isMoving to true when clicking and gragging an object', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 50,
             clientY: 75,
@@ -74,7 +74,7 @@ describe('SelectionService', () => {
     });
 
     it('#determineMovingState() should select the element when clicking and dragging an non selected object', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         service.createEncompassingBox();
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 50,
@@ -87,17 +87,19 @@ describe('SelectionService', () => {
     });
 
     it('#determineMovingState() should set #selectionState.isMoving to true when clicking and dragging in an encompassing box', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         service.createEncompassingBox();
         const mouseMove: MouseEvent = new MouseEvent('mousemove', {
             clientX: 50,
             clientY: 75,
             button: 1,
         });
-        service.encompassingBox.startX = 0;
-        service.encompassingBox.endX = 100;
-        service.encompassingBox.startY = 0;
-        service.encompassingBox.endY = 100;
+        const testValue1 = 0;
+        const testValue2 = 100;
+        service.encompassingBox.startX = testValue1;
+        service.encompassingBox.endX = testValue2;
+        service.encompassingBox.startY = testValue1;
+        service.encompassingBox.endY = testValue2;
 
         service.determineMovingState(mouseMove, testElement);
         expect(service.selectionState.isMoving).toBeTruthy();
@@ -108,7 +110,8 @@ describe('SelectionService', () => {
 
         service.selectionState.initialX = 0;
         service.selectionState.initialY = 0;
-        service.applySelection(10, 10);
+        const testValue = 10;
+        service.applySelection(testValue, testValue);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -117,7 +120,8 @@ describe('SelectionService', () => {
 
         service.movementState.lastPosX = 0;
         service.movementState.lastPosY = 0;
-        service.applyTranslation(10, 10);
+        const testValue = 10;
+        service.applyTranslation(testValue, testValue);
         expect(spy).toHaveBeenCalled();
     });
 
@@ -145,7 +149,7 @@ describe('SelectionService', () => {
     });
 
     it('#findSingleShape() should add the shape to selectedShapes', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
 
         service.shapes = [testElement];
         service.selectionState.isSelecting = true;
@@ -154,7 +158,7 @@ describe('SelectionService', () => {
     });
 
     it('#findSingleShape() should reset selectedShapes', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         service.shapes = [];
         service.selectionState.isSelecting = true;
         service.findSingleShape(testElement);
@@ -162,7 +166,7 @@ describe('SelectionService', () => {
     });
 
     it('#findSingleShape() should element from remove from selectedShapes', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         service.shapes = [testElement];
         service.selectedShapes = [testElement];
         service.selectionState.isDeselecting = true;
@@ -171,7 +175,7 @@ describe('SelectionService', () => {
     });
 
     it('#findMultipleShapes() should return the selected shapes', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         testElement.setAttribute('stroke-width', (1).toString());
         testElement.setAttribute('x', (1).toString());
         testElement.setAttribute('y', (1).toString());
@@ -184,7 +188,7 @@ describe('SelectionService', () => {
     });
 
     it('#findMultipleShapes() should return the selected shapes', () => {
-        let testElement = <Element>service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg') as Element;
         testElement.setAttribute('stroke-width', (1).toString());
         testElement.setAttribute('x', (1).toString());
         testElement.setAttribute('y', (1).toString());
@@ -208,8 +212,10 @@ describe('SelectionService', () => {
         service.svg = service.renderer.createElement('rect', 'svg');
 
         const spy = spyOn(service.svg, 'setAttribute');
-
-        service.drawSelectionRectangle(10, 10, 50, 80);
+        const testValue1 = 10;
+        const testValue2 = 50;
+        const testValue3 = 80;
+        service.drawSelectionRectangle(testValue1, testValue1, testValue2, testValue3);
         expect(spy).toHaveBeenCalledWith('x', '10');
         expect(spy).toHaveBeenCalledWith('y', '10');
     });
@@ -220,7 +226,7 @@ describe('SelectionService', () => {
     });
 
     it('#drawEncompassingBox() should draw the encompassingBox element', () => {
-        let testElement = [<Element>service.renderer.createElement('rect', 'svg')];
+        const testElement = [service.renderer.createElement('rect', 'svg') as Element];
         testElement[0].setAttribute('x', '0');
         testElement[0].setAttribute('y', '0');
         testElement[0].setAttribute('height', '0');
@@ -241,18 +247,19 @@ describe('SelectionService', () => {
 
         const spy = spyOn(service, 'setPosition');
         service.drawControlPoints();
-        expect(spy).toHaveBeenCalledTimes(4);
+        const testValue = 4;
+        expect(spy).toHaveBeenCalledTimes(testValue);
     });
 
     it('#setPosition() should set the attribute of given element', () => {
-        let testElement = service.renderer.createElement('rect', 'svg');
+        const testElement = service.renderer.createElement('rect', 'svg');
 
         const spy = spyOn(testElement, 'setAttribute');
-        service.setPosition(testElement, 1, 2, 3, 4);
+        service.setPosition(testElement, 1, 2, 2, 2);
         expect(spy).toHaveBeenCalledWith('x', '1');
         expect(spy).toHaveBeenCalledWith('y', '2');
-        expect(spy).toHaveBeenCalledWith('height', '3');
-        expect(spy).toHaveBeenCalledWith('width', '4');
+        expect(spy).toHaveBeenCalledWith('height', '2');
+        expect(spy).toHaveBeenCalledWith('width', '2');
     });
 
     it('#hideEncompassingBox() should set the opacity of encompassing box to 0', () => {
@@ -273,7 +280,7 @@ describe('SelectionService', () => {
     });
 
     it('#moveShapes() should apply movement to given shapes', () => {
-        let testElement = [service.renderer.createElement('rect', 'svg')];
+        const testElement = [service.renderer.createElement('rect', 'svg')];
         service.createEncompassingBox();
 
         const spy = spyOn(testElement[0], 'setAttribute');

@@ -1,8 +1,8 @@
 import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { FileTypes } from 'src/app/models/enums';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { FileTypes } from 'src/app/models/enums';
 
 // we do not want the img preview width and height to exceed 300px.
 const MAX_IMG_PREVIEW_SIZE = 300;
@@ -99,6 +99,6 @@ export class DrawingHandler {
 
   clearCanvas() {
     this.store.emptySvg();
-    this.store.resetUndoRedo()
+    this.store.resetUndoRedo();
   }
 }

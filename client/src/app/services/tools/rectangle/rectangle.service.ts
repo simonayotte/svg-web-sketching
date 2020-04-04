@@ -6,17 +6,22 @@ import { FormService } from '../form/form.service';
     providedIn: 'root',
 })
 export class RectangleService extends FormService {
-    startX: number = 0;
-    startY: number = 0;
-    lastX: number = 0;
-    lastY: number = 0;
-    isShift = false;
+    startX: number;
+    startY: number;
+    lastX: number;
+    lastY: number;
+    isShift: boolean;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super(store, rendererFactory);
+        this.startX = 0;
+        this.startY = 0;
+        this.lastX = 0;
+        this.lastY = 0;
+        this.isShift = false;
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         this.startX = event.offsetX;
         this.startY = event.offsetY;
         this.svg = this.renderer.createElement('rect', 'svg');
@@ -32,13 +37,13 @@ export class RectangleService extends FormService {
         this.isDrawing = true;
     }
 
-    continue(event: MouseEvent) {
+    continue(event: MouseEvent): void {
         this.lastX = event.offsetX;
         this.lastY = event.offsetY;
         this.draw(this.startX, this.startY, this.lastX, this.lastY);
     }
 
-    drawSquare(dx: number, dy: number) {
+    drawSquare(dx: number, dy: number): void {
         if (dx < 0 && dy < 0) {
             this.renderer.setAttribute(this.svg, 'x', (this.startX + dx).toString());
             this.renderer.setAttribute(this.svg, 'y', (this.startY + dy).toString());
@@ -54,7 +59,7 @@ export class RectangleService extends FormService {
         }
     }
 
-    drawRect(dx: number, dy: number) {
+    drawRect(dx: number, dy: number): void {
         if (dx < 0 && dy < 0) {
             this.renderer.setAttribute(this.svg, 'x', this.lastX.toString());
             this.renderer.setAttribute(this.svg, 'y', this.lastY.toString());
@@ -69,7 +74,7 @@ export class RectangleService extends FormService {
             this.renderer.setAttribute(this.svg, 'y', this.startY.toString());
         }
     }
-    draw(startX: number, startY: number, lastX: number, lastY: number) {
+    draw(startX: number, startY: number, lastX: number, lastY: number): void {
         let dx = lastX - startX;
         let dy = lastY - startY;
         // Length of square is equal to the smallest size (without changing sign)
@@ -88,7 +93,7 @@ export class RectangleService extends FormService {
         this.renderer.setAttribute(this.svg, 'height', Math.abs(dy).toString());
     }
 
-    stop() {
+    stop(): void {
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
             this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
@@ -100,13 +105,13 @@ export class RectangleService extends FormService {
         this.stopSignal();
     }
 
-    handleKeyDown(key: string) {
+    handleKeyDown(key: string): void {
         if (key === 'Shift') {
             this.isShift = true;
             this.draw(this.startX, this.startY, this.lastX, this.lastY);
         }
     }
-    handleKeyUp(key: string) {
+    handleKeyUp(key: string): void {
         if (key === 'Shift') {
             this.isShift = false;
             if (this.isDrawing) {

@@ -1,7 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
-import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 @Injectable({
     providedIn: 'root',
 })
@@ -25,9 +25,9 @@ export class PencilService extends Tool {
     }
 
     start(event: MouseEvent) {
-        let x = event.offsetX;
-        let y = event.offsetY;
-        let thickness = this.state.globalState.thickness;
+        const x = event.offsetX;
+        const y = event.offsetY;
+        const thickness = this.state.globalState.thickness;
 
         this.drawCircle(x, y, thickness / 2);
 

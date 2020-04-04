@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 
-import { PipetteService } from './pipette.service';
-import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
+import { PipetteService } from './pipette.service';
 
 describe('PipetteService', () => {
     let service: PipetteService;
@@ -52,7 +52,7 @@ describe('PipetteService', () => {
     });
 
     it('#createCanvasWithSvgs() should return canvas context with correct height and width', () => {
-        let ctx = service.createCanvasWithSvgs(500, 500);
+        const ctx = service.createCanvasWithSvgs(500, 500);
         expect(ctx).toBeTruthy();
         expect(ctx.canvas.width).toEqual(500);
         expect(ctx.canvas.height).toEqual(500);

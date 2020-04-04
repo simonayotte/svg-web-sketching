@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
-import { ColorComponent } from 'src/app/components/tools/color/color.component';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
+import { ColorComponent } from 'src/app/components/tools/color/color.component';
 
 describe('CreateDrawingComponent', () => {
     let component: CreateDrawingComponent;

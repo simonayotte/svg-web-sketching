@@ -1,7 +1,7 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material'
-import { GuideComponent } from 'src/app/components/guide/guide.component'
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
+import { GuideComponent } from 'src/app/components/guide/guide.component';
 import { HomePageComponent } from './home-page.component';
 
 describe('HomePageComponent', () => {

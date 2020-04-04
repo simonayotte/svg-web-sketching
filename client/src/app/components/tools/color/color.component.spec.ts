@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ColorComponent } from './color.component';
-import { Color } from 'src/app/models/color';
 import { FormsModule } from '@angular/forms';
+import { Color } from 'src/app/models/color';
+import { ColorComponent } from './color.component';
 
 describe('ColorComponent', () => {
     let component: ColorComponent;
@@ -26,8 +26,8 @@ describe('ColorComponent', () => {
     });
 
     it('#ngOnInit should call fillSquare() and fillBar() ', () => {
-        let squareSpy = spyOn(component, 'fillSquare');
-        let barSpy = spyOn(component, 'fillBar');
+        const squareSpy = spyOn(component, 'fillSquare');
+        const barSpy = spyOn(component, 'fillBar');
         component.ngOnInit();
         expect(squareSpy).toHaveBeenCalled();
         expect(barSpy).toHaveBeenCalled();

@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { BrushService } from './brush.service';
 
-import { DrawStore } from '../../../store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { Color } from 'src/app/models/color';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 describe('BrushService', () => {
     let service: BrushService;

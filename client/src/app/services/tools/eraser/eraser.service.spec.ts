@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import { EraserService } from './eraser.service';
-import { DrawStore } from 'src/app/store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
+import { EraserService } from './eraser.service';
 
 describe('EraserService', () => {
     let service: EraserService;
@@ -14,11 +14,11 @@ describe('EraserService', () => {
         store = TestBed.get(DrawStore);
         service = TestBed.get(EraserService);
 
-        let svg = service.renderer.createElement('svg', 'svg') as SVGSVGElement;
+        const svg = service.renderer.createElement('svg', 'svg') as SVGSVGElement;
         store.setDrawSvg(svg);
         service.renderer.appendChild(document.body, svg);
 
-        rect = <SVGGraphicsElement>service.renderer.createElement('rect', 'svg');
+        rect = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
         service.renderer.setAttribute(rect, 'x', '200');
         service.renderer.setAttribute(rect, 'y', '200');
         service.renderer.setAttribute(rect, 'width', '100');
@@ -31,7 +31,7 @@ describe('EraserService', () => {
         store.stateObs.subscribe((value: DrawState) => {
             service.state = value;
 
-            //service.state.svgState.svgs = [rect];
+            // service.state.svgState.svgs = [rect];
         });
     });
 
@@ -164,25 +164,25 @@ describe('EraserService', () => {
     });
 
     it('#isEraseTouching() should return true if eraser is smaller than svg and touching it', () => {
-        let rect = new DOMRect(50, 50, 200, 200);
+        const rect = new DOMRect(50, 50, 200, 200);
 
         expect(service.isEraseTouching(100, 100, rect, 10)).toBeTruthy();
     });
 
     it('#isEraseTouching() should return false if eraser is smaller than svg and not touching it', () => {
-        let rect = new DOMRect(50, 50, 200, 200);
+        const rect = new DOMRect(50, 50, 200, 200);
 
         expect(service.isEraseTouching(400, 400, rect, 10)).toBeFalsy();
     });
 
     it('#isEraseTouching() should return true if eraser is bigger than svg and touching it', () => {
-        let rect = new DOMRect(50, 50, 10, 10);
+        const rect = new DOMRect(50, 50, 10, 10);
 
         expect(service.isEraseTouching(55, 55, rect, 10)).toBeTruthy();
     });
 
     it('#isEraseTouching() should return false if eraser is bigger than svg and not touching it', () => {
-        let rect = new DOMRect(50, 50, 10, 10);
+        const rect = new DOMRect(50, 50, 10, 10);
 
         expect(service.isEraseTouching(10, 10, rect, 10)).toBeFalsy();
     });

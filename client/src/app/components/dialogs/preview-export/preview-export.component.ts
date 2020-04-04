@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { ExportedDrawing } from 'src/app/models/exported-drawing';
+import { HttpResponse } from 'src/app/models/httpResponse';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { HttpResponse } from 'src/app/models/httpResponse';
 
 @Component({
   selector: 'app-preview-export',
@@ -46,7 +46,7 @@ export class PreviewExportComponent implements OnInit {
     this.dialogRef.close();
     return this.httpService.exportDrawing(drawing)
     .toPromise()
-    .then((data:HttpResponse) => alert(data.message))
-    .catch((err:HttpResponse) => alert(err))
+    .then((data: HttpResponse) => alert(data.message))
+    .catch((err: HttpResponse) => alert(err));
   }
 }

@@ -1,24 +1,24 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExportDrawingComponent } from './export-drawing.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DrawStore } from 'src/app/store/draw-store';
-import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
-import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OverlayModule } from '@angular/cdk/overlay';
-import { MatDialogModule, MatDialogRef, MatDialog } from '@angular/material';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PreviewExportComponent } from '../preview-export/preview-export.component';
 import { FormValuesName } from 'src/app/models/enums';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
+import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
+import { DrawStore } from 'src/app/store/draw-store';
+import { PreviewExportComponent } from '../preview-export/preview-export.component';
+import { ExportDrawingComponent } from './export-drawing.component';
 
 describe('ExportDrawingComponent', () => {
   let component: ExportDrawingComponent;
   let fixture: ComponentFixture<ExportDrawingComponent>;
-  let store:DrawStore;
-  let drawingHandler:DrawingHandler
-  let exportDrawingService:ExportDrawingService
+  let store: DrawStore;
+  let drawingHandler: DrawingHandler;
+  let exportDrawingService: ExportDrawingService;
   const dialogMock = {
     close: () => {
         /*empty function*/
@@ -26,11 +26,11 @@ describe('ExportDrawingComponent', () => {
     open: () => {
     },
   };
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
         declarations: [ExportDrawingComponent],
-        imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule,OverlayModule, MatDialogModule,BrowserModule,BrowserAnimationsModule],
+        imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, OverlayModule, MatDialogModule, BrowserModule, BrowserAnimationsModule],
         providers: [
             {provide: MatDialogRef, useValue:  dialogMock },
             {provide: MatDialog, useValue: dialogMock},
@@ -40,7 +40,7 @@ describe('ExportDrawingComponent', () => {
         ],
     }).compileComponents();
     store = TestBed.get(DrawStore);
-    store.setDrawSvg(document.createElementNS("http://www.w3.org/2000/svg", "svg"));
+    store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
   }));
 
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe('ExportDrawingComponent', () => {
     drawingHandler = TestBed.get(DrawingHandler);
     exportDrawingService = TestBed.get(ExportDrawingService);
     fixture.detectChanges();
-    //clear the tags array before each test
+    // clear the tags array before each test
   });
 
   it('should create', () => {
@@ -59,19 +59,19 @@ describe('ExportDrawingComponent', () => {
   it('#submit should call #prepareDrawingExportation() of drawingHandler', () => {
     spyOn(drawingHandler, 'prepareDrawingExportation').and.callThrough();
     component.submit();
-    expect(drawingHandler.prepareDrawingExportation).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Type].value, component.exportDrawingForm.controls[FormValuesName.Filter].value)
+    expect(drawingHandler.prepareDrawingExportation).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Type].value, component.exportDrawingForm.controls[FormValuesName.Filter].value);
   });
 
   it('#submit should call #setExportName() of exportDrawingService', () => {
     spyOn(exportDrawingService, 'setExportName').and.callThrough();
     component.submit();
-    expect(exportDrawingService.setExportName).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Name].value)
+    expect(exportDrawingService.setExportName).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Name].value);
   });
 
   it('#submit should call #setType() of exportDrawingService', () => {
     spyOn(exportDrawingService, 'setType').and.callThrough();
     component.submit();
-    expect(exportDrawingService.setType).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Type].value)
+    expect(exportDrawingService.setType).toHaveBeenCalledWith(component.exportDrawingForm.controls[FormValuesName.Type].value);
   });
 
   it('#submit should close the dialog', () => {

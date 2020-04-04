@@ -11,12 +11,12 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
-    //undoRedo
+    // undoRedo
     undo() {
         if (this.state.undoRedoState.undoState.length === 0) {
             return;
         }
-        let next = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
+        const next = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: next },
@@ -31,7 +31,7 @@ export class DrawStore extends Store<DrawState> {
         if (this.state.undoRedoState.redoState.length === 0) {
             return;
         }
-        let next = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
+        const next = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
 
         this.setState({
             ...this.state,
@@ -51,7 +51,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    //Svg
+    // Svg
     setDrawSvg(value: SVGSVGElement) {
         this.setState({
             ...this.state,
@@ -81,7 +81,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     pushSvg(value: SVGGraphicsElement) {
-        let newState = this.state.svgState.svgs.concat(value);
+        const newState = this.state.svgState.svgs.concat(value);
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: newState },
@@ -96,7 +96,7 @@ export class DrawStore extends Store<DrawState> {
     deleteSvgs(value: SVGGraphicsElement[]) {
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter(svg => !value.includes(svg)) },
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter((svg) => !value.includes(svg)) },
             undoRedoState: {
                 ...this.state.undoRedoState,
                 undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
@@ -130,7 +130,7 @@ export class DrawStore extends Store<DrawState> {
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
         });
     }
-    //Global
+    // Global
 
     setThickness(value: number) {
         this.setState({

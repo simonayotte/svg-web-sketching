@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { EllipsisService } from './ellipsis.service';
 
-import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 describe('EllipsisService', () => {
     let service: EllipsisService;

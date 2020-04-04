@@ -3,9 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { SaveDrawingService } from './save-drawing.service';
 
 describe('SaveDrawingService', () => {
-  let service:SaveDrawingService;
+  let service: SaveDrawingService;
   beforeEach(() => {
-      TestBed.configureTestingModule({})
+      TestBed.configureTestingModule({});
       service = TestBed.get(SaveDrawingService);
     });
 
@@ -19,7 +19,7 @@ describe('SaveDrawingService', () => {
   });
 
   it('#setTags(tags) should set the #tags to the given name', () => {
-    service.setTags(['Sea','Beach','Waves']);
-    expect(service.getTags()).toEqual(['Sea','Beach','Waves']);
+    service.setTags(['Sea', 'Beach', 'Waves']);
+    expect(service.getTags()).toEqual(['Sea', 'Beach', 'Waves']);
   });
 });

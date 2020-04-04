@@ -1,24 +1,24 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { SaveDrawingComponent } from './save-drawing.component';
-import { FormsModule, ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { MatDialogRef, MatDialogModule, MatDialog } from '@angular/material';
-import { DrawStore } from 'src/app/store/draw-store';
-import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service'
-import { PreviewImageComponent } from '../preview-image/preview-image.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { OverlayModule } from '@angular/cdk/overlay';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { FormValuesName } from 'src/app/models/enums';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
+import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
+import { DrawStore } from 'src/app/store/draw-store';
+import { PreviewImageComponent } from '../preview-image/preview-image.component';
+import { SaveDrawingComponent } from './save-drawing.component';
 
 describe('SaveDrawingComponent', () => {
   let component: SaveDrawingComponent;
   let fixture: ComponentFixture<SaveDrawingComponent>;
-  let fb:FormBuilder = new FormBuilder();
-  let store:DrawStore;
-  let drawingHandler:DrawingHandler
-  let saveDrawingService:SaveDrawingService
+  const fb: FormBuilder = new FormBuilder();
+  let store: DrawStore;
+  let drawingHandler: DrawingHandler;
+  let saveDrawingService: SaveDrawingService;
   const dialogMock = {
     close: () => {
         /*empty function*/
@@ -26,11 +26,11 @@ describe('SaveDrawingComponent', () => {
     open: () => {
     },
   };
-  
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
         declarations: [SaveDrawingComponent],
-        imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule,OverlayModule, MatDialogModule,BrowserModule,BrowserAnimationsModule],
+        imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, OverlayModule, MatDialogModule, BrowserModule, BrowserAnimationsModule],
         providers: [
             {provide: MatDialogRef, useValue:  dialogMock },
             {provide: MatDialog, useValue: dialogMock},
@@ -40,7 +40,7 @@ describe('SaveDrawingComponent', () => {
         ],
     }).compileComponents();
     store = TestBed.get(DrawStore);
-    store.setDrawSvg(document.createElementNS("http://www.w3.org/2000/svg", "svg"));
+    store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
   }));
 
   beforeEach(() => {
@@ -49,8 +49,8 @@ describe('SaveDrawingComponent', () => {
     drawingHandler = TestBed.get(DrawingHandler);
     saveDrawingService = TestBed.get(SaveDrawingService);
     fixture.detectChanges();
-    //clear the tags array before each test
-    for(let i = 0; i < component.tags.length; i++){
+    // clear the tags array before each test
+    for (let i = 0; i < component.tags.length; i++) {
       component.tags.removeAt(i);
     }
   });
@@ -70,7 +70,7 @@ describe('SaveDrawingComponent', () => {
   });
 
   it('#addTag() should not add a tag if #tags is invalid', () => {
-    component.saveDrawingForm.controls[FormValuesName.Tags].setErrors({'incorrect': true});
+    component.saveDrawingForm.controls[FormValuesName.Tags].setErrors({incorrect: true});
     component.addTag();
     expect(component.tags.length).toEqual(0);
     component.saveDrawingForm.controls[FormValuesName.Tags].setErrors(null);
@@ -81,16 +81,16 @@ describe('SaveDrawingComponent', () => {
     component.tags.push(fb.control('Dog'));
     component.tags.push(fb.control('Park'));
     component.getTagsValues();
-    expect(component.tagStringArray).toEqual(['Cat','Dog','Park'])
+    expect(component.tagStringArray).toEqual(['Cat', 'Dog', 'Park']);
   });
-  
+
   it('#removeTags(2) should remove the third tag of tags', () => {
     component.tags.push(fb.control('Cat'));
     component.tags.push(fb.control('Dog'));
     component.tags.push(fb.control('Park'));
     component.removeTag(2);
     component.getTagsValues();
-    expect(component.tagStringArray).toEqual(['Cat','Dog'])
+    expect(component.tagStringArray).toEqual(['Cat', 'Dog']);
   });
 
   it('#removeTags(0) should remove the first tag of tags', () => {
@@ -100,7 +100,7 @@ describe('SaveDrawingComponent', () => {
     component.tags.push(fb.control('Orange'));
     component.removeTag(0);
     component.getTagsValues();
-    expect(component.tagStringArray).toEqual(['Cloud','Red','Orange'])
+    expect(component.tagStringArray).toEqual(['Cloud', 'Red', 'Orange']);
   });
 
   it('after adding 5 tags in #tags, calling #removeTags(3) should set the length of #tags to 4', () => {
@@ -121,7 +121,7 @@ describe('SaveDrawingComponent', () => {
   });
 
   it('#submit() should call #setImgName of  saveDrawingService', () => {
-    spyOn(saveDrawingService,'setImgName').and.callThrough();
+    spyOn(saveDrawingService, 'setImgName').and.callThrough();
     component.submit();
     expect(saveDrawingService.setImgName).toHaveBeenCalledWith(component.saveDrawingForm.controls[FormValuesName.Name].value);
   });
@@ -132,7 +132,6 @@ describe('SaveDrawingComponent', () => {
     expect(component.getTagsValues).toHaveBeenCalled();
   });
 
-
   it('#submit() should call #setTags of  saveDrawingService', () => {
     spyOn(saveDrawingService, 'setTags').and.callThrough();
     component.submit();
@@ -140,8 +139,8 @@ describe('SaveDrawingComponent', () => {
   });
 
   it('#submit() should open the PreviewImage dialog', () => {
-    spyOn(component.dialog,'open').and.callThrough();
+    spyOn(component.dialog, 'open').and.callThrough();
     component.submit();
-    expect(component.dialog.open).toHaveBeenCalledWith(PreviewImageComponent)
+    expect(component.dialog.open).toHaveBeenCalledWith(PreviewImageComponent);
   });
 });
