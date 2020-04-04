@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { FormValuesName } from 'src/app/models/enums';
+import { FormValuesName, Tools } from 'src/app/models/enums';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { DrawState } from 'src/app/state/draw-state';
@@ -43,6 +43,7 @@ export class ExportDrawingComponent implements OnInit {
   }
 
   submit(): void {
+    this.store.setTool(Tools.None);
     this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[FormValuesName.Type].value, this.exportDrawingForm.controls[FormValuesName.Filter].value);
     this.exportDrawingService.setExportName(this.exportDrawingForm.controls[FormValuesName.Name].value);
     this.exportDrawingService.setType(this.exportDrawingForm.controls[FormValuesName.Type].value);

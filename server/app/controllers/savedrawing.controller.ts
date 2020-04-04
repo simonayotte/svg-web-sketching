@@ -21,13 +21,17 @@ export class SaveDrawingController {
 
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             let drawing = new Drawing(req.body.name,req.body.tags, req.body.dataURL, req.body.svgsHTML, req.body.width, req.body.height, req.body.RGBA);
-            this.dbService.addDrawingDb(drawing).catch((err:Error) => {
-                let errorMsg = {status:'400', message: err.message}
-                res.json(errorMsg)});
-            await wait(100);
-            let drawing_id = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
-            await wait(100);
-            this.fileHandler.saveDrawing(drawing_id, drawing.dataURL);
+            try{
+                this.dbService.addDrawingDb(drawing)
+                await wait(100);
+                let drawing_id:Array<string> = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
+                await wait(100);
+                this.fileHandler.saveDrawing(drawing_id, drawing.dataURL);
+            }
+            catch(error){
+                let errorMsg = {status:'400', message: error.message}
+                res.json(errorMsg);
+            }
             let succesMsg = {status:'200', message:'Image sauvegardée avec succès!'}
             res.json(succesMsg)
         });

@@ -23,9 +23,8 @@ export class GalleryController {
                 let returnedDrawings: Array<Drawing> = this.fileHandler.checkAllDrawingsAreInServer(drawings);
                 res.send(returnedDrawings);
             })
-            .catch((error:Error) => {
-                let errorMsg = {status:'400', message:"Le dessins n'ont pas pu être récupérer"}
-                res.json(errorMsg);
+            .catch((err:Error)=> {
+                res.send([]);
             });
         });
 
@@ -34,8 +33,8 @@ export class GalleryController {
                 this.fileHandler.deleteDrawing(req.params.id)
                 let succesMsg = {status:'200', message:'Dessin supprimé avec succès!'}
                 res.json(succesMsg)
-            },
-            (err) => {
+            })
+            .catch((err:Error) => {
                 let errorMsg = {status:'400', message:"Le dessin n'a pas pu être supprimé!"}
                 res.json(errorMsg)
             })

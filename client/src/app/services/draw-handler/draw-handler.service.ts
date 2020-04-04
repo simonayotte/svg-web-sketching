@@ -64,7 +64,6 @@ export class DrawHandlerService {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.start(event);
         }
-        // TODO: Call fonction pour reset undo
     }
 
     stopTool() {

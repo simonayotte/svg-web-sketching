@@ -33,14 +33,14 @@ export class ApplicatorService extends Tool {
     }
 
     setFillColor(svg: SVGGraphicsElement, color: string) {
-        if (svg.getAttribute('fill') !== 'none') {
+        if (svg.getAttribute('fill') && svg.getAttribute('fill') !== 'none') {
             this.store.saveSvgsState(this.copyState(this.state.svgState.svgs));
             this.renderer.setAttribute(svg, 'fill', color);
         }
     }
 
     setBorderColor(svg: SVGGraphicsElement, color: string) {
-        if (svg.getAttribute('stroke') !== 'none') {
+        if (svg.getAttribute('stroke') && svg.getAttribute('stroke') !== 'none') {
             this.store.saveSvgsState(this.copyState(this.state.svgState.svgs));
             this.renderer.setAttribute(svg, 'stroke', color);
         }

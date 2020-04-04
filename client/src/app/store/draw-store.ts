@@ -103,7 +103,6 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
-        console.log(this.state.undoRedoState);
     }
 
     emptySvg() {
@@ -139,7 +138,10 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     setTool(value: Tools) {
-        const isPanelOpen = this.state.globalState.tool == value && this.state.globalState.isPanelOpen ? false : true;
+        const isPanelOpen =
+            this.state.globalState.tool === Tools.None || (this.state.globalState.tool === value && this.state.globalState.isPanelOpen)
+                ? false
+                : true;
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },

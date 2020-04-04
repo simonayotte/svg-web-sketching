@@ -8,12 +8,10 @@ import { DrawStore } from '../../../store/draw-store';
     providedIn: 'root',
 })
 export class AerosolService extends Tool {
-    path = '';
-    isDrawing = false;
-    // Emission
-    // Constant emissionPeriod for getting rid of lag
-    emissionPeriod = 0;
-    sprayIntervalID: any; // Pour acceder au setInterval du spray pattern
+    path: string;
+    isDrawing: boolean;
+    readonly emissionPeriod: number = 0;
+    sprayIntervalID: any;
 
     // Mouse position
     x: number;
@@ -24,6 +22,8 @@ export class AerosolService extends Tool {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.path = '';
+        this.isDrawing = false;
 
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
@@ -49,7 +49,6 @@ export class AerosolService extends Tool {
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
 
         // Function in interval for calling
-        // Interval se fait a chaque 50 pour eviter le lag
         this.sprayIntervalID = setInterval(() => this.spray(), this.emissionPeriod);
 
         this.isDrawing = true;
@@ -72,7 +71,6 @@ export class AerosolService extends Tool {
         this.stopSignal();
     }
 
-    // Returns random point inside the circle
     generateRandomPoint(x: number, y: number): Coordinate {
         const angle = Math.random() * Math.PI * 2;
         const r = Math.random() * Math.pow(this.state.globalState.thickness / 2, 2);
@@ -81,8 +79,7 @@ export class AerosolService extends Tool {
         return new Coordinate(pointX, pointY);
     }
 
-    // Adds a random point inside the SVG path, genere une emission
-    generateRandomSprayPoint(x: number, y: number) {
+    generateRandomSpray(x: number, y: number) {
         const density = this.convertEmissionRate();
         for (let i = 0; i < density; i++) {
             const point = this.generateRandomPoint(x, y);
@@ -92,13 +89,12 @@ export class AerosolService extends Tool {
         }
     }
 
-    // Conversion of emissionRate/sec in emissionRate per 50ms
     convertEmissionRate(): number {
         return ((this.state.emissionRate * 0.05) / 1000) * 10000;
     }
 
-    // Function for calling in setInterval, sprays with correct emissionRate
+    // Wrapper function for callback in setInterval
     spray() {
-        this.generateRandomSprayPoint(this.x, this.y);
+        this.generateRandomSpray(this.x, this.y);
     }
 }

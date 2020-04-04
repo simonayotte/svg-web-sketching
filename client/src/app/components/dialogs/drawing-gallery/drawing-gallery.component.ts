@@ -18,8 +18,8 @@ import { GalleryState } from './gallery-state';
 })
 export class DrawingGalleryComponent implements OnInit {
     private state: DrawState;
-    galleryState: GalleryState = new GalleryState();
-    filterDrawingForm = this.fb.group({
+    public galleryState: GalleryState;
+    public filterDrawingForm = this.fb.group({
       tags: this.fb.array([]),
     });
     constructor(
@@ -29,7 +29,9 @@ export class DrawingGalleryComponent implements OnInit {
         private fb: FormBuilder,
         private galleryService: GalleryService,
         public dialogRef: MatDialogRef<DrawingGalleryComponent>,
-        ) {
+        ) 
+        {
+        this.galleryState = new GalleryState();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
