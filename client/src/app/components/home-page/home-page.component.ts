@@ -1,6 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
+import { DrawingGalleryComponent } from '../dialogs/drawing-gallery/drawing-gallery.component';
 
 @Component({
     selector: 'app-home-page',
@@ -9,16 +10,26 @@ import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawin
 })
 export class HomePageComponent implements OnInit {
     private isCreateDrawingOpen = false;
+    private isGalleryOpen = false;
     constructor(private dialog: MatDialog) {}
     ngOnInit() {
         /* Nothing needed in ngOnInit() */
     }
-    openDialog(): void {
+    openCreateDrawingDialog(): void {
         const dialogRef = this.dialog.open(CreateDrawingComponent);
         this.isCreateDrawingOpen = true;
 
-        dialogRef.afterClosed().subscribe(result => {
+        dialogRef.afterClosed().subscribe((result) => {
             this.isCreateDrawingOpen = false;
+        });
+    }
+
+    openGalleryDialog(): void {
+        const dialogRef = this.dialog.open(DrawingGalleryComponent);
+        this.isGalleryOpen = true;
+
+        dialogRef.afterClosed().subscribe((result) => {
+            this.isGalleryOpen = false;
         });
     }
 
@@ -28,7 +39,13 @@ export class HomePageComponent implements OnInit {
             event.preventDefault();
             event.stopPropagation();
             if (!this.isCreateDrawingOpen) {
-                this.openDialog();
+                this.openCreateDrawingDialog();
+            }
+        } else if (event.code === 'KeyG' && event.ctrlKey) {
+            event.preventDefault();
+            event.stopPropagation();
+            if (!this.isGalleryOpen) {
+                this.openGalleryDialog();
             }
         }
     }

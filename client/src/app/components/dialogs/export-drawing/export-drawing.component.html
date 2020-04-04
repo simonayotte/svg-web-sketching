@@ -1,0 +1,37 @@
+<h1 mat-dialog-title>Exporter un dessin</h1>
+<div mat-dialog-content>
+    <form [formGroup]="exportDrawingForm">
+        <p>Nom du fichier:</p>
+        <label>
+            <input type="text"  formControlName="name">
+            <i *ngIf = 'name.errors?.required' class="fas fa-exclamation-triangle" title = "Le nom est requis!"></i>
+        </label>
+        <p>Format:</p>
+        <label>
+          <input type="radio" value="png" formControlName="type" >
+              <span>png</span>
+        </label>
+        <label>
+          <input type="radio" value="jpeg" formControlName="type">
+            <span>jpeg</span>
+        </label>
+        <label>
+          <input type="radio" value="svg+xml" formControlName="type">
+          <span>svg</span>
+          <i *ngIf = 'type.errors?.required' class="fas fa-exclamation-triangle" title = "Le format est requis!"></i><br>
+        </label><br>
+        <label>
+          <p>Filtres:</p>
+          <select id = 'filter' formControlName = 'filter'>
+            <option value = ''>Aucun</option>
+            <option value = '1'>Brouiller</option>
+            <option value = '2'>Niveau de gris</option>
+            <option value = '3'>Inverser couleurs</option>
+            <option value = '4'>Saturer</option>
+            <option value = '5'>Eroder</option>
+          </select>
+        </label><br>
+        <button (click) = 'submit()' [disabled] = '!exportDrawingForm.valid'>Confirmer</button>
+        <button mat-dialog-close>Annuler</button>
+     </form>
+</div>

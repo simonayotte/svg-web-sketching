@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-//import { RectangleService } from 'src/app/services/tools/rectangle/rectangle.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Types } from 'src/app/models/enums';
 
 @Component({
     selector: 'app-rectangle',
@@ -7,20 +7,24 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
     styleUrls: ['./rectangle.component.scss'],
 })
 export class RectangleComponent implements OnInit {
-    @Input('rectangleType') rectangleType: string;
+    @Input('rectangleType') rectangleType: Types;
     @Input('thickness') thickness: number;
     @Output() thicknessChange = new EventEmitter();
     @Output() rectangleTypeChange = new EventEmitter();
 
-    constructor() {}
+    constructor() {
+        // Empty Block
+    }
 
-    ngOnInit() {}
+    ngOnInit(): void {
+        // Empty Block
+    }
 
-    setThickness(event: any) {
+    setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setRectangleType(value: string) {
+    setRectangleType(value: Types): void {
         this.rectangleTypeChange.emit(value);
     }
 }

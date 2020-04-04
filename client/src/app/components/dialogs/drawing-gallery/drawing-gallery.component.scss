@@ -1,0 +1,77 @@
+img{
+    width : 100px;
+    height : 100px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.fa-trash{
+    float:right;
+}
+
+.fa-download{
+    float:right;
+    margin-right:15px;
+}
+
+.no-drawing{
+    margin:auto;
+}
+
+.no-filter{
+    margin:auto;
+}
+
+h1{
+    text-align: center;
+}
+
+.container{
+    display:flex;
+    flex-wrap: wrap;
+    width: 800px;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.drawing{
+    width: 150px;
+    text-align: center;
+    margin:10px;
+}
+
+.fa-plus{
+    color:green;
+}
+
+
+.fa-times{
+    color:red;
+    margin-left:5px;
+}
+
+.fa-exclamation-triangle{
+    color:orange;
+    margin-left:5px;
+}
+
+.fa-filter{
+    float:right;
+    color:lightgray;
+}
+
+.loader {
+    // taken from https://www.w3schools.com/howto/howto_css_loader.asp
+    border: 8px solid #f3f3f3; /* Light grey */
+    border-top: 8px solid #000000; /* Blue */
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 2s linear infinite;
+    margin:auto;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }

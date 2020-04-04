@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Color } from '../models/color';
+import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
-import { Color } from '../models/color';
-import { Shape } from '../models/shape';
 @Injectable({
     providedIn: 'root',
 })
@@ -11,47 +11,168 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
-    //Global
-    setCanvasHTML(value: HTMLCanvasElement) {
+    // undoRedo
+    undo(): void {
+        if (this.state.undoRedoState.undoState.length === 0) {
+            return;
+        }
+        const next = this.state.undoRedoState.undoState[this.state.undoRedoState.undoState.length - 1];
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, canvas: value, ctx: value.getContext('2d') as CanvasRenderingContext2D },
+            svgState: { ...this.state.svgState, svgs: next },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.slice(0, this.state.undoRedoState.undoState.length - 1),
+                redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
+            },
         });
     }
-    setThickness(value: number) {
+    redo(): void {
+        if (this.state.undoRedoState.redoState.length === 0) {
+            return;
+        }
+        const next = this.state.undoRedoState.redoState[this.state.undoRedoState.redoState.length - 1];
+
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: next },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                redoState: this.state.undoRedoState.redoState.slice(0, this.state.undoRedoState.redoState.length - 1),
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+            },
+        });
+    }
+
+    resetUndoRedo(): void {
+        this.setState({
+            ...this.state,
+            undoRedoState: { ...this.state.undoRedoState, redoState: [], undoState: [] },
+        });
+    }
+
+    // Svg
+    setDrawSvg(value: SVGSVGElement): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, drawSvg: value },
+        });
+    }
+
+    setDrawWidth(value: number): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, width: value },
+        });
+    }
+
+    setDrawHeight(value: number): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, height: value },
+        });
+    }
+
+    setSVGFilter(value: string): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgFilter: value },
+        });
+    }
+
+    pushSvg(value: SVGGraphicsElement): void {
+        const newState = this.state.svgState.svgs.concat(value);
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: newState },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
+        });
+    }
+
+    deleteSvgs(value: SVGGraphicsElement[]): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter((svg: SVGGraphicsElement) => !value.includes(svg)) },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
+        });
+    }
+
+    emptySvg(): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: [] },
+        });
+    }
+
+    saveSvgsState(value: SVGGraphicsElement[]): void {
+        this.setState({
+            ...this.state,
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([value]),
+                redoState: [],
+            },
+        });
+    }
+
+    popSvg(): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
+        });
+    }
+    // Global
+
+    setThickness(value: number): void {
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, thickness: value },
         });
     }
-    setTool(value: string) {
-        const isPanelOpen = this.state.globalState.tool == value && this.state.globalState.isPanelOpen ? false : true;
+    setTool(value: Tools): void {
+        const isPanelOpen =
+            this.state.globalState.tool === Tools.None || (this.state.globalState.tool === value && this.state.globalState.isPanelOpen)
+                ? false
+                : true;
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
         });
     }
-    //Canvas
-    setCanvasWidth(value: number) {
+    toggleGrid(): void {
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, width: value },
+            globalState: { ...this.state.globalState, isDisplayGrid: !this.state.globalState.isDisplayGrid },
         });
     }
-    setCanvasHeight(value: number) {
+    setGridSize(value: number): void {
         this.setState({
             ...this.state,
-            canvasState: { ...this.state.canvasState, height: value },
+            globalState: { ...this.state.globalState, gridSize: value },
         });
     }
-    pushShape(value: Shape) {
-        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.concat(value)}});
-    }
-    popShape(value: Shape) {
-        this.setState({...this.state, canvasState: { ...this.state.canvasState, shapes: this.state.canvasState.shapes.slice(0,this.state.canvasState.shapes.length - 1)}});
+    setIsKeyHandlerActive(value: boolean): void {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, isKeyHandlerActive: value },
+        });
     }
 
-    //Color
+    setMousePosition(x: number, y: number): void {
+        this.setState({
+            ...this.state,
+            globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
+        });
+    }
+    // Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({
             ...this.state,
@@ -97,69 +218,105 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    selectColor(value: string): void {
-        if (value == 'first') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        } else if (value == 'second') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        } else if (value == 'canvas') {
-            this.setState({
-                ...this.state,
-                colorState: { ...this.state.colorState, selectedColor: value },
-            });
-        }
+    selectColor(value: SelectedColors): void {
+        this.setState({
+            ...this.state,
+            colorState: { ...this.state.colorState, selectedColor: value },
+        });
     }
 
     swapColor(): void {
+        const firstColor = this.state.colorState.firstColor;
+        const secondColor = this.state.colorState.secondColor;
         this.setState({
             ...this.state,
-            colorState: { ...this.state.colorState, firstColor: this.state.colorState.secondColor, secondColor: this.state.colorState.firstColor },
+            colorState: { ...this.state.colorState, firstColor: secondColor, secondColor: firstColor },
         });
     }
 
     addLastColor(value: Color): void {
-        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
-        let lastColors: (Color | null)[] = this.state.colorState.lastColors;
-        lastColors[lastColorsIndex] = value;
+        const lastColors: (Color | null)[] = this.state.colorState.lastColors;
+        lastColors[this.state.colorState.lastColorsIndex] = value;
+        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % this.state.colorState.lastColors.length;
 
         this.setState({
             ...this.state,
             colorState: { ...this.state.colorState, lastColorsIndex, lastColors },
         });
     }
-    //Brush
-    setBrushTexture(value: string) {
+
+    setGridOpacity(value: number): void {
+        const gridColor = this.state.colorState.gridColor;
+        this.setState({
+            ...this.state,
+            colorState: { ...this.state.colorState, gridColor: new Color(gridColor.r, gridColor.g, gridColor.b, value) },
+        });
+    }
+    // Brush
+    setBrushTexture(value: BrushTextures): void {
         this.setState({
             ...this.state,
             brushTexture: value,
         });
     }
 
-    //Line
-    setLineJunctionThickness(value: number) {
+    // Line
+    setLineJunctionThickness(value: number): void {
         this.setState({
             ...this.state,
             lineJunctionThickness: value,
         });
     }
 
-    setLineHasJunction(value: boolean) {
+    setLineHasJunction(value: boolean): void {
         this.setState({
             ...this.state,
             lineHasJunction: value,
         });
     }
-    //Rect
-    setRectangleType(value: string) {
+    // Rect
+    setRectangleType(value: Types): void {
         this.setState({
             ...this.state,
             rectangleType: value,
+        });
+    }
+    // Aerosol
+    setEmissionRate(value: number): void {
+        this.setState({
+            ...this.state,
+            emissionRate: value,
+        });
+    }
+    // Polygon
+
+    setPolygonType(value: Types): void {
+        this.setState({
+            ...this.state,
+            polygonType: value,
+        });
+    }
+
+    setPolygonSides(value: number): void {
+        this.setState({
+            ...this.state,
+            polygonSides: value,
+        });
+    }
+
+    // Ellipsis
+    setEllipsisType(value: Types): void {
+        this.setState({
+            ...this.state,
+            ellipsisType: value,
+        });
+    }
+
+    // Eraser
+    setEraserThickness(value: number): void {
+        this.setState({
+            ...this.state,
+            eraserThickness: value,
         });
     }
 }

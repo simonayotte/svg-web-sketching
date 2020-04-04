@@ -1,21 +1,21 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 @Injectable()
 export class Store<T> {
-    private state_: BehaviorSubject<T>;
+    private STATE: BehaviorSubject<T>;
     stateObs: Observable<T>;
 
     constructor(initialState: T) {
-        this.state_ = new BehaviorSubject(initialState);
-        this.stateObs = this.state_.asObservable();
+        this.STATE = new BehaviorSubject(initialState);
+        this.stateObs = this.STATE.asObservable();
     }
 
     protected get state(): T {
-        return this.state_.getValue();
+        return this.STATE.getValue();
     }
 
     protected setState(nextState: T): void {
-        this.state_.next(nextState);
+        this.STATE.next(nextState);
     }
 }

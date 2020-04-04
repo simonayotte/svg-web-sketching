@@ -1,8 +1,12 @@
+import { Container } from 'inversify';
 import 'reflect-metadata';
-import { container } from './inversify.config';
+import { containerBootstrapper } from './inversify.config';
 import { Server } from './server';
 import Types from './types';
 
-const server: Server = container.get<Server>(Types.Server);
+void (async () => {
+    const container: Container = await containerBootstrapper();
+    const server: Server = container.get<Server>(Types.Server);
 
-server.init();
+    server.init();
+})();

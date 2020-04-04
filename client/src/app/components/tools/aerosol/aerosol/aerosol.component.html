@@ -1,0 +1,16 @@
+<div class="configuration">
+    <div class="configuration-title">
+        Épaisseur
+    </div>
+    <input class="slider" value="thickness" (input)="setThickness($event)" type="range" min="1" max="50" />
+    <div class="configuration-value">{{ thickness }} px</div>
+</div>
+
+<div class="configuration">
+    <div class="configuration-title">
+        Taux d'émission
+    </div>
+    <input class="slider" value="emissionRate" (input)="setEmissionRate($event)" type="range" min="1" max="60" />
+    <div class="configuration-value">{{ emissionRate }} émissions/seconde </div>
+</div>
+ 

@@ -19,10 +19,24 @@ export class GuideComponent {
       case 'crayon':
       case 'pinceau':
       case 'ligne':
+      case 'polygone':
+      case 'ellipse':
+      case 'pipette':
+      case 'aerosol':
+      case 'selection':
+      case 'efface':
+      case 'applicateur':
       case 'rectangle': {
         this.displayCategory('outils');
         break;
       }
+      case 'sauvegarder':
+        case 'exporter':
+        case 'undoredo':
+        case 'grille': {
+          this.displayCategory('param');
+          break;
+        }
       default: {
         this.displayCategory('');
         break;

@@ -1,5 +1,9 @@
 <div class="sidebar">
     <i class="sidebar-option fas fa-mouse-pointer" (click)="changeTool('Selection')" [ngClass]="{ active: tool == 'Selection' }"></i>
+    <!-- Undo Redo -->
+    <i class="sidebar-option fas fa-undo" (click)="triggerUndo()" [ngClass]="{ disabled: !canUndo }"></i>
+    <i class="sidebar-option fas fa-redo" (click)="triggerRedo()" [ngClass]="{ disabled: !canRedo }"></i>
+    <i class="sidebar-option fas fa-border-all" (click)="displayGridChange()" [ngClass]="{ active: isDisplayGrid }"></i>
 
     <div class="sidebar-option" (click)="toogleDrawOptions()">
         <i class=" fas fa-pencil-ruler"></i>
@@ -31,7 +35,7 @@
 
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowToolOptions == true }">
         <i class="sidebar-dropdown-option fas fa-stamp" (click)="changeTool('Étampe')" [ngClass]="{ active: tool == 'Étampe' }"></i>
-        <i class="sidebar-dropdown-option fas fa-eye-dropper" (click)="changeTool('pipette')" [ngClass]="{ active: tool == 'pipette' }"></i>
+        <i class="sidebar-dropdown-option fas fa-eye-dropper" (click)="changeTool('Pipette')" [ngClass]="{ active: tool == 'Pipette' }"></i>
         <i class="sidebar-dropdown-option fas fa-eraser" (click)="changeTool('Efface')" [ngClass]="{ active: tool == 'Efface' }"></i>
     </div>
 
@@ -42,24 +46,26 @@
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowEditOptions == true }">
         <i class="sidebar-dropdown-option fas fa-sync-alt" (click)="changeTool('Rotation')" [ngClass]="{ active: tool == 'Rotation' }"></i>
         <i class="sidebar-dropdown-option fas fa-crop-alt" (click)="changeTool('Redimension')" [ngClass]="{ active: tool == 'Redimension' }"></i>
-        <i class="sidebar-dropdown-option fas fa-cut" (click)="changeTool('Couper', false)" [ngClass]="{ active: tool == 'Couper' }"></i>
-        <i class="sidebar-dropdown-option fas fa-copy" (click)="changeTool('Copier', false)" [ngClass]="{ active: tool == 'Copier' }"></i>
-        <i class="sidebar-dropdown-option fas fa-clone" (click)="changeTool('Dupliquer', false)" [ngClass]="{ active: tool == 'Dupliquer' }"></i>
-        <i class="sidebar-dropdown-option fas fa-trash" (click)="changeTool('Supprimer', false)" [ngClass]="{ active: tool == 'Supprimer' }"></i>
+        <i class="sidebar-dropdown-option fas fa-cut" (click)="changeTool('Couper')" [ngClass]="{ active: tool == 'Couper' }"></i>
+        <i class="sidebar-dropdown-option fas fa-copy" (click)="changeTool('Copier')" [ngClass]="{ active: tool == 'Copier' }"></i>
+        <i class="sidebar-dropdown-option fas fa-clone" (click)="changeTool('Dupliquer')" [ngClass]="{ active: tool == 'Dupliquer' }"></i>
+        <i class="sidebar-dropdown-option fas fa-trash" (click)="changeTool('Supprimer')" [ngClass]="{ active: tool == 'Supprimer' }"></i>
     </div>
 
-    <i class="sidebar-option fas fa-palette" (click)="changeTool('Couleur')" [ngClass]="{ active: tool == 'Couleur' }"></i>
+    <i class="sidebar-option fas fa-palette" (click)="changeTool('Applicateur')" [ngClass]="{ active: tool == 'Applicateur' }"></i>
 
     <i class="sidebar-option fas fa-font" (click)="changeTool('Texte')" [ngClass]="{ active: tool == 'Texte' }"></i>
 
     <!--Will contain actions like file saving ...-->
-    <div class="sidebar-option" (click)='toggleSettingOptions()'>
+    <div class="sidebar-option" (click)="toggleSettingOptions()">
         <i class="fas fa-folder"></i>
         <i class="fas fa-sort-down"></i>
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }">
         <i class="sidebar-dropdown-option fas fa-plus" (click)="openCreateDrawing()"></i>
         <i class="sidebar-dropdown-option fas fa-save" (click)="openSaveDrawing()"></i>
+        <i class="sidebar-dropdown-option fas fa-file-export" (click)="openExportDrawing()"></i>
+        <i class="sidebar-dropdown-option fas fas fa-images" (click)="openGallery()"></i>
     </div>
 
     <div class="sidebar-option" data-toggle="modal" data-target="#userGuide">

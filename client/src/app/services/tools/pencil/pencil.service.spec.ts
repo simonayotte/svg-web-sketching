@@ -1,137 +1,213 @@
-import { ElementRef } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule } from '@angular/forms';
-import { MatDialogModule } from '@angular/material';
-import { BrushComponent } from 'src/app/components/tools/brush/brush.component';
-import { ColorComponent } from 'src/app/components/tools/color/color.component';
-import { DrawPageComponent } from 'src/app/components/draw-page/draw-page.component';
-import { GuideComponent } from 'src/app/components/guide/guide.component';
-import { LineComponent } from 'src/app/components/tools/line/line.component';
-import { PencilComponent } from 'src/app/components/tools/pencil/pencil.component';
-import { RectangleComponent } from 'src/app/components/tools/rectangle/rectangle.component';
+import { TestBed } from '@angular/core/testing';
+
 import { PencilService } from './pencil.service';
 
+import { Color } from 'src/app/models/color';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
+
+/* tslint:disable:no-magic-numbers */
 describe('PencilService', () => {
     let service: PencilService;
-    let drawStateService: DrawStateService;
+    let store: DrawStore;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, MatDialogModule],
-            declarations: [DrawPageComponent, BrushComponent, GuideComponent, ColorComponent, PencilComponent, RectangleComponent, LineComponent],
+            providers: [PencilService, DrawStore],
         });
-
-        drawStateService = TestBed.get(DrawStateService);
-        const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-        const pencilFixture: ComponentFixture<PencilComponent> = TestBed.createComponent(PencilComponent);
+        store = TestBed.get(DrawStore);
         service = TestBed.get(PencilService);
-        drawPageFixture.detectChanges();
-        pencilFixture.detectChanges();
+        store.setDrawSvg(service.renderer.createElement('svg', 'svg'));
+
+        store.stateObs.subscribe((value: DrawState) => {
+            service.state = value;
+            service.state.colorState.firstColor = new Color(255, 0, 255, 255);
+            service.state.colorState.secondColor = new Color(0, 0, 255, 255);
+        });
     });
 
     it('should be created', () => {
-        const testService: PencilService = TestBed.get(PencilService);
-        expect(testService).toBeTruthy();
+        expect(service).toBeTruthy();
     });
 
-    it('#startDraw() should be called on mouse down', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 300,
-                clientY: 400,
-            });
-
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            expect(service.lastX).toEqual(300);
-            expect(service.lastY).toEqual(400);
-            done();
+    it('#start() should call #drawCircle() ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 50,
+            clientY: 75,
         });
+        const spy = spyOn(service, 'drawCircle');
+        service.start(mouseDown);
+        expect(spy).toHaveBeenCalled();
+    });
+    it('#start() should set #isDrawing to true ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 50,
+            clientY: 75,
+        });
+
+        service.start(mouseDown);
+        expect(service.isDrawing).toBeTruthy();
     });
 
-    it('#continueDraw() should be called on mouse move after mouse down ', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 0,
-                clientY: 0,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
-                clientX: 100,
-                clientY: 50,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(service.lastX).toEqual(100);
-            expect(service.lastY).toEqual(50);
-            done();
+    it('#continue() should set #isPath to true ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 50,
+            clientY: 75,
         });
+
+        service.start(mouseDown);
+        const mousemove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 50,
+            clientY: 75,
+        });
+
+        service.continue(mousemove);
+        expect(service.isPath).toBeTruthy();
     });
 
-    it('#continueDraw() should not be called on mouse move before mouse down ', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
-                clientX: 100,
-                clientY: 50,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(service.lastX).toEqual(0);
-            expect(service.lastY).toEqual(0);
-            done();
+    it('#draw() should call #setAttribute() correctly', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 0,
+            clientY: 0,
         });
+
+        service.start(mouseDown);
+
+        const spy = spyOn(service.svg, 'setAttribute');
+
+        service.draw(10, 40);
+        expect(spy).toHaveBeenCalledWith('d', 'M 0 0 L 10 40 ');
     });
 
-    it('#continueDraw() should not be called on mouse move after mouse up ', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 100,
-                clientY: 10,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseUp: MouseEvent = new MouseEvent('mouseup');
-            canvasRef.nativeElement.dispatchEvent(mouseUp);
-            const mouseMove: MouseEvent = new MouseEvent('mousemove', {
-                clientX: 75,
-                clientY: 400,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseMove);
-            expect(service.lastX).toEqual(0);
-            expect(service.lastY).toEqual(0);
-            done();
+    it('#draw() should be called on mouse move after mouse down ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 0,
+            clientY: 0,
         });
+
+        service.start(mouseDown);
+
+        const spy = spyOn(service, 'draw');
+
+        const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 100,
+            clientY: 50,
+        });
+        service.state.svgState.drawSvg.dispatchEvent(mouseMove);
+        expect(spy).toHaveBeenCalled();
     });
 
-    it('#stopDraw() should be called on mouse up', (done: DoneFn) => {
-        service.lastX = 0;
-        service.lastY = 0;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseDown: MouseEvent = new MouseEvent('mousedown', {
-                clientX: 100,
-                clientY: 10,
-            });
-            canvasRef.nativeElement.dispatchEvent(mouseDown);
-            const mouseUp: MouseEvent = new MouseEvent('mouseup');
-            canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(service.lastX).toEqual(0);
-            expect(service.lastY).toEqual(0);
-            done();
+    it('#draw() should not be called on mouse move before mouse down ', () => {
+        const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 100,
+            clientY: 50,
         });
+        const spy = spyOn(service, 'draw');
+        service.state.svgState.drawSvg.dispatchEvent(mouseMove);
+        expect(spy).not.toHaveBeenCalled();
     });
-    it('#stopDraw() should not be called on mouse up before mouse down', (done: DoneFn) => {
-        service.lastX = 200;
-        service.lastY = 100;
-        drawStateService.canvasRefObs.subscribe((canvasRef: ElementRef) => {
-            const mouseUp: MouseEvent = new MouseEvent('mouseup');
-            canvasRef.nativeElement.dispatchEvent(mouseUp);
-            expect(service.lastX).toEqual(200);
-            expect(service.lastY).toEqual(100);
-            done();
+
+    it('#draw() should not be called on mouse move after mouse up ', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 100,
+            clientY: 10,
         });
+        service.start(mouseDown);
+        const spy = spyOn(service, 'draw');
+
+        const mouseUp: MouseEvent = new MouseEvent('mouseup');
+        service.state.svgState.drawSvg.dispatchEvent(mouseUp);
+        const mouseMove: MouseEvent = new MouseEvent('mousemove', {
+            clientX: 75,
+            clientY: 400,
+        });
+
+        service.state.svgState.drawSvg.dispatchEvent(mouseMove);
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('#stop() should call store #pushSvg() with #circle if #isDrawing is true and #isPath is false', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 0,
+            clientY: 0,
+        });
+
+        service.start(mouseDown);
+        const spy = spyOn(store, 'pushSvg');
+        service.stop();
+        expect(spy).toHaveBeenCalledWith(service.circle);
+    });
+
+    it('#stop() should call store #pushSvg() with #svg if #isDrawing is true and #isPath is true', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 0,
+            clientY: 0,
+        });
+
+        service.start(mouseDown);
+        service.isPath = true;
+        const spy = spyOn(store, 'pushSvg');
+        service.stop();
+        expect(spy).toHaveBeenCalledWith(service.svg);
+    });
+
+    it('#stop() should call store #pushSvg() if #isDrawing is true', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 50,
+            clientY: 75,
+        });
+
+        service.start(mouseDown);
+        const spy = spyOn(store, 'pushSvg');
+        service.stop();
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#stop() should not call store #pushSvg() if #isDrawing is false', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 50,
+            clientY: 75,
+        });
+
+        service.start(mouseDown);
+        service.isDrawing = false;
+        const spy = spyOn(store, 'pushSvg');
+        service.stop();
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('#stop() should set #isDrawing to false if #isDrawing is true', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 50,
+            clientY: 75,
+        });
+
+        service.start(mouseDown);
+        service.stop();
+        expect(service.isDrawing).toBeFalsy();
+    });
+    it('#stop() should be called on mouse up', () => {
+        const mouseDown: MouseEvent = new MouseEvent('mousedown', {
+            clientX: 100,
+            clientY: 10,
+        });
+        service.start(mouseDown);
+        const mouseUp: MouseEvent = new MouseEvent('mouseup');
+        const spy = spyOn(service, 'stopSignal');
+        service.state.svgState.drawSvg.dispatchEvent(mouseUp);
+        expect(spy).toHaveBeenCalled();
+    });
+
+    it('#stop() should not be called on mouse up before mouse down', () => {
+        const mouseUp: MouseEvent = new MouseEvent('mouseup');
+        const spy = spyOn(service, 'stopSignal');
+        service.state.svgState.drawSvg.dispatchEvent(mouseUp);
+        expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('#drawCircle() should set #circle', () => {
+        service.drawCircle(30, 30, 50);
+
+        expect(service.circle).toBeTruthy();
     });
 });

@@ -1,34 +1,42 @@
-import { GlobalState } from './global-state';
+import { BrushTextures, Types } from '../models/enums';
 import { ColorState } from './color-state';
-import { CanvasState } from './canvas-state';
+import { GlobalState } from './global-state';
+import { SvgState } from './svg-state';
+import { UndoRedoState } from './undo-redo-state';
 
+const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
+const POLYGON_SIDES_DEFAULT = 3;
+const THICKNESS_DEFAULT = 25;
+const EMISSION_RATE_DEFAULT = 30;
 export class DrawState {
-    //Brush
-    brushTexture = 'normal';
-    //Line
-    lineHasJunction = false;
-    lineJunctionThickness = 25;
-    //rectangle
-    rectangleType = 'outline only';
-    //
+    // Brush
+    brushTexture: BrushTextures = BrushTextures.Normal;
+    // Line
+    lineHasJunction: boolean;
+    lineJunctionThickness: number = LINE_JUNCTION_THICKNESS_DEFAULT;
+    // rectangle
+    rectangleType: Types = Types.Outline;
+    // polygon
+    polygonSides: number = POLYGON_SIDES_DEFAULT;
+    polygonType: Types = Types.Outline;
+    // ellipsis
+    ellipsisType: Types = Types.Outline;
+    // eraser
+    eraserThickness: number = THICKNESS_DEFAULT;
+
+    // aerosol
+    emissionRate: number;
+
     colorState: ColorState;
     globalState: GlobalState;
-    canvasState: CanvasState;
+    svgState: SvgState;
+    undoRedoState: UndoRedoState;
     constructor() {
+        this.lineHasJunction = false;
+        this.emissionRate = EMISSION_RATE_DEFAULT;
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
-        this.canvasState = new CanvasState();
+        this.svgState = new SvgState();
+        this.undoRedoState = new UndoRedoState();
     }
 }
-
-/*readonly globalState: GlobalState;
-    readonly pencilState: PencilState;
-    readonly brushState: BrushState;
-    readonly colorState: ColorState;
-
-    constructor() {
-        this.globalState = new GlobalState();
-        this.pencilState = new PencilState();
-        this.brushState = new BrushState();
-        this.colorState = new ColorState();
-    }*/

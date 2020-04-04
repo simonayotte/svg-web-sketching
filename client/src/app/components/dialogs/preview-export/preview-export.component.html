@@ -1,0 +1,12 @@
+<div mat-dialog-content>
+    <div class = 'previewImg' 
+    [style.width.px] = "previewWidth"
+    [style.height.px] = "previewHeight">
+        <img [style.width.px] = "previewWidth"
+         [src] = 'dataURL | safeUrl'
+         [style.height.px] = "previewHeight"/>
+    </div>
+    <p>Êtes vous certain de vouloir exporter l'image?</p>
+    <button (click) = 'exportDrawing()'>Confirmer</button>
+    <button mat-dialog-close>Annuler</button>
+</div>

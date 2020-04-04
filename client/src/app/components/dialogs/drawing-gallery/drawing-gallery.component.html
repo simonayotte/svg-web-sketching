@@ -1,0 +1,46 @@
+<h1 mat-dialog-title>Galeries des dessins
+    <i class="fas fa-trash" (click)=toggleTrashColor() [style.color] = 'galleryState.trashColor' title = 'Supprimer un dessin'></i>
+    <i class="fas fa-download" (click)=toggleLoadColor() [style.color] = 'galleryState.loadColor' title = 'Charger un dessin'></i>
+</h1>
+<form [formGroup]='filterDrawingForm'>
+    <div formArrayName="tags">
+        <div class = 'etiquettes'>
+            Ajouter un filtre:
+            <i class="fas fa-plus" (click)='addTag()' title='Ajouter une étiquette'></i>
+            <i class="fas fa-filter" title = 'Filtrer les dessins'
+            [ngStyle]="{'color': tags.length > 0? '#ff8c00' : 'lightgrey'}"
+            (click)=filterDrawings()></i>
+        </div>
+        
+        <div *ngFor="let tag of tags.controls; let i=index">
+            <label>
+                <input type="text" [formControlName]="i" value = '' required>
+                <i class="fas fa-times"(click)='removeTag(i)' title='Enlever une étiquette'></i>
+            </label>
+        </div>
+    </div>
+  </form>
+<div mat-dialog-content class = 'container' *ngIf = '!galleryState.loading'>
+    <div *ngIf = 'galleryState.drawingsToShow.length == 0 && !galleryState.noFilteredDrawingFound' class = no-drawing>
+        Aucun dessin sauvegardé
+    </div>
+    <div *ngIf = 'galleryState.noFilteredDrawingFound' class = no-filter>
+        Aucun dessin ne correspond aux étiquettes rentrées
+    </div>
+    <div *ngFor = 'let drawing of galleryState.drawingsToShow' class = 'drawing' (click)=deleteDrawing(drawing) (click)=loadDrawing(drawing)>
+        <div>
+            <img [src] = 'drawing.dataURL' *ngIf = "galleryState.loadColor == '#ff8c00'"routerLink = '/draw'>
+            <img [src] = 'drawing.dataURL' *ngIf = "galleryState.loadColor == 'black'">
+            <br>
+            nom : {{drawing.name}}
+            <br>
+            étiquettes : 
+            <span *ngFor = 'let tag of drawing.tags, let i = index' class = 'tags'>
+                {{tag}}<span *ngIf = 'i<drawing.tags.length-1'>,</span>
+            </span>
+         </div>
+    </div>
+</div><br>
+<div class="loader" *ngIf = 'galleryState.loading'></div>
+
+<button mat-dialog-close>Fermer</button>

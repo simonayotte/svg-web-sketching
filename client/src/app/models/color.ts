@@ -1,24 +1,25 @@
+/* tslint:disable:no-magic-numbers */
 export class Color {
     r: number;
     g: number;
     b: number;
     a: number;
-    RGBHex: string;
-    RGBAHex: string;
-    isHexValid: boolean = true;
+    rgbHex: string;
+    rgbaHex: string;
+    isHexValid = true;
 
-    private RGBHexPattern = new RegExp('[a-fA-F0-9]{6}');
+    private rgbHexPattern: RegExp = new RegExp('[a-fA-F0-9]{6}');
 
     constructor(r: number, g: number, b: number, a: number) {
         this.r = r;
         this.g = g;
         this.b = b;
         this.a = a;
-        this.RGBAHex = this.hex();
-        this.RGBHex = this.colorHex();
+        this.rgbaHex = this.hex();
+        this.rgbHex = this.colorHex();
     }
 
-    fixColorRGB(type: string) {
+    fixColorRGB(type: string): void {
         switch (type) {
             case 'r':
                 if (this.r < 0 || this.r == null) {
@@ -43,26 +44,26 @@ export class Color {
                 break;
         }
     }
-    synchronizeHex(type?: string) {
+    synchronizeHex(type?: string): void {
         if (type) {
             this.fixColorRGB(type);
         }
-        this.RGBHex = this.colorHex();
+        this.rgbHex = this.colorHex();
         this.isHexValid = true;
     }
 
-    synchronizeRGB() {
-        if (this.RGBHexPattern.test(this.RGBHex)) {
+    synchronizeRGB(): void {
+        if (this.rgbHexPattern.test(this.rgbHex)) {
             this.isHexValid = true;
-            this.r = parseInt(`0x${this.RGBHex.substring(0, 2)}`);
-            this.g = parseInt(`0x${this.RGBHex.substring(2, 4)}`);
-            this.b = parseInt(`0x${this.RGBHex.substring(4, 6)}`);
+            this.r = parseInt(`0x${this.rgbHex.substring(0, 2)}`);
+            this.g = parseInt(`0x${this.rgbHex.substring(2, 4)}`);
+            this.b = parseInt(`0x${this.rgbHex.substring(4, 6)}`);
         } else {
             this.isHexValid = false;
         }
     }
 
-    hex() {
+    hex(): string {
         let red: string = Number(this.r).toString(16);
         if (red.length < 2) {
             red = '0' + red;
@@ -86,7 +87,7 @@ export class Color {
         return '#' + red + green + blue + opacity;
     }
 
-    colorHex() {
+    colorHex(): string {
         let red: string = Number(this.r).toString(16);
         if (red.length < 2) {
             red = '0' + red;
@@ -104,15 +105,12 @@ export class Color {
 
         return red + green + blue;
     }
-    static fromColorHex(hex: string) {
-        //change rgb
-        //return [r, g, b];
-    }
-    rgba() {
+
+    rgba(): number[] {
         return [this.r, this.g, this.b, this.a];
     }
 
-    rgb() {
+    rgb(): number[] {
         return [this.r, this.g, this.b];
     }
 }

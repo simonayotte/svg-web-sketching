@@ -30,7 +30,7 @@
     </div>
 
     <br>
-    <button type='submit' mat-dialog-close (click)='onSubmit()'[disabled] = '!saveDrawingForm.valid'>Sauvegarder</button>
+    <button type='submit' mat-dialog-close [disabled] = '!saveDrawingForm.valid'(click)='submit()'>Sauvegarder</button>
     <button mat-dialog-close (click)='Cancel()'>Fermer</button>
   </form>
 </div>

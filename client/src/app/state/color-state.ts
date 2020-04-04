@@ -1,15 +1,20 @@
 import { Color } from '../models/color';
+import { SelectedColors } from '../models/enums';
 
+/* tslint:disable:no-magic-numbers */
 export class ColorState {
-    firstColor = new Color(0, 0, 0, 255);
-    secondColor = new Color(0, 0, 0, 255);
-    canvasColor = new Color(255, 255, 255, 255);
-    workspaceColor = new Color(0, 0, 0, 100);
-    isSidebarColorOpen = false;
-    lastColors: (Color | null)[] = [null, null, null, null, null, null, null, null, null, null];
-    lastColorsIndex = 0;
-    selectedColor = '';
-    constructor() {}
-}
+    firstColor: Color = new Color(0, 0, 0, 255); // BLACK
+    secondColor: Color = new Color(0, 0, 0, 255);
+    canvasColor: Color = new Color(255, 255, 255, 255); // WHITE
+    workspaceColor: Color = new Color(0, 0, 0, 100);
+    gridColor: Color = new Color(70, 70, 70, 255);
 
-//faire couleur et key-handler
+    isSidebarColorOpen: boolean;
+    lastColors: (Color | null)[] = [null, null, null, null, null, null, null, null, null, null];
+    lastColorsIndex: number;
+    selectedColor: SelectedColors = SelectedColors.None;
+    constructor() {
+        this.isSidebarColorOpen = false;
+        this.lastColorsIndex = 0;
+    }
+}
