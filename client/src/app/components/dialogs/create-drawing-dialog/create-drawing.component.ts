@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material';
 import { Color } from 'src/app/models/color';
 import { FormValuesName } from 'src/app/models/enums';
@@ -8,6 +8,9 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 
 const SIDEBAR_WIDTH = 52;
+const MIN_WIDTH = 1;
+const MAX_WIDTH = 5000;
+const WHITE = 255;
 
 @Component({
     selector: 'app-create-drawing',
@@ -16,39 +19,52 @@ const SIDEBAR_WIDTH = 52;
 })
 export class CreateDrawingComponent implements OnInit {
     state: DrawState;
-
-    isWidthModified = false;
-    isHeightModified = false;
-    isCreateDrawColorOpen = false;
-
+    isWidthModified: boolean;
+    isHeightModified: boolean;
+    isCreateDrawColorOpen: boolean;
     backgroundColor: Color;
-
-    createDrawingForm = new FormGroup({
-        width: new FormControl(FormValuesName.Width, [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
-        height: new FormControl(FormValuesName.Height, [Validators.required, Validators.min(1), Validators.max(5000), Validators.pattern('[^. | ^,]+')]),
-    });
-    constructor(private store: DrawStore, public dialogRef: MatDialogRef<CreateDrawingComponent>, private drawingHandler: DrawingHandler) {
+    createDrawingForm: FormGroup; 
+    constructor(
+        private store: DrawStore, 
+        public dialogRef: MatDialogRef<CreateDrawingComponent>, 
+        private drawingHandler: DrawingHandler) 
+        {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.isWidthModified = false;
+        this.isHeightModified = false;
+        this.isCreateDrawColorOpen = false;
+        this.createDrawingForm = new FormGroup({
+            width: new FormControl(FormValuesName.Width,
+                [Validators.required,
+                Validators.min(MIN_WIDTH),
+                Validators.max(MAX_WIDTH),
+                Validators.pattern('[^. | ^,]+')]),
+            height: new FormControl(FormValuesName.Height,
+                [Validators.required,
+                Validators.min(MIN_WIDTH),
+                Validators.max(MAX_WIDTH),
+                Validators.pattern('[^. | ^,]+')]),
+        });
     }
-    get width() {
+    get width(): AbstractControl | null {
         return this.createDrawingForm.get(FormValuesName.Width);
     }
-    get height() {
+    get height(): AbstractControl | null {
         return this.createDrawingForm.get(FormValuesName.Height);
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.createDrawingForm.patchValue({ width: window.innerWidth });
         this.createDrawingForm.patchValue({ height: window.innerHeight });
         this.isWidthModified = false;
         this.isHeightModified = false;
-        this.backgroundColor = new Color(255, 255, 255, 255);
+        this.backgroundColor = new Color(WHITE, WHITE, WHITE, WHITE);
         this.store.setIsKeyHandlerActive(false);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.store.setIsKeyHandlerActive(true);
     }
 
@@ -62,7 +78,7 @@ export class CreateDrawingComponent implements OnInit {
         }
     }
 
-    setCanvasColor(event: any) {
+    setCanvasColor(event: Color): void {
         this.backgroundColor = event;
     }
 
@@ -79,7 +95,7 @@ export class CreateDrawingComponent implements OnInit {
     }
 
     submit(): void {
-        if (this.state.svgState.svgs.length != 0) {
+        if (this.state.svgState.svgs.length !== 0) {
             this.drawingHandler.clearCanvas();
         }
         this.store.setCanvasColor(this.backgroundColor);
