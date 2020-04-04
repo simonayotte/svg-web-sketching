@@ -2,11 +2,12 @@ const WIDTH_DEFAULT = 500;
 const HEIGHT_DEFAULT = 500;
 
 export class SvgState {
-    width = WIDTH_DEFAULT;
-    height = HEIGHT_DEFAULT;
+    width: number = WIDTH_DEFAULT;
+    height: number = HEIGHT_DEFAULT;
     drawSvg: SVGSVGElement;
-    svgFilter = '';
+    svgFilter: string;
     svgs: SVGGraphicsElement[] = [];
-
-    constructor() {}
+    constructor() {
+        this.svgFilter = '';
+    }
 }

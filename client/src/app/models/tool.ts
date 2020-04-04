@@ -6,21 +6,33 @@ export abstract class Tool {
     protected mouseMoveListener: EventListener;
 
     svg: SVGGraphicsElement;
-    state = new DrawState();
+    state: DrawState = new DrawState();
 
     renderer: Renderer2;
-    start(event: MouseEvent) {}
-    continue(event: MouseEvent) {}
-    stop() {}
-    stopSignal() {} // for testing purpose
-    handleKeyDown(key: string) {}
-    handleKeyUp(key: string) {}
+    start(event: MouseEvent): void {
+        /**/
+    }
+    continue(event: MouseEvent): void {
+        /**/
+    }
+    stop(): void {
+        /**/
+    }
+    stopSignal(): void {
+        /**/
+    } // for testing purpose
+    handleKeyDown(key: string): void {
+        /**/
+    }
+    handleKeyUp(key: string): void {
+        /**/
+    }
 
     copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
         const newSvgs = [];
-        for (let i = 0; i < svgs.length; i++) {
-            const svg = svgs[i].cloneNode(true) as SVGGraphicsElement;
-            newSvgs.push(svg);
+        for (let svg of svgs) {
+            const clone = svg.cloneNode(true) as SVGGraphicsElement;
+            newSvgs.push(clone);
         }
         return newSvgs;
     }

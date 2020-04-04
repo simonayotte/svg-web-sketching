@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { GridPanelComponent } from './grid-panel.component';
-
+/* tslint:disable:no-magic-numbers */
 describe('GridPanelComponent', () => {
     let component: GridPanelComponent;
     let fixture: ComponentFixture<GridPanelComponent>;

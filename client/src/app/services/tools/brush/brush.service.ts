@@ -10,7 +10,7 @@ export class BrushService extends PencilService {
         super(store, rendererFactory);
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         const x = event.offsetX;
         const y = event.offsetY;
         this.path = `M ${x} ${y} `;

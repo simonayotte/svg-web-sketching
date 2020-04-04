@@ -5,6 +5,7 @@ import { ApplicatorService } from './applicator.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 
+/* tslint:disable:no-magic-numbers */
 describe('ApplicatorService', () => {
     let service: ApplicatorService;
     let store: DrawStore;
@@ -24,7 +25,6 @@ describe('ApplicatorService', () => {
     });
 
     it('should be created', () => {
-        const service: ApplicatorService = TestBed.get(ApplicatorService);
         expect(service).toBeTruthy();
     });
 

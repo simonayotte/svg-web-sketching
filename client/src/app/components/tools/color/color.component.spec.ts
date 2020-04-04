@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Color } from 'src/app/models/color';
 import { ColorComponent } from './color.component';
-
+/* tslint:disable:no-magic-numbers */
 describe('ColorComponent', () => {
     let component: ColorComponent;
     let fixture: ComponentFixture<ColorComponent>;

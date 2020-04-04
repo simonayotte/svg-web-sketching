@@ -16,10 +16,10 @@ export class ColorComponent implements OnInit {
     @Input('color') colorInput: Color;
     @Input('lastColors') lastColors: (Color | null)[];
 
-    @Output() closeColor = new EventEmitter();
-    @Output() saveColor = new EventEmitter();
-    @Output() setFirstColor = new EventEmitter();
-    @Output() setSecondColor = new EventEmitter();
+    @Output() closeColor: EventEmitter<void> = new EventEmitter();
+    @Output() saveColor: EventEmitter<Color> = new EventEmitter();
+    @Output() setFirstColor: EventEmitter<Color> = new EventEmitter();
+    @Output() setSecondColor: EventEmitter<Color> = new EventEmitter();
 
     @ViewChild('square', { static: true }) squareRef: ElementRef;
     @ViewChild('bar', { static: true }) barRef: ElementRef;

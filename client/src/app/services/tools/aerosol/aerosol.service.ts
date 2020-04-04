@@ -10,8 +10,8 @@ import { DrawStore } from '../../../store/draw-store';
 export class AerosolService extends Tool {
     path: string;
     isDrawing: boolean;
-    readonly emissionPeriod: number = 0;
-    sprayIntervalID: any;
+    readonly EMISSION_PERIOD: number = 0;
+    sprayIntervalID: NodeJS.Timer;
 
     // Mouse position
     x: number;
@@ -30,7 +30,7 @@ export class AerosolService extends Tool {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         // Update current mouse position
         this.x = event.offsetX;
         this.y = event.offsetY;
@@ -49,18 +49,18 @@ export class AerosolService extends Tool {
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
 
         // Function in interval for calling
-        this.sprayIntervalID = setInterval(() => this.spray(), this.emissionPeriod);
+        this.sprayIntervalID = setInterval(() => this.spray(), this.EMISSION_PERIOD);
 
         this.isDrawing = true;
     }
 
-    continue(event: MouseEvent) {
+    continue(event: MouseEvent): void {
         // Update current mouse position
         this.x = event.offsetX;
         this.y = event.offsetY;
     }
 
-    stop() {
+    stop(): void {
         clearInterval(this.sprayIntervalID);
 
         if (this.isDrawing) {
@@ -79,7 +79,7 @@ export class AerosolService extends Tool {
         return new Coordinate(pointX, pointY);
     }
 
-    generateRandomSpray(x: number, y: number) {
+    generateRandomSpray(x: number, y: number): void {
         const density = this.convertEmissionRate();
         for (let i = 0; i < density; i++) {
             const point = this.generateRandomPoint(x, y);
@@ -90,11 +90,14 @@ export class AerosolService extends Tool {
     }
 
     convertEmissionRate(): number {
-        return ((this.state.emissionRate * 0.05) / 1000) * 10000;
+        const emissionCoefficient = 0.05;
+        const totalMS = 1000;
+        const multiplier = 10000;
+        return ((this.state.emissionRate * emissionCoefficient) / totalMS) * multiplier;
     }
 
     // Wrapper function for callback in setInterval
-    spray() {
+    spray(): void {
         this.generateRandomSpray(this.x, this.y);
     }
 }

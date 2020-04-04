@@ -6,6 +6,7 @@ import { Coordinate } from 'src/app/models/coordinate';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
 
+/* tslint:disable:no-magic-numbers */
 describe('PolygonService', () => {
     let service: PolygonService;
     let store: DrawStore;

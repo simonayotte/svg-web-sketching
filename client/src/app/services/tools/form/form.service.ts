@@ -8,7 +8,7 @@ import { DrawStore } from '../../../store/draw-store';
     providedIn: 'root',
 })
 export class FormService extends Tool {
-    isDrawing = false;
+    isDrawing: boolean;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super();
@@ -16,6 +16,7 @@ export class FormService extends Tool {
             this.state = value;
         });
 
+        this.isDrawing = false;
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
         this.renderer = rendererFactory.createRenderer(null, null);
