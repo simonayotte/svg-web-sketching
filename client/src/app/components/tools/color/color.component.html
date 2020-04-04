@@ -26,7 +26,7 @@
         <div>
             <div class="input-container">
                 <div class="input-label">#</div>
-                <input class="hex-input" type="text" [(ngModel)]="color.RGBHex" (input)="onHexChange($event)" maxlength="6" />
+                <input class="hex-input" type="text" [(ngModel)]="color.rgbHex" (input)="onHexChange($event)" maxlength="6" />
             </div>
             <div class="color-error" [hidden]="color.isHexValid == true">
                 Syntaxe invalide
