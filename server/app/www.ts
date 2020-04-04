@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { container } from './inversify.config';
+import { container } from '../app/inversify.config';
 import { Server } from './server';
 import Types from './types';
 
