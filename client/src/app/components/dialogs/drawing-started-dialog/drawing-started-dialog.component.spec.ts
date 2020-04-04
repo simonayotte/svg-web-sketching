@@ -18,10 +18,10 @@ describe('DrawingStartedDialogComponent', () => {
     let galleryService: GalleryService;
     const dialogMock = {
         open: () => {
-
+            return;
         },
         close: () => {
-            /*empty function*/
+            return;
         },
     };
 

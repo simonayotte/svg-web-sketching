@@ -13,6 +13,8 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewExportComponent } from '../preview-export/preview-export.component';
 import { ExportDrawingComponent } from './export-drawing.component';
 
+// tslint:disable:max-line-length
+
 describe('ExportDrawingComponent', () => {
   let component: ExportDrawingComponent;
   let fixture: ComponentFixture<ExportDrawingComponent>;
@@ -21,9 +23,10 @@ describe('ExportDrawingComponent', () => {
   let exportDrawingService: ExportDrawingService;
   const dialogMock = {
     close: () => {
-        /*empty function*/
+        return;
     },
     open: () => {
+      return;
     },
   };
 
