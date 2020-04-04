@@ -10,22 +10,22 @@ export abstract class Tool {
 
     renderer: Renderer2;
     start(event: MouseEvent): void {
-        /**/
+        return;
     }
     continue(event: MouseEvent): void {
-        /**/
+        return;
     }
     stop(): void {
-        /**/
+        return;
     }
     stopSignal(): void {
-        /**/
+        return;
     } // for testing purpose
     handleKeyDown(key: string): void {
-        /**/
+        return;
     }
     handleKeyUp(key: string): void {
-        /**/
+        return;
     }
 
     copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {

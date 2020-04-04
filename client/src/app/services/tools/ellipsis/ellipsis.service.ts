@@ -10,7 +10,7 @@ export class EllipsisService extends FormService {
     startY: number;
     lastX: number;
     lastY: number;
-    isShift: boolean = false;
+    isShift: boolean;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super(store, rendererFactory);

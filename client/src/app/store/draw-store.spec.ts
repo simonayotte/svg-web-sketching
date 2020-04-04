@@ -193,6 +193,9 @@ describe('DrawStore', () => {
     });
 
     it('#setTool() should only change #tool and #isPanelOpen', (done: DoneFn) => {
+        state.globalState.isPanelOpen = false;
+        state.globalState.tool = Tools.Ellipsis;
+
         store.setTool(Tools.Brush);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.globalState.tool).toEqual(Tools.Brush);

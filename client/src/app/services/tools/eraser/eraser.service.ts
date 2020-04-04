@@ -111,8 +111,10 @@ export class EraserService extends Tool {
 
         if (this.state.eraserThickness < box.width) {
             // If svg box width is bigger than eraser ...
-            isLeftInside = eraserLeft >= boxLeft && eraserLeft <= boxRight; // verify if left side of eraser is between horizontal box bounds
-            isRightInside = eraserRight >= boxLeft && eraserRight <= boxRight; // verify if right side of eraser is between horizontal box bounds
+            // verify if left side of eraser is between horizontal box bounds
+            isLeftInside = eraserLeft >= boxLeft && eraserLeft <= boxRight;
+            // verify if right side of eraser is between horizontal box bounds
+            isRightInside = eraserRight >= boxLeft && eraserRight <= boxRight;
         } else {
             // If eraser width is bigger than svg box
             isLeftInside = boxLeft >= eraserLeft && boxLeft <= eraserRight;

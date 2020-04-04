@@ -22,7 +22,7 @@ export class FormService extends Tool {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    setColors(type: Types) {
+    setColors(type: Types): void {
         switch (type) {
             case Types.Outline:
                 this.renderer.setAttribute(this.svg, 'fill', 'none');
