@@ -7,7 +7,7 @@ import { UndoRedoState } from './undo-redo-state';
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
 const THICKNESS_DEFAULT = 25;
-
+const EMISSION_RATE_DEFAULT = 30;
 export class DrawState {
     // Brush
     brushTexture: BrushTextures = BrushTextures.Normal;
@@ -33,7 +33,7 @@ export class DrawState {
     undoRedoState: UndoRedoState;
     constructor() {
         this.lineHasJunction = false;
-        this.emissionRate = 30;
+        this.emissionRate = EMISSION_RATE_DEFAULT;
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
         this.svgState = new SvgState();

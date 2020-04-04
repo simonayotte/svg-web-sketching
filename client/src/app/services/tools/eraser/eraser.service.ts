@@ -32,18 +32,18 @@ export class EraserService extends Tool {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    start() {
+    start(): void {
         this.deleteTouchedSvg();
 
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
     }
 
-    continue() {
+    continue(): void {
         this.deleteTouchedSvg();
     }
 
-    stop() {
+    stop(): void {
         if (this.deletedSvgs.length > 0) {
             this.store.deleteSvgs(this.deletedSvgs);
             this.deletedSvgs = [];
@@ -54,12 +54,12 @@ export class EraserService extends Tool {
         this.stopSignal();
     }
 
-    move(x: number, y: number) {
+    move(x: number, y: number): void {
         const svgs = this.state.svgState.svgs;
         this.touchedSvgIndex = this.verifyMouseOver(x, y, svgs);
     }
 
-    deleteTouchedSvg() {
+    deleteTouchedSvg(): void {
         if (this.touchedSvgIndex >= 0) {
             this.renderer.setAttribute(this.state.svgState.svgs[this.touchedSvgIndex], 'stroke', this.oldStrokeColor);
             this.deletedSvgs.push(this.state.svgState.svgs[this.touchedSvgIndex]);
