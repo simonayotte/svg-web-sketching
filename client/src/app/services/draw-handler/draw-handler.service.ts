@@ -76,20 +76,20 @@ export class DrawHandlerService {
     onKeyDown(event: KeyboardEvent) {
         const key = event.key;
         if (this.state.globalState.isKeyHandlerActive) {
-            const keyEnum = <ToolButtons>key;
+            const keyEnum = key as ToolButtons;
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
-            //handle tool keyboard events
+            // handle tool keyboard events
             if (service) {
                 service.handleKeyDown(key);
             }
-            //handle tool selection keyboard events
+            // handle tool selection keyboard events
             if (this.keyMap.has(keyEnum) && !event.ctrlKey) {
-                const tool = <Tools>this.keyMap.get(keyEnum);
+                const tool = this.keyMap.get(keyEnum) as Tools;
                 this.store.setTool(tool);
             } else if (event.ctrlKey) {
                 switch (key) {
                     case OtherButtons.O:
-                        //mat dialog display
+                        // mat dialog display
                         event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)

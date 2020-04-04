@@ -6,10 +6,10 @@ import { FormService } from '../form/form.service';
     providedIn: 'root',
 })
 export class EllipsisService extends FormService {
-    startX: number = 0;
-    startY: number = 0;
-    lastX: number = 0;
-    lastY: number = 0;
+    startX = 0;
+    startY = 0;
+    lastX = 0;
+    lastY = 0;
     isShift = false;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
@@ -41,7 +41,7 @@ export class EllipsisService extends FormService {
     draw(startX: number, startY: number, lastX: number, lastY: number) {
         let dx = lastX - startX;
         let dy = lastY - startY;
-        //Length of square is equal to the smallest size (without changing sign)
+        // Length of square is equal to the smallest size (without changing sign)
         if (this.isShift) {
             if (Math.abs(dx) < Math.abs(dy)) {
                 dy = dy * Math.abs(dx / dy);
@@ -49,11 +49,11 @@ export class EllipsisService extends FormService {
                 dx = dx * Math.abs(dy / dx);
             }
         }
-        let rx = Math.abs(dx) / 2;
-        let ry = Math.abs(dy) / 2;
+        const rx = Math.abs(dx) / 2;
+        const ry = Math.abs(dy) / 2;
 
-        let cx = this.startX + dx / 2;
-        let cy = this.startY + dy / 2;
+        const cx = this.startX + dx / 2;
+        const cy = this.startY + dy / 2;
 
         this.renderer.setAttribute(this.svg, 'cx', cx.toString());
         this.renderer.setAttribute(this.svg, 'cy', cy.toString());

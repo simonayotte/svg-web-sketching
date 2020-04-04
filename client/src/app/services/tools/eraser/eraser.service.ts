@@ -1,8 +1,8 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Tool } from 'src/app/models/tool';
-import { DrawStore } from '../../../store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { Color } from 'src/app/models/color';
+import { Tool } from 'src/app/models/tool';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 const DARK_RED = new Color(150, 0, 0, 255);
 const RED = new Color(200, 0, 0, 255);
@@ -11,8 +11,8 @@ const RED = new Color(200, 0, 0, 255);
     providedIn: 'root',
 })
 export class EraserService extends Tool {
-    oldStrokeColor: string = '';
-    touchedSvgIndex: number = -1;
+    oldStrokeColor = '';
+    touchedSvgIndex = -1;
     deletedSvgs: SVGGraphicsElement[] = [];
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
@@ -49,7 +49,7 @@ export class EraserService extends Tool {
     }
 
     move(x: number, y: number) {
-        let svgs = this.state.svgState.svgs;
+        const svgs = this.state.svgState.svgs;
         this.touchedSvgIndex = this.verifyMouseOver(x, y, svgs);
     }
 
@@ -64,8 +64,8 @@ export class EraserService extends Tool {
 
     verifyMouseOver(x: number, y: number, svgs: SVGGraphicsElement[]): number {
         for (let i = svgs.length - 1; i >= 0; i--) {
-            let box = svgs[i].getBBox();
-            let thickness = parseInt(<string>svgs[i].getAttribute('stroke-width'));
+            const box = svgs[i].getBBox();
+            const thickness = parseInt(svgs[i].getAttribute('stroke-width') as string);
 
             if (this.isEraseTouching(x, y, box, thickness)) {
                 if (this.touchedSvgIndex === i) {
@@ -75,7 +75,7 @@ export class EraserService extends Tool {
                     this.renderer.setAttribute(svgs[this.touchedSvgIndex], 'stroke', this.oldStrokeColor);
                 }
 
-                this.oldStrokeColor = <string>svgs[i].getAttribute('stroke');
+                this.oldStrokeColor = svgs[i].getAttribute('stroke') as string;
 
                 if (this.oldStrokeColor === RED.hex()) {
                     this.renderer.setAttribute(svgs[i], 'stroke', DARK_RED.hex());
@@ -91,24 +91,24 @@ export class EraserService extends Tool {
     }
 
     isEraseTouching(x: number, y: number, box: DOMRect, thickness: number): boolean {
-        let eraserLeft = x - this.state.eraserThickness / 2;
-        let eraserRight = x + this.state.eraserThickness / 2;
-        let eraserTop = y + this.state.eraserThickness / 2;
-        let eraserBottom = y - this.state.eraserThickness / 2;
-        let boxLeft = box.x - thickness / 2;
-        let boxBottom = box.y - thickness / 2;
-        let boxRight = box.x + box.width + thickness / 2;
-        let boxTop = box.y + box.height + thickness / 2;
+        const eraserLeft = x - this.state.eraserThickness / 2;
+        const eraserRight = x + this.state.eraserThickness / 2;
+        const eraserTop = y + this.state.eraserThickness / 2;
+        const eraserBottom = y - this.state.eraserThickness / 2;
+        const boxLeft = box.x - thickness / 2;
+        const boxBottom = box.y - thickness / 2;
+        const boxRight = box.x + box.width + thickness / 2;
+        const boxTop = box.y + box.height + thickness / 2;
 
         let isLeftInside: boolean;
         let isRightInside: boolean;
 
         if (this.state.eraserThickness < box.width) {
-            //If svg box width is bigger than eraser ...
-            isLeftInside = eraserLeft >= boxLeft && eraserLeft <= boxRight; //verify if left side of eraser is between horizontal box bounds
-            isRightInside = eraserRight >= boxLeft && eraserRight <= boxRight; //verify if right side of eraser is between horizontal box bounds
+            // If svg box width is bigger than eraser ...
+            isLeftInside = eraserLeft >= boxLeft && eraserLeft <= boxRight; // verify if left side of eraser is between horizontal box bounds
+            isRightInside = eraserRight >= boxLeft && eraserRight <= boxRight; // verify if right side of eraser is between horizontal box bounds
         } else {
-            //If eraser width is bigger than svg box
+            // If eraser width is bigger than svg box
             isLeftInside = boxLeft >= eraserLeft && boxLeft <= eraserRight;
             isRightInside = boxRight >= eraserLeft && boxRight <= eraserRight;
         }
@@ -117,17 +117,17 @@ export class EraserService extends Tool {
         let isBottomInside: boolean;
 
         if (this.state.eraserThickness < box.height) {
-            //If svg box height is bigger than eraser ...
+            // If svg box height is bigger than eraser ...
             isTopInside = eraserTop >= boxBottom && eraserTop <= boxTop;
             isBottomInside = eraserBottom >= boxBottom && eraserBottom <= boxTop;
         } else {
-            //If eraser height is bigger than svg box ...
+            // If eraser height is bigger than svg box ...
             isTopInside = boxTop >= eraserBottom && boxTop <= eraserTop;
             isBottomInside = boxBottom >= eraserBottom && boxBottom <= eraserTop;
         }
-        let isXTouching = isLeftInside || isRightInside;
+        const isXTouching = isLeftInside || isRightInside;
 
-        let isYTouching = isTopInside || isBottomInside;
+        const isYTouching = isTopInside || isBottomInside;
 
         return isXTouching && isYTouching;
     }

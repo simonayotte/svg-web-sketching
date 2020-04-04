@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawStore } from './draw-store';
-import { DrawState } from '../state/draw-state';
 import { Color } from '../models/color';
-import { BrushTextures, Tools, SelectedColors, Types } from '../models/enums';
+import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
+import { DrawState } from '../state/draw-state';
+import { DrawStore } from './draw-store';
 
 describe('DrawStore', () => {
     let store: DrawStore;
@@ -20,10 +20,10 @@ describe('DrawStore', () => {
         expect(store).toBeTruthy();
     });
 
-    //undoRedo
+    // undoRedo
     it('#undo() should set #svgs with last index of #undoState ', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
 
@@ -35,8 +35,8 @@ describe('DrawStore', () => {
     });
 
     it('#undo() should remove last index of #undoState', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
         store.undo();
@@ -47,8 +47,8 @@ describe('DrawStore', () => {
     });
 
     it('#undo() should set #redoState with current state of #svgs ', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
 
@@ -62,8 +62,8 @@ describe('DrawStore', () => {
     });
 
     it('#redo() should set #svgs with last index of #redoState ', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         state.undoRedoState.redoState = [[], [rect], [rect, circle]];
 
@@ -75,8 +75,8 @@ describe('DrawStore', () => {
     });
 
     it('#redo() should remove last index of #redoState', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         state.undoRedoState.redoState = [[], [rect], [rect, circle]];
 
@@ -88,8 +88,8 @@ describe('DrawStore', () => {
     });
 
     it('#redo() should set #undoState with current state of #svgs ', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let path: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const path: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
         state.undoRedoState.redoState = [[], [rect], [rect, path]];
 
@@ -102,7 +102,7 @@ describe('DrawStore', () => {
         });
     });
 
-    //svg
+    // svg
     it('#setDrawSvg() should only change #drawSvg', (done: DoneFn) => {
         const drawSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         store.setDrawSvg(drawSvg);
@@ -129,8 +129,8 @@ describe('DrawStore', () => {
         });
     });
     it('#pushSvg() should set #undoState to old state of #svgs', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
         state.svgState.svgs = [circle];
         store.pushSvg(rect);
@@ -141,8 +141,8 @@ describe('DrawStore', () => {
     });
 
     it('#pushSvg() should set #redoState to []', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         state.undoRedoState.redoState = [[], [rect, circle]];
 
         store.pushSvg(rect);
@@ -172,8 +172,8 @@ describe('DrawStore', () => {
     });
 
     it('#saveSvgsState() should add state to #undoState and set #redoState to []', (done: DoneFn) => {
-        let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
         store.saveSvgsState([rect, circle]);
         store.stateObs.subscribe((value: DrawState) => {

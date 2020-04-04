@@ -1,8 +1,8 @@
-import { CanvasGridDirective } from './canvas-grid.directive';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { Component, DebugElement, SimpleChange } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Color } from '../models/color';
+import { CanvasGridDirective } from './canvas-grid.directive';
 
 @Component({
     template: '<canvas canvas-grid> </canvas>',
@@ -13,14 +13,14 @@ describe('CanvasGridDirective', () => {
     let fixture: ComponentFixture<TestComponent>;
     let directive: CanvasGridDirective;
     let directiveEl: DebugElement;
-    //let canvasEl: DebugElement;
+    // let canvasEl: DebugElement;
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [CanvasGridDirective, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
         directiveEl = fixture.debugElement.query(By.directive(CanvasGridDirective));
-        //canvasEl = fixture.debugElement.query(By.css('canvas'));
+        // canvasEl = fixture.debugElement.query(By.css('canvas'));
 
         directive = directiveEl.injector.get(CanvasGridDirective);
         directive.ngOnInit();
@@ -35,7 +35,7 @@ describe('CanvasGridDirective', () => {
     });
 
     it('#ngOnChanges should call #draw() if #size changes and if #isDisplay is equal to true  ', () => {
-        let spy = spyOn(directive, 'draw');
+        const spy = spyOn(directive, 'draw');
         directive.ngOnChanges({
             size: new SimpleChange(null, null, false),
         });
@@ -43,7 +43,7 @@ describe('CanvasGridDirective', () => {
     });
 
     it('#ngOnChanges should call #draw() if #color changes and if #isDisplay is equal to true  ', () => {
-        let spy = spyOn(directive, 'draw');
+        const spy = spyOn(directive, 'draw');
 
         directive.ngOnChanges({
             color: new SimpleChange(null, null, false),
@@ -52,7 +52,7 @@ describe('CanvasGridDirective', () => {
     });
 
     it('#ngOnChanges() should call #draw() if #isDisplay changes and if #isDisplay is equal to true  ', () => {
-        let spy = spyOn(directive, 'draw');
+        const spy = spyOn(directive, 'draw');
         directive.ngOnChanges({
             isDisplay: new SimpleChange(null, null, false),
         });
@@ -61,7 +61,7 @@ describe('CanvasGridDirective', () => {
 
     it('#ngOnChanges() should call #clearRect() if there is a change and if #isDisplay is equal to false  ', () => {
         directive.isDisplay = false;
-        let spy = spyOn(directive.ctx, 'clearRect');
+        const spy = spyOn(directive.ctx, 'clearRect');
         directive.ngOnChanges({
             size: new SimpleChange(null, null, false),
         });
@@ -70,7 +70,7 @@ describe('CanvasGridDirective', () => {
 
     it('#ngOnChanges() should not call #draw() if there is a change and if #isDisplay is equal to false  ', () => {
         directive.isDisplay = false;
-        let spy = spyOn(directive, 'draw');
+        const spy = spyOn(directive, 'draw');
         directive.ngOnChanges({
             size: new SimpleChange(null, null, false),
         });
@@ -82,7 +82,7 @@ describe('CanvasGridDirective', () => {
             key: 'any',
         });
 
-        let spy = spyOn(directive, 'onKeyDown');
+        const spy = spyOn(directive, 'onKeyDown');
         document.dispatchEvent(event);
         expect(spy).toHaveBeenCalled();
     });
@@ -92,7 +92,7 @@ describe('CanvasGridDirective', () => {
             key: 'g',
         });
 
-        let spy = spyOn(directive.toggleGrid, 'emit');
+        const spy = spyOn(directive.toggleGrid, 'emit');
         directive.onKeyDown(event);
         expect(spy).toHaveBeenCalled();
     });
@@ -103,7 +103,7 @@ describe('CanvasGridDirective', () => {
         });
 
         directive.isKeyHandlerActive = false;
-        let spy = spyOn(directive.toggleGrid, 'emit');
+        const spy = spyOn(directive.toggleGrid, 'emit');
         directive.onKeyDown(event);
         expect(spy).not.toHaveBeenCalled();
     });
@@ -112,7 +112,7 @@ describe('CanvasGridDirective', () => {
             key: '+',
         });
 
-        let spy = spyOn(directive.gridSizeChange, 'emit');
+        const spy = spyOn(directive.gridSizeChange, 'emit');
         directive.onKeyDown(event);
         expect(spy).toHaveBeenCalled();
     });
@@ -121,13 +121,13 @@ describe('CanvasGridDirective', () => {
             key: '-',
         });
 
-        let spy = spyOn(directive.gridSizeChange, 'emit');
+        const spy = spyOn(directive.gridSizeChange, 'emit');
         directive.onKeyDown(event);
         expect(spy).toHaveBeenCalled();
     });
 
     it('#draw() should call #beginPath 100 times if #size = 50 & #width = 500 & #height = 500', () => {
-        let spy = spyOn(directive.ctx, 'beginPath');
+        const spy = spyOn(directive.ctx, 'beginPath');
         directive.draw(50, 500, 500);
         expect(spy).toHaveBeenCalledTimes(100); // (500/50) * (500/50) = 10 * 10 = 100
     });

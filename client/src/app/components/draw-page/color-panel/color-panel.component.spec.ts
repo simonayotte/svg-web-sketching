@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ColorPanelComponent } from './color-panel.component';
 import { Color } from 'src/app/models/color';
 import { SelectedColors } from 'src/app/models/enums';
+import { ColorPanelComponent } from './color-panel.component';
 
 describe('ColorPanelComponent', () => {
     let component: ColorPanelComponent;
@@ -32,7 +32,7 @@ describe('ColorPanelComponent', () => {
     });
 
     it('color boxes should have correct background color', () => {
-        let boxes = fixture.debugElement.queryAll(By.css('.panel-color-button-color'));
+        const boxes = fixture.debugElement.queryAll(By.css('.panel-color-button-color'));
 
         expect(boxes[0].nativeElement.style.backgroundColor).toEqual('rgb(255, 0, 255)');
         expect(boxes[1].nativeElement.style.backgroundColor).toEqual('rgb(0, 0, 255)');

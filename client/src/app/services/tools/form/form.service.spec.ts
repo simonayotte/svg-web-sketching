@@ -1,10 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 
-import { FormService } from './form.service';
-import { DrawStore } from 'src/app/store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { Color } from 'src/app/models/color';
 import { Types } from 'src/app/models/enums';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from 'src/app/store/draw-store';
+import { FormService } from './form.service';
 
 describe('FormService', () => {
     let service: FormService;

@@ -17,9 +17,9 @@ export abstract class Tool {
     handleKeyUp(key: string) {}
 
     copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
-        let newSvgs = [];
+        const newSvgs = [];
         for (let i = 0; i < svgs.length; i++) {
-            let svg = <SVGGraphicsElement>svgs[i].cloneNode(true);
+            const svg = svgs[i].cloneNode(true) as SVGGraphicsElement;
             newSvgs.push(svg);
         }
         return newSvgs;

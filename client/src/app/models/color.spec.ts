@@ -47,14 +47,14 @@ describe('Color', () => {
 
     it('#synchronizeHex() should call #fixColorRGB if type parameter is defined ', () => {
         color = new Color(-255, 0, 49, 2);
-        let spy = spyOn(color, 'fixColorRGB');
+        const spy = spyOn(color, 'fixColorRGB');
         color.synchronizeHex('r');
         expect(spy).toHaveBeenCalled();
     });
 
     it('#synchronizeHex() should not call #fixColorRGB if type parameter is not defined ', () => {
         color = new Color(-255, 0, 49, 2);
-        let spy = spyOn(color, 'fixColorRGB');
+        const spy = spyOn(color, 'fixColorRGB');
         color.synchronizeHex();
         expect(spy).not.toHaveBeenCalled();
     });

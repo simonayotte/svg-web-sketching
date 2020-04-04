@@ -1,7 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-import { Tool } from '../../../models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
+import { Tool } from '../../../models/tool';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +18,7 @@ export class ApplicatorService extends Tool {
     }
 
     start(event: MouseEvent) {
-        let svg = <SVGGraphicsElement>event.target;
+        const svg = event.target as SVGGraphicsElement;
         if (this.state.svgState.svgs.includes(svg)) {
             this.applyColor(svg, event.button);
         }

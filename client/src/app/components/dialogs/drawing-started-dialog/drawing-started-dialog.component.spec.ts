@@ -1,15 +1,15 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA, MatDialogModule, MatDialog } from '@angular/material';
-import { DrawingStartedDialogComponent } from './drawing-started-dialog.component';
-import { DrawStore } from 'src/app/store/draw-store';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { OverlayModule } from '@angular/cdk/overlay';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef, MatDialogTitle } from '@angular/material';
+import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
-import { CreateDrawingComponent } from '../create-drawing-dialog/create-drawing.component';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { BrowserModule } from '@angular/platform-browser';
+import { DrawStore } from 'src/app/store/draw-store';
 import { ColorComponent } from '../../tools/color/color.component';
+import { CreateDrawingComponent } from '../create-drawing-dialog/create-drawing.component';
+import { DrawingStartedDialogComponent } from './drawing-started-dialog.component';
 
 describe('DrawingStartedDialogComponent', () => {
     let component: DrawingStartedDialogComponent;
@@ -17,8 +17,8 @@ describe('DrawingStartedDialogComponent', () => {
     let store: DrawStore;
     let galleryService: GalleryService;
     const dialogMock = {
-        open: () =>{
-            
+        open: () => {
+
         },
         close: () => {
             /*empty function*/

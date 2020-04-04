@@ -2,8 +2,8 @@ import { TestBed } from '@angular/core/testing';
 
 import { RectangleService } from './rectangle.service';
 
-import { DrawStore } from '../../../store/draw-store';
 import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 describe('RectangleService', () => {
     let service: RectangleService;
@@ -40,7 +40,11 @@ describe('RectangleService', () => {
         service.isShift = true;
 
         const spy = spyOn(service, 'drawSquare');
-        service.draw(50, 100, 200, 300);
+        const testValue1 = 50;
+        const testValue2 = 100;
+        const testValue3 = 200;
+        const testValue4 = 300;
+        service.draw(testValue1, testValue2, testValue3, testValue4);
 
         expect(spy).toHaveBeenCalled();
     });
@@ -48,7 +52,11 @@ describe('RectangleService', () => {
     it('#draw() should call #drawRect() if #isShift is false ', () => {
         service.svg = service.renderer.createElement('rect', 'svg');
         const spy = spyOn(service, 'drawRect');
-        service.draw(50, 100, 200, 300);
+        const testValue1 = 50;
+        const testValue2 = 100;
+        const testValue3 = 200;
+        const testValue4 = 300;
+        service.draw(testValue1, testValue2, testValue3, testValue4);
 
         expect(spy).toHaveBeenCalled();
     });

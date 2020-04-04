@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GridPanelComponent } from './grid-panel.component';
 import { FormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
+import { GridPanelComponent } from './grid-panel.component';
 
 describe('GridPanelComponent', () => {
     let component: GridPanelComponent;
@@ -26,26 +26,26 @@ describe('GridPanelComponent', () => {
     });
 
     it('#setGridOpacity() should emit #gridOpacityChange output', () => {
-        let spy = spyOn(component.gridOpacityChange, 'emit');
+        const spy = spyOn(component.gridOpacityChange, 'emit');
         component.setGridOpacity({ target: { value: 20 } });
         expect(spy).toHaveBeenCalledWith(20);
     });
 
     it('#setKeyHandler() should be called with false on input focus', () => {
-        let inputEl = fixture.debugElement.query(By.css('.input-number'));
-        let spy = spyOn(component, 'setKeyHandler');
+        const inputEl = fixture.debugElement.query(By.css('.input-number'));
+        const spy = spyOn(component, 'setKeyHandler');
         inputEl.triggerEventHandler('focus', null);
         expect(spy).toHaveBeenCalledWith(false);
     });
     it('#setKeyHandler() should be called with true on input focusout', () => {
-        let inputEl = fixture.debugElement.query(By.css('.input-number'));
-        let spy = spyOn(component, 'setKeyHandler');
+        const inputEl = fixture.debugElement.query(By.css('.input-number'));
+        const spy = spyOn(component, 'setKeyHandler');
         inputEl.triggerEventHandler('focusout', null);
         expect(spy).toHaveBeenCalledWith(true);
     });
 
     it('#setKeyHandler() should emit #keyHandlerChange output', () => {
-        let spy = spyOn(component.keyHandlerChange, 'emit');
+        const spy = spyOn(component.keyHandlerChange, 'emit');
         component.setKeyHandler(true);
         expect(spy).toHaveBeenCalledWith(true);
     });
@@ -64,7 +64,7 @@ describe('GridPanelComponent', () => {
     it('#confirmGridSize() should set #isSizeError to false and emit #gridSizeChange output if #size is valid ', () => {
         component.isSizeError = true;
         component.size = 70;
-        let spy = spyOn(component.gridSizeChange, 'emit');
+        const spy = spyOn(component.gridSizeChange, 'emit');
         component.confirmGridSize();
         expect(component.isSizeError).toBeFalsy();
         expect(spy).toHaveBeenCalled();

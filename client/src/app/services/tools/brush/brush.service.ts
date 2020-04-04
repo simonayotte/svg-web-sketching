@@ -1,7 +1,7 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
+import { BrushTextures } from 'src/app/models/enums';
 import { DrawStore } from '../../../store/draw-store';
 import { PencilService } from '../pencil/pencil.service';
-import { BrushTextures } from 'src/app/models/enums';
 @Injectable({
     providedIn: 'root',
 })
@@ -11,11 +11,11 @@ export class BrushService extends PencilService {
     }
 
     start(event: MouseEvent) {
-        let x = event.offsetX;
-        let y = event.offsetY;
+        const x = event.offsetX;
+        const y = event.offsetY;
         this.path = `M ${x} ${y} `;
 
-        let thickness = this.state.globalState.thickness;
+        const thickness = this.state.globalState.thickness;
 
         this.drawCircle(x, y, thickness / 2);
 

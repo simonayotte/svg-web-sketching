@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, OnInit, EventEmitter, Output } from '@angular/core';
+import { Directive, ElementRef, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { DrawHandlerService } from '../services/draw-handler/draw-handler.service';
 @Directive({
     selector: '[draw]',

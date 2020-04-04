@@ -43,7 +43,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).toHaveBeenCalledWith(service.svg, 'd', 'M 20 45 ');
           done();
-        })
+        });
     });
 
     it('#continue should set#x and #y to mouse position', (done: DoneFn) => {
@@ -57,7 +57,7 @@ describe('AerosolService', () => {
           expect(service.x).toBe(30);
           expect(service.y).toBe(65);
           done();
-        })
+        });
     });
 
     it('#stop should clearInterval and stop calling #spray', (done: DoneFn) => {
@@ -71,7 +71,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).not.toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#stop should not call store #pushSvg() if #isDrawing is false', (done: DoneFn) => {
@@ -87,7 +87,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).not.toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#stop should call store #pushSvg() if #isDrawing is true', (done: DoneFn) => {
@@ -102,7 +102,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#stop() should be called on mouse up', (done: DoneFn) => {
@@ -117,7 +117,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#stop() should not be called on mouse up before mouse down', (done: DoneFn) => {
@@ -127,7 +127,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).not.toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#spray() should not be called on mouse move before mouse down ', (done: DoneFn) => {
@@ -140,7 +140,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).not.toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#spray() should not be called on mouse move after mouse up ', (done: DoneFn) => {
@@ -161,7 +161,7 @@ describe('AerosolService', () => {
         store.stateObs.subscribe((value: DrawState) => {
           expect(spy).not.toHaveBeenCalled();
           done();
-        })
+        });
     });
 
     it('#generateRandomPoint should return random value', (done: DoneFn) => {
@@ -171,7 +171,7 @@ describe('AerosolService', () => {
         expect(point.pointX <= 10 || point.pointX >= -10).toBeTruthy();
         expect(point.pointY <= 10 || point.pointX >= -10).toBeTruthy();
         done();
-      })
+      });
     });
 
     it('#spray should call generateRandomSpray ', (done: DoneFn) => {
@@ -182,7 +182,7 @@ describe('AerosolService', () => {
       store.stateObs.subscribe((value: DrawState) => {
         expect(spy).toHaveBeenCalled();
         done();
-      })
+      });
     });
 
     it('#generateRandomSpray should add point to path', (done: DoneFn) => {
@@ -198,7 +198,7 @@ describe('AerosolService', () => {
       store.stateObs.subscribe((value: DrawState) => {
         expect(service.path.length !== length).toBeTruthy();
         done();
-      })
+      });
     });
 
     it('#convertEmissionRate should return correct values', (done: DoneFn) => {
@@ -206,6 +206,6 @@ describe('AerosolService', () => {
       store.stateObs.subscribe((value: DrawState) => {
         expect(service.convertEmissionRate() === 10000).toBeTruthy();
         done();
-      })
+      });
     });
 });

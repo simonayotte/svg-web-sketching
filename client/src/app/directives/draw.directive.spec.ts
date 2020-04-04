@@ -1,10 +1,10 @@
-import { DrawDirective } from './draw.directive';
-import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { DrawHandlerService } from '../services/draw-handler/draw-handler.service';
-//import { ElementRef } from '@angular/core';
-import { MatDialogModule } from '@angular/material';
 import { Component, DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+// import { ElementRef } from '@angular/core';
+import { MatDialogModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
+import { DrawHandlerService } from '../services/draw-handler/draw-handler.service';
+import { DrawDirective } from './draw.directive';
 
 @Component({
     template: '<svg draw> </svg>',
@@ -37,7 +37,7 @@ describe('DrawDirective', () => {
             key: 'c',
         });
 
-        let spy = spyOn(directive, 'onKeyDown');
+        const spy = spyOn(directive, 'onKeyDown');
         document.dispatchEvent(event);
         expect(spy).toHaveBeenCalled();
     });
@@ -45,7 +45,7 @@ describe('DrawDirective', () => {
         const event: KeyboardEvent = new KeyboardEvent('keyup', {
             key: 'c',
         });
-        let spy = spyOn(directive, 'onKeyUp');
+        const spy = spyOn(directive, 'onKeyUp');
         document.dispatchEvent(event);
 
         expect(spy).toHaveBeenCalled();
@@ -55,14 +55,14 @@ describe('DrawDirective', () => {
             clientX: 10,
             clientY: 15,
         });
-        let spy = spyOn(directive, 'onMouseDown');
+        const spy = spyOn(directive, 'onMouseDown');
         svgEl.triggerEventHandler('mousedown', event);
 
         expect(spy).toHaveBeenCalled();
     });
 
     it('mouseleave event should call #onMouseleave()', () => {
-        let spy = spyOn(directive, 'onMouseleave');
+        const spy = spyOn(directive, 'onMouseleave');
         svgEl.triggerEventHandler('mouseleave', null);
         expect(spy).toHaveBeenCalled();
     });

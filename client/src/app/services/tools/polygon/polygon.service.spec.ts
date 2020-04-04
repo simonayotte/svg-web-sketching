@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 
 import { PolygonService } from './polygon.service';
 
-import { DrawStore } from '../../../store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
 import { Coordinate } from 'src/app/models/coordinate';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../../store/draw-store';
 
 describe('PolygonService', () => {
     let service: PolygonService;
@@ -146,12 +146,12 @@ describe('PolygonService', () => {
         expect(spy).not.toHaveBeenCalled();
     });
     it('#pointsToString() should return correct string if #points parameter length > 0', () => {
-        let value = service.pointsToString([new Coordinate(10, 50), new Coordinate(13, 8), new Coordinate(60, 97)]);
+        const value = service.pointsToString([new Coordinate(10, 50), new Coordinate(13, 8), new Coordinate(60, 97)]);
         expect(value).toEqual('10,50 13,8 60,97');
     });
 
     it('#pointsToString() should return empty string if #points parameter length = 0', () => {
-        let value = service.pointsToString([]);
+        const value = service.pointsToString([]);
         expect(value).toEqual('');
     });
 });

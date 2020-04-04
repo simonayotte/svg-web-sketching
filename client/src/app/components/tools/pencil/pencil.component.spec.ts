@@ -21,7 +21,7 @@ describe('PencilComponent', () => {
     });
 
     it('#setThickness() should emit #thicknessChange', () => {
-        let spy = spyOn(component.thicknessChange, 'emit');
+        const spy = spyOn(component.thicknessChange, 'emit');
         component.setThickness({ target: { value: 35 } });
 
         expect(spy).toHaveBeenCalledWith(35);

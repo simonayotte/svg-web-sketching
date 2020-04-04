@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
-import { DrawHandlerService } from './draw-handler.service';
-import { DrawStore } from '../../store/draw-store';
-import { DrawState } from 'src/app/state/draw-state';
-import { PencilService } from '../tools/pencil/pencil.service';
-import { BrushService } from '../tools/brush/brush.service';
 import { MatDialogModule } from '@angular/material';
 import { Tools } from 'src/app/models/enums';
-import { RectangleService } from '../tools/rectangle/rectangle.service';
+import { DrawState } from 'src/app/state/draw-state';
+import { DrawStore } from '../../store/draw-store';
+import { BrushService } from '../tools/brush/brush.service';
 import { EraserService } from '../tools/eraser/eraser.service';
+import { PencilService } from '../tools/pencil/pencil.service';
+import { RectangleService } from '../tools/rectangle/rectangle.service';
+import { DrawHandlerService } from './draw-handler.service';
 
 describe('DrawHandlerService', () => {
     let service: DrawHandlerService;

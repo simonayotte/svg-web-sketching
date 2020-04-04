@@ -1,17 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { FormValuesName, GalleryButtonColors } from 'src/app/models/enums';
+import { HttpResponse } from 'src/app/models/httpResponse';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { SavedDrawing } from '../../../models/saved-drawing';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
-import { FormValuesName, GalleryButtonColors } from 'src/app/models/enums';
 import { GalleryState } from './gallery-state';
-import { HttpResponse } from 'src/app/models/httpResponse';
-
-
 
 @Component({
     selector: 'app-drawing-gallery',
@@ -20,8 +18,8 @@ import { HttpResponse } from 'src/app/models/httpResponse';
 })
 export class DrawingGalleryComponent implements OnInit {
     private state: DrawState;
-    public galleryState: GalleryState;
-    public filterDrawingForm = this.fb.group({
+    galleryState: GalleryState;
+    filterDrawingForm = this.fb.group({
       tags: this.fb.array([]),
     });
     constructor(
@@ -31,8 +29,7 @@ export class DrawingGalleryComponent implements OnInit {
         private fb: FormBuilder,
         private galleryService: GalleryService,
         public dialogRef: MatDialogRef<DrawingGalleryComponent>,
-        ) 
-        {
+        ) {
         this.galleryState = new GalleryState();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
@@ -40,7 +37,7 @@ export class DrawingGalleryComponent implements OnInit {
         this.galleryService.drawingsObs.subscribe((value: SavedDrawing[]) => {
             this.galleryState.drawingsToShow = value;
         });
-    };
+    }
 
     async ngOnInit() {
         this.store.setIsKeyHandlerActive(false);
@@ -75,7 +72,7 @@ export class DrawingGalleryComponent implements OnInit {
       this.galleryState.loading = true;
       return this.httpService.getAllDrawings()
       .toPromise()
-      .then((data:Array<SavedDrawing>) => {
+      .then((data: SavedDrawing[]) => {
           this.galleryService.setDrawings(data);
           this.galleryState.allDrawingsInDb = data;
           this.galleryState.loading = false;
@@ -85,7 +82,7 @@ export class DrawingGalleryComponent implements OnInit {
         });
       }
 
-    toggleTrashColor(): void{
+    toggleTrashColor(): void {
         this.galleryState.trashColor == GalleryButtonColors.Black ? (this.galleryState.trashColor = GalleryButtonColors.Orange) : (this.galleryState.trashColor = GalleryButtonColors.Black);
         this.galleryState.loadColor = GalleryButtonColors.Black;
     }
@@ -102,8 +99,7 @@ export class DrawingGalleryComponent implements OnInit {
                 this.galleryService.setDidGalleryOpen(true);
                 this.dialogRef.close();
                 this.dialog.open(DrawingStartedDialogComponent);
-            } 
-            else {
+            } else {
                 this.galleryService.loadDrawing(drawing);
                 this.dialogRef.close();
             }
@@ -115,11 +111,11 @@ export class DrawingGalleryComponent implements OnInit {
         this.galleryState.loading = true;
         return this.httpService.deleteDrawing(drawing._id)
         .toPromise()
-        .then((data:HttpResponse) => {
+        .then((data: HttpResponse) => {
           this.updateGallery();
           alert(data.message);
         })
-        .catch((err:HttpResponse) => {
+        .catch((err: HttpResponse) => {
           this.updateGallery();
           alert(err.message);
         });
@@ -131,8 +127,7 @@ export class DrawingGalleryComponent implements OnInit {
         if (this.galleryState.tagStringArray.length > 0 && !this.galleryState.tagStringArray.includes('')) {
             const filteredDrawings: SavedDrawing[] = this.galleryService.filterDrawings(this.galleryState.tagStringArray, this.galleryState.allDrawingsInDb);
             filteredDrawings.length == 0 ? this.galleryState.noFilteredDrawingFound = true : this.galleryState.noFilteredDrawingFound = false;
-        } 
-        else {
+        } else {
             this.galleryService.setDrawings(this.galleryState.allDrawingsInDb);
             this.galleryState.noFilteredDrawingFound = false;
         }

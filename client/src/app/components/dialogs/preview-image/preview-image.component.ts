@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
+import { HttpResponse } from 'src/app/models/httpResponse';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { HttpResponse } from 'src/app/models/httpResponse';
 
 @Component({
   selector: 'app-preview-image',
@@ -61,13 +61,13 @@ export class PreviewImageComponent implements OnInit {
     return this.httpService.saveDrawing(drawing)
     .toPromise()
     .then(
-    (data:HttpResponse) => {
+    (data: HttpResponse) => {
       this.dialogRef.close();
       alert(data.message);
       this.buttonDisabled = false;
 
     }).catch(
-    (err:HttpResponse) => {
+    (err: HttpResponse) => {
       this.dialogRef.close();
       alert(err.message);
       this.buttonDisabled = false;

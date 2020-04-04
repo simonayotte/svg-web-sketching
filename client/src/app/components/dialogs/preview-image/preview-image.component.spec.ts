@@ -1,13 +1,13 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PreviewImageComponent } from './preview-image.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatDialogRef, MatDialogTitle, MAT_DIALOG_DATA } from '@angular/material';
-import { DrawStore } from 'src/app/store/draw-store';
-import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpService } from 'src/app/services/http-service/http.service';
 import { defer } from 'rxjs';
+import { HttpService } from 'src/app/services/http-service/http.service';
+import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
+import { DrawStore } from 'src/app/store/draw-store';
+import { PreviewImageComponent } from './preview-image.component';
 
 export function fakeAsyncResponse<T>(data: T) {
     return defer(() => Promise.resolve(data));
@@ -20,7 +20,7 @@ const httpServiceStub = {
 };
 describe('PreviewImageComponent', () => {
   let component: PreviewImageComponent;
-  let store:DrawStore;
+  let store: DrawStore;
   let fixture: ComponentFixture<PreviewImageComponent>;
   let httpService: HttpService;
   let saveDrawingService: SaveDrawingService;
@@ -29,12 +29,11 @@ describe('PreviewImageComponent', () => {
         /*empty function*/
     },
   };
- 
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
         declarations: [PreviewImageComponent],
-        imports: [FormsModule, ReactiveFormsModule,HttpClientTestingModule, BrowserAnimationsModule],
+        imports: [FormsModule, ReactiveFormsModule, HttpClientTestingModule, BrowserAnimationsModule],
         providers: [
               {provide: MatDialogTitle, useValue: {}},
               {provide: MatDialogRef, useValue: dialogMock},
@@ -45,14 +44,14 @@ describe('PreviewImageComponent', () => {
         ],
     }).compileComponents();
     store = TestBed.get(DrawStore);
-    store.setDrawSvg(document.createElementNS("http://www.w3.org/2000/svg", "svg"));
+    store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
   }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(PreviewImageComponent);
     component = fixture.componentInstance;
-    httpService = TestBed.get(HttpService)
-    saveDrawingService = TestBed.get(SaveDrawingService)
+    httpService = TestBed.get(HttpService);
+    saveDrawingService = TestBed.get(SaveDrawingService);
     fixture.detectChanges();
   });
 
@@ -61,63 +60,63 @@ describe('PreviewImageComponent', () => {
   });
 
   it('#getSvgsHTML() should set #svgsHTML to be equal an array of string equal to the outerHTML of the svgs that are drawn', () => {
-    let ellipsis:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
-    let rect:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect')
-    let line:SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'line')
+    const ellipsis: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+    const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    const line: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     store.pushSvg(ellipsis);
     store.pushSvg(rect);
     store.pushSvg(line);
-    let svgsHTML:Array<string> = [ellipsis.outerHTML, rect.outerHTML, line.outerHTML] 
+    const svgsHTML: string[] = [ellipsis.outerHTML, rect.outerHTML, line.outerHTML];
     component.getSvgsHTML();
     expect(component.svgsHTML).toEqual(svgsHTML);
-  })
+  });
 
   it('#saveDrawing() should call #getSvgsHTML()', () => {
-    spyOn(component,'getSvgsHTML').and.callThrough();
-    component.saveDrawing()
+    spyOn(component, 'getSvgsHTML').and.callThrough();
+    component.saveDrawing();
     expect(component.getSvgsHTML).toHaveBeenCalled();
   });
 
   it('#saveDrawing() should call #saveDrawing() of httpService', () => {
-    spyOn(httpService, 'saveDrawing').and.callThrough();;
-    component.saveDrawing()
-    expect(httpService.saveDrawing).toHaveBeenCalled()
+    spyOn(httpService, 'saveDrawing').and.callThrough();
+    component.saveDrawing();
+    expect(httpService.saveDrawing).toHaveBeenCalled();
   });
 
   it('#saveDrawing() should call #getImgName() of saveDrawingService', () => {
-    spyOn(saveDrawingService, 'getImgName').and.callThrough();;
-    component.saveDrawing()
-    expect(saveDrawingService.getImgName).toHaveBeenCalled()
+    spyOn(saveDrawingService, 'getImgName').and.callThrough();
+    component.saveDrawing();
+    expect(saveDrawingService.getImgName).toHaveBeenCalled();
   });
 
   it('#saveDrawing() should call #getTags() of saveDrawingService', () => {
-    spyOn(saveDrawingService, 'getTags').and.callThrough();;
-    component.saveDrawing()
-    expect(saveDrawingService.getTags).toHaveBeenCalled()
+    spyOn(saveDrawingService, 'getTags').and.callThrough();
+    component.saveDrawing();
+    expect(saveDrawingService.getTags).toHaveBeenCalled();
   });
 
-  it('#saveDrawing() should close the dialog in the promise', (done:DoneFn) => {
+  it('#saveDrawing() should close the dialog in the promise', (done: DoneFn) => {
     spyOn(component.dialogRef, 'close');
-    component.saveDrawing().then(()=>{
+    component.saveDrawing().then(() => {
       expect(component.dialogRef.close).toHaveBeenCalled();
       done();
-    })
+    });
   });
 
-  it('#saveDrawing() should set #buttonDisabled to false in the promise', (done:DoneFn) => {
-    component.saveDrawing().then(()=>{
+  it('#saveDrawing() should set #buttonDisabled to false in the promise', (done: DoneFn) => {
+    component.saveDrawing().then(() => {
       expect(component.buttonDisabled).toEqual(false);
       done();
     });
   });
 
-  it('#saveDrawing() should call #window.alert in the promise', (done:DoneFn) => {
-    let message:string;
-    httpServiceStub.saveDrawing().subscribe((data)=>{
+  it('#saveDrawing() should call #window.alert in the promise', (done: DoneFn) => {
+    let message: string;
+    httpServiceStub.saveDrawing().subscribe((data) => {
       message = data.message;
-    })
-    spyOn(window,'alert');
-    component.saveDrawing().then(()=>{
+    });
+    spyOn(window, 'alert');
+    component.saveDrawing().then(() => {
       expect(window.alert).toHaveBeenCalledWith(message);
       done();
     });
@@ -126,5 +125,5 @@ describe('PreviewImageComponent', () => {
   it('saveDrawing() should set #buttonDisabled to true', () => {
     component.saveDrawing();
     expect(component.buttonDisabled).toEqual(true);
-  })
+  });
 });
