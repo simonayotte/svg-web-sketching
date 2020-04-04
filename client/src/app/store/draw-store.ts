@@ -138,10 +138,14 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     setTool(value: Tools): void {
-        const isPanelOpen =
-            this.state.globalState.tool === Tools.None || (this.state.globalState.tool === value && this.state.globalState.isPanelOpen)
-                ? false
-                : true;
+        let isPanelOpen;
+
+        if (value === Tools.None) {
+            isPanelOpen = false;
+        } else {
+            isPanelOpen = this.state.globalState.tool === value && this.state.globalState.isPanelOpen ? false : true;
+        }
+
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
