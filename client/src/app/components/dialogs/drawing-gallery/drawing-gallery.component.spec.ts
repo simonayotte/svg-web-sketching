@@ -5,8 +5,9 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { defer } from 'rxjs';
+import { defer, Observable } from 'rxjs';
 import { GalleryButtonColors } from 'src/app/models/enums';
+import { HttpResponse } from 'src/app/models/httpResponse';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
@@ -14,15 +15,19 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { DrawingStartedDialogComponent } from '../drawing-started-dialog/drawing-started-dialog.component';
 import { DrawingGalleryComponent } from './drawing-gallery.component';
 
-export function fakeAsyncResponse<T>(data: T) {
+// tslint:disable:no-magic-numbers
+// tslint:disable:max-line-length
+// tslint:disable:max-file-line-count
+
+export function fakeAsyncResponse<T>(data: T): Observable<T> {
     return defer(() => Promise.resolve(data));
 }
 
 const httpServiceStub = {
-    deleteDrawing() {
+    deleteDrawing(): Observable<HttpResponse> {
         return fakeAsyncResponse({ status: '200', message: 'Dessin supprimé avec succès!' });
     },
-    getAllDrawings() {
+    getAllDrawings(): Observable<SavedDrawing[]> {
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         return fakeAsyncResponse([drawing]);
     },
@@ -37,9 +42,11 @@ describe('DrawingGalleryComponent', () => {
     let httpService: HttpService;
     const dialogMock = {
         close: () => {
-            /*empty function*/
+            return;
         },
-        open: () => {},
+        open: () => {
+            return;
+        },
     };
 
     beforeEach(async(() => {
@@ -349,7 +356,7 @@ describe('DrawingGalleryComponent', () => {
         spyOn(httpService, 'deleteDrawing');
         component.galleryState.trashColor = GalleryButtonColors.Black;
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
-        component.deleteDrawing;
+        component.deleteDrawing(drawing);
         expect(httpService.deleteDrawing).not.toHaveBeenCalledWith(drawing);
     });
 

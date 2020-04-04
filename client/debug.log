@@ -102,3 +102,8 @@
 [0403/154704.542:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
 [0403/154704.542:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
 [0403/154704.812:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
+[0403/221848.914:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
+[0403/221848.978:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
+[0403/221849.199:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
+[0403/221849.200:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
+[0403/221849.416:ERROR:process_reader_win.cc(151)] SuspendThread: Accès refusé. (0x5)
