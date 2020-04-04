@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Types } from 'src/app/models/enums';
 import { PolygonComponent } from './polygon.component';
-
+/* tslint:disable:no-magic-numbers */
 describe('PolygonComponent', () => {
     let component: PolygonComponent;
     let fixture: ComponentFixture<PolygonComponent>;

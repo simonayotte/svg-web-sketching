@@ -6,6 +6,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { FormService } from './form.service';
 
+/* tslint:disable:no-magic-numbers */
 describe('FormService', () => {
     let service: FormService;
     let store: DrawStore;

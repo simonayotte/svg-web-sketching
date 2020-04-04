@@ -6,17 +6,19 @@ import { FormService } from '../form/form.service';
     providedIn: 'root',
 })
 export class EllipsisService extends FormService {
-    startX = 0;
-    startY = 0;
-    lastX = 0;
-    lastY = 0;
-    isShift = false;
+    startX: number;
+    startY: number;
+    lastX: number;
+    lastY: number;
+    isShift: boolean = false;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super(store, rendererFactory);
+        this.startX = this.startY = this.lastX = this.lastY = 0;
+        this.isShift = false;
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         this.startX = event.offsetX;
         this.startY = event.offsetY;
         this.svg = this.renderer.createElement('ellipse', 'svg');
@@ -32,13 +34,13 @@ export class EllipsisService extends FormService {
         this.isDrawing = true;
     }
 
-    continue(event: MouseEvent) {
+    continue(event: MouseEvent): void {
         this.lastX = event.offsetX;
         this.lastY = event.offsetY;
         this.draw(this.startX, this.startY, this.lastX, this.lastY);
     }
 
-    draw(startX: number, startY: number, lastX: number, lastY: number) {
+    draw(startX: number, startY: number, lastX: number, lastY: number): void {
         let dx = lastX - startX;
         let dy = lastY - startY;
         // Length of square is equal to the smallest size (without changing sign)
@@ -63,7 +65,7 @@ export class EllipsisService extends FormService {
         this.renderer.setAttribute(this.svg, 'ry', ry.toString());
     }
 
-    stop() {
+    stop(): void {
         if (this.isDrawing) {
             this.store.pushSvg(this.svg);
             this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
@@ -75,13 +77,13 @@ export class EllipsisService extends FormService {
         this.stopSignal();
     }
 
-    handleKeyDown(key: string) {
+    handleKeyDown(key: string): void {
         if (key === 'Shift') {
             this.isShift = true;
             this.draw(this.startX, this.startY, this.lastX, this.lastY);
         }
     }
-    handleKeyUp(key: string) {
+    handleKeyUp(key: string): void {
         if (key === 'Shift') {
             this.isShift = false;
             if (this.isDrawing) {

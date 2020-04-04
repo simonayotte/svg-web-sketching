@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Color } from '../models/color';
 import { CanvasGridDirective } from './canvas-grid.directive';
-
+/* tslint:disable:no-magic-numbers */
 @Component({
     template: '<canvas canvas-grid> </canvas>',
 })

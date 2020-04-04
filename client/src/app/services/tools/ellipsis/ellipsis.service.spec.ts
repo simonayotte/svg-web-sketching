@@ -5,6 +5,7 @@ import { EllipsisService } from './ellipsis.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
 
+/* tslint:disable:no-magic-numbers */
 describe('EllipsisService', () => {
     let service: EllipsisService;
     let store: DrawStore;

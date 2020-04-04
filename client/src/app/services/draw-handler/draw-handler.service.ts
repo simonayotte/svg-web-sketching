@@ -59,21 +59,21 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.R, Tools.Applicator);
     }
 
-    startTool(event: MouseEvent) {
+    startTool(event: MouseEvent): void {
         if (this.servicesMap.has(this.state.globalState.tool)) {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.start(event);
         }
     }
 
-    stopTool() {
+    stopTool(): void {
         if (this.servicesMap.has(this.state.globalState.tool)) {
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
             service.stop();
         }
     }
 
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
@@ -122,7 +122,7 @@ export class DrawHandlerService {
         }
     }
 
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         const key = event.key;
         const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
         if (service) {
@@ -130,7 +130,7 @@ export class DrawHandlerService {
         }
     }
 
-    onMouseMove(event: MouseEvent) {
+    onMouseMove(event: MouseEvent): void {
         this.store.setMousePosition(event.offsetX - this.state.eraserThickness / 2, event.offsetY - this.state.eraserThickness / 2);
         if (this.state.globalState.tool === Tools.Eraser) {
             const service = this.servicesMap.get(this.state.globalState.tool) as EraserService;

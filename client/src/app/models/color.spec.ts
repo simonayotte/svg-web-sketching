@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-
 import { Color } from 'src/app/models/color';
-
+/* tslint:disable:no-magic-numbers */
 describe('Color', () => {
     let color: Color = new Color(255, 255, 255, 255);
     beforeEach(() => {
@@ -59,23 +58,23 @@ describe('Color', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#synchronizeHex() should set #RGBHex correctly ', () => {
+    it('#synchronizeHex() should set #rgbHex correctly ', () => {
         color = new Color(255, 0, 0, 255);
         color.g = 255;
         color.synchronizeHex();
-        expect(color.RGBHex).toEqual('ffff00');
+        expect(color.rgbHex).toEqual('ffff00');
     });
 
-    it('#synchronizeRGB() should set #isHexValid to false if #RGBHex is not valid', () => {
+    it('#synchronizeRGB() should set #isHexValid to false if #rgbHex is not valid', () => {
         color = new Color(255, 0, 0, 255);
-        color.RGBHex = 'qqwwff';
+        color.rgbHex = 'qqwwff';
         color.synchronizeRGB();
         expect(color.isHexValid).toBeFalsy();
     });
 
-    it('#synchronizeRGB() should set #r,g,b correctly if #RGBHex is valid', () => {
+    it('#synchronizeRGB() should set #r,g,b correctly if #rgbHex is valid', () => {
         color = new Color(255, 0, 0, 255);
-        color.RGBHex = 'ff01fe';
+        color.rgbHex = 'ff01fe';
 
         color.synchronizeRGB();
         expect(color.rgba()).toEqual([255, 1, 254, 255]);
