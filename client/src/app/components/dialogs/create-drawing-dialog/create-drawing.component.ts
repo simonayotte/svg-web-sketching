@@ -23,12 +23,11 @@ export class CreateDrawingComponent implements OnInit {
     isHeightModified: boolean;
     isCreateDrawColorOpen: boolean;
     backgroundColor: Color;
-    createDrawingForm: FormGroup; 
+    createDrawingForm: FormGroup;
     constructor(
-        private store: DrawStore, 
-        public dialogRef: MatDialogRef<CreateDrawingComponent>, 
-        private drawingHandler: DrawingHandler) 
-        {
+        private store: DrawStore,
+        public dialogRef: MatDialogRef<CreateDrawingComponent>,
+        private drawingHandler: DrawingHandler) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
