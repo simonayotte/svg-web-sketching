@@ -11,7 +11,7 @@ import { MatDialogModule, MatDialogRef, MatDialog } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { PreviewExportComponent } from '../preview-export/preview-export.component';
-import { FormValuesName } from 'src/app/models/enums';
+import { FormValuesName, Tools } from 'src/app/models/enums';
 
 describe('ExportDrawingComponent', () => {
   let component: ExportDrawingComponent;
@@ -85,5 +85,12 @@ describe('ExportDrawingComponent', () => {
     component.submit();
     expect(component.dialog.open).toHaveBeenCalledWith(PreviewExportComponent);
   });
+
+  it('#submit should call the #setTool() of the store', () => {
+    spyOn(store, 'setTool').and.callThrough();
+    component.submit();
+    expect(store.setTool).toHaveBeenCalledWith(Tools.None);
+  });
+
 
 });

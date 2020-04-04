@@ -20,7 +20,7 @@ import { HttpResponse } from 'src/app/models/httpResponse';
 })
 export class DrawingGalleryComponent implements OnInit {
     private state: DrawState;
-    public galleryState: GalleryState = new GalleryState();
+    public galleryState: GalleryState;
     public filterDrawingForm = this.fb.group({
       tags: this.fb.array([]),
     });
@@ -33,6 +33,7 @@ export class DrawingGalleryComponent implements OnInit {
         public dialogRef: MatDialogRef<DrawingGalleryComponent>,
         ) 
         {
+        this.galleryState = new GalleryState();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
