@@ -5,12 +5,12 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { FormValuesName, Tools } from 'src/app/models/enums';
+import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewImageComponent } from '../preview-image/preview-image.component';
 import { SaveDrawingComponent } from './save-drawing.component';
-import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
-import { FormValuesName, Tools } from 'src/app/models/enums';
 
 describe('SaveDrawingComponent', () => {
   let component: SaveDrawingComponent;
