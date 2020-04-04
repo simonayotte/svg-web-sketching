@@ -3,7 +3,7 @@ import { Color } from 'src/app/models/color';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-
+/* tslint:disable:no-magic-numbers */
 @Injectable({
     providedIn: 'root',
 })
@@ -18,7 +18,7 @@ export class PipetteService extends Tool {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         this.ctx = this.createCanvasWithSvgs(this.state.svgState.width, this.state.svgState.height);
         this.drawSvgInCanvas(this.state.svgState.drawSvg, event);
     }
@@ -34,7 +34,7 @@ export class PipetteService extends Tool {
 
     // Draw all svg in created canvas
     // Source: https://stackoverflow.com/questions/3768565/drawing-an-svg-file-on-a-html5-canvas
-    drawSvgInCanvas(svg: SVGSVGElement, event: MouseEvent) {
+    drawSvgInCanvas(svg: SVGSVGElement, event: MouseEvent): void {
         const img = new Image();
         const xml = new XMLSerializer().serializeToString(svg);
 
@@ -53,7 +53,7 @@ export class PipetteService extends Tool {
         img.src = image64;
     }
 
-    setColor(ctx: CanvasRenderingContext2D, x: number, y: number, button: number) {
+    setColor(ctx: CanvasRenderingContext2D, x: number, y: number, button: number): void {
         const data: Uint8ClampedArray = ctx.getImageData(x, y, 1, 1).data;
         if (button === 0) {
             this.store.setFirstColor(new Color(data[0], data[1], data[2], data[3]));

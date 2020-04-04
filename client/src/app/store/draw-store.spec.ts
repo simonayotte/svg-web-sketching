@@ -4,6 +4,7 @@ import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
 import { DrawState } from '../state/draw-state';
 import { DrawStore } from './draw-store';
 
+/* tslint:disable:no-magic-numbers */
 describe('DrawStore', () => {
     let store: DrawStore;
     let state: DrawState;

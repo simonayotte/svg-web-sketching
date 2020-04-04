@@ -7,31 +7,33 @@ import { UndoRedoState } from './undo-redo-state';
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
 const THICKNESS_DEFAULT = 25;
-
+const EMISSION_RATE_DEFAULT = 30;
 export class DrawState {
     // Brush
-    brushTexture = BrushTextures.Normal;
+    brushTexture: BrushTextures = BrushTextures.Normal;
     // Line
-    lineHasJunction = false;
-    lineJunctionThickness = LINE_JUNCTION_THICKNESS_DEFAULT;
+    lineHasJunction: boolean;
+    lineJunctionThickness: number = LINE_JUNCTION_THICKNESS_DEFAULT;
     // rectangle
-    rectangleType = Types.Outline;
+    rectangleType: Types = Types.Outline;
     // polygon
-    polygonSides = POLYGON_SIDES_DEFAULT;
-    polygonType = Types.Outline;
+    polygonSides: number = POLYGON_SIDES_DEFAULT;
+    polygonType: Types = Types.Outline;
     // ellipsis
-    ellipsisType = Types.Outline;
+    ellipsisType: Types = Types.Outline;
     // eraser
-    eraserThickness = THICKNESS_DEFAULT;
+    eraserThickness: number = THICKNESS_DEFAULT;
 
     // aerosol
-    emissionRate = 30;
+    emissionRate: number;
 
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
     undoRedoState: UndoRedoState;
     constructor() {
+        this.lineHasJunction = false;
+        this.emissionRate = EMISSION_RATE_DEFAULT;
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
         this.svgState = new SvgState();

@@ -17,14 +17,14 @@ export class ApplicatorService extends Tool {
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         const svg = event.target as SVGGraphicsElement;
         if (this.state.svgState.svgs.includes(svg)) {
             this.applyColor(svg, event.button);
         }
     }
 
-    applyColor(svg: SVGGraphicsElement, button: number) {
+    applyColor(svg: SVGGraphicsElement, button: number): void {
         if (button === 0) {
             this.setFillColor(svg, this.state.colorState.firstColor.hex());
         } else if (button === 2) {
@@ -32,14 +32,14 @@ export class ApplicatorService extends Tool {
         }
     }
 
-    setFillColor(svg: SVGGraphicsElement, color: string) {
+    setFillColor(svg: SVGGraphicsElement, color: string): void {
         if (svg.getAttribute('fill') && svg.getAttribute('fill') !== 'none') {
             this.store.saveSvgsState(this.copyState(this.state.svgState.svgs));
             this.renderer.setAttribute(svg, 'fill', color);
         }
     }
 
-    setBorderColor(svg: SVGGraphicsElement, color: string) {
+    setBorderColor(svg: SVGGraphicsElement, color: string): void {
         if (svg.getAttribute('stroke') && svg.getAttribute('stroke') !== 'none') {
             this.store.saveSvgsState(this.copyState(this.state.svgState.svgs));
             this.renderer.setAttribute(svg, 'stroke', color);

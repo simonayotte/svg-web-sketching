@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BrushTextures } from 'src/app/models/enums';
 import { BrushComponent } from './brush.component';
+/* tslint:disable:no-magic-numbers */
 describe('BrushComponent', () => {
     let component: BrushComponent;
     let fixture: ComponentFixture<BrushComponent>;
