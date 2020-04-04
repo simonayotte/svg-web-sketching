@@ -12,15 +12,19 @@ export class RectangleComponent implements OnInit {
     @Output() thicknessChange = new EventEmitter();
     @Output() rectangleTypeChange = new EventEmitter();
 
-    constructor() {}
+    constructor() {
+        // Empty Block
+    }
 
-    ngOnInit() {}
+    ngOnInit(): void {
+        // Empty Block
+    }
 
-    setThickness(event: any) {
+    setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setRectangleType(value: Types) {
+    setRectangleType(value: Types): void {
         this.rectangleTypeChange.emit(value);
     }
 }

@@ -23,7 +23,7 @@ export class LineService extends Tool {
     lastY: number;
 
     // Array de point dans la ligne
-    coordinates: Coordinate[];
+    coordinates: Coordinate[] = [];
     points: string;
 
     // PreviewLine
@@ -34,6 +34,9 @@ export class LineService extends Tool {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.isShiftDown = false;
+        this.points = '';
+
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseDoubleClickListener = this.stop.bind(this);
 
