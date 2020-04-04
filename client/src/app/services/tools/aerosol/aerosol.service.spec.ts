@@ -3,7 +3,7 @@ import { Color } from 'src/app/models/color';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
 import { AerosolService } from './aerosol.service';
-
+/* tslint:disable:no-magic-numbers */
 describe('AerosolService', () => {
     let service: AerosolService;
     let store: DrawStore;

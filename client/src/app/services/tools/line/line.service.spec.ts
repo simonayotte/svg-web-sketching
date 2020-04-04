@@ -1,10 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-
-import { LineService } from './line.service';
-
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
-
+import { LineService } from './line.service';
+/* tslint:disable:no-magic-numbers */
 describe('LineService', () => {
     let service: LineService;
     let store: DrawStore;

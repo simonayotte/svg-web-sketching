@@ -3,7 +3,6 @@ import { Coordinate } from 'src/app/models/coordinate';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-const OFFSET = 25;
 
 @Injectable({
     providedIn: 'root',
@@ -42,6 +41,9 @@ export class LineService extends Tool {
         this.mouseDoubleClickListener = this.stop.bind(this);
 
         this.renderer = rendererFactory.createRenderer(null, null);
+        this.coordinates = [];
+        this.points = '';
+        this.isShiftDown = false;
     }
 
     start(event: MouseEvent): void {
@@ -59,23 +61,26 @@ export class LineService extends Tool {
             this.renderer.setAttribute(this.svg, 'points', `${event.offsetX},${event.offsetY} `);
 
             if (this.state.lineHasJunction) {
+                const COEFFICIENT = 25; // Coefficient pour augmenter precision de la selection de la largeur de la ligne
                 const marker = this.renderer.createElement('marker', 'svg');
-                this.renderer.setAttribute(marker, 'markerWidth', ((this.state.lineJunctionThickness * 2) / OFFSET).toString());
-                this.renderer.setAttribute(marker, 'markerHeight', ((this.state.lineJunctionThickness * 2) / OFFSET).toString());
-                this.renderer.setAttribute(marker, 'refX', (this.state.lineJunctionThickness / OFFSET).toString());
-                this.renderer.setAttribute(marker, 'refY', (this.state.lineJunctionThickness / OFFSET).toString());
-                this.renderer.setAttribute(marker, 'id', (this.state.lineJunctionThickness / OFFSET).toString());
+                this.renderer.setAttribute(marker, 'markerWidth', ((this.state.lineJunctionThickness * 2) / COEFFICIENT).toString());
+                this.renderer.setAttribute(marker, 'markerHeight', ((this.state.lineJunctionThickness * 2) / COEFFICIENT).toString());
+                this.renderer.setAttribute(marker, 'refX', (this.state.lineJunctionThickness / COEFFICIENT).toString());
+                this.renderer.setAttribute(marker, 'refY', (this.state.lineJunctionThickness / COEFFICIENT).toString());
+                this.renderer.setAttribute(marker, 'id', (this.state.lineJunctionThickness / COEFFICIENT).toString());
 
                 const circle = this.renderer.createElement('circle', 'svg');
-                this.renderer.setAttribute(circle, 'cx', (this.state.lineJunctionThickness / OFFSET).toString());
-                this.renderer.setAttribute(circle, 'cy', (this.state.lineJunctionThickness / OFFSET).toString());
-                this.renderer.setAttribute(circle, 'r', (this.state.lineJunctionThickness / OFFSET).toString());
+                this.renderer.setAttribute(circle, 'cx', (this.state.lineJunctionThickness / COEFFICIENT).toString());
+                this.renderer.setAttribute(circle, 'cy', (this.state.lineJunctionThickness / COEFFICIENT).toString());
+                this.renderer.setAttribute(circle, 'r', (this.state.lineJunctionThickness / COEFFICIENT).toString());
                 marker.appendChild(circle);
                 this.renderer.appendChild(this.state.svgState.drawSvg, marker);
-                this.renderer.setAttribute(this.svg, 'marker-start', 'url(#' + (this.state.lineJunctionThickness / OFFSET)
-                                                                                                                        .toString() + ')');
-                this.renderer.setAttribute(this.svg, 'marker-mid', 'url(#' + (this.state.lineJunctionThickness / OFFSET).toString() + ')');
-                this.renderer.setAttribute(this.svg, 'marker-end', 'url(#' + (this.state.lineJunctionThickness / OFFSET).toString() + ')');
+                this.renderer.setAttribute(this.svg, 'marker-start', 'url(#'
+                                           + (this.state.lineJunctionThickness / COEFFICIENT).toString() + ')');
+                this.renderer.setAttribute(this.svg, 'marker-mid', 'url(#'
+                                           + (this.state.lineJunctionThickness / COEFFICIENT).toString() + ')');
+                this.renderer.setAttribute(this.svg, 'marker-end', 'url(#'
+                                           + (this.state.lineJunctionThickness / COEFFICIENT).toString() + ')');
             }
             // Manage Event listeners
             this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
@@ -215,6 +220,9 @@ export class LineService extends Tool {
         for (const point of points) {
             tempString += `${point.pointX},${point.pointY} `;
         }
+        // for (let i = 0; i < points.length; i++) {
+        //     tempString += `${points[i].pointX},${points[i].pointY} `;
+        // }
         this.renderer.setAttribute(this.svg, 'points', tempString);
     }
 
@@ -239,9 +247,13 @@ export class LineService extends Tool {
             return new Coordinate(0, 0);
         }
     }
-    /* tslint:disable: no-magic-numbers cyclomatic-complexity*/
-    findCadrant(hypothenuseLineLength: number, angle: number, positionX: number, positionY: number, lastX: number,
-                lastY: number): Coordinate {
+    /*
+    Disable les magic numbers pour les nombres du cercle trigonometique et
+    le cyclomatic complexity pour eviter d'avoir 4 fonctions pour chaque cadrant
+    */
+    /* tslint:disable:cyclomatic-complexity no-magic-numbers */
+    findCadrant(hypothenuseLineLength: number, angle: number, positionX: number,
+                positionY: number, lastX: number, lastY: number): Coordinate {
         if (positionX - lastX >= 0 && positionY - lastY >= 0) {
             if (angle >= 0 && angle < Math.PI / 6) {
                 // Retourner point avec alignement 0deg

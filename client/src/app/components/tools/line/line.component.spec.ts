@@ -19,7 +19,8 @@
 
 //     beforeEach(async(() => {
 //         TestBed.configureTestingModule({
-//             declarations: [LineComponent, DrawPageComponent, GuideComponent, PencilComponent, RectangleComponent, ColorComponent, BrushComponent],
+//             declarations: [LineComponent, DrawPageComponent, GuideComponent, PencilComponent,
+//                         RectangleComponent, ColorComponent, BrushComponent],
 //             providers: [DrawStateService],
 //             imports: [FormsModule, MatDialogModule],
 //         }).compileComponents();
@@ -28,7 +29,8 @@
 //     beforeEach(() => {
 //         drawStateService = TestBed.get(DrawStateService);
 //         const drawPageFixture: ComponentFixture<DrawPageComponent> = TestBed.createComponent(DrawPageComponent);
-//         drawStateService.setCanvasRef(new ElementRef(drawPageFixture.debugElement.nativeElement.querySelector('.canvas')));
+//         drawStateService.setCanvasRef(new ElementRef(drawPageFixture.debugElement
+//         .nativeElement.querySelector('.canvas')));
 //         fixture = TestBed.createComponent(LineComponent);
 //         component = fixture.componentInstance;
 //         fixture.detectChanges();

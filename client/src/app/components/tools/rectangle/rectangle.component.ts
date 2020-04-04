@@ -16,7 +16,7 @@ export class RectangleComponent implements OnInit {
         // Empty Block
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         // Empty Block
     }
 
