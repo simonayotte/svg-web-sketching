@@ -59,14 +59,5 @@ describe('saveDrawingController', () => {
             });
     });
 
-    it('should return error message from saveDrawing service on non-valid post request ', async () => {
-        //expect(dbService.addDrawingDb().called);
-        dbService.addDrawingDb.rejects();
-        return supertest(app)
-            .post('/savedrawing')
-            .expect(400)
-            .then((response: any) => {
-                expect(response.body.status).to.equal('400');
-            });
-    });
+    
 });

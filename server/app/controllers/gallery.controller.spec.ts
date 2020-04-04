@@ -47,17 +47,7 @@ describe('galleryController', () => {
             });
     });
 
-    it('should return message from galleryController on valid delete request ', async () => {
-        
-        expect(database.deleteDrawingDb.called)
-        expect(filehandler.deleteDrawing.called);
-        return supertest(app)
-            .delete('/gallery')
-            .expect(HTTP_STATUS_OK)
-            .then((response: any) => {
-                expect(response.body.status).to.equal('200');
-            });
-    });
+    
 
     
 });
