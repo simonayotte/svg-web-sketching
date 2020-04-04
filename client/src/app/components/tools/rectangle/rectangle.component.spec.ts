@@ -26,8 +26,8 @@ describe('EllipsisComponent', () => {
     it('#setThickness() should emit #thicknessChange', () => {
         const spy = spyOn(component.thicknessChange, 'emit');
         component.setThickness({ target: { value: 35 } });
-
-        expect(spy).toHaveBeenCalledWith(35);
+        const testValue = 35;
+        expect(spy).toHaveBeenCalledWith(testValue);
     });
 
     it('#setType() should emit #rectangleTypeChange if type is valid', () => {
