@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import * as supertest from 'supertest';
-import { Stubbed, testingContainer } from '../../../server/test/test-utils';//Stubbed,Stubbed,
+import { Stubbed, testingContainer } from '../../test/test-utils';
 import { Application } from '../app';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
