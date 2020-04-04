@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { defer } from 'rxjs';
+import { defer, Observable } from 'rxjs';
+import { HttpResponse } from 'src/app/models/httpResponse';
 import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewExportComponent } from './preview-export.component';
 
-export function fakeAsyncResponse<T>(data: T) {
-    return defer(() => Promise.resolve(data));
+export function fakeAsyncResponse<T>(data: T): Observable<T> {
+  return defer(() => Promise.resolve(data));
 }
 
 const httpServiceStub = {
-    exportDrawing() {
+    exportDrawing(): Observable<HttpResponse> {
         return fakeAsyncResponse({ status: '200', message: 'Image exportée avec succès!' });
     },
 };

@@ -1,5 +1,6 @@
 import { Directive, ElementRef, EventEmitter, HostListener, Input, Output } from '@angular/core';
 import { Color } from '../models/color';
+/* tslint:disable:no-any */
 
 @Directive({
     selector: '[canvas-grid]',
@@ -14,17 +15,18 @@ export class CanvasGridDirective {
     @Input('isDisplayGrid') isDisplay: boolean;
     @Input('gridColor') color: Color;
 
-    @Output() toggleGrid = new EventEmitter();
-    @Output() gridSizeChange = new EventEmitter();
+    @Output() toggleGrid: EventEmitter<void> = new EventEmitter();
+    @Output() gridSizeChange: EventEmitter<number> = new EventEmitter();
 
-    readonly MIN_SQUARE_SIZE = 30;
-    readonly MAX_SQUARE_SIZE = 500;
-    ngOnInit() {
+    readonly MIN_SQUARE_SIZE: number = 30;
+    readonly MAX_SQUARE_SIZE: number = 500;
+    readonly GRID_SIZE_CHANGE: number = 5;
+    ngOnInit(): void {
         this.canvas = this.el.nativeElement;
         this.ctx = this.canvas.getContext('2d') as CanvasRenderingContext2D;
     }
 
-    ngOnChanges(changes: any) {
+    ngOnChanges(changes: any): void {
         if (!this.ctx || changes.isKeyHandlerActive) {
             return;
         }
@@ -39,7 +41,7 @@ export class CanvasGridDirective {
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         if (this.isKeyHandlerActive) {
             switch (event.key) {
                 case 'g':
@@ -49,19 +51,19 @@ export class CanvasGridDirective {
                     break;
                 case '+':
                     if (this.isDisplay) {
-                        this.gridSizeChange.emit(this.setSize(this.size, 5));
+                        this.gridSizeChange.emit(this.setSize(this.size, this.GRID_SIZE_CHANGE));
                     }
                     break;
                 case '-':
                     if (this.isDisplay) {
-                        this.gridSizeChange.emit(this.setSize(this.size, -5));
+                        this.gridSizeChange.emit(this.setSize(this.size, -this.GRID_SIZE_CHANGE));
                     }
                     break;
             }
         }
     }
 
-    draw(size: number, width: number, height: number) {
+    draw(size: number, width: number, height: number): void {
         for (let x = size; x <= width; x += size) {
             for (let y = size; y <= height; y += size) {
                 this.ctx.strokeStyle = this.color.hex();

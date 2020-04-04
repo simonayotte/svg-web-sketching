@@ -8,7 +8,7 @@ import { EraserService } from '../tools/eraser/eraser.service';
 import { PencilService } from '../tools/pencil/pencil.service';
 import { RectangleService } from '../tools/rectangle/rectangle.service';
 import { DrawHandlerService } from './draw-handler.service';
-
+/* tslint:disable:no-magic-numbers */
 describe('DrawHandlerService', () => {
     let service: DrawHandlerService;
     let store: DrawStore;
@@ -98,7 +98,7 @@ describe('DrawHandlerService', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#onKeyDown() should not call function #handleKeyDown() of Pencil Service if selected tool is Crayon and #isKeyHandlerActive is false', () => {
+    it('#onKeyDown() should not call function #handleKeyDown() if selected tool is Crayon and #isKeyHandlerActive is false', () => {
         service.state.globalState.tool = Tools.Pencil;
         service.state.globalState.isKeyHandlerActive = false;
         const event: KeyboardEvent = new KeyboardEvent('keydown', {

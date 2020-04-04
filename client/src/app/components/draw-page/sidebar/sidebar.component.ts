@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Tools } from 'src/app/models/enums';
 import { CreateDrawingComponent } from '../../dialogs/create-drawing-dialog/create-drawing.component';
@@ -12,44 +12,53 @@ import { SaveDrawingComponent } from '../../dialogs/save-drawing/save-drawing.co
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent implements OnInit {
-    private isShowDrawOptions = false;
-    private isShowFormOptions = false;
-    private isShowToolOptions = false;
-    private isShowEditOptions = false;
-    private isShowSettingOptions = false;
+export class SidebarComponent {
+    private isShowDrawOptions: boolean;
+    private isShowFormOptions: boolean;
+    private isShowToolOptions: boolean;
+    private isShowEditOptions: boolean;
+    private isShowSettingOptions: boolean;
     @Input('tool') tool: Tools;
     @Input('isStartedDrawing') isStartedDrawing: boolean;
 
     @Input('isDisplayGrid') isDisplayGrid: boolean;
-    @Output() toolChange = new EventEmitter();
-    @Output() toggleGrid = new EventEmitter();
+    @Output() toolChange: EventEmitter<unknown>;
+    @Output() toggleGrid: EventEmitter<unknown>;
 
     // Undo-Redo
-    @Output() undo = new EventEmitter();
-    @Output() redo = new EventEmitter();
+    @Output() undo: EventEmitter<unknown>;
+    @Output() redo: EventEmitter<unknown>;
     @Input('canUndo') canUndo: boolean;
     @Input('canRedo') canRedo: boolean;
 
-    constructor(private dialog: MatDialog) {}
+    constructor(private dialog: MatDialog) {
+        this.isShowDrawOptions = false;
+        this.isShowFormOptions = false;
+        this.isShowToolOptions = false;
+        this.isShowEditOptions = false;
+        this.isShowSettingOptions = false;
 
-    changeTool(tool: Tools) {
+        this.toolChange = new EventEmitter();
+        this.toggleGrid = new EventEmitter();
+        this.undo = new EventEmitter();
+        this.redo = new EventEmitter();
+    }
+
+    changeTool(tool: Tools): void {
         this.toolChange.emit(tool);
     }
 
-    displayGridChange() {
+    displayGridChange(): void  {
         this.toggleGrid.emit();
     }
 
-    triggerUndo() {
+    triggerUndo(): void  {
         this.undo.emit();
     }
 
-    triggerRedo() {
+    triggerRedo(): void  {
         this.redo.emit();
     }
-
-    ngOnInit() {}
 
     toogleDrawOptions(): void {
         this.isShowDrawOptions = !this.isShowDrawOptions;

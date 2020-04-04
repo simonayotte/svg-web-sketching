@@ -4,6 +4,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PipetteService } from './pipette.service';
 
+/* tslint:disable:no-magic-numbers */
 describe('PipetteService', () => {
     let service: PipetteService;
     let store: DrawStore;
@@ -23,7 +24,6 @@ describe('PipetteService', () => {
     });
 
     it('should be created', () => {
-        const service: PipetteService = TestBed.get(PipetteService);
         expect(service).toBeTruthy();
     });
 

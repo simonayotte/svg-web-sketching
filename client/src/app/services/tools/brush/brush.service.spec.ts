@@ -6,6 +6,7 @@ import { Color } from 'src/app/models/color';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
 
+/* tslint:disable:no-magic-numbers */
 describe('BrushService', () => {
     let service: BrushService;
     let store: DrawStore;

@@ -12,26 +12,31 @@ import { CreateDrawingComponent } from '../create-drawing-dialog/create-drawing.
 })
 export class DrawingStartedDialogComponent implements OnInit {
 
-    private didGalleryOpenDialog = false;
+    private didGalleryOpenDialog: boolean;
     drawingToLoad: SavedDrawing;
-    constructor(public dialogRef: MatDialogRef<DrawingStartedDialogComponent>, public dialog: MatDialog, private store: DrawStore, private galleryService: GalleryService) {
+    constructor(public dialogRef: MatDialogRef<DrawingStartedDialogComponent>,
+                public dialog: MatDialog, private store: DrawStore,
+                private galleryService: GalleryService) {
         this.galleryService.drawingToLoadObs.subscribe((value: SavedDrawing) => {
             this.drawingToLoad = value;
         });
         this.galleryService.didGalleryOpenObs.subscribe((value: boolean) => {
             this.didGalleryOpenDialog = value;
         });
+        this.didGalleryOpenDialog = false;
     }
-    ngOnInit() {
+    ngOnInit(): void {
         this.store.setIsKeyHandlerActive(false);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.store.setIsKeyHandlerActive(true);
     }
 
     continue(): void {
-        this.didGalleryOpenDialog ?  this.galleryService.loadDrawing(this.drawingToLoad) : this.dialog.open(CreateDrawingComponent);
+        this.didGalleryOpenDialog ?
+        this.galleryService.loadDrawing(this.drawingToLoad) :
+        this.dialog.open(CreateDrawingComponent);
         this.dialogRef.close();
         this.galleryService.setDidGalleryOpen(false);
     }

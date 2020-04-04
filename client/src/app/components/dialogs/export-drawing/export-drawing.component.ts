@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators,  } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { FormValuesName, Tools } from 'src/app/models/enums';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
@@ -23,28 +23,31 @@ export class ExportDrawingComponent implements OnInit {
      private exportDrawingService: ExportDrawingService) {
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
-  }); }
+    });
+    this.exportDrawingForm = this.fb.group({
+      name : ['', Validators.required],
+      type : ['', Validators.required],
+      filter: ['']
+     });
+  }
 
-   get name() { return this.exportDrawingForm.get(FormValuesName.Name); }
-   get type() { return this.exportDrawingForm.get(FormValuesName.Type) ; }
+   get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
+   get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
   state: DrawState;
 
-  exportDrawingForm = this.fb.group({
-    name : ['', Validators.required],
-    type : ['', Validators.required],
-    filter: ['']
-   });
-  ngOnInit() {
+  exportDrawingForm: FormGroup;
+  ngOnInit(): void {
     this.store.setIsKeyHandlerActive(false);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.store.setIsKeyHandlerActive(true);
   }
 
   submit(): void {
     this.store.setTool(Tools.None);
-    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[FormValuesName.Type].value, this.exportDrawingForm.controls[FormValuesName.Filter].value);
+    this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[FormValuesName.Type].value,
+                                                  this.exportDrawingForm.controls[FormValuesName.Filter].value);
     this.exportDrawingService.setExportName(this.exportDrawingForm.controls[FormValuesName.Name].value);
     this.exportDrawingService.setType(this.exportDrawingForm.controls[FormValuesName.Type].value);
     this.dialogRef.close();

@@ -6,25 +6,27 @@ import { DrawStore } from '../../../store/draw-store';
     providedIn: 'root',
 })
 export class PencilService extends Tool {
-    isDrawing = false;
-    isPath = false;
+    isDrawing: boolean;
+    isPath: boolean;
     circle: SVGCircleElement;
 
-    protected path = '';
+    protected path: string;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
-
+        this.isDrawing = false;
+        this.isPath = false;
+        this.path = '';
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
 
         this.renderer = rendererFactory.createRenderer(null, null);
     }
 
-    start(event: MouseEvent) {
+    start(event: MouseEvent): void {
         const x = event.offsetX;
         const y = event.offsetY;
         const thickness = this.state.globalState.thickness;
@@ -45,18 +47,18 @@ export class PencilService extends Tool {
         this.isDrawing = true;
     }
 
-    continue(event: MouseEvent) {
+    continue(event: MouseEvent): void {
         this.draw(event.offsetX, event.offsetY);
         if (!this.isPath) {
             this.isPath = true;
         }
     }
 
-    draw(x: number, y: number) {
+    draw(x: number, y: number): void {
         this.path = this.path.concat(`L ${x} ${y} `);
         this.renderer.setAttribute(this.svg, 'd', this.path);
     }
-    stop() {
+    stop(): void {
         if (this.isDrawing) {
             if (this.isPath) {
                 this.store.pushSvg(this.svg);
@@ -75,7 +77,7 @@ export class PencilService extends Tool {
         this.stopSignal();
     }
 
-    drawCircle(x: number, y: number, r: number) {
+    drawCircle(x: number, y: number, r: number): void {
         this.circle = this.renderer.createElement('circle', 'svg');
         this.renderer.setAttribute(this.circle, 'cx', x.toString());
 

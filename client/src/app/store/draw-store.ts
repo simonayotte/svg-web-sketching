@@ -12,7 +12,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     // undoRedo
-    undo() {
+    undo(): void {
         if (this.state.undoRedoState.undoState.length === 0) {
             return;
         }
@@ -27,7 +27,7 @@ export class DrawStore extends Store<DrawState> {
             },
         });
     }
-    redo() {
+    redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {
             return;
         }
@@ -44,7 +44,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    resetUndoRedo() {
+    resetUndoRedo(): void {
         this.setState({
             ...this.state,
             undoRedoState: { ...this.state.undoRedoState, redoState: [], undoState: [] },
@@ -52,35 +52,35 @@ export class DrawStore extends Store<DrawState> {
     }
 
     // Svg
-    setDrawSvg(value: SVGSVGElement) {
+    setDrawSvg(value: SVGSVGElement): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, drawSvg: value },
         });
     }
 
-    setDrawWidth(value: number) {
+    setDrawWidth(value: number): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, width: value },
         });
     }
 
-    setDrawHeight(value: number) {
+    setDrawHeight(value: number): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, height: value },
         });
     }
 
-    setSVGFilter(value: string) {
+    setSVGFilter(value: string): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgFilter: value },
         });
     }
 
-    pushSvg(value: SVGGraphicsElement) {
+    pushSvg(value: SVGGraphicsElement): void {
         const newState = this.state.svgState.svgs.concat(value);
         this.setState({
             ...this.state,
@@ -93,10 +93,10 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    deleteSvgs(value: SVGGraphicsElement[]) {
+    deleteSvgs(value: SVGGraphicsElement[]): void {
         this.setState({
             ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter((svg) => !value.includes(svg)) },
+            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.filter((svg: SVGGraphicsElement) => !value.includes(svg)) },
             undoRedoState: {
                 ...this.state.undoRedoState,
                 undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
@@ -105,14 +105,14 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    emptySvg() {
+    emptySvg(): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: [] },
         });
     }
 
-    saveSvgsState(value: SVGGraphicsElement[]) {
+    saveSvgsState(value: SVGGraphicsElement[]): void {
         this.setState({
             ...this.state,
             undoRedoState: {
@@ -123,7 +123,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    popSvg() {
+    popSvg(): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
@@ -131,13 +131,13 @@ export class DrawStore extends Store<DrawState> {
     }
     // Global
 
-    setThickness(value: number) {
+    setThickness(value: number): void {
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, thickness: value },
         });
     }
-    setTool(value: Tools) {
+    setTool(value: Tools): void {
         const isPanelOpen =
             this.state.globalState.tool === Tools.None || (this.state.globalState.tool === value && this.state.globalState.isPanelOpen)
                 ? false
@@ -147,26 +147,26 @@ export class DrawStore extends Store<DrawState> {
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
         });
     }
-    toggleGrid() {
+    toggleGrid(): void {
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, isDisplayGrid: !this.state.globalState.isDisplayGrid },
         });
     }
-    setGridSize(value: number) {
+    setGridSize(value: number): void {
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, gridSize: value },
         });
     }
-    setIsKeyHandlerActive(value: boolean) {
+    setIsKeyHandlerActive(value: boolean): void {
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, isKeyHandlerActive: value },
         });
     }
 
-    setMousePosition(x: number, y: number) {
+    setMousePosition(x: number, y: number): void {
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
@@ -226,16 +226,18 @@ export class DrawStore extends Store<DrawState> {
     }
 
     swapColor(): void {
+        const firstColor = this.state.colorState.firstColor;
+        const secondColor = this.state.colorState.secondColor;
         this.setState({
             ...this.state,
-            colorState: { ...this.state.colorState, firstColor: this.state.colorState.secondColor, secondColor: this.state.colorState.firstColor },
+            colorState: { ...this.state.colorState, firstColor: secondColor, secondColor: firstColor },
         });
     }
 
     addLastColor(value: Color): void {
         const lastColors: (Color | null)[] = this.state.colorState.lastColors;
         lastColors[this.state.colorState.lastColorsIndex] = value;
-        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % 10;
+        const lastColorsIndex: number = (this.state.colorState.lastColorsIndex + 1) % this.state.colorState.lastColors.length;
 
         this.setState({
             ...this.state,
@@ -243,7 +245,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    setGridOpacity(value: number) {
+    setGridOpacity(value: number): void {
         const gridColor = this.state.colorState.gridColor;
         this.setState({
             ...this.state,
@@ -251,7 +253,7 @@ export class DrawStore extends Store<DrawState> {
         });
     }
     // Brush
-    setBrushTexture(value: BrushTextures) {
+    setBrushTexture(value: BrushTextures): void {
         this.setState({
             ...this.state,
             brushTexture: value,
@@ -259,28 +261,28 @@ export class DrawStore extends Store<DrawState> {
     }
 
     // Line
-    setLineJunctionThickness(value: number) {
+    setLineJunctionThickness(value: number): void {
         this.setState({
             ...this.state,
             lineJunctionThickness: value,
         });
     }
 
-    setLineHasJunction(value: boolean) {
+    setLineHasJunction(value: boolean): void {
         this.setState({
             ...this.state,
             lineHasJunction: value,
         });
     }
     // Rect
-    setRectangleType(value: Types) {
+    setRectangleType(value: Types): void {
         this.setState({
             ...this.state,
             rectangleType: value,
         });
     }
     // Aerosol
-    setEmissionRate(value: number) {
+    setEmissionRate(value: number): void {
         this.setState({
             ...this.state,
             emissionRate: value,
@@ -288,14 +290,14 @@ export class DrawStore extends Store<DrawState> {
     }
     // Polygon
 
-    setPolygonType(value: Types) {
+    setPolygonType(value: Types): void {
         this.setState({
             ...this.state,
             polygonType: value,
         });
     }
 
-    setPolygonSides(value: number) {
+    setPolygonSides(value: number): void {
         this.setState({
             ...this.state,
             polygonSides: value,
@@ -303,7 +305,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     // Ellipsis
-    setEllipsisType(value: Types) {
+    setEllipsisType(value: Types): void {
         this.setState({
             ...this.state,
             ellipsisType: value,
@@ -311,7 +313,7 @@ export class DrawStore extends Store<DrawState> {
     }
 
     // Eraser
-    setEraserThickness(value: number) {
+    setEraserThickness(value: number): void {
         this.setState({
             ...this.state,
             eraserThickness: value,
