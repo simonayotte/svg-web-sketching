@@ -199,7 +199,7 @@
         </defs>
 
         <ng-container *ngFor="let svg of state.svgState.svgs">
-            <!--Directive svg adds svg to main svg -->
+            <!--Directive svg adds svg to main svg-->
             <ng-template svg [svg]="svg" [drawSvg]="state.svgState.drawSvg"></ng-template>
         </ng-container>
 
@@ -226,11 +226,12 @@
         <!--Selection box-->
         <ng-container *ngIf="state.selectionBox.display">
             <rect
+                selection
                 [attr.width.px]="state.selectionBox.width"
                 [attr.height.px]="state.selectionBox.height"
                 [attr.x]="state.selectionBox.x"
                 [attr.y]="state.selectionBox.y"
-                fill="none"
+                fill="transparent"
                 stroke="#464646"
                 stroke-width="3"
                 stroke-dasharray="10"

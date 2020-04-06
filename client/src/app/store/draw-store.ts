@@ -11,6 +11,18 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
+    //Movement
+    moveSelection(startX: number, startY: number, dX: number, dY: number): void {
+        let box = this.state.selectionBox;
+        box.x = startX + dX;
+        box.y = startY + dY;
+
+        this.setState({
+            ...this.state,
+            selectionBox: box,
+        });
+    }
+
     //selection
     selectSvg(svg: SVGGraphicsElement): void {
         let box = this.state.selectionBox;
@@ -49,6 +61,13 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    setIsSelectionMoving(value: boolean): void {
+        this.setState({
+            ...this.state,
+            isSelectionMoving: value,
+        });
+    }
+
     // undoRedo
     undo(): void {
         if (this.state.undoRedoState.undoState.length === 0) {
@@ -64,6 +83,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.clearSelection();
     }
     redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {

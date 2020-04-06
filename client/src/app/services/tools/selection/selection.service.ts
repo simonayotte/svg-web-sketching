@@ -28,20 +28,29 @@ export class SelectionService extends Tool {
     start(event: MouseEvent): void {
         let svg = <SVGGraphicsElement>event.target;
 
-        if (event.button === 0 && this.state.svgState.svgs.includes(svg)) {
-            this.store.selectSvg(svg);
-        } else {
+        if (event.button === 2) {
             this.store.clearSelection();
+        } else {
+            if (this.state.svgState.svgs.includes(svg)) {
+                this.store.selectSvg(svg);
+            } else if (!this.state.isSelectionMoving) {
+                // Not clicked on selection svg
+                this.store.clearSelection();
+            }
         }
 
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
-        this.rectangle.start(event);
+        if (!this.state.isSelectionMoving) {
+            this.rectangle.start(event);
+        }
     }
 
     continue(): void {
-        for (let svg of this.state.svgState.svgs) {
-            this.selectSvg(svg);
+        if (!this.state.isSelectionMoving) {
+            for (let svg of this.state.svgState.svgs) {
+                this.selectSvg(svg);
+            }
         }
     }
 

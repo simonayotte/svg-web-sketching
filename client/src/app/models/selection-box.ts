@@ -1,7 +1,9 @@
 export class SelectionBox {
     display: boolean;
+
     x: number;
     y: number;
+
     width: number;
     height: number;
 
@@ -9,8 +11,7 @@ export class SelectionBox {
 
     constructor() {
         this.display = false;
-        this.x = 0;
-        this.y = 0;
+        this.x = this.y = 0;
         this.width = 0;
         this.height = 0;
     }
@@ -31,11 +32,12 @@ export class SelectionBox {
 
         for (const svg of this.selectedSvgs) {
             let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
+            let translation = this.getTranslation(svg);
             let domRect = svg.getBBox();
-            let rectLeft = domRect.x - thickness;
-            let rectTop = domRect.y - thickness;
-            let rectRight = domRect.x + domRect.width + thickness;
-            let rectBottom = domRect.y + domRect.height + thickness;
+            let rectLeft = domRect.x - thickness + translation[0];
+            let rectTop = domRect.y - thickness + translation[1];
+            let rectRight = domRect.x + domRect.width + thickness + translation[0];
+            let rectBottom = domRect.y + domRect.height + thickness + translation[1];
 
             left = left > rectLeft ? rectLeft : left; // choose min
             right = right < rectRight ? rectRight : right; // choose max
@@ -49,11 +51,26 @@ export class SelectionBox {
         this.height = bottom - top;
     }
 
+    getTranslation(svg: SVGGraphicsElement): [number, number] {
+        let str = svg.getAttribute('transform');
+        if (!str) {
+            return [0, 0];
+        }
+
+        let matches = str.match(/[+-]?\d+/g);
+
+        if (!matches) {
+            return [0, 0];
+        }
+
+        return <[number, number]>matches.map(Number);
+    }
+
     get svgs(): SVGGraphicsElement[] {
         return this.selectedSvgs;
     }
 
-    push(svg: SVGGraphicsElement) {
+    push(svg: SVGGraphicsElement): void {
         this.svgs = this.selectedSvgs.concat(svg);
     }
 }

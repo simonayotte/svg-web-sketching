@@ -29,6 +29,7 @@ export class DrawState {
     emissionRate: number;
 
     //selection
+    isSelectionMoving: boolean;
     selectionBox: SelectionBox;
 
     colorState: ColorState;
@@ -38,6 +39,7 @@ export class DrawState {
 
     constructor() {
         this.lineHasJunction = false;
+        this.isSelectionMoving = false;
         this.emissionRate = EMISSION_RATE_DEFAULT;
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
