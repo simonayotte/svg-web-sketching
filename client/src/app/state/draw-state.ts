@@ -3,6 +3,7 @@ import { ColorState } from './color-state';
 import { GlobalState } from './global-state';
 import { SvgState } from './svg-state';
 import { UndoRedoState } from './undo-redo-state';
+import { SelectionBox } from '../models/selection-box';
 
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
@@ -27,10 +28,14 @@ export class DrawState {
     // aerosol
     emissionRate: number;
 
+    //selection
+    selectionBox: SelectionBox;
+
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
     undoRedoState: UndoRedoState;
+
     constructor() {
         this.lineHasJunction = false;
         this.emissionRate = EMISSION_RATE_DEFAULT;
@@ -38,5 +43,7 @@ export class DrawState {
         this.colorState = new ColorState();
         this.svgState = new SvgState();
         this.undoRedoState = new UndoRedoState();
+        //this.selectionState = new SelectionState();
+        this.selectionBox = new SelectionBox();
     }
 }

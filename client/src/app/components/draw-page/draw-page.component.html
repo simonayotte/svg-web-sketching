@@ -222,6 +222,53 @@
             <feColorMatrix in="SourceGraphic" type="saturate" values="10" *ngSwitchCase="4" />
             <feMorphology operator="erode" radius="8" *ngSwitchCase="5" />
         </filter>
+
+        <!--Selection box-->
+        <ng-container *ngIf="state.selectionBox.display">
+            <rect
+                [attr.width.px]="state.selectionBox.width"
+                [attr.height.px]="state.selectionBox.height"
+                [attr.x]="state.selectionBox.x"
+                [attr.y]="state.selectionBox.y"
+                fill="none"
+                stroke="#464646"
+                stroke-width="3"
+                stroke-dasharray="10"
+            ></rect>
+            <!--Left-->
+            <rect
+                fill="#464646"
+                width="16"
+                height="16"
+                [attr.x]="state.selectionBox.x - 16"
+                [attr.y]="state.selectionBox.y - 8 + state.selectionBox.height / 2"
+            ></rect>
+            <!--Right-->
+            <rect
+                fill="#464646"
+                width="16"
+                height="16"
+                [attr.x]="state.selectionBox.x + state.selectionBox.width"
+                [attr.y]="state.selectionBox.y - 8 + state.selectionBox.height / 2"
+            ></rect>
+            <!--Top-->
+            <rect
+                fill="#464646"
+                width="16"
+                height="16"
+                [attr.x]="state.selectionBox.x - 8 + state.selectionBox.width / 2"
+                [attr.y]="state.selectionBox.y - 16"
+            ></rect>
+            <!--Bottom-->
+            <rect
+                fill="#464646"
+                width="16"
+                height="16"
+                [attr.x]="state.selectionBox.x - 8 + state.selectionBox.width / 2"
+                [attr.y]="state.selectionBox.y + state.selectionBox.height"
+            ></rect>
+        </ng-container>
+
         <!--Eraser cursor-->
         <rect
             *ngIf="state.globalState.tool === 'Efface'"

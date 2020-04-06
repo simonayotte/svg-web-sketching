@@ -11,6 +11,44 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
+    //selection
+    selectSvg(svg: SVGGraphicsElement): void {
+        let box = this.state.selectionBox;
+        box.svgs = [svg];
+        this.setState({
+            ...this.state,
+            selectionBox: box,
+        });
+    }
+
+    deselectSvg(value: SVGGraphicsElement): void {
+        let box = this.state.selectionBox;
+        box.svgs = this.state.selectionBox.svgs.filter((svg: SVGGraphicsElement) => svg !== value);
+        this.setState({
+            ...this.state,
+            selectionBox: box,
+        });
+    }
+
+    clearSelection(): void {
+        let box = this.state.selectionBox;
+        box.svgs = [];
+
+        this.setState({
+            ...this.state,
+            selectionBox: box,
+        });
+    }
+
+    pushSelectedSvg(svg: SVGGraphicsElement): void {
+        let box = this.state.selectionBox;
+        box.push(svg);
+        this.setState({
+            ...this.state,
+            selectionBox: box,
+        });
+    }
+
     // undoRedo
     undo(): void {
         if (this.state.undoRedoState.undoState.length === 0) {
@@ -123,12 +161,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    popSvg(): void {
-        this.setState({
-            ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
-        });
-    }
     // Global
 
     setThickness(value: number): void {

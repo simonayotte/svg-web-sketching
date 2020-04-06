@@ -9,44 +9,46 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 
 @Component({
-  selector: 'app-preview-export',
-  templateUrl: './preview-export.component.html',
-  styleUrls: ['./preview-export.component.scss']
+    selector: 'app-preview-export',
+    templateUrl: './preview-export.component.html',
+    styleUrls: ['./preview-export.component.scss'],
 })
 export class PreviewExportComponent implements OnInit {
+    dataURL: string;
+    state: DrawState;
+    previewHeight: number;
+    previewWidth: number;
+    constructor(
+        private drawingHandler: DrawingHandler,
+        private store: DrawStore,
+        public dialogRef: MatDialogRef<PreviewExportComponent>,
+        private exportDrawingService: ExportDrawingService,
+        private httpService: HttpService,
+    ) {
+        this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
+        this.drawingHandler.previewWidthObs.subscribe((previewWidth: number) => (this.previewWidth = previewWidth));
+        this.drawingHandler.previewHeightObs.subscribe((previewHeight: number) => (this.previewHeight = previewHeight));
+        this.store.stateObs.subscribe((value: DrawState) => {
+            this.state = value;
+        });
+    }
+    ngOnInit() {
+        this.drawingHandler.setPreviewImgWidth();
+        this.drawingHandler.setPreviewImgHeight();
+        this.store.setIsKeyHandlerActive(false);
+    }
 
-  dataURL: string;
-  state: DrawState;
-  previewHeight: number;
-  previewWidth: number;
-  constructor(private drawingHandler: DrawingHandler,
-              private store: DrawStore,
-              public dialogRef: MatDialogRef<PreviewExportComponent>,
-              private exportDrawingService: ExportDrawingService,
-              private httpService: HttpService) {
-    this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
-    this.drawingHandler.previewWidthObs.subscribe((previewWidth: number) => (this.previewWidth = previewWidth));
-    this.drawingHandler.previewHeightObs.subscribe((previewHeight: number) => (this.previewHeight = previewHeight));
-    this.store.stateObs.subscribe((value: DrawState) => {
-      this.state = value;
-  });
-  }
-  ngOnInit() {
-    this.drawingHandler.setPreviewImgWidth();
-    this.drawingHandler.setPreviewImgHeight();
-    this.store.setIsKeyHandlerActive(false);
-  }
+    ngOnDestroy() {
+        this.store.setIsKeyHandlerActive(true);
+    }
 
-  ngOnDestroy() {
-    this.store.setIsKeyHandlerActive(true);
-  }
-
-  exportDrawing() {
-    const drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL);
-    this.dialogRef.close();
-    return this.httpService.exportDrawing(drawing)
-    .toPromise()
-    .then((data: HttpResponse) => alert(data.message))
-    .catch((err: HttpResponse) => alert(err));
-  }
+    exportDrawing() {
+        const drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL);
+        this.dialogRef.close();
+        return this.httpService
+            .exportDrawing(drawing)
+            .toPromise()
+            .then((data: HttpResponse) => alert(data.message))
+            .catch((err: HttpResponse) => alert(err));
+    }
 }
