@@ -1,31 +1,41 @@
 import { Directive, HostListener, Injector, OnInit } from '@angular/core';
 import { MovementService } from '../services/movement/movement.service';
 import { RotationService } from './../services/rotation/rotation.service';
-
+import { ClipboardService } from '../services/tools/clipboard/clipboard.service';
 @Directive({
     selector: '[selection]',
 })
 export class SelectionDirective implements OnInit {
-    movement: MovementService;
-    rotation: RotationService;
+    movementService: MovementService;
+    clipboardService: ClipboardService;
+    rotationService: RotationService;
     constructor(protected injector: Injector) {
-        this.movement = injector.get(MovementService);
-        this.rotation = injector.get(RotationService);
+        this.movementService = injector.get(MovementService);
+        this.clipboardService = injector.get(ClipboardService);
+        this.rotationService = injector.get(RotationService);
     }
     ngOnInit() {}
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent) {
-        this.movement.start(event);
+        this.movementService.start(event);
     }
 
     @HostListener('document:keydown', ['$event'])
     onKeyDown(event: KeyboardEvent) {
-        this.movement.handleKeyDown(event.key);
+        event.preventDefault();
+        this.movementService.handleKeyDown(event.key);
+        this.clipboardService.handleKeyDown(event.key);
+    }
+
+    @HostListener('document:keyup', ['$event'])
+    onKeyUp(event: KeyboardEvent) {
+        this.movementService.handleKeyUp(event.key);
+        this.clipboardService.handleKeyUp(event.key);
     }
 
     @HostListener('wheel', ['$event'])
     onMouseWheel(event: WheelEvent) {
-        this.rotation.start(event);
+        this.rotationService.start(event);
     }
 }

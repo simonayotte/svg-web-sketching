@@ -75,6 +75,7 @@ export class DrawHandlerService {
 
     onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
+
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;

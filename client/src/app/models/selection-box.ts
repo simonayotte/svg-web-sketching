@@ -1,7 +1,10 @@
 import { Coordinate } from './coordinate';
+const PANEL_WIDTH = 252;
+const SIDEBAR_WIDTH = 52;
+
 export class SelectionBox {
     display: boolean;
-
+    isPanelOpen: boolean;
     x: number;
     y: number;
 
@@ -12,14 +15,21 @@ export class SelectionBox {
 
     constructor() {
         this.display = false;
+        this.isPanelOpen = false;
         this.x = this.y = 0;
         this.width = 0;
         this.height = 0;
     }
 
+    hideSelection() {
+        this.selectedSvgs = [];
+        this.x = 0;
+        this.y = 0;
+        this.width = 0;
+        this.height = 0;
+    }
     set svgs(svgs: SVGGraphicsElement[]) {
         this.selectedSvgs = svgs;
-
         if (this.selectedSvgs.length === 0) {
             this.display = false;
             return;
@@ -33,12 +43,12 @@ export class SelectionBox {
 
         for (const svg of this.selectedSvgs) {
             let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
-            let translation = this.getTranslation(svg);
-            let domRect = svg.getBBox();
-            let rectLeft = domRect.x - thickness + translation[0];
-            let rectTop = domRect.y - thickness + translation[1];
-            let rectRight = domRect.x + domRect.width + thickness + translation[0];
-            let rectBottom = domRect.y + domRect.height + thickness + translation[1];
+
+            let domRect = svg.getBoundingClientRect();
+            let rectLeft = domRect.x - thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+            let rectTop = domRect.y - thickness;
+            let rectRight = domRect.x + domRect.width + thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+            let rectBottom = domRect.y + domRect.height + thickness;
 
             left = left > rectLeft ? rectLeft : left; // choose min
             right = right < rectRight ? rectRight : right; // choose max
@@ -92,5 +102,13 @@ export class SelectionBox {
 
     getCenter(): Coordinate {
         return new Coordinate(this.x + this.width/2, this.y + this.height/2);
+    }
+    
+    delete(svgToDelete: SVGGraphicsElement): void {
+        this.svgs = this.svgs.filter((svg: SVGGraphicsElement) => svg !== svgToDelete);
+    }
+
+    update(): void {
+        this.svgs = this.svgs;
     }
 }

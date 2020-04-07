@@ -40,26 +40,19 @@ export class MovementService extends Tool {
     }
 
     continue(event: MouseEvent): void {
-        this.moveSvgs(event.offsetX, event.offsetY);
-        this.moveSelection(event.offsetX, event.offsetY);
+        let dX = event.offsetX - this.lastX;
+        let dY = event.offsetY - this.lastY;
+        this.lastX = event.offsetX;
+        this.lastY = event.offsetY;
+        this.moveSvgs(dX, dY);
     }
-    moveSvgs(x: number, y: number) {
-        let dX = x - this.lastX;
-        let dY = y - this.lastY;
-        this.lastX = x;
-        this.lastY = y;
+    moveSvgs(dX: number, dY: number) {
         for (const svg of this.state.selectionBox.svgs) {
             let translation = this.state.selectionBox.getTranslation(svg);
 
             this.renderer.setAttribute(svg, 'transform', `translate(${dX + translation[0]},${dY + translation[1]})`);
+            this.state.selectionBox.update();
         }
-    }
-
-    moveSelection(x: number, y: number) {
-        let dX = x - this.startX;
-        let dY = y - this.startY;
-
-        this.store.moveSelection(this.startSelectX, this.startSelectY, dX, dY);
     }
 
     stop(): void {
@@ -75,36 +68,16 @@ export class MovementService extends Tool {
         this.startSelectY = this.state.selectionBox.y;
 
         if (key === SelectionButtons.ArrowLeft) {
-            this.store.moveSelection(this.startSelectX, this.startSelectY, -MINIMUM_MOVEMENT, 0);
-            for (const svg of this.state.selectionBox.svgs) {
-                let translation = this.state.selectionBox.getTranslation(svg);
-
-                this.renderer.setAttribute(svg, 'transform', `translate(${translation[0] - MINIMUM_MOVEMENT},${translation[1]})`);
-            }
+            this.moveSvgs(-MINIMUM_MOVEMENT, 0);
         }
         if (key === SelectionButtons.ArrowRight) {
-            this.store.moveSelection(this.startSelectX, this.startSelectY, MINIMUM_MOVEMENT, 0);
-            for (const svg of this.state.selectionBox.svgs) {
-                let translation = this.state.selectionBox.getTranslation(svg);
-
-                this.renderer.setAttribute(svg, 'transform', `translate(${translation[0] + MINIMUM_MOVEMENT},${translation[1]})`);
-            }
+            this.moveSvgs(MINIMUM_MOVEMENT, 0);
         }
         if (key === SelectionButtons.ArrowUp) {
-            this.store.moveSelection(this.startSelectX, this.startSelectY, 0, -MINIMUM_MOVEMENT);
-            for (const svg of this.state.selectionBox.svgs) {
-                let translation = this.state.selectionBox.getTranslation(svg);
-
-                this.renderer.setAttribute(svg, 'transform', `translate(${translation[0]},${translation[1] - MINIMUM_MOVEMENT})`);
-            }
+            this.moveSvgs(0, -MINIMUM_MOVEMENT);
         }
         if (key === SelectionButtons.ArrowDown) {
-            this.store.moveSelection(this.startSelectX, this.startSelectY, 0, MINIMUM_MOVEMENT);
-            for (const svg of this.state.selectionBox.svgs) {
-                let translation = this.state.selectionBox.getTranslation(svg);
-
-                this.renderer.setAttribute(svg, 'transform', `translate(${translation[0]},${translation[1] + MINIMUM_MOVEMENT})`);
-            }
+            this.moveSvgs(0, MINIMUM_MOVEMENT);
         }
     }
 }

@@ -243,6 +243,7 @@
                 height="16"
                 [attr.x]="state.selectionBox.x - 16"
                 [attr.y]="state.selectionBox.y - 8 + state.selectionBox.height / 2"
+                *ngIf="state.selectionBox.svgs.length > 0"
             ></rect>
             <!--Right-->
             <rect
@@ -251,6 +252,7 @@
                 height="16"
                 [attr.x]="state.selectionBox.x + state.selectionBox.width"
                 [attr.y]="state.selectionBox.y - 8 + state.selectionBox.height / 2"
+                *ngIf="state.selectionBox.svgs.length > 0"
             ></rect>
             <!--Top-->
             <rect
@@ -259,6 +261,7 @@
                 height="16"
                 [attr.x]="state.selectionBox.x - 8 + state.selectionBox.width / 2"
                 [attr.y]="state.selectionBox.y - 16"
+                *ngIf="state.selectionBox.svgs.length > 0"
             ></rect>
             <!--Bottom-->
             <rect
@@ -267,6 +270,7 @@
                 height="16"
                 [attr.x]="state.selectionBox.x - 8 + state.selectionBox.width / 2"
                 [attr.y]="state.selectionBox.y + state.selectionBox.height"
+                *ngIf="state.selectionBox.svgs.length > 0"
             ></rect>
         </ng-container>
 

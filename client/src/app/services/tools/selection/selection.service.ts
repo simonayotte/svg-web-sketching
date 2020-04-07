@@ -3,13 +3,15 @@ import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { RectangleService } from '../rectangle/rectangle.service';
-import { Tools } from 'src/app/models/enums';
+import { Tools, SelectionButtons } from 'src/app/models/enums';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SelectionService extends Tool {
     rectangle: RectangleService;
+
+    isCtrl: boolean;
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -20,6 +22,7 @@ export class SelectionService extends Tool {
         });
         this.rectangle = new RectangleService(store, rendererFactory);
         this.rectangle.isSelection = true;
+        this.isCtrl = false;
         this.renderer = rendererFactory.createRenderer(null, null);
         this.mouseMoveListener = this.continue.bind(this);
         this.mouseUpListener = this.stop.bind(this);
@@ -29,13 +32,13 @@ export class SelectionService extends Tool {
         let svg = <SVGGraphicsElement>event.target;
 
         if (event.button === 2) {
-            this.store.clearSelection();
+            this.state.selectionBox.svgs = [];
         } else {
             if (this.state.svgState.svgs.includes(svg)) {
-                this.store.selectSvg(svg);
+                this.state.selectionBox.push(svg);
             } else if (!this.state.isSelectionMoving) {
                 // Not clicked on selection svg
-                this.store.clearSelection();
+                this.state.selectionBox.svgs = [];
             }
         }
 
@@ -64,18 +67,18 @@ export class SelectionService extends Tool {
 
     selectSvg(svg: SVGGraphicsElement): void {
         let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
-        let svgRect = svg.getBBox();
-        let selectRect = this.rectangle.svg.getBBox();
+        let svgRect = svg.getBoundingClientRect();
+        let selectRect = this.rectangle.svg.getBoundingClientRect();
 
-        const selectLeft = selectRect.x;
-        const selectRight = selectRect.x + selectRect.width;
-        const selectTop = selectRect.y;
-        const selectBottom = selectRect.y + selectRect.height;
+        const selectLeft = selectRect.left;
+        const selectRight = selectRect.right;
+        const selectTop = selectRect.top;
+        const selectBottom = selectRect.bottom;
 
-        const svgLeft = svgRect.x + thickness;
-        const svgRight = svgRect.x + svgRect.width - thickness;
-        const svgTop = svgRect.y + thickness;
-        const svgBottom = svgRect.y + svgRect.height - thickness;
+        const svgLeft = svgRect.left + thickness;
+        const svgRight = svgRect.right - thickness;
+        const svgTop = svgRect.top + thickness;
+        const svgBottom = svgRect.bottom - thickness;
 
         if (
             svgTop + svgRect.height > selectTop &&
@@ -84,10 +87,25 @@ export class SelectionService extends Tool {
             svgRight - svgRect.width < selectRight
         ) {
             if (!this.state.selectionBox.svgs.includes(svg)) {
-                this.store.pushSelectedSvg(svg);
+                this.state.selectionBox.push(svg);
             }
         } else {
-            this.store.deselectSvg(svg);
+            this.state.selectionBox.delete(svg);
+        }
+    }
+
+    handleKeyDown(key: string) {
+        if (key === SelectionButtons.Control) {
+            this.isCtrl = true;
+        }
+        if (key === SelectionButtons.A && this.isCtrl) {
+            this.state.selectionBox.svgs = this.state.svgState.svgs;
+        }
+    }
+
+    handleKeyUp(key: string) {
+        if (key === SelectionButtons.Control) {
+            this.isCtrl = false;
         }
     }
 }
