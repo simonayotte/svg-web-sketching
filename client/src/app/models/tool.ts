@@ -28,10 +28,10 @@ export abstract class Tool {
         return;
     }
 
-    copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
+    cloneSvgs(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
         const newSvgs = [];
         for (let svg of svgs) {
-            const clone = svg.cloneNode(true) as SVGGraphicsElement;
+            const clone = svg.cloneNode(false) as SVGGraphicsElement;
             newSvgs.push(clone);
         }
         return newSvgs;

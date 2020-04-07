@@ -11,56 +11,6 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
-    //Movement
-    moveSelection(startX: number, startY: number, dX: number, dY: number): void {
-        let box = this.state.selectionBox;
-        box.x = startX + dX;
-        box.y = startY + dY;
-
-        this.setState({
-            ...this.state,
-            selectionBox: box,
-        });
-    }
-
-    //selection
-    selectSvg(svg: SVGGraphicsElement): void {
-        let box = this.state.selectionBox;
-        box.svgs = [svg];
-        this.setState({
-            ...this.state,
-            selectionBox: box,
-        });
-    }
-
-    deselectSvg(value: SVGGraphicsElement): void {
-        let box = this.state.selectionBox;
-        box.svgs = this.state.selectionBox.svgs.filter((svg: SVGGraphicsElement) => svg !== value);
-        this.setState({
-            ...this.state,
-            selectionBox: box,
-        });
-    }
-
-    clearSelection(): void {
-        let box = this.state.selectionBox;
-        box.svgs = [];
-
-        this.setState({
-            ...this.state,
-            selectionBox: box,
-        });
-    }
-
-    pushSelectedSvg(svg: SVGGraphicsElement): void {
-        let box = this.state.selectionBox;
-        box.push(svg);
-        this.setState({
-            ...this.state,
-            selectionBox: box,
-        });
-    }
-
     setIsSelectionMoving(value: boolean): void {
         this.setState({
             ...this.state,
@@ -83,7 +33,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
             },
         });
-        this.clearSelection();
+        this.state.selectionBox.svgs = [];
     }
     redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {
@@ -150,6 +100,18 @@ export class DrawStore extends Store<DrawState> {
             },
         });
     }
+    pushSvgs(value: SVGGraphicsElement[]): void {
+        const newState = this.state.svgState.svgs.concat(value);
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: newState },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
+        });
+    }
 
     deleteSvgs(value: SVGGraphicsElement[]): void {
         this.setState({
@@ -198,9 +160,12 @@ export class DrawStore extends Store<DrawState> {
             isPanelOpen = this.state.globalState.tool === value && this.state.globalState.isPanelOpen ? false : true;
         }
 
+        let box = this.state.selectionBox;
+        box.isPanelOpen = isPanelOpen;
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
+            selectionBox: box,
         });
     }
     toggleGrid(): void {

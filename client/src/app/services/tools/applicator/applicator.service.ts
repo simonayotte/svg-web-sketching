@@ -34,14 +34,14 @@ export class ApplicatorService extends Tool {
 
     setFillColor(svg: SVGGraphicsElement, color: string): void {
         if (svg.getAttribute('fill') && svg.getAttribute('fill') !== 'none') {
-            this.store.saveSvgsState(this.copyState(this.state.svgState.svgs));
+            this.store.saveSvgsState(this.cloneSvgs(this.state.svgState.svgs));
             this.renderer.setAttribute(svg, 'fill', color);
         }
     }
 
     setBorderColor(svg: SVGGraphicsElement, color: string): void {
         if (svg.getAttribute('stroke') && svg.getAttribute('stroke') !== 'none') {
-            this.store.saveSvgsState(this.copyState(this.state.svgState.svgs));
+            this.store.saveSvgsState(this.cloneSvgs(this.state.svgState.svgs));
             this.renderer.setAttribute(svg, 'stroke', color);
         }
     }

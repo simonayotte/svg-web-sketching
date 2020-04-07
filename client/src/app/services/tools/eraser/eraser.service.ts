@@ -9,8 +9,10 @@ const ONE_FIFTY = 150;
 const TWO_HUNDRED = 200;
 const DARK_RED = new Color(ONE_FIFTY, 0, 0, FULL_COLOR);
 const RED = new Color(TWO_HUNDRED, 0, 0, FULL_COLOR);
-
 const NO_SVG = -1;
+
+const PANEL_WIDTH = 252;
+const SIDEBAR_WIDTH = 52;
 @Injectable({
     providedIn: 'root',
 })
@@ -70,7 +72,7 @@ export class EraserService extends Tool {
 
     verifyMouseOver(x: number, y: number, svgs: SVGGraphicsElement[]): number {
         for (let i = svgs.length - 1; i >= 0; i--) {
-            const box = svgs[i].getBBox();
+            const box = svgs[i].getBoundingClientRect();
             const thickness = parseInt(svgs[i].getAttribute('stroke-width') as string);
 
             if (this.isEraseTouching(x, y, box, thickness)) {
@@ -101,42 +103,19 @@ export class EraserService extends Tool {
         const eraserRight = x + this.state.eraserThickness / 2;
         const eraserTop = y + this.state.eraserThickness / 2;
         const eraserBottom = y - this.state.eraserThickness / 2;
-        const boxLeft = box.x - thickness / 2;
-        const boxBottom = box.y - thickness / 2;
-        const boxRight = box.x + box.width + thickness / 2;
-        const boxTop = box.y + box.height + thickness / 2;
+        const boxLeft = box.left - thickness / 2 - (this.state.globalState.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+        const boxBottom = box.bottom - thickness / 2;
+        const boxRight = box.right + thickness / 2 - (this.state.globalState.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+        const boxTop = box.top + thickness / 2;
 
-        let isLeftInside: boolean;
-        let isRightInside: boolean;
-
-        if (this.state.eraserThickness < box.width) {
-            // If svg box width is bigger than eraser ...
-            // verify if left side of eraser is between horizontal box bounds
-            isLeftInside = eraserLeft >= boxLeft && eraserLeft <= boxRight;
-            // verify if right side of eraser is between horizontal box bounds
-            isRightInside = eraserRight >= boxLeft && eraserRight <= boxRight;
-        } else {
-            // If eraser width is bigger than svg box
-            isLeftInside = boxLeft >= eraserLeft && boxLeft <= eraserRight;
-            isRightInside = boxRight >= eraserLeft && boxRight <= eraserRight;
+        if (
+            boxTop + box.height > eraserTop &&
+            boxLeft + box.width > eraserLeft &&
+            boxBottom - box.height < eraserBottom &&
+            boxRight - box.width < eraserRight
+        ) {
+            return true;
         }
-
-        let isTopInside: boolean;
-        let isBottomInside: boolean;
-
-        if (this.state.eraserThickness < box.height) {
-            // If svg box height is bigger than eraser ...
-            isTopInside = eraserTop >= boxBottom && eraserTop <= boxTop;
-            isBottomInside = eraserBottom >= boxBottom && eraserBottom <= boxTop;
-        } else {
-            // If eraser height is bigger than svg box ...
-            isTopInside = boxTop >= eraserBottom && boxTop <= eraserTop;
-            isBottomInside = boxBottom >= eraserBottom && boxBottom <= eraserTop;
-        }
-        const isXTouching = isLeftInside || isRightInside;
-
-        const isYTouching = isTopInside || isBottomInside;
-
-        return isXTouching && isYTouching;
+        return false;
     }
 }
