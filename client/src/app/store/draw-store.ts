@@ -68,6 +68,13 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    setIsSelectionRotating(value: boolean): void {
+        this.setState({
+            ...this.state,
+            isSelectionRotating: value,
+        });
+    }
+
     // undoRedo
     undo(): void {
         if (this.state.undoRedoState.undoState.length === 0) {

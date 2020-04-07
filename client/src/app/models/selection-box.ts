@@ -1,10 +1,11 @@
+import { Coordinate } from './coordinate';
 export class SelectionBox {
     display: boolean;
 
     x: number;
     y: number;
 
-    width: number;
+    width: number; 
     height: number;
 
     private selectedSvgs: SVGGraphicsElement[] = [];
@@ -66,11 +67,30 @@ export class SelectionBox {
         return <[number, number]>matches.map(Number);
     }
 
+    getRotation(svg: SVGGraphicsElement): [number, number, number] {
+        let str = svg.getAttribute('transform');
+        if (!str) {
+            return [0, 0, 0];
+        }
+
+        let matches = str.match(/[+-]?\d+/g);
+
+        if (!matches) {
+            return [0, 0, 0];
+        }
+
+        return <[number, number, number]>matches.map(Number);
+    }
+    
     get svgs(): SVGGraphicsElement[] {
         return this.selectedSvgs;
     }
 
     push(svg: SVGGraphicsElement): void {
         this.svgs = this.selectedSvgs.concat(svg);
+    }
+
+    getCenter(): Coordinate {
+        return new Coordinate(this.x + this.width/2, this.y + this.height/2);
     }
 }

@@ -31,6 +31,7 @@ export class DrawState {
     //selection
     isSelectionMoving: boolean;
     selectionBox: SelectionBox;
+    isSelectionRotating: boolean;
 
     colorState: ColorState;
     globalState: GlobalState;
