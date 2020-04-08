@@ -182,12 +182,14 @@ export class DrawStore extends Store<DrawState> {
         this.automaticSave();
     }
 
-    emptySvg(): void {
+    emptySvg(save:boolean): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: [] },
         });
-        this.automaticSave();
+        if(save){
+            this.automaticSave();
+        }
     }
 
     saveSvgsState(value: SVGGraphicsElement[]): void {

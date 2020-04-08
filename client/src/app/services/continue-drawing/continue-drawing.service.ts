@@ -29,9 +29,7 @@ export class ContinueDrawingService {
         this.store.setCanvasColor(canvasColor);
         let svgArray: SVGGraphicsElement[] = this.drawingHandler.convertHtmlToSvgElement(drawingJSON.svgsHTML);
         this.drawingHandler.clearCanvas();
-        for(let svg of svgArray){
-          this.store.pushSvg(svg);
-        }
+        setTimeout(()=> this.store.setSvgArray(svgArray));
     }
   }
 

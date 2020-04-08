@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Tools } from 'src/app/models/enums';
-//import { CreateDrawingComponent } from '../../dialogs/create-drawing-dialog/create-drawing.component';
+import { CreateDrawingComponent } from '../../dialogs/create-drawing-dialog/create-drawing.component';
 import { DrawingGalleryComponent } from '../../dialogs/drawing-gallery/drawing-gallery.component';
-//import { DrawingStartedDialogComponent } from '../../dialogs/drawing-started-dialog/drawing-started-dialog.component';
+import { DrawingStartedDialogComponent } from '../../dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from '../../dialogs/export-drawing/export-drawing.component';
 import { SaveDrawingComponent } from '../../dialogs/save-drawing/save-drawing.component';
-import { ContinueDrawingService } from 'src/app/services/continue-drawing/continue-drawing.service';
 
 @Component({
     selector: 'app-sidebar',
@@ -106,7 +105,7 @@ export class SidebarComponent {
         this.isShowSettingOptions = !this.isShowSettingOptions;
     }
     openCreateDrawing(): void {
-        this.continueDrawingService.loadSavedDrawing();
+        this.isStartedDrawing ? this.dialog.open(DrawingStartedDialogComponent) : this.dialog.open(CreateDrawingComponent);
     }
     openSaveDrawing(): void {
         this.dialog.open(SaveDrawingComponent);

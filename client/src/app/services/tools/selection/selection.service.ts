@@ -106,28 +106,8 @@ export class SelectionService extends Tool {
             if (key === SelectionButtons.A) {
                 this.state.selectionBox.svgs = this.state.svgState.svgs;
             }
-<<<<<<< HEAD
-            shape.setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
-        }
-        this.drawEncompassingBox(shapes);
-        this.store.automaticSave();
-    }
-
-    handleKeyDown(key: string): void {
-        if (key === SelectionButtons.Control) {
-            this.keys.controlKey = true;
-        }
-        if (key === SelectionButtons.A) {
-            this.keys.aKey = true;
-        }
-        if (this.keys.controlKey && this.keys.aKey) {
-            this.selectedShapes = this.shapes.slice();
-            if (this.selectedShapes[0]) {
-                this.drawEncompassingBox(this.selectedShapes);
-=======
             if (key === SelectionButtons.V) {
                 this.store.paste();
->>>>>>> clipboard
             }
             if (this.state.selectionBox.display) {
                 switch (key) {

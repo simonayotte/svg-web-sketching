@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { DrawStore } from 'src/app/store/draw-store';
 
 @Component({
@@ -6,8 +6,12 @@ import { DrawStore } from 'src/app/store/draw-store';
     templateUrl: './draw-page.component.html',
     styleUrls: ['./draw-page.component.scss'],
 })
-export class DrawPageComponent  {
+export class DrawPageComponent implements OnDestroy  {
     constructor(public store: DrawStore) {}
+
+    ngOnDestroy(){
+        this.store.emptySvg(false);
+    }
     
 
 }

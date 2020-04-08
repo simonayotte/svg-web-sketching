@@ -57,6 +57,7 @@ export class MovementService extends Tool {
             this.renderer.setAttribute(svg, 'transform', `translate(${dX + translation[0]},${dY + translation[1]})`);
             this.state.selectionBox.update();
         }
+        this.store.automaticSave();
     }
 
     stop(): void {

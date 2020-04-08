@@ -116,7 +116,7 @@ export class DrawingHandler {
   }
 
   clearCanvas() {
-    this.store.emptySvg();
+    this.store.emptySvg(true);
     this.store.resetUndoRedo();
   }
 }
