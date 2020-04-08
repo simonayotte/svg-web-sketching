@@ -32,7 +32,16 @@ export class SidebarComponent {
     @Input('canUndo') canUndo: boolean;
     @Input('canRedo') canRedo: boolean;
 
-    constructor(private dialog: MatDialog, private continueDrawingService: ContinueDrawingService) {
+    //clipboard
+    @Input('isSelection') isSelection: boolean;
+    @Input('clipboard') clipboard: SVGGraphicsElement[];
+    @Output() copy: EventEmitter<void>;
+    @Output() cut: EventEmitter<void>;
+    @Output() paste: EventEmitter<void>;
+    @Output() duplicate: EventEmitter<void>;
+    @Output() delete: EventEmitter<void>;
+
+    constructor(private dialog: MatDialog) {
         this.isShowDrawOptions = false;
         this.isShowFormOptions = false;
         this.isShowToolOptions = false;
@@ -43,22 +52,42 @@ export class SidebarComponent {
         this.toggleGrid = new EventEmitter();
         this.undo = new EventEmitter();
         this.redo = new EventEmitter();
+        this.copy = new EventEmitter();
+        this.cut = new EventEmitter();
+        this.paste = new EventEmitter();
+        this.duplicate = new EventEmitter();
+        this.delete = new EventEmitter();
     }
 
     changeTool(tool: Tools): void {
         this.toolChange.emit(tool);
     }
 
-    displayGridChange(): void  {
+    displayGridChange(): void {
         this.toggleGrid.emit();
     }
 
-    triggerUndo(): void  {
+    triggerUndo(): void {
         this.undo.emit();
     }
 
-    triggerRedo(): void  {
+    triggerRedo(): void {
         this.redo.emit();
+    }
+    triggerCut(): void {
+        this.cut.emit();
+    }
+    triggerCopy(): void {
+        this.copy.emit();
+    }
+    triggerPaste(): void {
+        this.paste.emit();
+    }
+    triggerDuplicate(): void {
+        this.duplicate.emit();
+    }
+    triggerDelete(): void {
+        this.delete.emit();
     }
 
     toogleDrawOptions(): void {

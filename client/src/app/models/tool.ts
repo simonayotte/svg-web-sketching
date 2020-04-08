@@ -28,12 +28,28 @@ export abstract class Tool {
         return;
     }
 
-    copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
+    static cloneSvgs(svgs: SVGGraphicsElement[], offset: number = 0): SVGGraphicsElement[] {
         const newSvgs = [];
-        for (let svg of svgs) {
-            const clone = svg.cloneNode(true) as SVGGraphicsElement;
+        for (let i = 0; i < svgs.length; i++) {
+            const clone = svgs[i].cloneNode(false) as SVGGraphicsElement;
+            let translation = this.getTranslation(svgs[i]);
+            clone.setAttribute('transform', `translate(${offset + translation[0]},${offset + translation[1]})`);
             newSvgs.push(clone);
         }
         return newSvgs;
+    }
+
+    static getTranslation(svg: SVGGraphicsElement): [number, number] {
+        let str = svg.getAttribute('transform');
+        if (!str) {
+            return [0, 0];
+        }
+
+        let matches = str.match(/[+-]?\d+/g);
+
+        if (!matches) {
+            return [0, 0];
+        }
+        return <[number, number]>matches.map(Number);
     }
 }

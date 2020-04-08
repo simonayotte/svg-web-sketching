@@ -43,6 +43,7 @@ export class SaveDrawingComponent implements OnInit {
 
     ngOnInit() {
         this.store.setIsKeyHandlerActive(false);
+        setTimeout(() => this.store.setTool(Tools.None));
     }
 
     ngOnDestroy() {
@@ -66,7 +67,6 @@ export class SaveDrawingComponent implements OnInit {
     }
 
     submit(): void {
-        this.store.setTool(Tools.None);
         this.drawingHandler.prepareDrawingExportation(FileTypes.Png);
         this.saveDrawingService.setImgName(this.saveDrawingForm.controls[FormValuesName.Name].value);
         this.getTagsValues();
