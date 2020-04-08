@@ -230,12 +230,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    setMousePosition(x: number, y: number): void {
-        this.setState({
-            ...this.state,
-            globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
-        });
-    }
     // Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({

@@ -5,7 +5,7 @@ import { DrawingGalleryComponent } from 'src/app/components/dialogs/drawing-gall
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from 'src/app/components/dialogs/export-drawing/export-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
-import { OtherButtons, ToolButtons, Tools, SelectionButtons } from 'src/app/models/enums';
+import { OtherButtons, ToolButtons, Tools } from 'src/app/models/enums';
 import { Tool } from 'src/app/models/tool';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';

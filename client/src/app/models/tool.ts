@@ -39,17 +39,17 @@ export abstract class Tool {
         return newSvgs;
     }
 
-    static getTranslation(svg: SVGGraphicsElement): [number, number] {
+    static getTranslation(svg: SVGGraphicsElement): number[] {
         let str = svg.getAttribute('transform');
         if (!str) {
             return [0, 0];
         }
 
-        let matches = str.match(/[+-]?\d+/g);
+        let matches = str.match(/(?!translate)[+-]?\d+/g);
 
         if (!matches) {
             return [0, 0];
         }
-        return <[number, number]>matches.map(Number);
+        return [parseInt(matches[0]), parseInt(matches[1])];
     }
 }
