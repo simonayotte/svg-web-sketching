@@ -4,6 +4,7 @@ import { GlobalState } from './global-state';
 import { SvgState } from './svg-state';
 import { UndoRedoState } from './undo-redo-state';
 import { SelectionBox } from '../models/selection-box';
+import { ClipboardState } from './clipboard-state';
 
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
@@ -29,23 +30,22 @@ export class DrawState {
     emissionRate: number;
 
     //selection
-    isSelectionMoving: boolean;
     selectionBox: SelectionBox;
 
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
     undoRedoState: UndoRedoState;
+    clipboardState: ClipboardState;
 
     constructor() {
         this.lineHasJunction = false;
-        this.isSelectionMoving = false;
         this.emissionRate = EMISSION_RATE_DEFAULT;
         this.globalState = new GlobalState();
         this.colorState = new ColorState();
         this.svgState = new SvgState();
         this.undoRedoState = new UndoRedoState();
-        //this.selectionState = new SelectionState();
+        this.clipboardState = new ClipboardState();
         this.selectionBox = new SelectionBox();
     }
 }

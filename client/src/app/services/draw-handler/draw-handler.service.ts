@@ -5,7 +5,7 @@ import { DrawingGalleryComponent } from 'src/app/components/dialogs/drawing-gall
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from 'src/app/components/dialogs/export-drawing/export-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
-import { OtherButtons, ToolButtons, Tools } from 'src/app/models/enums';
+import { OtherButtons, ToolButtons, Tools, SelectionButtons } from 'src/app/models/enums';
 import { Tool } from 'src/app/models/tool';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
@@ -132,7 +132,8 @@ export class DrawHandlerService {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.store.setMousePosition(event.offsetX - this.state.eraserThickness / 2, event.offsetY - this.state.eraserThickness / 2);
+        this.state.globalState.cursorX = event.offsetX - this.state.eraserThickness / 2;
+        this.state.globalState.cursorY = event.offsetY - this.state.eraserThickness / 2;
         if (this.state.globalState.tool === Tools.Eraser) {
             const service = this.servicesMap.get(this.state.globalState.tool) as EraserService;
             service.move(event.offsetX, event.offsetY);

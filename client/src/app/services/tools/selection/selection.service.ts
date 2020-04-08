@@ -35,8 +35,8 @@ export class SelectionService extends Tool {
             this.state.selectionBox.svgs = [];
         } else {
             if (this.state.svgState.svgs.includes(svg)) {
-                this.state.selectionBox.push(svg);
-            } else if (!this.state.isSelectionMoving) {
+                this.state.selectionBox.svgs = [svg];
+            } else if (!this.state.selectionBox.isMoving) {
                 // Not clicked on selection svg
                 this.state.selectionBox.svgs = [];
             }
@@ -44,13 +44,13 @@ export class SelectionService extends Tool {
 
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
-        if (!this.state.isSelectionMoving) {
+        if (!this.state.selectionBox.isMoving) {
             this.rectangle.start(event);
         }
     }
 
     continue(): void {
-        if (!this.state.isSelectionMoving) {
+        if (!this.state.selectionBox.isMoving) {
             for (let svg of this.state.svgState.svgs) {
                 this.selectSvg(svg);
             }
@@ -98,8 +98,31 @@ export class SelectionService extends Tool {
         if (key === SelectionButtons.Control) {
             this.isCtrl = true;
         }
-        if (key === SelectionButtons.A && this.isCtrl) {
-            this.state.selectionBox.svgs = this.state.svgState.svgs;
+        if (key === SelectionButtons.Delete) {
+            this.store.delete();
+        }
+
+        if (this.isCtrl) {
+            if (key === SelectionButtons.A) {
+                this.state.selectionBox.svgs = this.state.svgState.svgs;
+            }
+            if (key === SelectionButtons.V) {
+                this.store.paste();
+            }
+            if (this.state.selectionBox.display) {
+                switch (key) {
+                    case SelectionButtons.C:
+                        this.store.copy();
+                        break;
+                    case SelectionButtons.X:
+                        this.store.cut();
+                        break;
+
+                    case SelectionButtons.D:
+                        this.store.duplicate();
+                        break;
+                }
+            }
         }
     }
 

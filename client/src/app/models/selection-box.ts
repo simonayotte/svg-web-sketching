@@ -6,27 +6,22 @@ export class SelectionBox {
     isPanelOpen: boolean;
     x: number;
     y: number;
-
+    isMoving: boolean;
     width: number;
     height: number;
 
     private selectedSvgs: SVGGraphicsElement[] = [];
 
-    constructor() {
+    constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
         this.display = false;
         this.isPanelOpen = false;
-        this.x = this.y = 0;
-        this.width = 0;
-        this.height = 0;
+        this.isMoving = false;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
-    hideSelection() {
-        this.selectedSvgs = [];
-        this.x = 0;
-        this.y = 0;
-        this.width = 0;
-        this.height = 0;
-    }
     set svgs(svgs: SVGGraphicsElement[]) {
         this.selectedSvgs = svgs;
         if (this.selectedSvgs.length === 0) {
@@ -44,10 +39,10 @@ export class SelectionBox {
             let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
 
             let domRect = svg.getBoundingClientRect();
-            let rectLeft = domRect.x - thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
-            let rectTop = domRect.y - thickness;
-            let rectRight = domRect.x + domRect.width + thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
-            let rectBottom = domRect.y + domRect.height + thickness;
+            let rectLeft = domRect.left - thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+            let rectTop = domRect.top - thickness;
+            let rectRight = domRect.right + thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+            let rectBottom = domRect.bottom + thickness;
 
             left = left > rectLeft ? rectLeft : left; // choose min
             right = right < rectRight ? rectRight : right; // choose max
@@ -59,21 +54,6 @@ export class SelectionBox {
         this.y = top;
         this.width = right - left;
         this.height = bottom - top;
-    }
-
-    getTranslation(svg: SVGGraphicsElement): [number, number] {
-        let str = svg.getAttribute('transform');
-        if (!str) {
-            return [0, 0];
-        }
-
-        let matches = str.match(/[+-]?\d+/g);
-
-        if (!matches) {
-            return [0, 0];
-        }
-
-        return <[number, number]>matches.map(Number);
     }
 
     get svgs(): SVGGraphicsElement[] {

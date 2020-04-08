@@ -49,6 +49,7 @@ export enum SelectionButtons {
     ArrowUp = 'ArrowUp',
     ArrowDown = 'ArrowDown',
 }
+
 export enum SelectedColors {
     First = 'First',
     Second = 'Second',

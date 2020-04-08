@@ -15,6 +15,7 @@ export class MovementService extends Tool {
     lastY: number;
     startSelectX: number;
     startSelectY: number;
+    svgsBeforeMovement: SVGGraphicsElement[] = [];
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -32,14 +33,17 @@ export class MovementService extends Tool {
         this.startY = this.lastY = event.offsetY;
         this.startSelectX = this.state.selectionBox.x;
         this.startSelectY = this.state.selectionBox.y;
+        this.state.selectionBox.isMoving = true; //this.store.setSelectionAction(SelectionActions.Move);
 
-        this.store.setIsSelectionMoving(true);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
         this.state.svgState.drawSvg.addEventListener('mouseleave', this.mouseUpListener);
     }
 
     continue(event: MouseEvent): void {
+        if (this.svgsBeforeMovement.length === 0) {
+            this.svgsBeforeMovement = Tool.cloneSvgs(this.state.svgState.svgs);
+        }
         let dX = event.offsetX - this.lastX;
         let dY = event.offsetY - this.lastY;
         this.lastX = event.offsetX;
@@ -48,7 +52,7 @@ export class MovementService extends Tool {
     }
     moveSvgs(dX: number, dY: number) {
         for (const svg of this.state.selectionBox.svgs) {
-            let translation = this.state.selectionBox.getTranslation(svg);
+            let translation = Tool.getTranslation(svg);
 
             this.renderer.setAttribute(svg, 'transform', `translate(${dX + translation[0]},${dY + translation[1]})`);
             this.state.selectionBox.update();
@@ -56,8 +60,9 @@ export class MovementService extends Tool {
     }
 
     stop(): void {
-        this.store.setIsSelectionMoving(false);
-
+        this.state.selectionBox.isMoving = false;
+        this.store.saveSvgsState(this.svgsBeforeMovement); //for undo redo
+        this.svgsBeforeMovement = [];
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
         this.state.svgState.drawSvg.removeEventListener('mouseleave', this.mouseUpListener);
