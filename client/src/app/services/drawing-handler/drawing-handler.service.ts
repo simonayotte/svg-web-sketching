@@ -97,6 +97,24 @@ export class DrawingHandler {
     this.store.setSVGFilter('');
   }
 
+  convertHtmlToSvgElement(svgsHTML: string[]) {
+    const parser = new DOMParser();
+    let svgArray = [];
+    for (const svgHTML of svgsHTML) {
+        const htmlElement = parser.parseFromString(svgHTML, 'image/svg+xml').documentElement;
+        const svg: SVGGraphicsElement = this.renderer2.createElement(htmlElement.tagName, 'svg');
+
+        for (let i = 0; i < htmlElement.attributes.length; i++) {
+            const attribute = htmlElement.attributes.item(i);
+            if (attribute) {
+                this.renderer2.setAttribute(svg, attribute.name, attribute.value);
+            }
+        }
+        svgArray.push(svg);
+    }
+    return svgArray;
+  }
+
   clearCanvas() {
     this.store.emptySvg();
     this.store.resetUndoRedo();

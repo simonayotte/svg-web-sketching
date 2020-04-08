@@ -2,6 +2,9 @@ import { Component, HostListener, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
 import { DrawingGalleryComponent } from '../dialogs/drawing-gallery/drawing-gallery.component';
+import { DrawStore } from 'src/app/store/draw-store';
+import { ContinueDrawingService } from 'src/app/services/continue-drawing/continue-drawing.service';
+
 
 @Component({
     selector: 'app-home-page',
@@ -11,7 +14,10 @@ import { DrawingGalleryComponent } from '../dialogs/drawing-gallery/drawing-gall
 export class HomePageComponent implements OnInit {
     private isCreateDrawingOpen = false;
     private isGalleryOpen = false;
-    constructor(private dialog: MatDialog) {}
+    localStorageLength: number
+    constructor(private dialog: MatDialog, public store: DrawStore, private continueDrawingService: ContinueDrawingService) {
+        this.localStorageLength = localStorage.length;
+    }
     ngOnInit() {
         /* Nothing needed in ngOnInit() */
     }
@@ -48,5 +54,9 @@ export class HomePageComponent implements OnInit {
                 this.openGalleryDialog();
             }
         }
+    }
+
+    continueDrawing(): void {
+       this.continueDrawingService.setIsContinueDrawing(true);
     }
 }

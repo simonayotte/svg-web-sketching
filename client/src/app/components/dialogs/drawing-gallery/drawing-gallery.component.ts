@@ -104,6 +104,7 @@ export class DrawingGalleryComponent implements OnInit {
                 this.dialogRef.close();
             }
         }
+        this.store.automaticSave();
     }
 
     async deleteDrawing(drawing: SavedDrawing): Promise<void> {

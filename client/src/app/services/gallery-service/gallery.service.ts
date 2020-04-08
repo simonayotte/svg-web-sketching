@@ -1,4 +1,4 @@
-import { Injectable, Renderer2, RendererFactory2 } from '@angular/core';
+import { Injectable, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Color } from 'src/app/models/color';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
@@ -11,13 +11,11 @@ import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
 })
 export class GalleryService {
     state: DrawState;
-    private renderer2: Renderer2;
 
     constructor(private store: DrawStore, private drawingHandler: DrawingHandler, public rendererFactory: RendererFactory2) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
-        this.renderer2 = rendererFactory.createRenderer(null, null);
     }
 
     private drawings: BehaviorSubject<SavedDrawing[]> = new BehaviorSubject<SavedDrawing[]>([]);
@@ -41,29 +39,14 @@ export class GalleryService {
         this.didGalleryOpen.next(value);
     }
 
-    convertHtmlToSvgElement(svgsHTML: string[]) {
-        const parser = new DOMParser();
-        for (const svgHTML of svgsHTML) {
-            const htmlElement = parser.parseFromString(svgHTML, 'image/svg+xml').documentElement;
-            const svg: SVGGraphicsElement = this.renderer2.createElement(htmlElement.tagName, 'svg');
-
-            for (let i = 0; i < htmlElement.attributes.length; i++) {
-                const attribute = htmlElement.attributes.item(i);
-                if (attribute) {
-                    this.renderer2.setAttribute(svg, attribute.name, attribute.value);
-                }
-            }
-            this.store.pushSvg(svg);
-        }
-    }
-
     loadDrawing(drawing: SavedDrawing) {
         this.store.setDrawHeight(drawing.height);
         this.store.setDrawWidth(drawing.width);
         const canvasColor = new Color(drawing.RGBA[0], drawing.RGBA[1], drawing.RGBA[2], drawing.RGBA[3]);
         this.store.setCanvasColor(canvasColor);
         this.drawingHandler.clearCanvas();
-        this.convertHtmlToSvgElement(drawing.svgsHTML);
+        let svgArray = this.drawingHandler.convertHtmlToSvgElement(drawing.svgsHTML);
+        this.store.setSvgArray(svgArray);
     }
 
     filterDrawings(tagStringArray: string[], allDrawingsInDb: SavedDrawing[]): SavedDrawing[] {

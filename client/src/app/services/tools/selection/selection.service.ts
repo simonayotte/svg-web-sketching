@@ -397,6 +397,7 @@ export class SelectionService extends Tool {
             shape.setAttribute('transform', 'translate(' + (X + translationX).toString() + ',' + (Y + translationY).toString() + ')');
         }
         this.drawEncompassingBox(shapes);
+        this.store.automaticSave();
     }
 
     handleKeyDown(key: string): void {

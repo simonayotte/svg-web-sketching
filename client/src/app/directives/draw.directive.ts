@@ -1,15 +1,25 @@
 import { Directive, ElementRef, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { DrawHandlerService } from '../services/draw-handler/draw-handler.service';
+import { ContinueDrawingService } from '../services/continue-drawing/continue-drawing.service';
 @Directive({
     selector: '[draw]',
 })
 export class DrawDirective implements OnInit {
-    constructor(private el: ElementRef, private drawHandler: DrawHandlerService) {}
+    private isContinueDrawing: boolean;
+    constructor(private el: ElementRef, private drawHandler: DrawHandlerService, private continueDrawingService:ContinueDrawingService) {
+        this.continueDrawingService.isContinueDrawingObs.subscribe((value:boolean)=>{
+            this.isContinueDrawing = value;
+        })
+    }
 
     @Output() drawSvgChange = new EventEmitter();
 
     ngOnInit() {
         this.drawSvgChange.emit(this.el.nativeElement);
+        if(this.isContinueDrawing){
+            this.continueDrawingService.loadSavedDrawing()
+            this.continueDrawingService.setIsContinueDrawing(false);
+        }
     }
 
     @HostListener('document:keydown', ['$event'])

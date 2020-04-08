@@ -57,7 +57,7 @@ export class PreviewImageComponent implements OnInit {
     this.svgsHTML,
     this.state.svgState.width,
     this.state.svgState.height,
-    [canvasColor.r, canvasColor.g, canvasColor.b, canvasColor.a]);
+    canvasColor.rgba());
     return this.httpService.saveDrawing(drawing)
     .toPromise()
     .then(

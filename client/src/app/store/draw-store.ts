@@ -26,6 +26,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.automaticSave();
     }
     redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {
@@ -42,6 +43,7 @@ export class DrawStore extends Store<DrawState> {
                 undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.automaticSave();
     }
 
     resetUndoRedo(): void {
@@ -91,6 +93,15 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        this.automaticSave();
+    }
+
+    setSvgArray(value: SVGGraphicsElement[]): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: value },
+        });
+        this.automaticSave();
     }
 
     deleteSvgs(value: SVGGraphicsElement[]): void {
@@ -103,6 +114,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        this.automaticSave();
     }
 
     emptySvg(): void {
@@ -110,6 +122,7 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             svgState: { ...this.state.svgState, svgs: [] },
         });
+        this.automaticSave();
     }
 
     saveSvgsState(value: SVGGraphicsElement[]): void {
@@ -128,6 +141,7 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
         });
+        this.automaticSave();
     }
     // Global
 
@@ -205,6 +219,7 @@ export class DrawStore extends Store<DrawState> {
         if (isAddLastColor) {
             this.addLastColor(value);
         }
+        this.automaticSave();
     }
 
     setWorkspaceColor(value: Color): void {
@@ -323,4 +338,20 @@ export class DrawStore extends Store<DrawState> {
             eraserThickness: value,
         });
     }
+
+    automaticSave(): void {
+        let svgsHTML = []
+        for(let svg of this.state.svgState.svgs){
+            svgsHTML.push(svg.outerHTML);
+        }
+        let jsonState = {
+            width : this.state.svgState.width,
+            height : this.state.svgState.height,
+            svgsHTML : svgsHTML,
+            canvasColor : this.state.colorState.canvasColor.rgba()
+        };
+        localStorage.setItem('Drawing', JSON.stringify(jsonState));
+    }
+
+    
 }
