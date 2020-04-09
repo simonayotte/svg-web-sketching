@@ -19,6 +19,7 @@ import { CanvasGridDirective } from '../directives/canvas-grid.directive';
 import { DrawDirective } from '../directives/draw.directive';
 import { SvgDirective } from '../directives/svg.directive';
 import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.component';
+import { BucketComponent } from '../components/tools/bucket/bucket.component';
 
 @NgModule({
     declarations: [
@@ -39,6 +40,7 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         SelectionComponent,
         AerosolComponent,
         EraserComponent,
+        BucketComponent,
         DrawDirective,
         SvgDirective,
     ],
@@ -60,6 +62,7 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         EllipsisComponent,
         SelectionComponent,
         EraserComponent,
+        BucketComponent,
         AerosolComponent,
         DrawDirective,
         SvgDirective,

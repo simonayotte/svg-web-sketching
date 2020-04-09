@@ -323,4 +323,12 @@ export class DrawStore extends Store<DrawState> {
             eraserThickness: value,
         });
     }
+
+    // Fill-Bucket
+    setTolerance(value: number): void {
+        this.setState({
+            ...this.state,
+            tolerance: value,
+        });
+    }
 }

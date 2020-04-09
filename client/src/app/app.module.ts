@@ -18,7 +18,6 @@ import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-dra
 import { HomePageComponent } from './components/home-page/home-page.component';
 import { DrawModule } from './modules/draw.module';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
-import { BucketComponent } from './components/tools/bucket/bucket.component';
 
 @NgModule({
     declarations: [AppComponent,
@@ -30,8 +29,7 @@ import { BucketComponent } from './components/tools/bucket/bucket.component';
                 ExportDrawingComponent,
                 PreviewExportComponent,
                 DrawingGalleryComponent,
-                SafeUrlPipe,
-                BucketComponent],
+                SafeUrlPipe],
     imports: [
         BrowserModule,
         HttpClientModule,

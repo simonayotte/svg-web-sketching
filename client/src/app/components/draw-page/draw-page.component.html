@@ -61,6 +61,12 @@
                 (emissionRateChange)="store.setEmissionRate($event)"
             >
             </app-aerosol>
+            <app-bucket
+                *ngSwitchCase="'Sceau'"
+                [tolerance]="state.tolerance"
+                (toleranceChange)="store.setTolerance($event)"
+            >
+            </app-bucket>
 
             <app-polygon
                 *ngSwitchCase="'Polygone'"

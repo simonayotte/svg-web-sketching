@@ -1,1 +1,7 @@
-<p>bucket works!</p>
+<div class="configuration">
+    <div class="configuration-title">
+        Tolérance
+    </div>
+    <input class="slider" value="tolerance" (input)="setTolerance($event)" type="range" min="1" max="100" value="1" />
+    <div class="configuration-value">{{ tolerance }} %</div>
+</div>

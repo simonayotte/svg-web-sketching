@@ -20,6 +20,7 @@ import { PencilService } from '../tools/pencil/pencil.service';
 import { RectangleService } from '../tools/rectangle/rectangle.service';
 import { SelectionService } from '../tools/selection/selection.service';
 import { AerosolService } from './../tools/aerosol/aerosol.service';
+import { BucketService } from '../tools/bucket/bucket.service';
 
 @Injectable({
     providedIn: 'root',
@@ -45,6 +46,7 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
         this.servicesMap.set(Tools.Aerosol, injector.get(AerosolService));
         this.servicesMap.set(Tools.Applicator, injector.get(ApplicatorService));
+        this.servicesMap.set(Tools.Bucket, injector.get(BucketService));
 
         this.keyMap.set(ToolButtons.One, Tools.Rectangle);
         this.keyMap.set(ToolButtons.C, Tools.Pencil);
@@ -57,6 +59,8 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.E, Tools.Eraser);
         this.keyMap.set(ToolButtons.A, Tools.Aerosol);
         this.keyMap.set(ToolButtons.R, Tools.Applicator);
+        this.keyMap.set(ToolButtons.B, Tools.Bucket);
+
     }
 
     startTool(event: MouseEvent): void {

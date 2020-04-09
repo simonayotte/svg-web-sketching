@@ -8,6 +8,8 @@ const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
 const THICKNESS_DEFAULT = 25;
 const EMISSION_RATE_DEFAULT = 30;
+const TOLERANCE_DEFAULT = 1;
+
 export class DrawState {
     // Brush
     brushTexture: BrushTextures = BrushTextures.Normal;
@@ -23,9 +25,10 @@ export class DrawState {
     ellipsisType: Types = Types.Outline;
     // eraser
     eraserThickness: number = THICKNESS_DEFAULT;
-
     // aerosol
     emissionRate: number;
+    // fill
+    tolerance: number = TOLERANCE_DEFAULT;
 
     colorState: ColorState;
     globalState: GlobalState;
