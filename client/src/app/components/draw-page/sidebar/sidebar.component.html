@@ -44,7 +44,7 @@
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowEditOptions == true }">
         <i class="sidebar-dropdown-option fas fa-sync-alt" (click)="setSelectionAction('Rotate')" [ngClass]="{ disabled: !isSelection }"></i>
         <i class="sidebar-dropdown-option fas fa-copy" (click)="triggerCopy()" [ngClass]="{ disabled: !isSelection }"></i>
-        <i class="sidebar-dropdown-option fas fa-paste" (click)="triggerPaste()" [ngClass]="{ disabled: clipboard.length === 0 }"></i>
+        <i class="sidebar-dropdown-option fas fa-paste" (click)="triggerPaste()" [ngClass]="{ disabled: isClipboardEmpty }"></i>
         <i class="sidebar-dropdown-option fas fa-cut" (click)="triggerCut()" [ngClass]="{ disabled: !isSelection }"></i>
         <i class="sidebar-dropdown-option fas fa-clone" (click)="triggerDuplicate()" [ngClass]="{ disabled: !isSelection }"></i>
         <i class="sidebar-dropdown-option fas fa-trash" (click)="triggerDelete()" [ngClass]="{ disabled: !isSelection }"></i>

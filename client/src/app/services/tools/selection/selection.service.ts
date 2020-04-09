@@ -52,24 +52,21 @@ export class SelectionService extends Tool {
     continue(): void {
         if (!this.state.selectionBox.isMoving) {
             for (let svg of this.state.svgState.svgs) {
-                this.selectSvg(svg);
+                let selectRect = <DOMRect>this.rectangle.svg.getBoundingClientRect();
+                this.selectSvg(svg, selectRect);
             }
         }
     }
 
     stop(): void {
-        if (this.rectangle.isDrawing) {
-            this.renderer.removeChild(this.state.svgState.drawSvg, this.rectangle.svg);
-        }
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
+        this.stopSignal();
     }
 
-    selectSvg(svg: SVGGraphicsElement): void {
+    selectSvg(svg: SVGGraphicsElement, selectRect: DOMRect): void {
         let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
         let svgRect = svg.getBoundingClientRect();
-        let selectRect = this.rectangle.svg.getBoundingClientRect();
-
         const selectLeft = selectRect.left;
         const selectRight = selectRect.right;
         const selectTop = selectRect.top;

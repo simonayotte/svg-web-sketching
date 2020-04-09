@@ -10,7 +10,7 @@
         [canUndo]="state.undoRedoState.undoState.length != 0"
         [canRedo]="state.undoRedoState.redoState.length != 0"
         [isSelection]="state.selectionBox.display"
-        [clipboard]="state.clipboardState.copiedSvgs"
+        [isClipboardEmpty]="state.clipboardState.copiedSvgs.length === 0"
         (copy)="store.copy()"
         (cut)="store.cut()"
         (paste)="store.paste()"
