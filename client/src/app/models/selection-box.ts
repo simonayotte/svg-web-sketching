@@ -8,6 +8,7 @@ export class SelectionBox {
     x: number;
     y: number;
     isMoving: boolean;
+    isRotating: boolean;
     width: number;
     height: number;
 
@@ -66,7 +67,8 @@ export class SelectionBox {
     }
 
     getCenter(): Coordinate {
-        return new Coordinate(this.x + this.width/2, this.y + this.height/2);
+        // Garder des Math.round pour eviter bug -> Rotation en spirale 
+        return new Coordinate(Math.round(this.x + this.width/2), Math.round(this.y + this.height/2));
     }
     
     delete(svgToDelete: SVGGraphicsElement): void {

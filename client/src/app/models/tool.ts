@@ -52,4 +52,18 @@ export abstract class Tool {
         }
         return [parseInt(matches[0]), parseInt(matches[1])];
     }
+    // Returns current angle on selection box
+    static getRotation(svg: SVGGraphicsElement): number {
+        let str = svg.getAttribute('transform');
+        if (!str) {
+            return 0;
+        }
+
+        let matches = str.match(/(?!rotate)[+-]?\d+/g);
+
+        if (!matches) {
+            return 0;
+        }
+        return parseInt(matches[0]);
+    }
 }

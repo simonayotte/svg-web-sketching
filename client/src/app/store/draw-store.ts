@@ -63,12 +63,6 @@ export class DrawStore extends Store<DrawState> {
         this.state.selectionBox.svgs = []; //update selection box
     }
 
-    setIsSelectionRotating(value: boolean): void {
-        this.setState({
-            ...this.state,
-            isSelectionRotating: value,
-        });
-    }
 
     // undoRedo
     undo(): void {
