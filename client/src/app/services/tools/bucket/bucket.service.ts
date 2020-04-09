@@ -30,6 +30,8 @@ export class BucketService extends Tool {
     this.renderer.setAttribute(this.svg, 'stroke-linecap', 'square');
     this.renderer.setAttribute(this.svg, 'stroke-linejoin', 'square');
     this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
+    this.SVGHeight = +this.state.svgState.drawSvg.getAttribute('height')!;
+    this.SVGWidth = +this.state.svgState.drawSvg.getAttribute('width')!;
     this.colorArea(event.offsetX, event.offsetY);
     this.stop();
   }
@@ -54,7 +56,7 @@ export class BucketService extends Tool {
         const currentPixel = unverifiedPixels.pop();
         if (currentPixel !== undefined) {
           const currentPixelColor = this.getPixelColor(currentPixel.pointX, currentPixel.pointY);
-          if (currentPixel.pointX >= 0 && currentPixel.pointX <= 100 && currentPixel.pointY >= 0 && currentPixel.pointY <= 100) { // TODO: get svg width and height
+          if (currentPixel.pointX >= 0 && currentPixel.pointX <= this.SVGWidth && currentPixel.pointY >= 0 && currentPixel.pointY <= this.SVGHeight) {
             if (!verifiedPixels.includes(currentPixel) && this.checkColor(currentPixelColor, color, this.state.tolerance)) {
               verifiedPixels.push(currentPixel);
               pixelsToColor.push(currentPixel);
@@ -93,9 +95,7 @@ export class BucketService extends Tool {
   }
 
   fillEntireSVG(): void {
-    const height = 10; // TODO : get SVG height
-    const width = 10; // TODO : get SVG width
-    const path = `M0 0 L${width} 0 L${width} ${height} L0 ${height} Z`;
+    const path = `M0 0 L${this.SVGWidth} 0 L${this.SVGWidth} ${this.SVGHeight} L0 ${this.SVGHeight} Z`;
     this.renderer.setAttribute(this.svg, 'd', path);
   }
 
