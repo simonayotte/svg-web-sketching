@@ -3,6 +3,11 @@ import { Color } from '../models/color';
 import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
+import { Tool } from '../models/tool';
+import { Coordinate } from '../models/coordinate';
+
+const OFFSET = 10;
+
 @Injectable({
     providedIn: 'root',
 })
@@ -11,11 +16,51 @@ export class DrawStore extends Store<DrawState> {
         super(new DrawState());
     }
 
-    setIsSelectionMoving(value: boolean): void {
+    // clipboard
+    copy(): void {
         this.setState({
             ...this.state,
-            isSelectionMoving: value,
+            clipboardState: {
+                ...this.state.clipboardState,
+                copiedSvgs: Tool.cloneSvgs(this.state.selectionBox.svgs),
+                offset: OFFSET,
+                copiedSvgsCoord: new Coordinate(this.state.selectionBox.x, this.state.selectionBox.y),
+            },
         });
+    }
+    paste(): void {
+        let offset = this.state.clipboardState.offset;
+        let copiedSvgsCoord = this.state.clipboardState.copiedSvgsCoord;
+        let newSvgs = Tool.cloneSvgs(this.state.clipboardState.copiedSvgs, offset); //clone with offset
+        this.pushSvgs(newSvgs);
+
+        offset += OFFSET;
+        if (offset + copiedSvgsCoord.pointX >= this.state.svgState.width || offset + copiedSvgsCoord.pointY >= this.state.svgState.height) {
+            offset = OFFSET;
+        }
+
+        this.setState({
+            ...this.state,
+            clipboardState: { ...this.state.clipboardState, offset },
+        });
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); //update selection box
+    }
+
+    cut(): void {
+        this.copy();
+        this.deleteSvgs(this.state.selectionBox.svgs);
+        this.state.selectionBox.svgs = []; //update selection box
+    }
+
+    duplicate(): void {
+        let newSvgs = Tool.cloneSvgs(this.state.selectionBox.svgs, OFFSET); //clone with offset
+        this.pushSvgs(newSvgs);
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); //update selection box
+    }
+
+    delete(): void {
+        this.deleteSvgs(this.state.selectionBox.svgs);
+        this.state.selectionBox.svgs = []; //update selection box
     }
 
     setIsSelectionRotating(value: boolean): void {
@@ -167,13 +212,11 @@ export class DrawStore extends Store<DrawState> {
             isPanelOpen = this.state.globalState.tool === value && this.state.globalState.isPanelOpen ? false : true;
         }
 
-        let box = this.state.selectionBox;
-        box.isPanelOpen = isPanelOpen;
         this.setState({
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
-            selectionBox: box,
         });
+        this.state.selectionBox.isPanelOpen = isPanelOpen;
     }
     toggleGrid(): void {
         this.setState({
@@ -194,12 +237,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    setMousePosition(x: number, y: number): void {
-        this.setState({
-            ...this.state,
-            globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
-        });
-    }
     // Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({

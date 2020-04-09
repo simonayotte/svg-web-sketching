@@ -33,7 +33,7 @@ export class RotationService extends Tool {
     event.preventDefault();
     this.store.setIsSelectionRotating(true);
     event.altKey ? this.angle = ALT_ROTATION : this.angle = DEFAULT_ROTATION;
-    console.log(this.state.selectionBox.svgs[0].getAttribute('transform'));
+    console.log(event.deltaY);
     this.rotateSvgs();
   }
 
@@ -41,8 +41,8 @@ export class RotationService extends Tool {
     const centerX = this.state.selectionBox.getCenter().pointX;
     const centerY = this.state.selectionBox.getCenter().pointY;
     for (const svg of this.state.selectionBox.svgs) {
-      let rotation = this.state.selectionBox.getRotation(svg);
-      this.renderer.setAttribute(svg, 'transform', `rotate(${(this.angle + rotation[0]) % 360 },${centerX},${centerY})`);
+      //let rotation = this.state.selectionBox.getRotation(svg);
+      //this.renderer.setAttribute(svg, 'transform', `rotate(${(this.angle + rotation[0]) % 360 },${centerX},${centerY})`);
       this.state.selectionBox.update();
     }
   }

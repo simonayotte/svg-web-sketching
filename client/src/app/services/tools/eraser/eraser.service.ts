@@ -72,7 +72,7 @@ export class EraserService extends Tool {
 
     verifyMouseOver(x: number, y: number, svgs: SVGGraphicsElement[]): number {
         for (let i = svgs.length - 1; i >= 0; i--) {
-            const box = svgs[i].getBoundingClientRect();
+            const box: DOMRect = <DOMRect>svgs[i].getBoundingClientRect();
             const thickness = parseInt(svgs[i].getAttribute('stroke-width') as string);
 
             if (this.isEraseTouching(x, y, box, thickness)) {
