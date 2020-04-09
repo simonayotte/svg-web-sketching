@@ -33,7 +33,7 @@ export class MovementService extends Tool {
         this.startY = this.lastY = event.offsetY;
         this.startSelectX = this.state.selectionBox.x;
         this.startSelectY = this.state.selectionBox.y;
-        this.state.selectionBox.isMoving = true; //this.store.setSelectionAction(SelectionActions.Move);
+        this.state.selectionBox.isMoving = true;
 
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);

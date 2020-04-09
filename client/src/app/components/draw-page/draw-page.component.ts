@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, HostListener } from '@angular/core';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { DrawStore } from 'src/app/store/draw-store';
 
@@ -12,5 +12,10 @@ export class DrawPageComponent implements OnDestroy {
 
     ngOnDestroy() {
         this.drawingHandler.clearCanvas();
+    }
+
+    @HostListener('contextmenu', ['$event'])
+    onContextMenu(event: MouseEvent) {
+        event.preventDefault();
     }
 }
