@@ -75,10 +75,6 @@ export class SelectionBox {
         this.svgs = this.selectedSvgs.concat(svg);
     }
 
-    getCenter(): Coordinate {
-        //TODO: Fix this function
-        return new Coordinate(Math.round(this.x + this.width/2), Math.round(this.y + this.height/2));
-    }
     
     delete(svgToDelete: SVGGraphicsElement): void {
         this.svgs = this.svgs.filter((svg: SVGGraphicsElement) => svg !== svgToDelete);
