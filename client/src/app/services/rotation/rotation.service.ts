@@ -4,7 +4,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 
 export const DEFAULT_ROTATION = 15;
-export const ALT_ROTATION = 2;
+export const ALT_ROTATION = 1;
 @Injectable({
   providedIn: 'root'
 })
@@ -36,12 +36,11 @@ export class RotationService extends Tool {
   }
 
   rotateSvgs(): void {
+    const centerX = this.state.selectionBox.centerX;
+    const centerY = this.state.selectionBox.centerY;
     for (const svg of this.state.selectionBox.svgs) {
-      const centerX = this.state.selectionBox.getCenter().pointX;
-      const centerY = this.state.selectionBox.getCenter().pointY;
-      console.log(centerX);
-      console.log(centerY);
       let rotation = Tool.getRotation(svg);
+      console.log("angle", rotation, "centerX",  centerX, "centerY", centerY);   
       this.renderer.setAttribute(svg, 'transform', `rotate(${(this.angle + rotation) % 360},${centerX},${centerY})`);
       this.state.selectionBox.update();
     }
@@ -51,8 +50,8 @@ export class RotationService extends Tool {
   rotateSvg(x: number, y: number): void {
     let elementToRotate = this.state.selectionBox.svgs[this.findElementToRotate(x, y)];
     let area = elementToRotate.getBoundingClientRect();
-    const centerX = Math.abs((area.right - area.left)/2);
-    const centerY = Math.abs((area.bottom - area.top)/2);
+    const centerX = Math.abs((area.right - area.left)/2); console.log("centerX", centerX);
+    const centerY = Math.abs((area.bottom - area.top)/2); console.log("centerY", centerY);
     let rotation = Tool.getRotation(elementToRotate);
     this.renderer.setAttribute(elementToRotate, 'transform', `rotate(${(this.angle + rotation) % 360},${centerX},${centerY})`);
     this.state.selectionBox.update();
