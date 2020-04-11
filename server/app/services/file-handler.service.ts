@@ -28,7 +28,8 @@ export class FileHandler {
       let filename:string;
       type == FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}`: filename = `${name}.${type}`;
       let localPath:string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
-      fs.writeFileSync(localPath,data,`${Encoding.Utf8}`); 
+      fs.writeFileSync(localPath,data,`${Encoding.Utf8}`);
+      // console.log(+);
       return new Blob([data]);
     }
 
