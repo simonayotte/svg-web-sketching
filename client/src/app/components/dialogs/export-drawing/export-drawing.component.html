@@ -1,9 +1,11 @@
+
 <h1 mat-dialog-title>Exporter un dessin</h1>
 <div mat-dialog-content>
+  
     <form [formGroup]="exportDrawingForm">
         <p>Nom du fichier:</p>
         <label>
-            <input type="text"  formControlName="name">
+            <input type="text"  formControlName="name" >
             <i *ngIf = 'name.errors?.required' class="fas fa-exclamation-triangle" title = "Le nom est requis!"></i>
         </label>
         <p>Format:</p>
@@ -20,7 +22,26 @@
           <span>svg</span>
           <i *ngIf = 'type.errors?.required' class="fas fa-exclamation-triangle" title = "Le format est requis!"></i><br>
         </label><br>
-        <label>
+
+              
+        <div>
+          
+          <input type="checkbox" name="send-email" id="choice-send-email" required>
+          <label for="choice-send-email">Envoyer par courriel</label>
+          <i class="fas fa-envelope"></i>
+          
+          <div class="reveal-if-active">
+              <input matInput formControlName="email" placeholder="email@example.com">
+              <!--
+              <i *ngIf = 'name.errors?.required' class="fas fa-exclamation-triangle" title = "Le nom du fichier est requis!"></i>
+              <i *ngIf = 'type.errors?.required' class="fas fa-exclamation-triangle" title = "Le format est requis!"></i>
+              <i *ngIf='!email.error.required' class="fas fa-exclamation-triangle" title = "Une adresse email valide est requise!"></i>
+-->
+            </div>
+        </div>
+        
+        
+        <label> 
           <p>Filtres:</p>
           <select id = 'filter' formControlName = 'filter'>
             <option value = ''>Aucun</option>
@@ -35,3 +56,4 @@
         <button mat-dialog-close>Annuler</button>
      </form>
 </div>
+

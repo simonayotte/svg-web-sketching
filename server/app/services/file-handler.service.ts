@@ -22,13 +22,14 @@ export class FileHandler {
       fs.writeFileSync(path,data,`${Encoding.Utf8}`); 
     }
 
-    exportDrawing(name:string, type:string, dataURL:string): void{
+    exportDrawing(name:string, type:string, dataURL:string): Blob {
       let base64DataURL:string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`,'');
       let data = Buffer.from(base64DataURL,'base64');
       let filename:string;
       type == FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}`: filename = `${name}.${type}`;
       let localPath:string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
       fs.writeFileSync(localPath,data,`${Encoding.Utf8}`); 
+      return new Blob([data]);
     }
 
     deleteDrawing(id:string): void{

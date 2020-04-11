@@ -9,3 +9,21 @@ input{
 .fa-exclamation-triangle{
     color:orange;
 }
+.fa-envelope{
+
+    margin-left: 15px;
+}
+.reveal-if-active { // code from https://css-tricks.com/exposing-form-fields-radio-button-css/
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transform: scale(0.8);
+    transition: 0.5s;
+    input[type="checkbox"]:checked ~ & {
+      opacity: 1;
+      max-height: 100px;
+      overflow: visible;
+      padding: 10px 20px;
+      transform: scale(1);
+    }
+  }

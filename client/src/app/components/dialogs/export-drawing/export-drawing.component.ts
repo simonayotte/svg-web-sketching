@@ -27,12 +27,14 @@ export class ExportDrawingComponent implements OnInit {
     this.exportDrawingForm = this.fb.group({
       name : ['', Validators.required],
       type : ['', Validators.required],
-      filter: ['']
+      filter: [''],
+      email: ['', [Validators.required, Validators.email]],
      });
   }
 
    get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
    get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
+   get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
   state: DrawState;
 
   exportDrawingForm: FormGroup;
@@ -45,11 +47,15 @@ export class ExportDrawingComponent implements OnInit {
   }
 
   submit(): void {
+    
     this.store.setTool(Tools.None);
     this.drawingHandler.prepareDrawingExportation(this.exportDrawingForm.controls[FormValuesName.Type].value,
                                                   this.exportDrawingForm.controls[FormValuesName.Filter].value);
     this.exportDrawingService.setExportName(this.exportDrawingForm.controls[FormValuesName.Name].value);
     this.exportDrawingService.setType(this.exportDrawingForm.controls[FormValuesName.Type].value);
+    this.exportDrawingService.setEmail(this.exportDrawingForm.controls[FormValuesName.Email].value);
+    
+
     this.dialogRef.close();
     this.dialog.open(PreviewExportComponent);
   }

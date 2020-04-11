@@ -5,14 +5,16 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ExportDrawingService {
-
-  constructor() { }
-
   private exportName: BehaviorSubject<string> = new BehaviorSubject<string>('');
   exportNameObs: Observable<string> = this.exportName.asObservable();
 
   private type: BehaviorSubject<string> = new BehaviorSubject<string>('');
   typeObs: Observable<string> = this.type.asObservable();
+
+  private email: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  emailObs: Observable<string> = this.type.asObservable();
+
+  constructor() { }
 
   setExportName(exportName: string): void {
     this.exportName.next(exportName);
@@ -22,11 +24,19 @@ export class ExportDrawingService {
     this.type.next(type);
   }
 
+  setEmail(email: string): void {
+    this.email.next(email);
+  }
+
   getExportName(): string {
     return this.exportName.value;
   }
 
   getType(): string {
     return this.type.value;
+  }
+
+  getEmail(): string{
+    return this.email.value;
   }
 }

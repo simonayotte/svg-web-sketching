@@ -72,7 +72,8 @@ export enum FormValuesName {
     Tags = 'tags',
     Name = 'name',
     Type = 'type',
-    Filter = 'filter'
+    Filter = 'filter',
+    Email = 'email',
 }
 
 export enum FileTypes {

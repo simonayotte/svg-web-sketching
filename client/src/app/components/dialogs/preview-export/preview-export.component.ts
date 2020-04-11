@@ -40,10 +40,16 @@ export class PreviewExportComponent implements OnInit {
   ngOnDestroy() {
     this.store.setIsKeyHandlerActive(true);
   }
+  
 
   exportDrawing() {
-    const drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL);
+    const drawing = new ExportedDrawing(
+      this.exportDrawingService.getExportName(),
+      this.exportDrawingService.getType(),
+      this.exportDrawingService.getEmail(),
+      this.dataURL);
     this.dialogRef.close();
+
     return this.httpService.exportDrawing(drawing)
     .toPromise()
     .then((data: HttpResponse) => alert(data.message))

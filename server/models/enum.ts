@@ -8,8 +8,7 @@ export enum FileTypes {
 export enum FilePaths {
     ImageStorage = '/image-storage/',
     ServerPath = '\\server\\app\\services',
-    LocalPath = '\\client\\local-images\\'
-
+    LocalPath = '\\client\\local-images\\',
 }
 
 export enum Encoding {
