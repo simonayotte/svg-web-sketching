@@ -1,5 +1,4 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
-//import { Tools } from 'src/app/models/enums';
 import { Color } from 'src/app/models/color';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
@@ -68,7 +67,7 @@ export class BucketService extends Tool {
         }
       }
 
-      this.renderer.setAttribute(this.svg, 'd', this.pointsToString(pixelsToColor));
+      this.renderer.setAttribute(this.svg, 'd', this.pointsToString(pixelsToColor, SVGWidth, SVGHeight));
     }
     this.stop();
   }
@@ -81,6 +80,8 @@ export class BucketService extends Tool {
     return ctx;
   }
 
+  // Draw all svg in created canvas
+  // Source: https://stackoverflow.com/questions/3768565/drawing-an-svg-file-on-a-html5-canvas
   fillCanvas(svg: SVGSVGElement, event: MouseEvent): void {
     const img = new Image();
     const xml = new XMLSerializer().serializeToString(svg);
@@ -106,7 +107,7 @@ export class BucketService extends Tool {
   }
 
   checkColor(pixelColor: Color, primaryColor: Color, tolerance: number): boolean {
-    const diff = (255 + tolerance) / 100;
+    const diff = (255 * tolerance) / 100;
     const isRedOk = (primaryColor.r >= pixelColor.r - diff) && (primaryColor.r <= pixelColor.r + diff);
     const isGreenOk = (primaryColor.g >= pixelColor.g - diff) && (primaryColor.g <= pixelColor.g + diff);
     const isBlueOk = (primaryColor.b >= pixelColor.b - diff) && (primaryColor.b <= pixelColor.b + diff);
@@ -135,11 +136,11 @@ export class BucketService extends Tool {
     this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
   }
 
-  pointsToString(points: Uint8Array): string {
+  pointsToString(points: Uint8Array, width: number, height: number): string {
     let result = '';
-    for (let i = 0; i < this.state.svgState.height; i++) {
-      for (let j = 0; j < this.state.svgState.width; j++) {
-        if (points[i * this.state.svgState.width + j]) {
+    for (let i = 0; i < height; i++) {
+      for (let j = 0; j < width; j++) {
+        if (points[i * width + j]) {
           result = result.concat(`M ${j} ${i} v 1`);
         }
       }
