@@ -4,6 +4,10 @@ import * as fs from 'fs'
 import { Drawing } from '../../models/drawing';
 import { FilePaths, FileTypes, Encoding } from '../../models/enum';
 
+export interface ExportReturn {
+  name: string,
+  stream: fs.ReadStream,
+}
 
 @injectable()
 export class FileHandler {
@@ -22,18 +26,20 @@ export class FileHandler {
       fs.writeFileSync(path,data,`${Encoding.Utf8}`); 
     }
 
-    exportDrawing(name:string, type:string, dataURL:string): Blob {
+    exportDrawing(name:string, type:string, dataURL:string): ExportReturn {
       let base64DataURL:string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`,'');
       let data = Buffer.from(base64DataURL,'base64');
       let filename:string;
       type == FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}`: filename = `${name}.${type}`;
       let localPath:string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
       fs.writeFileSync(localPath,data,`${Encoding.Utf8}`);
-      // console.log(+);
-      return new Blob([data]);
+      return {
+        name: filename,
+        stream: fs.createReadStream(localPath),
+      };
     }
 
-    deleteDrawing(id:string): void{
+    deleteDrawing(id:string): void {
       fs.unlinkSync(`${__dirname}${FilePaths.ImageStorage}${id}.${FileTypes.Png}`)
     }
 

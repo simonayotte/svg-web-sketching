@@ -23,23 +23,37 @@
           <i *ngIf = 'type.errors?.required' class="fas fa-exclamation-triangle" title = "Le format est requis!"></i><br>
         </label><br>
 
-              
-        <div>
-          
-          <input type="checkbox" name="send-email" id="choice-send-email" required>
-          <label for="choice-send-email">Envoyer par courriel</label>
-          <i class="fas fa-envelope"></i>
-          
+      
+      <p>Options: <i *ngIf = 'option.errors?.required' class="fas fa-exclamation-triangle" title = "L'option est requise!"></i></p>
+
+      <!--Option 1: Export Seulement-->
+      <label>
+        <input type="radio" value="one" formControlName="option" >
+            <span>Export</span><br>
+            
+      </label><br>
+
+       <!--Option 2: Email Seulement-->
+      <label>
+        <input type="radio" value="two" formControlName="option">
+          <span>Envoyer par email</span>
           <div class="reveal-if-active">
-              <input matInput formControlName="email" placeholder="email@example.com">
-              <!--
-              <i *ngIf = 'name.errors?.required' class="fas fa-exclamation-triangle" title = "Le nom du fichier est requis!"></i>
-              <i *ngIf = 'type.errors?.required' class="fas fa-exclamation-triangle" title = "Le format est requis!"></i>
-              <i *ngIf='!email.error.required' class="fas fa-exclamation-triangle" title = "Une adresse email valide est requise!"></i>
--->
-            </div>
+            <label for="option 2">Entrer un email valide</label>
+            <input type="email" formControlName="email" id="email" name="email" class="require-if-active" data-require-pair="#email" placeholder="email@exemple.com"> <br>
+          </div>
+      </label><br>
+
+       <!--Option 3: Export et Email-->
+      <label>
+        <input type="radio" value="three" formControlName="option" >
+        <span>Export & Email</span>
+        <div class="reveal-if-active">
+          <label for="option 3">Entrer un email valide</label>
+          <input type="email" formControlName="email" id="email" name="email" class="require-if-active" data-require-pair="#email" placeholder="email@exemple.com"> <br>
         </div>
-        
+      </label><br>
+
+
         
         <label> 
           <p>Filtres:</p>
@@ -52,7 +66,8 @@
             <option value = '5'>Eroder</option>
           </select>
         </label><br>
-        <button (click) = 'submit()' [disabled] = '!exportDrawingForm.valid'>Confirmer</button>
+        
+        <button (click) = 'submit()'>Confirmer</button> 
         <button mat-dialog-close>Annuler</button>
      </form>
 </div>

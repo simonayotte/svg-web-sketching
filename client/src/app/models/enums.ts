@@ -67,13 +67,16 @@ export enum BrushTextures {
 }
 
 export enum FormValuesName {
-    Width = 'width',
-    Height = 'height',
-    Tags = 'tags',
-    Name = 'name',
-    Type = 'type',
-    Filter = 'filter',
-    Email = 'email',
+  Width = 'width',
+  Height = 'height',
+  Tags = 'tags',
+  Name = 'name',
+  Type = 'type', 
+  Option = 'option',
+  Email = 'email',
+  Filter = 'filter',
+  
+ 
 }
 
 export enum FileTypes {

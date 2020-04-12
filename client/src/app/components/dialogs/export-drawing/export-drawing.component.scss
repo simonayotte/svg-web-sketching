@@ -10,10 +10,13 @@ input{
     color:orange;
 }
 .fa-envelope{
-
     margin-left: 15px;
 }
-.reveal-if-active { // code from https://css-tricks.com/exposing-form-fields-radio-button-css/
+
+.fa-download{
+    margin-left: 15px;
+}
+/*.reveal-if-active { // code from https://css-tricks.com/exposing-form-fields-radio-button-css/
     opacity: 0;
     max-height: 0;
     overflow: hidden;
@@ -26,4 +29,31 @@ input{
       padding: 10px 20px;
       transform: scale(1);
     }
+  }*/
+
+  .reveal-if-active {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    font-size: 16px;
+    transform: scale(0.8);
+    transition: 0.5s;
+    
+    label {
+      display: block;
+      margin: 0 0 3px 0;
+    }
+    input[type=text] {
+      width: 100%;
+    }
+    
+    input[type="radio"]:checked ~ &,
+    input[type="checkbox"]:checked ~ & {
+      opacity: 1;
+      max-height: 100px;
+      padding: 10px 20px;
+      transform: scale(1);
+      overflow: visible;
+    }
+    
   }

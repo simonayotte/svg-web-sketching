@@ -47,6 +47,7 @@ export class PreviewExportComponent implements OnInit {
       this.exportDrawingService.getExportName(),
       this.exportDrawingService.getType(),
       this.exportDrawingService.getEmail(),
+      this.exportDrawingService.getOption(), 
       this.dataURL);
     this.dialogRef.close();
 
