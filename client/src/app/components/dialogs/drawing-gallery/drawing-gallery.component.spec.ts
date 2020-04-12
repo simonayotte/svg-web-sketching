@@ -207,7 +207,7 @@ describe('DrawingGalleryComponent', () => {
     it('if #loadColor is #ff8c00 and svgs of svgState is empty, #loadDrawing() should call #loadDrawing() of galleryService should be called', () => {
         spyOn(galleryService, 'loadDrawing').and.callThrough();
         component.galleryState.loadColor = GalleryButtonColors.Orange;
-        store.emptySvg();
+        store.emptySvg(false);
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.loadDrawing(drawing);
         expect(galleryService.loadDrawing).toHaveBeenCalledWith(drawing);
@@ -216,7 +216,7 @@ describe('DrawingGalleryComponent', () => {
     it('if #loadColor is #ff8c00 and svgs of svgState is empty,calling #loadDrawing() should close the dialog', () => {
         spyOn(component.dialogRef, 'close').and.callThrough();
         component.galleryState.loadColor = GalleryButtonColors.Orange;
-        store.emptySvg();
+        store.emptySvg(false);
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.loadDrawing(drawing);
         expect(component.dialogRef.close).toHaveBeenCalled();
@@ -265,7 +265,7 @@ describe('DrawingGalleryComponent', () => {
     it('if #loadColor is black and svgs of svgState is empty, #loadDrawing() should not call #loadDrawing() of galleryService should not be called', () => {
         spyOn(galleryService, 'loadDrawing').and.callThrough();
         component.galleryState.loadColor = GalleryButtonColors.Black;
-        store.emptySvg();
+        store.emptySvg(false);
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.loadDrawing(drawing);
         expect(galleryService.loadDrawing).not.toHaveBeenCalledWith(drawing);
@@ -274,7 +274,7 @@ describe('DrawingGalleryComponent', () => {
     it('if #loadColor is black and svgs of svgState is empty, #loadDrawing() should not close the dialog', () => {
         spyOn(component.dialogRef, 'close').and.callThrough();
         component.galleryState.loadColor = GalleryButtonColors.Black;
-        store.emptySvg();
+        store.emptySvg(false);
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.loadDrawing(drawing);
         expect(component.dialogRef.close).not.toHaveBeenCalled();

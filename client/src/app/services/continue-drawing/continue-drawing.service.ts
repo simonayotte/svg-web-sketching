@@ -19,6 +19,10 @@ export class ContinueDrawingService {
     this.isContinueDrawing.next(value)
   }
 
+  getIsContinueDrawing(): boolean {
+    return this.isContinueDrawing.value;
+  }
+
   loadSavedDrawing(): void {
     let drawingJSONString:string | null = localStorage.getItem('Drawing');
     if(drawingJSONString){
