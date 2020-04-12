@@ -1,3 +1,5 @@
+import { Coordinate } from './../../models/coordinate';
+import { ElementToRotate } from './elementToRotate';
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
@@ -26,48 +28,58 @@ export class RotationService extends Tool {
 
       this.mouseWheelListener = this.start.bind(this);
       this.state.svgState.drawSvg.addEventListener('wheel', this.mouseWheelListener);
-
+      this.state.selectionBox.svgsBeforeRotation = [];
       this.renderer = rendererFactory.createRenderer(null, null);
   }
 
   start(event: WheelEvent): void {
     event.preventDefault();
-    this.state.selectionBox.isRotating = true;
     this.angle = (event.altKey ? ALT_ROTATION : DEFAULT_ROTATION);
-    event.shiftKey ? this.rotateSvg(event.offsetX, event.offsetY) : this.rotateSvgs();
-    // Add logic for undo redo
+    event.shiftKey ? this.singleRotation(event.offsetX, event.offsetY) : this.multipleRotation();
   }
-  // Fonctionne 
-  rotateSvgs(): void {
-    const centerX = this.state.selectionBox.centerX;
-    const centerY = this.state.selectionBox.centerY;
+  
+  // TODO: Fix calcul du centre de la bonding box
+  multipleRotation(): void {
     for (const svg of this.state.selectionBox.svgs) {
-      let rotation = Tool.getRotation(svg);
-      console.log("angle", rotation, "centerX",  centerX, "centerY", centerY);   
-      this.renderer.setAttribute(svg, 'transform', `rotate(${(this.angle + rotation) % 360},${centerX},${centerY})`);
-      this.state.selectionBox.update();
+      this.rotate(svg, this.state.selectionBox.centerX, this.state.selectionBox.centerY);
     }
   }
 
   // Find closest element to x, y mouse cursor and return svg element inside the box
-  rotateSvg(x: number, y: number): void {
-    let element = this.findElementToRotate(x, y);
-    console.log("index", element[0]);
-    let elementToRotate = this.state.selectionBox.svgs[element[0]];
-    let rotation = Tool.getRotation(elementToRotate);
-    this.renderer.setAttribute(elementToRotate, 'transform', `rotate(${(this.angle + rotation) % 360},${element[1]},${element[2]})`);
-    this.state.selectionBox.update();
+  singleRotation(x: number, y: number): void {
+    let element = this.findElementToRotate(x, y); // Returns ElementToRotate
+    if (element != -1) {
+      let elementToRotate = this.state.selectionBox.svgs[element];
+      //this.rotate(elementToRotate, element.center.pointX, element.center.pointY);
+      const domRect = elementToRotate.getBoundingClientRect();
+      let thickness = parseInt(<string>elementToRotate.getAttribute('stroke-width')) / 2;
+      let rectLeft = domRect.left - thickness - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+      let rectTop = domRect.top - thickness;
+      let rectRight = domRect.right + thickness - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+      let rectBottom = domRect.bottom + thickness;
+      const centerX = Math.abs((rectRight- rectLeft)/2 + rectLeft);
+      const centerY = Math.abs((rectBottom - rectTop)/2 + rectTop);
+      this.rotate(elementToRotate, centerX, centerY);
+      this.state.selectionBox.updateCenter();
+    }
   }
 
+  // TODO: Find way to call this method when finished with rotation.
   stop(): void {
-    this.state.selectionBox.isRotating = false;
     this.state.svgState.drawSvg.removeEventListener('wheel', this.mouseWheelListener);
   }
 
+  // TODO: Change to find the closest SVG Element that can be found
   // Give MouseEvent coordiante -> finds closest SVG element inside the selection box
-  findElementToRotate(x: number, y:number): number[] {
+  findElementToRotate(x: number, y:number): number {
     let currentIndex = 0;
+    //let maxDistance = Math.sqrt(Math.pow((this.state.svgState.width),2) + Math.pow((this.state.svgState.height),2));
+    //console.log('maxDistance:', maxDistance);
+    // Get center of the first SVG Element in the array.
+    //let elementToRotate = new ElementToRotate(new Coordinate(0, 0), currentIndex, maxDistance);
+    // Find closest SVG element to mouse 
     for (const svg of this.state.selectionBox.svgs) {
+      // Operations to obtain center of current SVG
       const domRect = svg.getBoundingClientRect();
       let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
       let rectLeft = domRect.left - thickness - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
@@ -75,17 +87,28 @@ export class RotationService extends Tool {
       let rectRight = domRect.right + thickness - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
       let rectBottom = domRect.bottom + thickness;
 
-      console.log("rectLeft", rectLeft, "x", x,  "rectRight", rectRight);
-      console.log("rectTop", rectTop, "y", y, "rectBottom", rectBottom);
+      //const centerX = Math.abs((rectRight- rectLeft)/2 + rectLeft);
+      //const centerY = Math.abs((rectBottom - rectTop)/2 + rectTop);
+      // if (currentIndex === 0)
+      //   elementToRotate.center = new Coordinate(centerX, centerY);
+      // Check for minDistance, updates minDistance
+      // if(elementToRotate.findDistance(x, y)) {
+      //   elementToRotate.updateElement(centerX, centerY, currentIndex);
+      // } 
       const insideX = (rectLeft <= x && x <= rectRight);
       const insideY = (rectTop <= y && y <= rectBottom);
-      if(insideX && insideY) {
-        const centerX = Math.abs((rectRight- rectLeft)/2 + rectLeft); console.log("centerX", centerX);
-        const centerY = Math.abs((rectBottom - rectTop)/2 + rectTop); console.log("centerY" , centerY);
-        return [currentIndex, centerX, centerY];
-      }
+      if(insideX && insideY)
+        return currentIndex;
       currentIndex++;
     }
-    return [-1,-1,-1];
+    return -1;
+    // return elementToRotate;
+  }
+
+  // Rotate one SVG element, with coordinates of center of rotation
+  rotate(svg: SVGGraphicsElement, x: number, y: number) : void {
+    let rotation = Tool.getRotation(svg);
+    this.renderer.setAttribute(svg, 'transform', `rotate(${(this.angle + rotation) % 360},${x},${y})`);
+    this.state.selectionBox.update();
   }
 }

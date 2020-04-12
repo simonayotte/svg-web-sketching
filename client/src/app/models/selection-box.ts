@@ -1,4 +1,3 @@
-import { Coordinate } from './coordinate';
 const PANEL_WIDTH = 252;
 const SIDEBAR_WIDTH = 52;
 
@@ -7,26 +6,23 @@ export class SelectionBox {
     isPanelOpen: boolean;
     x: number;
     y: number;
-    isMoving: boolean;
     isRotating: boolean;
     width: number;
     height: number;
     centerX: number;
     centerY: number;
+    svgsBeforeRotation: SVGGraphicsElement[] = [];
 
     private selectedSvgs: SVGGraphicsElement[] = [];
 
     constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
         this.display = false;
         this.isPanelOpen = false;
-        this.isMoving = false;
         this.isRotating = false;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
-        this.centerX = 0;
-        this.centerY = 0;
     }
 
     set svgs(svgs: SVGGraphicsElement[]) {
@@ -61,10 +57,6 @@ export class SelectionBox {
         this.y = top;
         this.width = right - left;
         this.height = bottom - top;
-        if(!this.isRotating) {
-            this.centerX = Math.round(this.x + this.width/2);
-            this.centerY = Math.round(this.y + this.height/2);
-        }
     }
 
     get svgs(): SVGGraphicsElement[] {
@@ -82,5 +74,10 @@ export class SelectionBox {
 
     update(): void {
         this.svgs = this.svgs;
+    }
+
+    updateCenter(): void {
+        this.centerX = this.x + this.width/2;
+        this.centerY = this.y + this.height/2;
     }
 }

@@ -1,13 +1,11 @@
-import { Directive, HostListener, Injector, OnInit } from '@angular/core';
+import { Directive, HostListener, OnInit } from '@angular/core';
 import { MovementService } from '../services/tools/movement/movement.service';
 import { RotationService } from './../services/rotation/rotation.service';
 @Directive({
     selector: '[selection]',
 })
 export class SelectionDirective implements OnInit {
-    rotationService: RotationService;
-    constructor(private movementService: MovementService, protected injector: Injector) {
-        this.rotationService = injector.get(RotationService);
+    constructor(private movementService: MovementService,  private rotationService: RotationService) {
     }
 
     ngOnInit() {}
