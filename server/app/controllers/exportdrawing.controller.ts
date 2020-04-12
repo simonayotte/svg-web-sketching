@@ -30,7 +30,6 @@ export class ExportDrawingController {
                 });
                 console.log('HERE');
                 console.log(req.body.to);
-                ;
                 axios({
                     method: 'post',
                     url: 'https://log2990.step.polymtl.ca/email?address_validation=true&dry_run=true',
@@ -40,7 +39,7 @@ export class ExportDrawingController {
                         'X-Team-Key': '736a0365-3b0e-4b8e-9598-2f6c73fdb290',   // x-team-key utiliser dotenv!!!!!
                         ...formData.getHeaders(),
                     },
-                }).then((a) => console.log(a.data)).catch((err) => console.log(err));
+                }).then((a) => console.log(a.data)).catch((err) => console.log(err)); // Clean gestion d'error
                 /*
                 // res2 verification
                 if (res2.status === 200 || res2.status === 202) {
