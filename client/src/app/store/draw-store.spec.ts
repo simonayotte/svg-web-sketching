@@ -62,6 +62,14 @@ describe('DrawStore', () => {
         });
     });
 
+    it('#undo() should call #automaticSave ', () => {
+        spyOn(store, 'automaticSave');
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        state.undoRedoState.undoState = [[rect]];
+        store.undo();
+        expect(store.automaticSave).toHaveBeenCalled();
+    });
+
     it('#redo() should set #svgs with last index of #redoState ', (done: DoneFn) => {
         const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -102,6 +110,15 @@ describe('DrawStore', () => {
             done();
         });
     });
+
+    it('#redo() should call #automaticSave ', () => {
+        spyOn(store, 'automaticSave')
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        state.undoRedoState.redoState = [[rect]];
+        store.redo();
+        expect(store.automaticSave).toHaveBeenCalled();
+    });
+
 
     // svg
     it('#setDrawSvg() should only change #drawSvg', (done: DoneFn) => {
@@ -162,6 +179,14 @@ describe('DrawStore', () => {
         });
     });
 
+    it('#pushSvg() should call #automaticSave ', () => {
+        spyOn(store, 'automaticSave')
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        store.pushSvg(rect);
+        expect(store.automaticSave).toHaveBeenCalled();
+    });
+
+
     it('#saveSvgsState() should add state to #undoState and set #redoState to []', (done: DoneFn) => {
         const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
@@ -173,6 +198,47 @@ describe('DrawStore', () => {
             done();
         });
     });
+
+    it('#setSvgArray() should only change #svgs', (done: DoneFn) => {
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        let svgArray: SVGGraphicsElement[] = [rect,circle]
+        store.setSvgArray(svgArray);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.svgState.svgs).toEqual(svgArray);
+            done();
+        });
+    });
+
+    it('#setSvgArray() should call #automaticSave ', () => {
+        spyOn(store, 'automaticSave')
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        let svgArray: SVGGraphicsElement[] = [rect,circle]
+        store.setSvgArray(svgArray);
+        expect(store.automaticSave).toHaveBeenCalled();
+    });
+
+    it('#emptySvg() should only change #svgs to []', (done: DoneFn) => {
+        store.emptySvg(true);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.svgState.svgs).toEqual([]);
+            done();
+        });
+    });
+
+    it('#emptySvg(true) should call #automaticSave', () => {
+        spyOn(store, 'automaticSave')
+        store.emptySvg(true);
+        expect(store.automaticSave).toHaveBeenCalled();
+    });
+
+    it('#emptySvg(false) should not call #automaticSave', () => {
+        spyOn(store, 'automaticSave')
+        store.emptySvg(false);
+        expect(store.automaticSave).not.toHaveBeenCalled();
+    });
+
 
     it('#setThickness() should only change #thickness', (done: DoneFn) => {
         store.setThickness(10);
@@ -217,6 +283,22 @@ describe('DrawStore', () => {
             expect(value.globalState.isKeyHandlerActive).toBeFalsy();
             done();
         });
+    });
+
+    it('#setCanvasColor() should only change #canvasColor', (done: DoneFn) => {
+        const color = new Color(1, 2, 3, 4);
+        store.setCanvasColor(color);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.colorState.canvasColor).toEqual(color);
+            done();
+        });
+    });
+
+    it('#setCanvasColor() call #automaticSave()', () => {
+        spyOn(store, 'automaticSave')
+        const color = new Color(1, 2, 3, 4);
+        store.setCanvasColor(color);
+        expect(store.automaticSave).toHaveBeenCalled();
     });
 
     it('#setFirstColor() should only change #firstColor', (done: DoneFn) => {
@@ -332,4 +414,54 @@ describe('DrawStore', () => {
             done();
         });
     });
+
+    it('#automaticSave() should save an item with the width equal to svgState.width', () => {
+        store.setDrawWidth(200);
+        store.automaticSave();
+        let drawingJSONString: string | null = localStorage.getItem('Drawing');
+        let drawingJSON: any;
+        if(drawingJSONString){
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
+        expect(drawingJSON.width).toEqual(200);
+    });
+
+    it('#automaticSave() should save an item with the height equal to svgState.height', () => {
+        store.setDrawHeight(300);
+        store.automaticSave();
+        let drawingJSONString: string | null = localStorage.getItem('Drawing');
+        let drawingJSON: any;
+        if(drawingJSONString){
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
+        expect(drawingJSON.height).toEqual(300);
+    });
+
+    it('#automaticSave() should save an item with the canvasColor equal to colorState.canvasColor.rbga()', () => {
+        let color = new Color(1,2,3,4);
+        store.setCanvasColor(color);
+        store.automaticSave();
+        let drawingJSONString: string | null = localStorage.getItem('Drawing');
+        let drawingJSON: any;
+        if(drawingJSONString){
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
+        expect(drawingJSON.canvasColor).toEqual(color.rgba());
+    });
+
+    it('#automaticSave() should save an item with the svgsHTML equal to the outerHTML of the values in svgState.svgs', () => {
+        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        let svgsHTML = [rect.outerHTML,circle.outerHTML];
+        store.setSvgArray([rect,circle])
+        store.automaticSave();
+        let drawingJSONString: string | null = localStorage.getItem('Drawing');
+        let drawingJSON: any;
+        if(drawingJSONString){
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
+        expect(drawingJSON.svgsHTML).toEqual(svgsHTML);
+    });
+
+
 });

@@ -123,6 +123,16 @@ describe('DrawingHandler', () => {
     expect(store.setSVGFilter).toHaveBeenCalledWith('1');
   });
 
+  it('convertHtmlToSvgElement() should take an array of html, convert them into an SVGGraphicsElement an push then in the svg array', () => {
+    const svg1: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svg2: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svg3: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svgHTML = [svg1.outerHTML, svg2.outerHTML, svg3.outerHTML];
+    const svgs = [svg1, svg2, svg3];
+    let svgArray:SVGGraphicsElement[] =  service.convertHtmlToSvgElement(svgHTML);
+    expect(svgs).toEqual(svgArray);
+  });
+
   it('#clearCanvas should call #empySvg() of the store', () => {
     spyOn(store, 'emptySvg');
     service.clearCanvas();

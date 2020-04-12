@@ -6,7 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormValuesName, Tools } from 'src/app/models/enums';
+import { FormValuesName } from 'src/app/models/enums';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -87,12 +87,6 @@ describe('ExportDrawingComponent', () => {
     spyOn(component.dialog, 'open').and.callThrough();
     component.submit();
     expect(component.dialog.open).toHaveBeenCalledWith(PreviewExportComponent);
-  });
-
-  it('#submit should call the #setTool() of the store', () => {
-    spyOn(store, 'setTool').and.callThrough();
-    component.submit();
-    expect(store.setTool).toHaveBeenCalledWith(Tools.None);
   });
 
 });
