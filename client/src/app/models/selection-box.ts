@@ -6,6 +6,7 @@ export class SelectionBox {
     isPanelOpen: boolean;
     x: number;
     y: number;
+    isMoving: boolean;
     isRotating: boolean;
     width: number;
     height: number;
@@ -19,6 +20,7 @@ export class SelectionBox {
         this.display = false;
         this.isPanelOpen = false;
         this.isRotating = false;
+        this.isMoving = false;
         this.x = x;
         this.y = y;
         this.width = width;
