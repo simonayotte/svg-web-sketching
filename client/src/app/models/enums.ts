@@ -39,11 +39,17 @@ export enum OtherButtons {
 export enum SelectionButtons {
     Control = 'Control',
     A = 'a',
+    C = 'c',
+    X = 'x',
+    V = 'v',
+    D = 'd',
+    Delete = 'Delete',
     ArrowLeft = 'ArrowLeft',
     ArrowRight = 'ArrowRight',
     ArrowUp = 'ArrowUp',
     ArrowDown = 'ArrowDown',
 }
+
 export enum SelectedColors {
     First = 'First',
     Second = 'Second',
@@ -72,16 +78,16 @@ export enum FormValuesName {
     Tags = 'tags',
     Name = 'name',
     Type = 'type',
-    Filter = 'filter'
+    Filter = 'filter',
 }
 
 export enum FileTypes {
     Png = 'png',
     Jpeg = 'jpeg',
-    Svg = 'svg+xml'
+    Svg = 'svg+xml',
 }
 
 export enum GalleryButtonColors {
     Black = 'black',
-    Orange = '#ff8c00'
+    Orange = '#ff8c00',
 }

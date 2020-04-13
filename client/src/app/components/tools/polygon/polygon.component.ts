@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Types } from 'src/app/models/enums';
-
 /* tslint:disable:no-any */
 @Component({
     selector: 'app-polygon',
@@ -15,15 +14,15 @@ export class PolygonComponent {
     @Output() polygonTypeChange: EventEmitter<Types> = new EventEmitter();
     @Output() polygonSidesChange: EventEmitter<number> = new EventEmitter();
 
-    setThickness(event: any) {
+    setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setType(value: Types) {
+    setType(value: Types): void {
         this.polygonTypeChange.emit(value);
     }
 
-    setSides(event: any) {
+    setSides(event: any): void {
         this.polygonSidesChange.emit(event.target.value);
     }
 }

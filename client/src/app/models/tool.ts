@@ -9,6 +9,31 @@ export abstract class Tool {
     state: DrawState = new DrawState();
 
     renderer: Renderer2;
+
+    static cloneSvgs(svgs: SVGGraphicsElement[], offset: number = 0): SVGGraphicsElement[] {
+        const newSvgs = [];
+        for (let svg of svgs) {
+            const clone = svg.cloneNode(false) as SVGGraphicsElement;
+            const translation = this.getTranslation(svg);
+            clone.setAttribute('transform', `translate(${offset + translation[0]},${offset + translation[1]})`);
+            newSvgs.push(clone);
+        }
+        return newSvgs;
+    }
+
+    static getTranslation(svg: SVGGraphicsElement): number[] {
+        const str = svg.getAttribute('transform');
+        if (!str) {
+            return [0, 0];
+        }
+
+        const matches = str.match(/(?!translate)[+-]?\d+/g);
+
+        if (!matches) {
+            return [0, 0];
+        }
+        return [parseInt(matches[0], 10), parseInt(matches[1], 10)];
+    }
     start(event: MouseEvent): void {
         return;
     }
@@ -26,14 +51,5 @@ export abstract class Tool {
     }
     handleKeyUp(key: string): void {
         return;
-    }
-
-    copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
-        const newSvgs = [];
-        for (let svg of svgs) {
-            const clone = svg.cloneNode(true) as SVGGraphicsElement;
-            newSvgs.push(clone);
-        }
-        return newSvgs;
     }
 }

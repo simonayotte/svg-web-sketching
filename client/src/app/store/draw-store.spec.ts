@@ -1,16 +1,22 @@
 import { TestBed } from '@angular/core/testing';
 import { Color } from '../models/color';
+import { Coordinate } from '../models/coordinate';
 import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
+import { Tool } from '../models/tool';
 import { DrawState } from '../state/draw-state';
 import { DrawStore } from './draw-store';
 
 /* tslint:disable:no-magic-numbers */
+/* tslint:disable:max-file-line-count */
+
 describe('DrawStore', () => {
     let store: DrawStore;
     let state: DrawState;
+    const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+
     beforeEach(() => {
         TestBed.configureTestingModule({});
-
         store = new DrawStore();
         store.stateObs.subscribe((value: DrawState) => {
             state = value;
@@ -21,11 +27,76 @@ describe('DrawStore', () => {
         expect(store).toBeTruthy();
     });
 
+    // clipboard
+    it('#copy() should set #copiedSvg to selectionBox cloned #svgs and reset #offset', () => {
+        state.selectionBox.svgs = [rect, circle];
+        state.clipboardState.offset = 30;
+        store.copy();
+        expect(state.clipboardState.copiedSvgs).toEqual(Tool.cloneSvgs([rect, circle]));
+        expect(state.clipboardState.offset).toEqual(10);
+    });
+
+    it('#paste() should call Tool #cloneSvgs() with #offset and increment #offset by 10 ', () => {
+        state.clipboardState.copiedSvgs = [rect, circle];
+        state.clipboardState.offset = 30;
+
+        const spy = spyOn(Tool, 'cloneSvgs');
+        store.paste();
+        expect(spy).toHaveBeenCalledWith([rect, circle], 30);
+        expect(state.clipboardState.offset).toEqual(40);
+    });
+
+    it('#paste() should set set selectionBox #svgs after timeout ', (done: DoneFn) => {
+        state.clipboardState.copiedSvgs = [rect, circle];
+        store.paste();
+        setTimeout(() => {
+            expect(state.selectionBox.svgs).toEqual(Tool.cloneSvgs([rect, circle]));
+            done();
+        });
+    });
+
+    it('#paste() should reset #offset to 10 if paste is out of bounds ', () => {
+        state.clipboardState.copiedSvgs = [rect, circle];
+        state.clipboardState.copiedSvgsCoord = new Coordinate(495, 495); // width and height is 500 , offset is
+        state.clipboardState.offset = 30;
+        store.paste();
+        expect(state.clipboardState.offset).toEqual(10);
+    });
+
+    it('#cut() should call #copy() and #deleteSvgs()', () => {
+        const spyCopy = spyOn(store, 'copy');
+        const spyDelete = spyOn(store, 'deleteSvgs');
+
+        store.cut();
+        expect(spyCopy).toHaveBeenCalled();
+        expect(spyDelete).toHaveBeenCalled();
+    });
+
+    it('#duplicate() should call #pushSvgs() with selectionBox cloned #svgs', () => {
+        state.selectionBox.svgs = [circle, rect];
+        const spy = spyOn(store, 'pushSvgs');
+        store.duplicate();
+        expect(spy).toHaveBeenCalledWith(Tool.cloneSvgs([circle, rect], 10));
+    });
+
+    it('#duplicate() should set set selectionBox #svgs after timeout ', (done: DoneFn) => {
+        state.selectionBox.svgs = [circle, rect];
+        store.duplicate();
+        setTimeout(() => {
+            expect(state.selectionBox.svgs).toEqual(Tool.cloneSvgs([circle, rect], 10));
+            done();
+        });
+    });
+
+    it('#delete() should call #deleteSvgs() with selectionBox #svgs and empty it', () => {
+        state.selectionBox.svgs = [circle, rect];
+        const spy = spyOn(store, 'deleteSvgs');
+        store.delete();
+        expect(spy).toHaveBeenCalledWith([circle, rect]);
+        expect(state.selectionBox.svgs).toEqual([]);
+    });
     // undoRedo
     it('#undo() should set #svgs with last index of #undoState ', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
 
         store.undo();
@@ -36,9 +107,6 @@ describe('DrawStore', () => {
     });
 
     it('#undo() should remove last index of #undoState', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
         store.undo();
         store.stateObs.subscribe((value: DrawState) => {
@@ -48,9 +116,6 @@ describe('DrawStore', () => {
     });
 
     it('#undo() should set #redoState with current state of #svgs ', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
         state.undoRedoState.undoState = [[], [rect], [rect, circle]];
 
         state.svgState.svgs = [rect, circle, rect, circle];
@@ -63,9 +128,6 @@ describe('DrawStore', () => {
     });
 
     it('#redo() should set #svgs with last index of #redoState ', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
         state.undoRedoState.redoState = [[], [rect], [rect, circle]];
 
         store.redo();
@@ -76,9 +138,6 @@ describe('DrawStore', () => {
     });
 
     it('#redo() should remove last index of #redoState', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
         state.undoRedoState.redoState = [[], [rect], [rect, circle]];
 
         store.redo();
@@ -89,7 +148,6 @@ describe('DrawStore', () => {
     });
 
     it('#redo() should set #undoState with current state of #svgs ', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const path: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
         state.undoRedoState.redoState = [[], [rect], [rect, path]];
@@ -130,9 +188,6 @@ describe('DrawStore', () => {
         });
     });
     it('#pushSvg() should set #undoState to old state of #svgs', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-
         state.svgState.svgs = [circle];
         store.pushSvg(rect);
         store.stateObs.subscribe((value: DrawState) => {
@@ -142,8 +197,6 @@ describe('DrawStore', () => {
     });
 
     it('#pushSvg() should set #redoState to []', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         state.undoRedoState.redoState = [[], [rect, circle]];
 
         store.pushSvg(rect);
@@ -162,20 +215,7 @@ describe('DrawStore', () => {
         });
     });
 
-    it('#popSvg() should remove last element from #svgs', (done: DoneFn) => {
-        store.pushSvg(document.createElementNS('http://www.w3.org/2000/svg', 'rect'));
-        store.pushSvg(document.createElementNS('http://www.w3.org/2000/svg', 'circle'));
-        store.popSvg();
-        store.stateObs.subscribe((value: DrawState) => {
-            expect(value.svgState.svgs.length).toEqual(1);
-            done();
-        });
-    });
-
     it('#saveSvgsState() should add state to #undoState and set #redoState to []', (done: DoneFn) => {
-        const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-        const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-
         store.saveSvgsState([rect, circle]);
         store.stateObs.subscribe((value: DrawState) => {
             expect(value.undoRedoState.undoState).toEqual([[rect, circle]]);

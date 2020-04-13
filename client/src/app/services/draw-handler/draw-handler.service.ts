@@ -75,6 +75,8 @@ export class DrawHandlerService {
 
     onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
+        event.preventDefault();
+
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
             const service: Tool = this.servicesMap.get(this.state.globalState.tool) as Tool;
@@ -90,24 +92,20 @@ export class DrawHandlerService {
                 switch (key) {
                     case OtherButtons.O:
                         // mat dialog display
-                        event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
                     case OtherButtons.S:
-                        event.preventDefault();
                         event.stopPropagation();
                         this.matDialog.open(SaveDrawingComponent);
                         break;
 
                     case OtherButtons.E:
-                        event.preventDefault();
                         this.matDialog.open(ExportDrawingComponent);
                         break;
 
                     case OtherButtons.G:
-                        event.preventDefault();
                         this.matDialog.open(DrawingGalleryComponent);
                         break;
 
@@ -131,7 +129,8 @@ export class DrawHandlerService {
     }
 
     onMouseMove(event: MouseEvent): void {
-        this.store.setMousePosition(event.offsetX - this.state.eraserThickness / 2, event.offsetY - this.state.eraserThickness / 2);
+        this.state.globalState.cursorX = event.offsetX - this.state.eraserThickness / 2;
+        this.state.globalState.cursorY = event.offsetY - this.state.eraserThickness / 2;
         if (this.state.globalState.tool === Tools.Eraser) {
             const service = this.servicesMap.get(this.state.globalState.tool) as EraserService;
             service.move(event.offsetX, event.offsetY);

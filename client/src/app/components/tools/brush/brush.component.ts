@@ -11,14 +11,14 @@ export class BrushComponent {
     @Input('texture') texture: BrushTextures;
     @Input('thickness') thickness: string;
 
-    @Output() textureChange = new EventEmitter();
-    @Output() thicknessChange = new EventEmitter();
-
-    setThickness(event: any) {
+    @Output() textureChange: EventEmitter<BrushTextures> = new EventEmitter();
+    @Output() thicknessChange: EventEmitter<number> = new EventEmitter();
+    /* tslint:disable:no-any */
+    setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }
 
-    setTexture(value: BrushTextures) {
+    setTexture(value: BrushTextures): void {
         this.textureChange.emit(value);
     }
 }

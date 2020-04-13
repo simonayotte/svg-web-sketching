@@ -6,33 +6,33 @@ import { DrawHandlerService } from '../services/draw-handler/draw-handler.servic
 export class DrawDirective implements OnInit {
     constructor(private el: ElementRef, private drawHandler: DrawHandlerService) {}
 
-    @Output() drawSvgChange = new EventEmitter();
+    @Output() drawSvgChange: EventEmitter<SVGSVGElement> = new EventEmitter();
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawSvgChange.emit(this.el.nativeElement);
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         this.drawHandler.onKeyDown(event);
     }
     @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         this.drawHandler.onKeyUp(event);
     }
 
     @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         this.drawHandler.startTool(event);
     }
 
     @HostListener('mouseleave')
-    onMouseleave() {
+    onMouseleave(): void {
         this.drawHandler.stopTool();
     }
 
     @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent) {
+    onMouseMove(event: MouseEvent): void {
         this.drawHandler.onMouseMove(event);
     }
 }

@@ -20,16 +20,18 @@ import { DrawModule } from './modules/draw.module';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
-    declarations: [AppComponent,
-                CreateDrawingComponent,
-                HomePageComponent,
-                DrawingStartedDialogComponent,
-                SaveDrawingComponent,
-                PreviewImageComponent,
-                ExportDrawingComponent,
-                PreviewExportComponent,
-                DrawingGalleryComponent,
-                SafeUrlPipe],
+    declarations: [
+        AppComponent,
+        CreateDrawingComponent,
+        HomePageComponent,
+        DrawingStartedDialogComponent,
+        SaveDrawingComponent,
+        PreviewImageComponent,
+        ExportDrawingComponent,
+        PreviewExportComponent,
+        DrawingGalleryComponent,
+        SafeUrlPipe,
+    ],
     imports: [
         BrowserModule,
         HttpClientModule,
@@ -42,7 +44,15 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
         DrawModule,
     ],
     providers: [],
-    entryComponents: [CreateDrawingComponent, DrawingStartedDialogComponent, SaveDrawingComponent, PreviewImageComponent, ExportDrawingComponent, PreviewExportComponent, DrawingGalleryComponent],
+    entryComponents: [
+        CreateDrawingComponent,
+        DrawingStartedDialogComponent,
+        SaveDrawingComponent,
+        PreviewImageComponent,
+        ExportDrawingComponent,
+        PreviewExportComponent,
+        DrawingGalleryComponent,
+    ],
     bootstrap: [AppComponent],
 })
 export class AppModule {}

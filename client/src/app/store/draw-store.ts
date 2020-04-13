@@ -1,14 +1,67 @@
 import { Injectable } from '@angular/core';
 import { Color } from '../models/color';
+import { Coordinate } from '../models/coordinate';
 import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
+import { Tool } from '../models/tool';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
+
+const OFFSET = 10;
+/* tslint:disable:max-file-line-count */
+
 @Injectable({
     providedIn: 'root',
 })
 export class DrawStore extends Store<DrawState> {
     constructor() {
         super(new DrawState());
+    }
+
+    // clipboard
+    copy(): void {
+        this.setState({
+            ...this.state,
+            clipboardState: {
+                ...this.state.clipboardState,
+                copiedSvgs: Tool.cloneSvgs(this.state.selectionBox.svgs),
+                offset: OFFSET,
+                copiedSvgsCoord: new Coordinate(this.state.selectionBox.x, this.state.selectionBox.y),
+            },
+        });
+    }
+    paste(): void {
+        let offset = this.state.clipboardState.offset;
+        const copiedSvgsCoord = this.state.clipboardState.copiedSvgsCoord;
+        const newSvgs = Tool.cloneSvgs(this.state.clipboardState.copiedSvgs, offset); // clone with offset
+        this.pushSvgs(newSvgs);
+
+        offset += OFFSET;
+        if (offset + copiedSvgsCoord.pointX >= this.state.svgState.width || offset + copiedSvgsCoord.pointY >= this.state.svgState.height) {
+            offset = OFFSET;
+        }
+
+        this.setState({
+            ...this.state,
+            clipboardState: { ...this.state.clipboardState, offset },
+        });
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); // update selection box
+    }
+
+    cut(): void {
+        this.copy();
+        this.deleteSvgs(this.state.selectionBox.svgs);
+        this.state.selectionBox.svgs = []; // update selection box
+    }
+
+    duplicate(): void {
+        const newSvgs = Tool.cloneSvgs(this.state.selectionBox.svgs, OFFSET); // clone with offset
+        this.pushSvgs(newSvgs);
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); // update selection box
+    }
+
+    delete(): void {
+        this.deleteSvgs(this.state.selectionBox.svgs);
+        this.state.selectionBox.svgs = []; // update selection box
     }
 
     // undoRedo
@@ -26,6 +79,7 @@ export class DrawStore extends Store<DrawState> {
                 redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.state.selectionBox.svgs = [];
     }
     redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {
@@ -92,6 +146,18 @@ export class DrawStore extends Store<DrawState> {
             },
         });
     }
+    pushSvgs(value: SVGGraphicsElement[]): void {
+        const newState = this.state.svgState.svgs.concat(value);
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: newState },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
+        });
+    }
 
     deleteSvgs(value: SVGGraphicsElement[]): void {
         this.setState({
@@ -123,12 +189,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    popSvg(): void {
-        this.setState({
-            ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
-        });
-    }
     // Global
 
     setThickness(value: number): void {
@@ -150,6 +210,7 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
         });
+        this.state.selectionBox.isPanelOpen = isPanelOpen;
     }
     toggleGrid(): void {
         this.setState({
@@ -170,12 +231,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    setMousePosition(x: number, y: number): void {
-        this.setState({
-            ...this.state,
-            globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
-        });
-    }
     // Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({
