@@ -10,7 +10,7 @@ import { Color } from 'src/app/models/color';
 })
 export class ContinueDrawingService {
 
-  private isContinueDrawing: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  private isContinueDrawing: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   isContinueDrawingObs: Observable<boolean> = this.isContinueDrawing.asObservable();
 
   constructor(private drawingHandler: DrawingHandler, private store:DrawStore) { }

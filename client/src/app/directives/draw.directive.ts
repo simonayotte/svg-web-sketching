@@ -18,7 +18,6 @@ export class DrawDirective implements OnInit {
         this.drawSvgChange.emit(this.el.nativeElement);
         if(this.isContinueDrawing){
             this.continueDrawingService.loadSavedDrawing()
-            this.continueDrawingService.setIsContinueDrawing(false);
         }
     }
 

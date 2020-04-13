@@ -5,6 +5,7 @@ import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
+import { ContinueDrawingService } from '../continue-drawing/continue-drawing.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +13,7 @@ import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
 export class GalleryService {
     state: DrawState;
 
-    constructor(private store: DrawStore, private drawingHandler: DrawingHandler, public rendererFactory: RendererFactory2) {
+    constructor(private store: DrawStore, private drawingHandler: DrawingHandler, public rendererFactory: RendererFactory2, private continueDrawingService: ContinueDrawingService) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
@@ -40,13 +41,14 @@ export class GalleryService {
     }
 
     loadDrawing(drawing: SavedDrawing) {
+        this.continueDrawingService.setIsContinueDrawing(false);
         this.store.setDrawHeight(drawing.height);
         this.store.setDrawWidth(drawing.width);
         const canvasColor = new Color(drawing.RGBA[0], drawing.RGBA[1], drawing.RGBA[2], drawing.RGBA[3]);
         this.store.setCanvasColor(canvasColor);
         this.drawingHandler.clearCanvas();
-        let svgArray = this.drawingHandler.convertHtmlToSvgElement(drawing.svgsHTML);
-        this.store.setSvgArray(svgArray);
+        let svgArray:SVGGraphicsElement[] = this.drawingHandler.convertHtmlToSvgElement(drawing.svgsHTML);
+        setTimeout(()=> this.store.setSvgArray(svgArray));
     }
 
     filterDrawings(tagStringArray: string[], allDrawingsInDb: SavedDrawing[]): SavedDrawing[] {

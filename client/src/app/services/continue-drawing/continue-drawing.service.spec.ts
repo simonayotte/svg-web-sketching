@@ -34,8 +34,8 @@ describe('ContinueDrawingService', () => {
   });
 
   it('#setIsContinueDrawing() should set the value of #isContinueDrawing', () => {
-    service.setIsContinueDrawing(true);
-    expect(service.getIsContinueDrawing()).toEqual(true);
+    service.setIsContinueDrawing(false);
+    expect(service.getIsContinueDrawing()).toEqual(false);
   });
 
   it('#loadSavedDrawing() should call #setDrawWidth() of the store', () => {
