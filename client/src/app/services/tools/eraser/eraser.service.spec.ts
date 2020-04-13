@@ -172,8 +172,6 @@ describe('EraserService', () => {
         expect(service.isEraseTouching(400, 400, domRect, 10)).toBeFalsy();
     });
 
-
-
     it('#isEraseTouching() should return false if eraser is not touching svg ', () => {
         const domRect = new DOMRect(50, 50, 10, 10);
 

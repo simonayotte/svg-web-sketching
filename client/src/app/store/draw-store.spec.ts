@@ -1,17 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { Color } from '../models/color';
+import { Coordinate } from '../models/coordinate';
 import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
+import { Tool } from '../models/tool';
 import { DrawState } from '../state/draw-state';
 import { DrawStore } from './draw-store';
-import { Tool } from '../models/tool';
-import { Coordinate } from '../models/coordinate';
 
 /* tslint:disable:no-magic-numbers */
+/* tslint:disable:max-file-line-count */
+
 describe('DrawStore', () => {
     let store: DrawStore;
     let state: DrawState;
-    let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
@@ -25,7 +27,7 @@ describe('DrawStore', () => {
         expect(store).toBeTruthy();
     });
 
-    //clipboard
+    // clipboard
     it('#copy() should set #copiedSvg to selectionBox cloned #svgs and reset #offset', () => {
         state.selectionBox.svgs = [rect, circle];
         state.clipboardState.offset = 30;
@@ -55,7 +57,7 @@ describe('DrawStore', () => {
 
     it('#paste() should reset #offset to 10 if paste is out of bounds ', () => {
         state.clipboardState.copiedSvgs = [rect, circle];
-        state.clipboardState.copiedSvgsCoord = new Coordinate(495, 495); //width and height is 500 , offset is
+        state.clipboardState.copiedSvgsCoord = new Coordinate(495, 495); // width and height is 500 , offset is
         state.clipboardState.offset = 30;
         store.paste();
         expect(state.clipboardState.offset).toEqual(10);

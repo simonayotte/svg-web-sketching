@@ -6,7 +6,7 @@ export class Color {
     a: number;
     rgbHex: string;
     rgbaHex: string;
-    isHexValid = true;
+    isHexValid: boolean;
 
     private rgbHexPattern: RegExp = new RegExp('[a-fA-F0-9]{6}');
 
@@ -17,6 +17,7 @@ export class Color {
         this.a = a;
         this.rgbaHex = this.hex();
         this.rgbHex = this.colorHex();
+        this.isHexValid = true;
     }
 
     fixColorRGB(type: string): void {
@@ -55,9 +56,9 @@ export class Color {
     synchronizeRGB(): void {
         if (this.rgbHexPattern.test(this.rgbHex)) {
             this.isHexValid = true;
-            this.r = parseInt(`0x${this.rgbHex.substring(0, 2)}`);
-            this.g = parseInt(`0x${this.rgbHex.substring(2, 4)}`);
-            this.b = parseInt(`0x${this.rgbHex.substring(4, 6)}`);
+            this.r = parseInt(`0x${this.rgbHex.substring(0, 2)}`, 16);
+            this.g = parseInt(`0x${this.rgbHex.substring(2, 4)}`, 16);
+            this.b = parseInt(`0x${this.rgbHex.substring(4, 6)}`, 16);
         } else {
             this.isHexValid = false;
         }

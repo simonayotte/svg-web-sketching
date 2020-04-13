@@ -1,9 +1,9 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
+import { SelectionButtons, Tools } from 'src/app/models/enums';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { RectangleService } from '../rectangle/rectangle.service';
-import { Tools, SelectionButtons } from 'src/app/models/enums';
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +29,7 @@ export class SelectionService extends Tool {
     }
 
     start(event: MouseEvent): void {
-        let svg = <SVGGraphicsElement>event.target;
+        const svg = event.target as SVGGraphicsElement;
 
         if (event.button === 2) {
             this.state.selectionBox.svgs = [];
@@ -51,8 +51,8 @@ export class SelectionService extends Tool {
 
     continue(): void {
         if (!this.state.selectionBox.isMoving) {
-            for (let svg of this.state.svgState.svgs) {
-                let selectRect = <DOMRect>this.rectangle.svg.getBoundingClientRect();
+            for (const svg of this.state.svgState.svgs) {
+                const selectRect = this.rectangle.svg.getBoundingClientRect() as DOMRect;
                 this.selectSvg(svg, selectRect);
             }
         }
@@ -65,8 +65,8 @@ export class SelectionService extends Tool {
     }
 
     selectSvg(svg: SVGGraphicsElement, selectRect: DOMRect): void {
-        let thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
-        let svgRect = svg.getBoundingClientRect();
+        const thickness = parseInt(svg.getAttribute('stroke-width') as string, 10) / 2;
+        const svgRect = svg.getBoundingClientRect();
         const selectLeft = selectRect.left;
         const selectRight = selectRect.right;
         const selectTop = selectRect.top;
@@ -91,7 +91,7 @@ export class SelectionService extends Tool {
         }
     }
 
-    handleKeyDown(key: string) {
+    handleKeyDown(key: string): void {
         if (key === SelectionButtons.Control) {
             this.isCtrl = true;
         }
@@ -123,7 +123,7 @@ export class SelectionService extends Tool {
         }
     }
 
-    handleKeyUp(key: string) {
+    handleKeyUp(key: string): void {
         if (key === SelectionButtons.Control) {
             this.isCtrl = false;
         }

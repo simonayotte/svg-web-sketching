@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Color } from '../models/color';
+import { Coordinate } from '../models/coordinate';
 import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
+import { Tool } from '../models/tool';
 import { DrawState } from '../state/draw-state';
 import { Store } from './store';
-import { Tool } from '../models/tool';
-import { Coordinate } from '../models/coordinate';
 
 const OFFSET = 10;
+/* tslint:disable:max-file-line-count */
 
 @Injectable({
     providedIn: 'root',
@@ -30,8 +31,8 @@ export class DrawStore extends Store<DrawState> {
     }
     paste(): void {
         let offset = this.state.clipboardState.offset;
-        let copiedSvgsCoord = this.state.clipboardState.copiedSvgsCoord;
-        let newSvgs = Tool.cloneSvgs(this.state.clipboardState.copiedSvgs, offset); //clone with offset
+        const copiedSvgsCoord = this.state.clipboardState.copiedSvgsCoord;
+        const newSvgs = Tool.cloneSvgs(this.state.clipboardState.copiedSvgs, offset); // clone with offset
         this.pushSvgs(newSvgs);
 
         offset += OFFSET;
@@ -43,24 +44,24 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             clipboardState: { ...this.state.clipboardState, offset },
         });
-        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); //update selection box
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); // update selection box
     }
 
     cut(): void {
         this.copy();
         this.deleteSvgs(this.state.selectionBox.svgs);
-        this.state.selectionBox.svgs = []; //update selection box
+        this.state.selectionBox.svgs = []; // update selection box
     }
 
     duplicate(): void {
-        let newSvgs = Tool.cloneSvgs(this.state.selectionBox.svgs, OFFSET); //clone with offset
+        const newSvgs = Tool.cloneSvgs(this.state.selectionBox.svgs, OFFSET); // clone with offset
         this.pushSvgs(newSvgs);
-        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); //update selection box
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); // update selection box
     }
 
     delete(): void {
         this.deleteSvgs(this.state.selectionBox.svgs);
-        this.state.selectionBox.svgs = []; //update selection box
+        this.state.selectionBox.svgs = []; // update selection box
     }
 
     // undoRedo

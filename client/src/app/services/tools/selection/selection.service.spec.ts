@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
+import { SelectionButtons } from 'src/app/models/enums';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
+import { FormService } from '../form/form.service';
 import { RectangleService } from '../rectangle/rectangle.service';
 import { SelectionService } from './selection.service';
-import { SelectionButtons } from 'src/app/models/enums';
-import { FormService } from '../form/form.service';
-
+/* tslint:disable:no-magic-numbers */
 describe('SelectionService', () => {
     let service: SelectionService;
     let store: DrawStore;
@@ -100,24 +100,24 @@ describe('SelectionService', () => {
     });
 
     it('#selectSvg() should add svg to #selectionBox if selection is colliding', () => {
-        let selectRect = new DOMRect(250, 250, 45, 20);
+        const selectRect = new DOMRect(250, 250, 45, 20);
         service.selectSvg(rect, selectRect);
         expect(service.state.selectionBox.svgs).toEqual([rect]);
     });
     it('#selectSvg() should not add svg to #selectionBox if selection is not colliding', () => {
-        let selectRect = new DOMRect(400, 400, 45, 20);
+        const selectRect = new DOMRect(400, 400, 45, 20);
         service.selectSvg(rect, selectRect);
         expect(service.state.selectionBox.svgs).toEqual([]);
     });
     it('#selectSvg() should not add svg to #selectionBox if selection is colliding but svg is already selected', () => {
-        let selectRect = new DOMRect(250, 250, 45, 20);
+        const selectRect = new DOMRect(250, 250, 45, 20);
         service.state.selectionBox.svgs = [rect];
         service.selectSvg(rect, selectRect);
         expect(service.state.selectionBox.svgs).toEqual([rect]);
     });
 
     it('#selectSvg() should delete svg from #selectionBox if selection is not colliding', () => {
-        let selectRect = new DOMRect(400, 400, 45, 20);
+        const selectRect = new DOMRect(400, 400, 45, 20);
         service.state.selectionBox.svgs = [rect];
         service.selectSvg(rect, selectRect);
         expect(service.state.selectionBox.svgs).toEqual([]);

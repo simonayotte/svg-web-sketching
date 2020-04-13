@@ -1,6 +1,8 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Color } from 'src/app/models/color';
 
+/* tslint:disable:no-magic-numbers */
+
 @Component({
     selector: 'app-color',
     templateUrl: './color.component.html',
@@ -9,8 +11,6 @@ import { Color } from 'src/app/models/color';
 export class ColorComponent implements OnInit {
     private squareContext: CanvasRenderingContext2D;
     private barContext: CanvasRenderingContext2D;
-
-    constructor() {}
     color: Color;
 
     @Input('color') colorInput: Color;
@@ -24,7 +24,7 @@ export class ColorComponent implements OnInit {
     @ViewChild('square', { static: true }) squareRef: ElementRef;
     @ViewChild('bar', { static: true }) barRef: ElementRef;
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.squareContext = this.squareRef.nativeElement.getContext('2d');
         this.barContext = this.barRef.nativeElement.getContext('2d');
         this.color = new Color(this.colorInput.r, this.colorInput.g, this.colorInput.b, this.colorInput.a);
@@ -32,8 +32,8 @@ export class ColorComponent implements OnInit {
         this.fillSquare(this.color);
         this.fillBar();
     }
-
-    onRGBChange(event: any, type: string) {
+    /* tslint:disable:no-any */
+    onRGBChange(event: any, type: string): void {
         const value: number = event.target.value;
         if (value < 0 || value == null) {
             event.target.value = 0;
@@ -44,12 +44,12 @@ export class ColorComponent implements OnInit {
         this.fillSquare(this.color);
     }
 
-    onHexChange() {
+    onHexChange(): void {
         this.color.synchronizeRGB();
         this.fillSquare(this.color);
     }
 
-    setColorWithSquare(event: MouseEvent) {
+    setColorWithSquare(event: MouseEvent): void {
         const data: Uint8ClampedArray = this.squareContext.getImageData(event.offsetX, event.offsetY, 1, 1).data;
         this.color.r = data[0];
         this.color.g = data[1];
@@ -57,7 +57,7 @@ export class ColorComponent implements OnInit {
         this.color.a = data[3];
         this.color.synchronizeHex();
     }
-    setColorWithBar(event: MouseEvent) {
+    setColorWithBar(event: MouseEvent): void {
         const data: Uint8ClampedArray = this.barContext.getImageData(event.offsetX, event.offsetY, 1, 1).data;
         this.color.r = data[0];
         this.color.g = data[1];
@@ -68,18 +68,18 @@ export class ColorComponent implements OnInit {
         this.fillSquare(this.color);
     }
 
-    save() {
+    save(): void {
         this.saveColor.emit(this.color);
         this.close();
     }
-    close() {
+    close(): void {
         this.closeColor.emit();
     }
 
-    useColor(event: MouseEvent, color: Color) {
-        if (event.button == 0) {
+    useColor(event: MouseEvent, color: Color): void {
+        if (event.button === 0) {
             this.setFirstColor.emit(color);
-        } else if (event.button == 2) {
+        } else if (event.button === 2) {
             this.setSecondColor.emit(color);
         }
     }

@@ -38,14 +38,14 @@ export class SelectionBox {
         for (const svg of this.selectedSvgs) {
             let thickness = 0;
             if (svg.getAttribute('stroke-width')) {
-                thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
+                thickness = parseInt(svg.getAttribute('stroke-width') as string, 10) / 2;
             }
 
-            let domRect = svg.getBoundingClientRect();
-            let rectLeft = domRect.left - thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
-            let rectTop = domRect.top - thickness;
-            let rectRight = domRect.right + thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
-            let rectBottom = domRect.bottom + thickness;
+            const domRect = svg.getBoundingClientRect();
+            const rectLeft = domRect.left - thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+            const rectTop = domRect.top - thickness;
+            const rectRight = domRect.right + thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+            const rectBottom = domRect.bottom + thickness;
 
             left = left > rectLeft ? rectLeft : left; // choose min
             right = right < rectRight ? rectRight : right; // choose max

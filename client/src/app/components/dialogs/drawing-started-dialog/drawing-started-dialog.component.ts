@@ -12,7 +12,7 @@ import { CreateDrawingComponent } from '../create-drawing-dialog/create-drawing.
 })
 export class DrawingStartedDialogComponent implements OnInit {
 
-    private didGalleryOpenDialog:boolean;
+    private didGalleryOpenDialog: boolean;
     drawingToLoad: SavedDrawing;
     constructor(public dialogRef: MatDialogRef<DrawingStartedDialogComponent>, public dialog: MatDialog, private store: DrawStore, private galleryService: GalleryService) {
         this.galleryService.drawingToLoadObs.subscribe((value: SavedDrawing) => {

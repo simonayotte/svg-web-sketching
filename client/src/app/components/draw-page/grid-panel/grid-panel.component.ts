@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+const MIN_SQUARE_SIZE = 30;
+const MAX_SQUARE_SIZE = 500;
 @Component({
     selector: 'app-grid-panel',
     templateUrl: './grid-panel.component.html',
@@ -17,9 +19,7 @@ export class GridPanelComponent {
     @Output() keyHandlerChange: EventEmitter<boolean> = new EventEmitter();
     isSizeError: boolean;
     sizeErrorMsg: string;
-    readonly MIN_SQUARE_SIZE = 30;
-    readonly MAX_SQUARE_SIZE = 500;
-
+    /* tslint:disable:no-any */
     setGridOpacity(event: any): void {
         this.gridOpacityChange.emit(event.target.value);
     }
@@ -29,11 +29,11 @@ export class GridPanelComponent {
     }
 
     confirmGridSize(): void {
-        if (this.size < this.MIN_SQUARE_SIZE) {
+        if (this.size < MIN_SQUARE_SIZE) {
             this.isSizeError = true;
             this.sizeErrorMsg = 'Taille est plus petite que 30';
             return;
-        } else if (this.size > this.MAX_SQUARE_SIZE) {
+        } else if (this.size > MAX_SQUARE_SIZE) {
             this.isSizeError = true;
             this.sizeErrorMsg = 'Taille est plus grande que 500';
             return;

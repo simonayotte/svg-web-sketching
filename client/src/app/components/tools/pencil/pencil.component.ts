@@ -1,19 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'app-pencil',
     templateUrl: './pencil.component.html',
     styleUrls: ['./pencil.component.scss'],
 })
-export class PencilComponent implements OnInit {
-    constructor() {}
+export class PencilComponent {
     @Input('thickness') thickness: string;
 
-    @Output() textureChange = new EventEmitter();
-    @Output() thicknessChange = new EventEmitter();
-
-    setThickness(event: any) {
+    @Output() thicknessChange: EventEmitter<number> = new EventEmitter();
+    /* tslint:disable:no-any */
+    setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }
-    ngOnInit() {}
 }

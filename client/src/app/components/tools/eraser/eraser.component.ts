@@ -1,19 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
     selector: 'app-eraser',
     templateUrl: './eraser.component.html',
     styleUrls: ['./eraser.component.scss'],
 })
-export class EraserComponent implements OnInit {
-    constructor() {}
-
+export class EraserComponent {
     @Input('thickness') thickness: string;
 
-    @Output() thicknessChange = new EventEmitter();
-
-    setThickness(event: any) {
+    @Output() thicknessChange: EventEmitter<number> = new EventEmitter();
+    /* tslint:disable:no-any */
+    setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }
-    ngOnInit() {}
 }

@@ -1,10 +1,10 @@
 import { BrushTextures, Types } from '../models/enums';
+import { SelectionBox } from '../models/selection-box';
+import { ClipboardState } from './clipboard-state';
 import { ColorState } from './color-state';
 import { GlobalState } from './global-state';
 import { SvgState } from './svg-state';
 import { UndoRedoState } from './undo-redo-state';
-import { SelectionBox } from '../models/selection-box';
-import { ClipboardState } from './clipboard-state';
 
 const LINE_JUNCTION_THICKNESS_DEFAULT = 25;
 const POLYGON_SIDES_DEFAULT = 3;
@@ -29,7 +29,7 @@ export class DrawState {
     // aerosol
     emissionRate: number;
 
-    //selection
+    // selection
     selectionBox: SelectionBox;
 
     colorState: ColorState;

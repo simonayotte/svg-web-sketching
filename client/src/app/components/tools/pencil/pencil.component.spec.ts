@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PencilComponent } from './pencil.component';
+/* tslint:disable:no-magic-numbers */
+
 describe('PencilComponent', () => {
     let component: PencilComponent;
     let fixture: ComponentFixture<PencilComponent>;

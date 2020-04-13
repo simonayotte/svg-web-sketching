@@ -31,7 +31,7 @@ export class SidebarComponent {
     @Input('canUndo') canUndo: boolean;
     @Input('canRedo') canRedo: boolean;
 
-    //clipboard
+    // clipboard
     @Input('isSelection') isSelection: boolean;
     @Input('isClipboardEmpty') isClipboardEmpty: boolean;
     @Output() copy: EventEmitter<void>;

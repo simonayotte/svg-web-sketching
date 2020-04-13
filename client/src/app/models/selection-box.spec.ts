@@ -2,9 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { SelectionBox } from './selection-box';
 /* tslint:disable:no-magic-numbers */
 describe('Color', () => {
-    let selectionBox: SelectionBox = new SelectionBox(0, 0, 0, 0);
-    let rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    let circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    const selectionBox: SelectionBox = new SelectionBox(0, 0, 0, 0);
+    const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
     beforeEach(() => {
         TestBed.configureTestingModule({});
         spyOn(rect, 'getBoundingClientRect').and.returnValue(new DOMRect(200, 200, 100, 100));
@@ -26,7 +26,7 @@ describe('Color', () => {
 
     it('#set() should set #x to position x of most left svg', () => {
         selectionBox.svgs = [rect, circle];
-        expect(selectionBox.x).toEqual(75 - 52); //52 is sidebar width
+        expect(selectionBox.x).toEqual(75 - 52); // 52 is sidebar width
     });
 
     it('#set() should set #y to position y of most top svg', () => {
