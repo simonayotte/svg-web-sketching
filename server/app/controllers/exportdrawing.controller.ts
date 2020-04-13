@@ -4,6 +4,8 @@ import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 import * as FormData from 'form-data';
 import axios from 'axios';
+require('dotenv').config();
+const API_KEY=process.env.API_KEY;
 
 @injectable()
 export class ExportDrawingController {
@@ -12,84 +14,118 @@ export class ExportDrawingController {
     constructor(@inject(Types.FileHandler) private fileHandler: FileHandler) {
         this.configureRouter();
     }
-
+    
     private configureRouter(): void {
         this.router = Router();
 
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
+            //Export without sending email
+            if(req.body.option === 'one'){
+                console.log('option 1 avant TRY')
+                try{
+                    this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
+                }
+                catch(e){
+                    let errorMsg = {status:'400', message: e.message}
+                    res.json(errorMsg);
+                }
+                let succesMsg = {status:'200', message:'Image exportée avec succès!'}
+                res.json(succesMsg)
+            }
+            if(req.body.option === 'two'){
             try {
                 // verify req.body.to
-                const exportReturn = this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
+                console.log('Print option POST METHOD:',req.body.option)
+                const exportReturn = this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
                 const formData = new FormData();
                 formData.append('to', req.body.to);
-                console.log(exportReturn.stream);
-                formData.append('payload', exportReturn.stream, {
-                    filename: 'foobar.png',
-                    contentType: 'image/png',
-                });
-                console.log('HERE');
-                console.log(req.body.to);
+                switch(req.body.type)
+                {
+                    
+                    case 'png':
+                        formData.append('payload', exportReturn.stream, {
+                            filename: req.body.name + '.' + req.body.type,
+                            contentType: 'image/png' ,  
+                        });
+                    break;
+                    case 'jpeg':
+                        formData.append('payload', exportReturn.stream, {
+                            filename: req.body.name + '.' + req.body.type,
+                            contentType: 'image/jpeg' ,  
+                        });
+                    break;
+                    case 'svg+xml':
+                        formData.append('payload', exportReturn.stream, {
+                            filename: req.body.name + '.svg' ,
+                            contentType: 'image/svg+xml' ,  
+                        });
+                    break;
+                    
+                }
                 axios({
                     method: 'post',
-                    url: 'https://log2990.step.polymtl.ca/email?address_validation=true&dry_run=true',
+                    url: 'https://log2990.step.polymtl.ca/email?address_validation=true', //&dry_run=true
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        'X-Team-Key': '736a0365-3b0e-4b8e-9598-2f6c73fdb290',   // x-team-key utiliser dotenv!!!!!
+                        'X-Team-Key': API_KEY,   // x-team-key utiliser dotenv!!!!!
                         ...formData.getHeaders(),
-                    },
-                }).then((a) => console.log(a.data)).catch((err) => console.log(err)); // Clean gestion d'error
-                /*
-                // res2 verification
-                if (res2.status === 200 || res2.status === 202) {
-                    res.json({
-                        status: '200',
-                        message: 'Email envoyé',
+                    }
+                })
+                .then(() => {
+                    let succesMsg = {status:'200', message:'Email envoyé avec succès!' };
+                    res.json(succesMsg);
+                })
+                .catch((err) =>
+                    { 
+                    console.log('ERROR AXIOS',err.response.status); // Clean gestion d'error
+                        switch(err.response.status) 
+                            {
+                                case 400:
+                                    res.json({
+                                        status: '400',
+                                        message: 'Email invalide. API(email) narrive pas à joindre cette adresse courriel',
+                                    })
+                                break;
+                                case 403:
+                                    res.json({
+                                        status: '403',
+                                        message: 'Votre requête ne comporte pas le header HTTP valide X-Team-Key.',
+                                    })
+                                break;
+                                case 422:
+                                    res.json({
+                                        status: '422',
+                                        message: 'Votre requête ne passe pas la validation de base (vous nenvoyez probablement pas le bon type de données, regardez que votre adresse courriel est bien présent, regardez que le payload est bel et bien un fichier)',
+                                    })
+                                break;
+                                case 429:
+                                    res.json({
+                                        status: '429',
+                                        message: 'Vous avez dépassé votre quota de courriel alloué par heure.',
+                                    })
+                                break;
+                                case 500:
+                                    res.json({
+                                        status: '500',
+                                        message: ' Le mail API éprouve des difficultés à envoyer le courriel',
+                                    })
+                                break;
+                                default:
+                                    res.json({
+                                        status: '400',
+                                        message: 'Message par défaut',
+                                    })
+                            }
                     });
-                } else {
-                    console.log(res2.data);
-                    res.json({
-                        status: '406',
-                        message: 'oops email non envoyé',
-                    });
-                }*/
-                // form
-               /* if(!(req.body.email === "")){
-                    console.log(req.body.email);
-                    const blob = this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
-                    const formData = new FormData();
-                    formData.append('to', req.body.email);
-                    formData.append('payload', blob, `${req.body.name}.${req.body.type}`);
-
-                    // header a donner (c'est la clé reçu par courriel)
-                    // 'X-Team-Key': 736a0365-3b0e-4b8e-9598-2f6c73fdb290
-                    //  https://log2990.step.polymtl.ca/email
-
-                    // query 
-                    // https://log2990.stemp.polymtl.ca/email?dry_run=true  // dry_run=true a retirer lorsque le bug sera fixed
-                    
-                    // axios
-                   
-                }*/    
-                // Send the request to the service and send the response
-            //try{
-            //    this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
-            //}
-            /*catch(e){
-                let errorMsg = {status:'400', message: e.message}
+            }
+            catch(e)
+            {
+                let errorMsg = {status:'400', message: e.message};
                 res.json(errorMsg);
             }
-            let succesMsg = {status:'200', message:'Image exportée avec succès!'}
-            res.json(succesMsg)
-    
-            }*/
-            } catch(e){
-                let errorMsg = {status:'400', message: e.message}
-                res.json(errorMsg);
             }
-            // let succesMsg = {status:'200', message:'Image exportée avec succès!'}
-            // res.json(succesMsg);
         });
     }
 }

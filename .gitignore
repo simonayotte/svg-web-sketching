@@ -5,6 +5,9 @@
 package-lock.json
 .DS_Store
 
+#ignore API_KEY dotenv folder
+.env
+
 # Code Coverage Folder
 coverage/
 node_modules

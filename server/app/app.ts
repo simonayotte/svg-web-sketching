@@ -11,6 +11,8 @@ import { SaveDrawingController } from './controllers/savedrawing.controller';
 import { ExportDrawingController } from './controllers/exportdrawing.controller';
 import { GalleryController } from './controllers/gallery.controller';
 
+
+
 @injectable()
 export class Application {
     private readonly internalError: number = 500;

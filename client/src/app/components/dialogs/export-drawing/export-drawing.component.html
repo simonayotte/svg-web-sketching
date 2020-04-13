@@ -29,32 +29,22 @@
       <!--Option 1: Export Seulement-->
       <label>
         <input type="radio" value="one" formControlName="option" >
-            <span>Export</span><br>
+            <span>Exporter le dessin</span><br>
             
       </label><br>
 
-       <!--Option 2: Email Seulement-->
+       <!--Option 2: Exporter et envoyer par Email -->
       <label>
         <input type="radio" value="two" formControlName="option">
           <span>Envoyer par email</span>
           <div class="reveal-if-active">
             <label for="option 2">Entrer un email valide</label>
-            <input type="email" formControlName="email" id="email" name="email" class="require-if-active" data-require-pair="#email" placeholder="email@exemple.com"> <br>
+            <input type="email" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" formControlName="email" id="email" name="email" class="require-if-active" data-require-pair="#email" placeholder="email@exemple.com" > 
+            <i *ngIf = 'email.errors?.required' class="fas fa-exclamation-triangle" title = "Le courriel est requis!"></i>
+            <i *ngIf = 'email.errors?.pattern' class="fas fa-exclamation-triangle" title = "Un courriel du type email@exemple.com est requis!"></i><br>
           </div>
       </label><br>
 
-       <!--Option 3: Export et Email-->
-      <label>
-        <input type="radio" value="three" formControlName="option" >
-        <span>Export & Email</span>
-        <div class="reveal-if-active">
-          <label for="option 3">Entrer un email valide</label>
-          <input type="email" formControlName="email" id="email" name="email" class="require-if-active" data-require-pair="#email" placeholder="email@exemple.com"> <br>
-        </div>
-      </label><br>
-
-
-        
         <label> 
           <p>Filtres:</p>
           <select id = 'filter' formControlName = 'filter'>
@@ -67,7 +57,8 @@
           </select>
         </label><br>
         
-        <button (click) = 'submit()'>Confirmer</button> 
+        <!--<button (click) = 'submit()'>Confirmer</button> -->
+        <button (click) = 'submit()' [disabled] = '!exportDrawingForm.valid'>Confirmer</button>
         <button mat-dialog-close>Annuler</button>
      </form>
 </div>
