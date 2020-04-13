@@ -1,11 +1,12 @@
+import * as FormData from 'form-data';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { FileHandler } from '../services/file-handler.service';
-import Types from '../types';
-import * as FormData from 'form-data';
 import axios from 'axios';
+import Types from '../types';
+
 require('dotenv').config();
-const API_KEY=process.env.API_KEY;
+const API_KEY = process.env.API_KEY;
 
 @injectable()
 export class ExportDrawingController {
@@ -14,33 +15,32 @@ export class ExportDrawingController {
     constructor(@inject(Types.FileHandler) private fileHandler: FileHandler) {
         this.configureRouter();
     }
-    
+
     private configureRouter(): void {
         this.router = Router();
 
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
             // Send the request to the service and send the response
-            //Export without sending email
-            if(req.body.option === 'one'){
-                console.log('option 1 avant TRY')
-                try{
+            // Export without sending email
+            if (req.body.option === 'one') {
+                try {
                     this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
                 }
-                catch(e){
-                    let errorMsg = {status:'400', message: e.message}
-                    res.json(errorMsg);
-                }
-                let succesMsg = {status:'200', message:'Image exportée avec succès!'}
-                res.json(succesMsg)
+                catch (e) {
+                        const errorMsg = { status:'400' , message: e.message };
+                        res.json(errorMsg);
+                        }
+                const succesMsg = { status:'200' , message : 'Image exportée avec succès!' };
+                res.json( succesMsg );
             }
-            if(req.body.option === 'two'){
+            if (req.body.option === 'two') {
             try {
                 // verify req.body.to
-                console.log('Print option POST METHOD:',req.body.option)
+                console.log( 'Print option POST METHOD:',req.body.option );
                 const exportReturn = this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
                 const formData = new FormData();
                 formData.append('to', req.body.to);
-                switch(req.body.type)
+                switch (req.body.type)
                 {
                     
                     case 'png':
