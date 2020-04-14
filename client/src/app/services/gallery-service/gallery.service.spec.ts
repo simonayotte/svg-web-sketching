@@ -1,11 +1,13 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { Color } from 'src/app/models/color';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawStore } from 'src/app/store/draw-store';
+import { ContinueDrawingService } from '../continue-drawing/continue-drawing.service';
 import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
 import { GalleryService } from './gallery.service';
-import { ContinueDrawingService } from '../continue-drawing/continue-drawing.service';
+
+// tslint:disable:no-magic-numbers
 
 describe('GalleryService', () => {
   let service: GalleryService;

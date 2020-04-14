@@ -91,3 +91,10 @@ export enum GalleryButtonColors {
     Black = 'black',
     Orange = '#ff8c00',
 }
+
+export enum CanvasColorIndex {
+    One = 0,
+    Two = 1,
+    Three = 2,
+    Four = 3
+  }

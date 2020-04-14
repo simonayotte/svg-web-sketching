@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
-import { HttpResponse } from 'src/app/models/httpResponse';
+import { HttpResponse } from 'src/app/models/http-response';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { HttpService } from 'src/app/services/http-service/http.service';

@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Color } from '../models/color';
 import { Coordinate } from '../models/coordinate';
+import { DrawingJson } from './../models/drawing-json';
 import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
 import { Tool } from '../models/tool';
 import { DrawState } from '../state/draw-state';
@@ -183,12 +184,12 @@ export class DrawStore extends Store<DrawState> {
         this.automaticSave();
     }
 
-    emptySvg(save:boolean): void {
+    emptySvg(save: boolean): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: [] },
         });
-        if(save){
+        if (save) {
             this.automaticSave();
         }
     }
@@ -396,18 +397,17 @@ export class DrawStore extends Store<DrawState> {
     }
 
     automaticSave(): void {
-        let svgsHTML = []
-        for(let svg of this.state.svgState.svgs){
+        const svgsHTML: string[] = [];
+        for (const svg of this.state.svgState.svgs) {
             svgsHTML.push(svg.outerHTML);
         }
-        let jsonState = {
+        const jsonState: DrawingJson = {
             width : this.state.svgState.width,
             height : this.state.svgState.height,
-            svgsHTML : svgsHTML,
+            svgsHTML,
             canvasColor : this.state.colorState.canvasColor.rgba()
         };
         localStorage.setItem('Drawing', JSON.stringify(jsonState));
     }
 
-    
 }

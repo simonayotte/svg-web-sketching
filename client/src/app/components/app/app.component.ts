@@ -11,5 +11,5 @@ import { BehaviorSubject } from 'rxjs';
 })
 export class AppComponent {
     readonly title: string = 'LOG2990';
-    message = new BehaviorSubject<string>('');
+    message: BehaviorSubject<string> = new BehaviorSubject<string>('');
 }

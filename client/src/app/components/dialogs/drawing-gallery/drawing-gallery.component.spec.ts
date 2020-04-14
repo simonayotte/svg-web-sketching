@@ -7,7 +7,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { defer, Observable } from 'rxjs';
 import { GalleryButtonColors } from 'src/app/models/enums';
-import { HttpResponse } from 'src/app/models/httpResponse';
+import { HttpResponse } from 'src/app/models/http-response';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
@@ -324,7 +324,7 @@ describe('DrawingGalleryComponent', () => {
         component.galleryState.trashColor = GalleryButtonColors.Orange;
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.deleteDrawing(drawing);
-        expect(httpService.deleteDrawing).toHaveBeenCalledWith(drawing._id);
+        expect(httpService.deleteDrawing).toHaveBeenCalledWith(drawing.id);
     });
 
     it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', (done: DoneFn) => {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { ExportedDrawing } from 'src/app/models/exported-drawing';
-import { HttpResponse } from 'src/app/models/httpResponse';
+import { HttpResponse } from 'src/app/models/http-response';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { HttpService } from 'src/app/services/http-service/http.service';

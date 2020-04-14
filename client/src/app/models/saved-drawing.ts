@@ -1,6 +1,6 @@
 // Structure pour sauvegarder un dessin
 export class SavedDrawing {
-    _id: string;
+    id: string;
     name: string;
     tags: string[];
     dataURL: string;

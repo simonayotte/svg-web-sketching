@@ -6,7 +6,7 @@ import { DrawStore } from 'src/app/store/draw-store';
 
 // we do not want the img preview width and height to exceed 300px.
 const MAX_IMG_PREVIEW_SIZE = 300;
-const wait = (ms: number) => new Promise((res) => setTimeout(res, ms));
+const wait = async (ms: number) => new Promise((res) => setTimeout(res, ms));
 
 @Injectable({
   providedIn: 'root'
@@ -48,27 +48,27 @@ export class DrawingHandler {
 
   /*Functions are used when a preview of the image to be saved or exported is shown, it is used to make an image
   with dimensions that are proportional with the canvas*/
-  setPreviewImgWidth() {
+  setPreviewImgWidth(): void {
     if (this.state.svgState.width < MAX_IMG_PREVIEW_SIZE) {
       this.previewWidth.next(this.state.svgState.width);
     } else {
-    const width_height_ratio = this.state.svgState.width / this.state.svgState.height;
-    width_height_ratio > 1 ? this.previewWidth.next(MAX_IMG_PREVIEW_SIZE) :
-                            this.previewWidth.next(MAX_IMG_PREVIEW_SIZE * width_height_ratio);
+    const widthHeightRatio = this.state.svgState.width / this.state.svgState.height;
+    widthHeightRatio > 1 ? this.previewWidth.next(MAX_IMG_PREVIEW_SIZE) :
+                            this.previewWidth.next(MAX_IMG_PREVIEW_SIZE * widthHeightRatio);
     }
   }
 
-  setPreviewImgHeight() {
+  setPreviewImgHeight(): void {
     if (this.state.svgState.height < MAX_IMG_PREVIEW_SIZE) {
       this.previewHeight.next(this.state.svgState.height);
     } else {
-    const width_height_ratio = this.state.svgState.width / this.state.svgState.height;
-    width_height_ratio > 1 ? this.previewHeight.next(MAX_IMG_PREVIEW_SIZE / width_height_ratio) :
+    const widthHeightRatio = this.state.svgState.width / this.state.svgState.height;
+    widthHeightRatio > 1 ? this.previewHeight.next(MAX_IMG_PREVIEW_SIZE / widthHeightRatio) :
                             this.previewHeight.next(MAX_IMG_PREVIEW_SIZE);
     }
   }
 
-  async prepareDrawingExportation(format: string, filter?: string | undefined) {
+  async prepareDrawingExportation(format: string, filter?: string | undefined): Promise<void> {
     if (filter) {
       this.store.setSVGFilter(filter);
       // wait for filter to be applied before saving the drawing
@@ -78,7 +78,7 @@ export class DrawingHandler {
     const svg64: string = btoa(xml);
     const b64Start = 'data:image/svg+xml;base64,';
     const image64: string = b64Start + svg64;
-    if (format == FileTypes.Svg) {
+    if (format === FileTypes.Svg) {
       this.setDataURL(image64);
     } else {
       const img = new Image();
@@ -97,9 +97,9 @@ export class DrawingHandler {
     this.store.setSVGFilter('');
   }
 
-  convertHtmlToSvgElement(svgsHTML: string[]) {
+  convertHtmlToSvgElement(svgsHTML: string[]): SVGGraphicsElement[] {
     const parser = new DOMParser();
-    let svgArray = [];
+    const svgArray = [];
     for (const svgHTML of svgsHTML) {
         const htmlElement = parser.parseFromString(svgHTML, 'image/svg+xml').documentElement;
         const svg: SVGGraphicsElement = this.renderer2.createElement(htmlElement.tagName, 'svg');
@@ -115,7 +115,7 @@ export class DrawingHandler {
     return svgArray;
   }
 
-  clearCanvas() {
+  clearCanvas(): void {
     this.store.emptySvg(true);
     this.store.resetUndoRedo();
   }

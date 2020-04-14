@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { FormValuesName, GalleryButtonColors } from 'src/app/models/enums';
-import { HttpResponse } from 'src/app/models/httpResponse';
+import { HttpResponse } from 'src/app/models/http-response';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawState } from 'src/app/state/draw-state';
@@ -115,7 +115,7 @@ export class DrawingGalleryComponent implements OnInit {
     async deleteDrawing(drawing: SavedDrawing): Promise<void> {
       if (this.galleryState.trashColor === GalleryButtonColors.Orange) {
         this.galleryState.loading = true;
-        return this.httpService.deleteDrawing(drawing._id)
+        return this.httpService.deleteDrawing(drawing.id)
         .toPromise()
         .then((data: HttpResponse) => {
           this.updateGallery();

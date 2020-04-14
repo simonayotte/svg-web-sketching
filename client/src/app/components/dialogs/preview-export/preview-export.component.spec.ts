@@ -4,7 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { defer, Observable } from 'rxjs';
-import { HttpResponse } from 'src/app/models/httpResponse';
+import { HttpResponse } from 'src/app/models/http-response';
 import { SafeUrlPipe } from 'src/app/pipes/safe-url.pipe';
 import { ExportDrawingService } from 'src/app/services/export-drawing-service/export-drawing.service';
 import { HttpService } from 'src/app/services/http-service/http.service';

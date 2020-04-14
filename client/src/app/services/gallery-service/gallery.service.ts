@@ -1,19 +1,22 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Color } from 'src/app/models/color';
+import { CanvasColorIndex } from 'src/app/models/enums';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
 import { ContinueDrawingService } from '../continue-drawing/continue-drawing.service';
+import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class GalleryService {
     state: DrawState;
-
-    constructor(private store: DrawStore, private drawingHandler: DrawingHandler, public rendererFactory: RendererFactory2, private continueDrawingService: ContinueDrawingService) {
+    constructor(private store: DrawStore,
+                private drawingHandler: DrawingHandler,
+                public rendererFactory: RendererFactory2,
+                private continueDrawingService: ContinueDrawingService) {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
@@ -28,27 +31,30 @@ export class GalleryService {
     private didGalleryOpen: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
     didGalleryOpenObs: Observable<boolean> = this.didGalleryOpen.asObservable();
 
-    setDrawings(value: SavedDrawing[]) {
+    setDrawings(value: SavedDrawing[]): void {
         this.drawings.next(value);
     }
 
-    setDrawingToLoad(value: SavedDrawing) {
+    setDrawingToLoad(value: SavedDrawing): void {
         this.drawingToLoad.next(value);
     }
 
-    setDidGalleryOpen(value: boolean) {
+    setDidGalleryOpen(value: boolean): void {
         this.didGalleryOpen.next(value);
     }
 
-    loadDrawing(drawing: SavedDrawing) {
+    loadDrawing(drawing: SavedDrawing): void {
         this.continueDrawingService.setIsContinueDrawing(false);
         this.store.setDrawHeight(drawing.height);
         this.store.setDrawWidth(drawing.width);
-        const canvasColor = new Color(drawing.RGBA[0], drawing.RGBA[1], drawing.RGBA[2], drawing.RGBA[3]);
+        const canvasColor = new Color(drawing.RGBA[CanvasColorIndex.One],
+                                      drawing.RGBA[CanvasColorIndex.Two],
+                                      drawing.RGBA[CanvasColorIndex.Three],
+                                      drawing.RGBA[CanvasColorIndex.Four]);
         this.store.setCanvasColor(canvasColor);
         this.drawingHandler.clearCanvas();
-        let svgArray:SVGGraphicsElement[] = this.drawingHandler.convertHtmlToSvgElement(drawing.svgsHTML);
-        setTimeout(()=> this.store.setSvgArray(svgArray));
+        const svgArray: SVGGraphicsElement[] = this.drawingHandler.convertHtmlToSvgElement(drawing.svgsHTML);
+        setTimeout(() => this.store.setSvgArray(svgArray));
     }
 
     filterDrawings(tagStringArray: string[], allDrawingsInDb: SavedDrawing[]): SavedDrawing[] {

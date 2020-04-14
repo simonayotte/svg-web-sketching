@@ -3,6 +3,10 @@ import { FileTypes } from 'src/app/models/enums';
 import { DrawStore } from 'src/app/store/draw-store';
 import { DrawingHandler } from './drawing-handler.service';
 
+// tslint:disable:no-magic-numbers
+// tslint:disable:max-line-length
+// tslint:disable:max-file-line-count
+
 describe('DrawingHandler', () => {
   let service: DrawingHandler;
   let store: DrawStore;
@@ -129,7 +133,7 @@ describe('DrawingHandler', () => {
     const svg3: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
     const svgHTML = [svg1.outerHTML, svg2.outerHTML, svg3.outerHTML];
     const svgs = [svg1, svg2, svg3];
-    let svgArray:SVGGraphicsElement[] =  service.convertHtmlToSvgElement(svgHTML);
+    const svgArray: SVGGraphicsElement[] =  service.convertHtmlToSvgElement(svgHTML);
     expect(svgs).toEqual(svgArray);
   });
 
