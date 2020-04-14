@@ -23,6 +23,9 @@ export class DrawDirective implements OnInit {
 
     @HostListener('mousedown', ['$event'])
     onMouseDown(event: MouseEvent) {
+        console.log(event.offsetX);
+        console.log(event.offsetY);
+
         this.drawHandler.startTool(event);
     }
 

@@ -60,11 +60,11 @@ export class SelectionService extends Tool {
         if (this.rectangle.isDrawing) {
             this.renderer.removeChild(this.state.svgState.drawSvg, this.rectangle.svg);
         }
-        this.state.selectionBox.updateCenter();
+        //this.state.selectionBox.updateCenter();
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
         // Pour la rotation de selection
-        this.store.saveSvgsState(this.state.selectionBox.svgsBeforeRotation); 
+        this.store.saveSvgsState(this.state.selectionBox.svgsBeforeRotation);
         this.state.selectionBox.svgsBeforeRotation = [];
     }
 

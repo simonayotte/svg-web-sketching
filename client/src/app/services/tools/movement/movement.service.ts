@@ -53,10 +53,15 @@ export class MovementService extends Tool {
     moveSvgs(dX: number, dY: number) {
         for (const svg of this.state.selectionBox.svgs) {
             let translation = Tool.getTranslation(svg);
+            let rotation = Tool.getRotation(svg);
 
-            this.renderer.setAttribute(svg, 'transform', `translate(${dX + translation[0]},${dY + translation[1]})`);
-            this.state.selectionBox.update();
+            this.renderer.setAttribute(
+                svg,
+                'transform',
+                `translate(${dX + translation[0]},${dY + translation[1]}) rotate(${rotation[0]} ${rotation[1]} ${rotation[2]})`,
+            );
         }
+        this.state.selectionBox.move(dX, dY);
     }
 
     stop(): void {

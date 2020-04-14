@@ -1,34 +1,30 @@
 const PANEL_WIDTH = 252;
 const SIDEBAR_WIDTH = 52;
-
 export class SelectionBox {
     display: boolean;
     isPanelOpen: boolean;
     x: number;
     y: number;
     isMoving: boolean;
-    isRotating: boolean;
     width: number;
     height: number;
-    centerX: number;
-    centerY: number;
     svgsBeforeRotation: SVGGraphicsElement[] = [];
-
     private selectedSvgs: SVGGraphicsElement[] = [];
 
     constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
         this.display = false;
         this.isPanelOpen = false;
-        this.isRotating = false;
         this.isMoving = false;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        //this.centerX = this.centerY = 0;
     }
 
     set svgs(svgs: SVGGraphicsElement[]) {
         this.selectedSvgs = svgs;
+
         if (this.selectedSvgs.length === 0) {
             this.display = false;
             return;
@@ -64,22 +60,16 @@ export class SelectionBox {
     get svgs(): SVGGraphicsElement[] {
         return this.selectedSvgs;
     }
+    move(dX: number, dY: number): void {
+        this.x += dX;
+        this.y += dY;
+    }
 
     push(svg: SVGGraphicsElement): void {
         this.svgs = this.selectedSvgs.concat(svg);
     }
 
-    
     delete(svgToDelete: SVGGraphicsElement): void {
         this.svgs = this.svgs.filter((svg: SVGGraphicsElement) => svg !== svgToDelete);
-    }
-
-    update(): void {
-        this.svgs = this.svgs;
-    }
-
-    updateCenter(): void {
-        this.centerX = this.x + this.width/2;
-        this.centerY = this.y + this.height/2;
     }
 }
