@@ -6,7 +6,7 @@ import axios from 'axios';
 import Types from '../types';
 
 require('dotenv').config();
-const API_KEY = process.env.API_KEY;
+const API_KEY = '736a0365-3b0e-4b8e-9598-2f6c73fdb290';
 
 @injectable()
 export class ExportDrawingController {
@@ -20,8 +20,6 @@ export class ExportDrawingController {
         this.router = Router();
 
         this.router.post('/', async (req: Request, res: Response, next: NextFunction) => {
-            // Send the request to the service and send the response
-            // Export without sending email
             if (req.body.option === 'one') {
                 try {
                     this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
@@ -42,7 +40,6 @@ export class ExportDrawingController {
                 formData.append('to', req.body.to);
                 switch (req.body.type)
                 {
-                    
                     case 'png':
                         formData.append('payload', exportReturn.stream, {
                             filename: req.body.name + '.' + req.body.type,
@@ -61,7 +58,6 @@ export class ExportDrawingController {
                             contentType: 'image/svg+xml' ,  
                         });
                     break;
-                    
                 }
                 axios({
                     method: 'post',
