@@ -32,17 +32,17 @@ export class PreviewExportComponent implements OnInit {
             this.state = value;
         });
     }
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawingHandler.setPreviewImgWidth();
         this.drawingHandler.setPreviewImgHeight();
         this.store.setIsKeyHandlerActive(false);
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.store.setIsKeyHandlerActive(true);
     }
 
-    exportDrawing() {
+    async exportDrawing(): Promise<void> {
         const drawing = new ExportedDrawing(this.exportDrawingService.getExportName(), this.exportDrawingService.getType(), this.dataURL);
         this.dialogRef.close();
         return this.httpService

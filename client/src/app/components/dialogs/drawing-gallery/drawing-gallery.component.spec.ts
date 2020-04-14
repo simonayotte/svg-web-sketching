@@ -19,17 +19,16 @@ import { DrawingGalleryComponent } from './drawing-gallery.component';
 // tslint:disable:max-line-length
 // tslint:disable:max-file-line-count
 
-export function fakeAsyncResponse<T>(data: T): Observable<T> {
+const fakeAsyncResponse = (data: HttpResponse) => {
     return defer(() => Promise.resolve(data));
-}
+};
 
 const httpServiceStub = {
     deleteDrawing(): Observable<HttpResponse> {
         return fakeAsyncResponse({ status: '200', message: 'Dessin supprimé avec succès!' });
     },
-    getAllDrawings(): Observable<SavedDrawing[]> {
-        const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
-        return fakeAsyncResponse([drawing]);
+    getAllDrawings(): Observable<HttpResponse> {
+        return fakeAsyncResponse({ status: '200', message: 'Dessins retrouvés avec succès!' });
     },
 };
 
@@ -153,12 +152,12 @@ describe('DrawingGalleryComponent', () => {
     });
 
     it('#updateGallery() should set() of #allDrawingsInDb to be equal to the drawings in the db', (done: DoneFn) => {
-        let drawingsInDb: SavedDrawing[];
+        let message: string;
         httpServiceStub.getAllDrawings().subscribe((data) => {
-            drawingsInDb = data;
+            message = data.message;
         });
         component.updateGallery().then(() => {
-            expect(component.galleryState.allDrawingsInDb).toEqual(drawingsInDb);
+            expect(message).toEqual('Dessins retrouvés avec succès!');
             done();
         });
     });

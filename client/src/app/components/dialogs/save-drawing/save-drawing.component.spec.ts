@@ -12,6 +12,9 @@ import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewImageComponent } from '../preview-image/preview-image.component';
 import { SaveDrawingComponent } from './save-drawing.component';
 
+// tslint:disable:no-magic-numbers
+// tslint:disable:max-line-length
+
 describe('SaveDrawingComponent', () => {
   let component: SaveDrawingComponent;
   let fixture: ComponentFixture<SaveDrawingComponent>;
@@ -21,9 +24,10 @@ describe('SaveDrawingComponent', () => {
   let saveDrawingService: SaveDrawingService;
   const dialogMock = {
     close: () => {
-        /*empty function*/
+        return;
     },
     open: () => {
+      return;
     },
   };
 

@@ -17,37 +17,43 @@ import { DrawStore } from 'src/app/store/draw-store';
 export class PreviewImageComponent implements OnInit {
   dataURL: string;
   state: DrawState;
-  buttonDisabled = false;
+  buttonDisabled: boolean;
   previewHeight: number;
   previewWidth: number;
-  svgsHTML: string[] = [];
-  constructor(private saveDrawingService: SaveDrawingService, private store: DrawStore, public dialogRef: MatDialogRef<PreviewImageComponent>,
-              private drawingHandler: DrawingHandler,
-              private httpService: HttpService) {
+  svgsHTML: string[];
+  constructor(
+    private saveDrawingService: SaveDrawingService,
+    private store: DrawStore,
+    public dialogRef: MatDialogRef<PreviewImageComponent>,
+    private drawingHandler: DrawingHandler,
+    private httpService: HttpService) {
     this.drawingHandler.dataURLObs.subscribe((dataURL: string) => (this.dataURL = dataURL));
     this.drawingHandler.previewWidthObs.subscribe((previewWidth: number) => (this.previewWidth = previewWidth));
     this.drawingHandler.previewHeightObs.subscribe((previewHeight: number) => (this.previewHeight = previewHeight));
     this.store.stateObs.subscribe((value: DrawState) => {
       this.state = value;
-  });
+    });
+    this.buttonDisabled = false;
+    this.svgsHTML = [];
   }
-  ngOnInit() {
+
+  ngOnInit(): void {
     this.drawingHandler.setPreviewImgWidth();
     this.drawingHandler.setPreviewImgHeight();
     this.store.setIsKeyHandlerActive(false);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.store.setIsKeyHandlerActive(true);
   }
 
-  getSvgsHTML() {
+  getSvgsHTML(): void {
     for (const svg of this.state.svgState.svgs) {
       this.svgsHTML.push(svg.outerHTML);
     }
   }
 
-  async saveDrawing() {
+  async saveDrawing(): Promise<void> {
     this.getSvgsHTML();
     this.buttonDisabled = true;
     const canvasColor = this.state.colorState.canvasColor;
@@ -65,7 +71,6 @@ export class PreviewImageComponent implements OnInit {
       this.dialogRef.close();
       alert(data.message);
       this.buttonDisabled = false;
-
     }).catch(
     (err: HttpResponse) => {
       this.dialogRef.close();

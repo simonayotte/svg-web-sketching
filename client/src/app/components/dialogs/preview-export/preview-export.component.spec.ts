@@ -1,5 +1,5 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -11,9 +11,9 @@ import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewExportComponent } from './preview-export.component';
 
-export function fakeAsyncResponse<T>(data: T): Observable<T> {
+const fakeAsyncResponse = (data: HttpResponse) => {
   return defer(() => Promise.resolve(data));
-}
+};
 
 const httpServiceStub = {
     exportDrawing(): Observable<HttpResponse> {

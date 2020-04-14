@@ -3,18 +3,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { defer } from 'rxjs';
+import { defer, Observable } from 'rxjs';
+import { HttpResponse } from 'src/app/models/httpResponse';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewImageComponent } from './preview-image.component';
 
-export function fakeAsyncResponse<T>(data: T) {
+const fakeAsyncResponse = (data: HttpResponse) => {
     return defer(() => Promise.resolve(data));
-}
+};
 
 const httpServiceStub = {
-    saveDrawing() {
+    saveDrawing(): Observable<HttpResponse> {
         return fakeAsyncResponse({ status: '200', message: 'Image sauvegardée avec succès!' });
     },
 };
