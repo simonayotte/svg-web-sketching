@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Types } from 'src/app/models/enums';
 
 @Component({
@@ -6,20 +6,13 @@ import { Types } from 'src/app/models/enums';
     templateUrl: './rectangle.component.html',
     styleUrls: ['./rectangle.component.scss'],
 })
-export class RectangleComponent implements OnInit {
+export class RectangleComponent {
     @Input('rectangleType') rectangleType: Types;
     @Input('thickness') thickness: number;
-    @Output() thicknessChange = new EventEmitter();
-    @Output() rectangleTypeChange = new EventEmitter();
+    @Output() thicknessChange: EventEmitter<number> = new EventEmitter();
+    @Output() rectangleTypeChange: EventEmitter<Types> = new EventEmitter();
 
-    constructor() {
-        // Empty Block
-    }
-
-    ngOnInit(): void {
-        // Empty Block
-    }
-
+    /* tslint:disable:no-any */
     setThickness(event: any): void {
         this.thicknessChange.emit(event.target.value);
     }

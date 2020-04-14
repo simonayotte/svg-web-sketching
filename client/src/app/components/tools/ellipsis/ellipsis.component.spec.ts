@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { Types } from 'src/app/models/enums';
 import { EllipsisComponent } from './ellipsis.component';
-
+/* tslint:disable:no-magic-numbers */
 describe('EllipsisComponent', () => {
     let component: EllipsisComponent;
     let fixture: ComponentFixture<EllipsisComponent>;

@@ -5,7 +5,7 @@ import { DrawingGalleryComponent } from 'src/app/components/dialogs/drawing-gall
 import { DrawingStartedDialogComponent } from 'src/app/components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from 'src/app/components/dialogs/export-drawing/export-drawing.component';
 import { SaveDrawingComponent } from 'src/app/components/dialogs/save-drawing/save-drawing.component';
-import { OtherButtons, ToolButtons, Tools, SelectionButtons } from 'src/app/models/enums';
+import { OtherButtons, ToolButtons, Tools } from 'src/app/models/enums';
 import { Tool } from 'src/app/models/tool';
 import { EllipsisService } from 'src/app/services/tools/ellipsis/ellipsis.service';
 import { PipetteService } from 'src/app/services/tools/pipette/pipette.service';
@@ -75,6 +75,7 @@ export class DrawHandlerService {
 
     onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
+        event.preventDefault();
 
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
@@ -91,24 +92,20 @@ export class DrawHandlerService {
                 switch (key) {
                     case OtherButtons.O:
                         // mat dialog display
-                        event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
                     case OtherButtons.S:
-                        event.preventDefault();
                         event.stopPropagation();
                         this.matDialog.open(SaveDrawingComponent);
                         break;
 
                     case OtherButtons.E:
-                        event.preventDefault();
                         this.matDialog.open(ExportDrawingComponent);
                         break;
 
                     case OtherButtons.G:
-                        event.preventDefault();
                         this.matDialog.open(DrawingGalleryComponent);
                         break;
 

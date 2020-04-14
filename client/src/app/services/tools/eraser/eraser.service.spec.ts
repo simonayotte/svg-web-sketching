@@ -17,17 +17,13 @@ describe('EraserService', () => {
 
         const svg = service.renderer.createElement('svg', 'svg') as SVGSVGElement;
         store.setDrawSvg(svg);
-        service.renderer.appendChild(document.body, svg);
 
         rect = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
-        service.renderer.setAttribute(rect, 'x', '200');
-        service.renderer.setAttribute(rect, 'y', '200');
-        service.renderer.setAttribute(rect, 'width', '100');
-        service.renderer.setAttribute(rect, 'height', '100');
+
         service.renderer.setAttribute(rect, 'stroke-width', '5');
         service.renderer.setAttribute(rect, 'stroke', '#000000ff');
 
-        service.renderer.appendChild(svg, rect);
+        spyOn(rect, 'getBoundingClientRect').and.returnValue(new DOMRect(200, 200, 100, 100));
 
         store.stateObs.subscribe((value: DrawState) => {
             service.state = value;
@@ -164,25 +160,19 @@ describe('EraserService', () => {
         expect(spy).not.toHaveBeenCalled();
     });
 
-    it('#isEraseTouching() should return true if eraser is smaller than svg and touching it', () => {
+    it('#isEraseTouching() should return true if eraser is touching touching svg', () => {
         const domRect = new DOMRect(50, 50, 200, 200);
 
         expect(service.isEraseTouching(100, 100, domRect, 10)).toBeTruthy();
     });
 
-    it('#isEraseTouching() should return false if eraser is smaller than svg and not touching it', () => {
+    it('#isEraseTouching() should return false if eraser is not touching svg', () => {
         const domRect = new DOMRect(50, 50, 200, 200);
 
         expect(service.isEraseTouching(400, 400, domRect, 10)).toBeFalsy();
     });
 
-    it('#isEraseTouching() should return true if eraser is bigger than svg and touching it', () => {
-        const domRect = new DOMRect(50, 50, 10, 10);
-
-        expect(service.isEraseTouching(55, 55, domRect, 10)).toBeTruthy();
-    });
-
-    it('#isEraseTouching() should return false if eraser is bigger than svg and not touching it', () => {
+    it('#isEraseTouching() should return false if eraser is not touching svg ', () => {
         const domRect = new DOMRect(50, 50, 10, 10);
 
         expect(service.isEraseTouching(10, 10, domRect, 10)).toBeFalsy();

@@ -12,9 +12,9 @@ export class DrawDirective implements OnInit {
         })
     }
 
-    @Output() drawSvgChange = new EventEmitter();
+    @Output() drawSvgChange: EventEmitter<SVGSVGElement> = new EventEmitter();
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawSvgChange.emit(this.el.nativeElement);
         if(this.isContinueDrawing){
             this.continueDrawingService.loadSavedDrawing()
@@ -22,26 +22,26 @@ export class DrawDirective implements OnInit {
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         this.drawHandler.onKeyDown(event);
     }
     @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         this.drawHandler.onKeyUp(event);
     }
 
     @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         this.drawHandler.startTool(event);
     }
 
     @HostListener('mouseleave')
-    onMouseleave() {
+    onMouseleave(): void {
         this.drawHandler.stopTool();
     }
 
     @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent) {
+    onMouseMove(event: MouseEvent): void {
         this.drawHandler.onMouseMove(event);
     }
 }

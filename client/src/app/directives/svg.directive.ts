@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Directive, ElementRef, Input, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 @Directive({
     selector: '[svg]',
 })
@@ -9,14 +9,14 @@ export class SvgDirective implements OnInit, OnDestroy, AfterViewInit {
     filterHTML: Element;
     constructor(protected el: ElementRef, private renderer: Renderer2) {}
 
-    ngOnInit() {
-        this.filterHTML = <Element>this.drawSvg.children.namedItem('filter');
+    ngOnInit(): void {
+        this.filterHTML = this.drawSvg.children.namedItem('filter') as Element;
     }
 
-    ngAfterViewInit() {
+    ngAfterViewInit(): void {
         this.renderer.insertBefore(this.drawSvg, this.svg, this.filterHTML);
     }
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.renderer.removeChild(this.drawSvg, this.svg);
     }
 }
