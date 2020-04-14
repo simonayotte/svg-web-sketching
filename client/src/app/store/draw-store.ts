@@ -398,8 +398,10 @@ export class DrawStore extends Store<DrawState> {
 
     automaticSave(): void {
         const svgsHTML: string[] = [];
-        for (const svg of this.state.svgState.svgs) {
-            svgsHTML.push(svg.outerHTML);
+        if(this.state.svgState.svgs.length > 0){
+            for (const svg of this.state.svgState.svgs) {
+                svgsHTML.push(svg.outerHTML);
+            }
         }
         const jsonState: DrawingJson = {
             width : this.state.svgState.width,

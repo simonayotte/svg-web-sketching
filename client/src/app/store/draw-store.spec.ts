@@ -15,11 +15,8 @@ describe('DrawStore', () => {
     let state: DrawState;
     const rect: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
     const circle: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-    const drawingJSONString: string | null = localStorage.getItem('Drawing');
+    let drawingJSONString: string | null;
     let drawingJSON: DrawingJson;
-    if (drawingJSONString) {
-        drawingJSON = JSON.parse(drawingJSONString);
-    }
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
@@ -464,12 +461,20 @@ describe('DrawStore', () => {
     it('#automaticSave() should save an item with the width equal to svgState.width', () => {
         store.setDrawWidth(200);
         store.automaticSave();
+        drawingJSONString = localStorage.getItem('Drawing');
+        if (drawingJSONString) {
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
         expect(drawingJSON.width).toEqual(200);
     });
 
     it('#automaticSave() should save an item with the height equal to svgState.height', () => {
         store.setDrawHeight(300);
         store.automaticSave();
+        drawingJSONString = localStorage.getItem('Drawing');
+        if (drawingJSONString) {
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
         expect(drawingJSON.height).toEqual(300);
     });
 
@@ -477,6 +482,10 @@ describe('DrawStore', () => {
         const color = new Color(1, 2, 3, 4);
         store.setCanvasColor(color);
         store.automaticSave();
+        drawingJSONString = localStorage.getItem('Drawing');
+        if (drawingJSONString) {
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
         expect(drawingJSON.canvasColor).toEqual(color.rgba());
     });
 
@@ -484,6 +493,10 @@ describe('DrawStore', () => {
         const svgsHTML = [rect.outerHTML, circle.outerHTML];
         store.setSvgArray([rect, circle]);
         store.automaticSave();
+        drawingJSONString = localStorage.getItem('Drawing');
+        if (drawingJSONString) {
+            drawingJSON = JSON.parse(drawingJSONString);
+        }
         expect(drawingJSON.svgsHTML).toEqual(svgsHTML);
     });
 
