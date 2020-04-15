@@ -8,8 +8,12 @@ i{
     margin-left: 5px;
 }
 
-.action-button{
+.action-button-right{
     float:right;
+}
+
+.action-button-left{
+    float:left;
 }
 
 .no-drawing{
@@ -20,9 +24,7 @@ i{
     margin:auto;
 }
 
-h1{
-    text-align: center;
-}
+
 
 .container{
     display:flex;
