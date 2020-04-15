@@ -43,13 +43,14 @@
           </div>
         </label><br>
 
-        <label>
-            <button [ngStyle]="{ 'background-color': backgroundColor.hex() }" (click)="setIsCreateDrawColorOpen(true)">
+        <label><br>
+            <button id="color-button" [ngStyle]="{ 'background-color': backgroundColor.hex() }" (click)="setIsCreateDrawColorOpen(true)">
                 Couleur d'arrière plan
             </button>
         </label>
-        <br />
-        <button type="submit" [disabled]="!createDrawingForm.valid" data-dismiss="modal" (click)="submit()" routerLink="/draw">Soumettre</button>
-        <button mat-dialog-close>Fermer</button>
+        <br/>
+        <br>
+        <button class = 'mat-button' type="submit" [disabled]="!createDrawingForm.valid" data-dismiss="modal" (click)="submit()" routerLink="/draw">Soumettre</button>
+        <button id = "close" class = 'mat-button' mat-dialog-close>Fermer</button>
     </form>
 </div>

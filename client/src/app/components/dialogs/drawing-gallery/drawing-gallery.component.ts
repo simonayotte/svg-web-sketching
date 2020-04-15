@@ -84,17 +84,17 @@ export class DrawingGalleryComponent implements OnInit {
       }
 
     toggleTrashColor(): void {
-        this.galleryState.trashColor === GalleryButtonColors.Black ?
+        this.galleryState.trashColor === GalleryButtonColors.White ?
         (this.galleryState.trashColor = GalleryButtonColors.Orange) :
-        (this.galleryState.trashColor = GalleryButtonColors.Black);
-        this.galleryState.loadColor = GalleryButtonColors.Black;
+        (this.galleryState.trashColor = GalleryButtonColors.White);
+        this.galleryState.loadColor = GalleryButtonColors.White;
     }
 
     toggleLoadColor(): void {
-        this.galleryState.loadColor === GalleryButtonColors.Black ?
+        this.galleryState.loadColor === GalleryButtonColors.White ?
         (this.galleryState.loadColor = GalleryButtonColors.Orange) :
-        (this.galleryState.loadColor = GalleryButtonColors.Black);
-        this.galleryState.trashColor = GalleryButtonColors.Black;
+        (this.galleryState.loadColor = GalleryButtonColors.White);
+        this.galleryState.trashColor = GalleryButtonColors.White;
     }
 
     loadDrawing(drawing: SavedDrawing): void {

@@ -88,7 +88,7 @@ export enum FileTypes {
 }
 
 export enum GalleryButtonColors {
-    Black = 'black',
+    White = 'white',
     Orange = '#ff8c00',
 }
 
