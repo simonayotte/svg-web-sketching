@@ -35,17 +35,20 @@ export class FileHandler {
       fs.writeFileSync(localPath,data,`${Encoding.Utf8}`); 
     }
 
-    exportDrawingEmail(name:string, type:string, dataURL:string): ExportReturn {
-      let base64DataURL:string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`,'');
+    exportDrawingEmail(name:string, type:string, dataURL:string): Promise <ExportReturn> {
+      return new Promise<ExportReturn> ((resolve) => {
+        let base64DataURL:string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`,'');
       let data = Buffer.from(base64DataURL,'base64');
       let filename:string;
       type == FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}`: filename = `${name}.${type}`;
       let localPath:string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
       fs.writeFileSync(localPath,data,`${Encoding.Utf8}`);
-      return {
+      resolve({
         name: filename,
         stream: fs.createReadStream(localPath),
-      };
+      }); 
+      });
+      
     }
 
     deleteDrawing(id:string): void {
