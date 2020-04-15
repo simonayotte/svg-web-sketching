@@ -1,8 +1,12 @@
 // This file is required by karma.conf.js and loads recursively all the .spec and framework files
+// tslint:disable-next-line:no-any from cli
+// import de zone.js doit etre en premier, sinon il y a des erreurs dans les test fakeAsync
+// tslint:disable:ordered-imports
 import 'zone.js/dist/zone-testing';
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
-// tslint:disable-next-line:no-any from cli
+
+
 declare const require: any;
 
 // First, initialize the Angular testing environment.

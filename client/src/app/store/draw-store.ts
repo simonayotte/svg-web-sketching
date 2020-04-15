@@ -398,7 +398,7 @@ export class DrawStore extends Store<DrawState> {
 
     automaticSave(): void {
         const svgsHTML: string[] = [];
-        if(this.state.svgState.svgs.length > 0){
+        if (this.state.svgState.svgs.length > 0) {
             for (const svg of this.state.svgState.svgs) {
                 svgsHTML.push(svg.outerHTML);
             }

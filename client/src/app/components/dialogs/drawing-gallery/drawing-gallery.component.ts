@@ -115,7 +115,7 @@ export class DrawingGalleryComponent implements OnInit {
     async deleteDrawing(drawing: SavedDrawing): Promise<void> {
       if (this.galleryState.trashColor === GalleryButtonColors.Orange) {
         this.galleryState.loading = true;
-        return this.httpService.deleteDrawing(drawing.id)
+        return this.httpService.deleteDrawing(drawing._id)
         .toPromise()
         .then((data: HttpResponse) => {
           this.updateGallery();
