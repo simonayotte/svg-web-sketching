@@ -33,7 +33,8 @@ export abstract class Tool {
         for (let i = 0; i < svgs.length; i++) {
             const clone = svgs[i].cloneNode(false) as SVGGraphicsElement;
             let translation = this.getTranslation(svgs[i]);
-            clone.setAttribute('transform', `translate(${offset + translation[0]},${offset + translation[1]})`);
+            let rotation = this.getRotation(svgs[i]);
+            clone.setAttribute('transform', `translate(${offset + translation[0]},${offset + translation[1]}) rotate(${rotation[0]},${rotation[1]},${rotation[2]})`);
             newSvgs.push(clone);
         }
         return newSvgs;

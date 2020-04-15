@@ -16,6 +16,7 @@ const SIDEBAR_WIDTH = 52;
 export class RotationService extends Tool {
     isShiftDown: boolean;
     angle: number;
+    svgsBeforeRotation: SVGGraphicsElement[] = [];
 
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
@@ -27,7 +28,9 @@ export class RotationService extends Tool {
     }
 
     start(): void {
+        this.svgsBeforeRotation = Tool.cloneSvgs(this.state.svgState.svgs);
         this.multipleRotation();
+        this.store.saveSvgsState(this.svgsBeforeRotation);
     }
 
     multipleRotation(): void {
