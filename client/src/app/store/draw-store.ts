@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Color } from '../models/color';
-import { Coordinate } from '../models/coordinate';
-import { DrawingJson } from './../models/drawing-json';
-import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
-import { Tool } from '../models/tool';
-import { DrawState } from '../state/draw-state';
-import { Store } from './store';
+import { Color } from 'src/app/models/color';
+import { Coordinate } from 'src/app/models/coordinate';
+import { DrawingJson } from 'src/app/models/drawing-json';
+import { BrushTextures, SelectedColors, Tools, Types } from 'src/app/models/enums';
+import { Tool } from 'src/app/models/tool';
+import { DrawState } from 'src/app/state/draw-state';
+import { Store } from 'src/app/store/store';
 
 const OFFSET = 10;
-/* tslint:disable:max-file-line-count */
+// tslint:disable:max-file-line-count
 
 @Injectable({
     providedIn: 'root',

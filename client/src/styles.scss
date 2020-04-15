@@ -62,7 +62,11 @@ i {
     border-radius: 3px;
 }
 
-.mat-button:hover {
+.mat-button:hover:enabled {
     color: white;
     background-color: #ff8c00;
+}
+
+input:focus, button:focus{
+    outline: none;
 }

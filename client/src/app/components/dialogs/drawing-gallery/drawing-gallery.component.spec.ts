@@ -324,7 +324,7 @@ describe('DrawingGalleryComponent', () => {
         component.galleryState.trashColor = GalleryButtonColors.Orange;
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.deleteDrawing(drawing);
-        expect(httpService.deleteDrawing).toHaveBeenCalledWith(drawing.id);
+        expect(httpService.deleteDrawing).toHaveBeenCalledWith(drawing._id);
     });
 
     it('if #trashColor is #ff8c00, #deleteDrawing should call #updateGallery', (done: DoneFn) => {
@@ -333,20 +333,6 @@ describe('DrawingGalleryComponent', () => {
         const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
         component.deleteDrawing(drawing).then(() => {
             expect(component.updateGallery).toHaveBeenCalled();
-            done();
-        });
-    });
-
-    it('if #trashColor is #ff8c00, #deleteDrawing should call window.alert', (done: DoneFn) => {
-        let message: string;
-        httpServiceStub.deleteDrawing().subscribe((data) => {
-            message = data.message;
-        });
-        spyOn(window, 'alert');
-        component.galleryState.trashColor = GalleryButtonColors.Orange;
-        const drawing = new SavedDrawing('test', ['testtag'], 'testdataurl', [], 100, 100, [1, 2, 3]);
-        component.deleteDrawing(drawing).then(() => {
-            expect(window.alert).toHaveBeenCalledWith(message);
             done();
         });
     });

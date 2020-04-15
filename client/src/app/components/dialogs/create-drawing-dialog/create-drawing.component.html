@@ -10,37 +10,17 @@
     <form [formGroup]='createDrawingForm'>
         <label>
           Largeur(px):
-          <input type='number' (keydown) = 'setIsWidthChangedToTrue()' formControlName='width'>
-          <div *ngIf = 'width.errors?.required'class="alert alert-danger">
-            La largeur est requise
-          </div>
-          <div *ngIf = 'width.errors?.min'class="alert alert-danger">
-            La largeur doit être supérieur à 0
-          </div>
-          <div *ngIf = 'width.errors?.max'class="alert alert-danger">
-            La largeur doit être inférieur à 5000
-          </div>
-          <div *ngIf = 'width.errors?.pattern'class="alert alert-danger">
-            Pas de pixels en décimaux
-          </div>
-        </label>
-        <br>
-        
-        <label>
+          <input type='number' (keydown) = 'setIsWidthChangedToTrue()' formControlName='width'><br>
+          <i *ngIf = 'width.errors?.required' class="fas fa-exclamation-triangle" title = "La largeur est requise"></i>
+          <i *ngIf = 'width.errors?.min' class="fas fa-exclamation-triangle" title = "La largeur doit être supérieur à 0"></i>
+          <i *ngIf = 'width.errors?.max' class="fas fa-exclamation-triangle" title = "La largeur doit être inférieur à 5000"></i>
+          <i *ngIf = 'width.errors?.pattern' class="fas fa-exclamation-triangle" title = "Pas de pixels en décimaux"></i><br>
           Longueur(px):
-          <input type='number' (keydown) = 'setIsHeightChangedToTrue()' formControlName='height'>
-          <div *ngIf = 'height.errors?.required'class="alert alert-danger">
-            La longueur est requise
-          </div>
-          <div *ngIf = 'height.errors?.min'class="alert alert-danger">
-            La longueur doit être supérieur à 0
-          </div>
-          <div *ngIf = 'height.errors?.max'class="alert alert-danger">
-            La longueur doit être inférieur à 5000
-          </div>
-          <div *ngIf = 'height.errors?.pattern'class="alert alert-danger">
-            Pas de pixels en décimaux
-          </div>
+          <input type='number' (keydown) = 'setIsHeightChangedToTrue()' formControlName='height'><br>
+          <i *ngIf = 'height.errors?.required' class="fas fa-exclamation-triangle" title = "La longueur est requise"></i>
+          <i *ngIf = 'height.errors?.min' class="fas fa-exclamation-triangle" title = "La longueur doit être supérieur à 0"></i>
+          <i *ngIf = 'height.errors?.max' class="fas fa-exclamation-triangle" title = "La longueur doit être inférieur à 5000"></i>
+          <i *ngIf = 'height.errors?.pattern' class="fas fa-exclamation-triangle" title = "Pas de pixels en décimaux"></i>
         </label><br>
 
         <label><br>

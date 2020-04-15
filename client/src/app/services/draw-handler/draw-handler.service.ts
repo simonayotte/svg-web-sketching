@@ -92,7 +92,6 @@ export class DrawHandlerService {
                 switch (key) {
                     case OtherButtons.O:
                         event.preventDefault();
-                        // mat dialog display
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);

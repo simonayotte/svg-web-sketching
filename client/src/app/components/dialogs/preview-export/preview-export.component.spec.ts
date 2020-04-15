@@ -1,7 +1,7 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { defer, Observable } from 'rxjs';
 import { HttpResponse } from 'src/app/models/http-response';
@@ -29,9 +29,12 @@ describe('PreviewExportComponent', () => {
   let exportDrawingService: ExportDrawingService;
   const dialogMock = {
     close: () => {
-        /*empty function*/
+        return;
     },
-  };
+    open: () => {
+        return;
+    },
+};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -42,6 +45,7 @@ describe('PreviewExportComponent', () => {
               {provide: MatDialogRef, useValue: dialogMock},
               {provide: MAT_DIALOG_DATA, useValue: []},
               {provide: HttpService, useValue: httpServiceStub},
+              {provide: MatDialog, useValue: dialogMock},
             DrawStore,
             ExportDrawingService,
         ],
@@ -78,18 +82,6 @@ describe('PreviewExportComponent', () => {
     spyOn(httpService, 'exportDrawing').and.callThrough();
     component.exportDrawing();
     expect(httpService.exportDrawing).toHaveBeenCalled();
-  });
-
-  it('#exportDrawing() should call #window.alert() in the promise', (done: DoneFn) => {
-    let message: string;
-    httpServiceStub.exportDrawing().subscribe((data) => {
-      message = data.message;
-    });
-    spyOn(window, 'alert');
-    component.exportDrawing().then(() => {
-      expect(window.alert).toHaveBeenCalledWith(message);
-      done();
-    });
   });
 
 });

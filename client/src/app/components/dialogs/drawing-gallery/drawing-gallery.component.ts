@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material';
+import { HttpResponseDialogComponent } from 'src/app/components/dialogs/http-response-dialog/http-response-dialog.component';
 import { FormValuesName, GalleryButtonColors } from 'src/app/models/enums';
 import { HttpResponse } from 'src/app/models/http-response';
 import { GalleryService } from 'src/app/services/gallery-service/gallery.service';
+import { HttpResponseService } from 'src/app/services/http-response/http-response.service';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
@@ -27,6 +29,7 @@ export class DrawingGalleryComponent implements OnInit {
         private fb: FormBuilder,
         private galleryService: GalleryService,
         public dialogRef: MatDialogRef<DrawingGalleryComponent>,
+        private httpResponseService: HttpResponseService
         ) {
         this.galleryState = new GalleryState();
         this.store.stateObs.subscribe((value: DrawState) => {
@@ -119,11 +122,13 @@ export class DrawingGalleryComponent implements OnInit {
         .toPromise()
         .then((data: HttpResponse) => {
           this.updateGallery();
-          alert(data.message);
+          this.httpResponseService.setMessage(data.message);
+          this.dialog.open(HttpResponseDialogComponent);
         })
         .catch((err: HttpResponse) => {
           this.updateGallery();
-          alert(err.message);
+          this.httpResponseService.setMessage(err.message);
+          this.dialog.open(HttpResponseDialogComponent);
         });
       }
     }
