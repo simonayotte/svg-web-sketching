@@ -45,12 +45,12 @@ export abstract class Tool {
             return [0, 0];
         }
 
-        let matches = str.match(/[+-]?\d+/g);
+        let matches = str.match(/-?\d+\.?\d*/g);
 
         if (!matches) {
             return [0, 0];
         }
-        return [parseInt(matches[0]), parseInt(matches[1])];
+        return [parseFloat(matches[0]), parseFloat(matches[1])];
     }
     // Returns current angle on selection box
     static getRotation(svg: SVGGraphicsElement): number[] {
@@ -59,11 +59,11 @@ export abstract class Tool {
             return [0, 0, 0];
         }
 
-        let matches = str.match(/[+-]?\d+/g);
+        let matches = str.match(/-?\d+\.?\d*/g);
 
         if (!matches) {
             return [0, 0, 0];
         }
-        return [parseInt(matches[2]), parseInt(matches[3]), parseInt(matches[4])];
+        return [parseFloat(matches[2]), parseFloat(matches[3]), parseFloat(matches[4])];
     }
 }

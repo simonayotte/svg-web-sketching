@@ -8,7 +8,6 @@ export class SelectionBox {
     isMoving: boolean;
     width: number;
     height: number;
-    svgsBeforeRotation: SVGGraphicsElement[] = [];
     private selectedSvgs: SVGGraphicsElement[] = [];
 
     constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
@@ -19,7 +18,6 @@ export class SelectionBox {
         this.y = y;
         this.width = width;
         this.height = height;
-        //this.centerX = this.centerY = 0;
     }
 
     set svgs(svgs: SVGGraphicsElement[]) {
