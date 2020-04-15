@@ -1,14 +1,24 @@
 .fa-plus{
-    color:green;
+    color:#ff8c00;
 }
 
 
 .fa-times{
-    color:red;
+    color:#ff8c00;
     margin-left:5px;
 }
 
 .fa-exclamation-triangle{
-    color:orange;
+    color:#ff8c00;
     margin-left:5px;
+}
+
+.alert-warning{
+    color:white;
+    background: #ff8c00;
+    border:none;
+}
+
+#close{
+    float: right;
 }

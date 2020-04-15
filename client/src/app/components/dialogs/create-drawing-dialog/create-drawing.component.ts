@@ -103,5 +103,6 @@ export class CreateDrawingComponent implements OnInit {
         this.store.setDrawWidth(this.createDrawingForm.controls.width.value);
         this.store.setDrawHeight(this.createDrawingForm.controls.height.value);
         this.dialogRef.close();
+        this.store.automaticSave();
     }
 }

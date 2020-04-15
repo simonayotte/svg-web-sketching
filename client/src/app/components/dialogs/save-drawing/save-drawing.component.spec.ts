@@ -5,12 +5,15 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialog, MatDialogModule, MatDialogRef } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormValuesName, Tools } from 'src/app/models/enums';
+import { FormValuesName } from 'src/app/models/enums';
 import { DrawingHandler } from 'src/app/services/drawing-handler/drawing-handler.service';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewImageComponent } from '../preview-image/preview-image.component';
 import { SaveDrawingComponent } from './save-drawing.component';
+
+// tslint:disable:no-magic-numbers
+// tslint:disable:max-line-length
 
 describe('SaveDrawingComponent', () => {
   let component: SaveDrawingComponent;
@@ -21,9 +24,10 @@ describe('SaveDrawingComponent', () => {
   let saveDrawingService: SaveDrawingService;
   const dialogMock = {
     close: () => {
-        /*empty function*/
+        return;
     },
     open: () => {
+      return;
     },
   };
 
@@ -142,11 +146,5 @@ describe('SaveDrawingComponent', () => {
     spyOn(component.dialog, 'open').and.callThrough();
     component.submit();
     expect(component.dialog.open).toHaveBeenCalledWith(PreviewImageComponent);
-  });
-
-  it('#submit should call the #setTool() of the store', () => {
-    spyOn(store, 'setTool').and.callThrough();
-    component.submit();
-    expect(store.setTool).toHaveBeenCalledWith(Tools.None);
   });
 });

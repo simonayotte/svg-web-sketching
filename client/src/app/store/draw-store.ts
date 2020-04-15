@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Color } from '../models/color';
-import { Coordinate } from '../models/coordinate';
-import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
-import { Tool } from '../models/tool';
-import { DrawState } from '../state/draw-state';
-import { Store } from './store';
+import { Color } from 'src/app/models/color';
+import { Coordinate } from 'src/app/models/coordinate';
+import { DrawingJson } from 'src/app/models/drawing-json';
+import { BrushTextures, SelectedColors, Tools, Types } from 'src/app/models/enums';
+import { Tool } from 'src/app/models/tool';
+import { DrawState } from 'src/app/state/draw-state';
+import { Store } from 'src/app/store/store';
 
 const OFFSET = 10;
-/* tslint:disable:max-file-line-count */
+// tslint:disable:max-file-line-count
 
 @Injectable({
     providedIn: 'root',
@@ -80,6 +81,7 @@ export class DrawStore extends Store<DrawState> {
             },
         });
         this.state.selectionBox.svgs = [];
+        this.automaticSave();
     }
     redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {
@@ -96,6 +98,7 @@ export class DrawStore extends Store<DrawState> {
                 undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.automaticSave();
     }
 
     resetUndoRedo(): void {
@@ -145,6 +148,15 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        this.automaticSave();
+    }
+
+    setSvgArray(value: SVGGraphicsElement[]): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: value },
+        });
+        this.automaticSave();
     }
     pushSvgs(value: SVGGraphicsElement[]): void {
         const newState = this.state.svgState.svgs.concat(value);
@@ -169,13 +181,17 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        this.automaticSave();
     }
 
-    emptySvg(): void {
+    emptySvg(save: boolean): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: [] },
         });
+        if (save) {
+            this.automaticSave();
+        }
     }
 
     saveSvgsState(value: SVGGraphicsElement[]): void {
@@ -260,6 +276,7 @@ export class DrawStore extends Store<DrawState> {
         if (isAddLastColor) {
             this.addLastColor(value);
         }
+        this.automaticSave();
     }
 
     setWorkspaceColor(value: Color): void {
@@ -378,4 +395,21 @@ export class DrawStore extends Store<DrawState> {
             eraserThickness: value,
         });
     }
+
+    automaticSave(): void {
+        const svgsHTML: string[] = [];
+        if (this.state.svgState.svgs.length > 0) {
+            for (const svg of this.state.svgState.svgs) {
+                svgsHTML.push(svg.outerHTML);
+            }
+        }
+        const jsonState: DrawingJson = {
+            width : this.state.svgState.width,
+            height : this.state.svgState.height,
+            svgsHTML,
+            canvasColor : this.state.colorState.canvasColor.rgba()
+        };
+        localStorage.setItem('Drawing', JSON.stringify(jsonState));
+    }
+
 }

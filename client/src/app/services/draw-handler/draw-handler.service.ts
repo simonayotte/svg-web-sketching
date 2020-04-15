@@ -75,7 +75,6 @@ export class DrawHandlerService {
 
     onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
-        event.preventDefault();
 
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
@@ -86,33 +85,38 @@ export class DrawHandlerService {
             }
             // handle tool selection keyboard events
             if (this.keyMap.has(keyEnum) && !event.ctrlKey) {
+                event.preventDefault();
                 const tool = this.keyMap.get(keyEnum) as Tools;
                 this.store.setTool(tool);
             } else if (event.ctrlKey) {
                 switch (key) {
                     case OtherButtons.O:
-                        // mat dialog display
+                        event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
                     case OtherButtons.S:
-                        event.stopPropagation();
+                        event.preventDefault();
                         this.matDialog.open(SaveDrawingComponent);
                         break;
 
                     case OtherButtons.E:
+                        event.preventDefault();
                         this.matDialog.open(ExportDrawingComponent);
                         break;
 
                     case OtherButtons.G:
+                        event.preventDefault();
                         this.matDialog.open(DrawingGalleryComponent);
                         break;
 
                     case OtherButtons.Z:
+                        event.preventDefault();
                         this.store.undo();
                         break;
                     case OtherButtons.ShiftZ:
+                        event.preventDefault();
                         this.store.redo();
                         break;
                 }

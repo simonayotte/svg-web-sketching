@@ -12,6 +12,7 @@ import { CreateDrawingComponent } from './components/dialogs/create-drawing-dial
 import { DrawingGalleryComponent } from './components/dialogs/drawing-gallery/drawing-gallery.component';
 import { DrawingStartedDialogComponent } from './components/dialogs/drawing-started-dialog/drawing-started-dialog.component';
 import { ExportDrawingComponent } from './components/dialogs/export-drawing/export-drawing.component';
+import { HttpResponseDialogComponent } from './components/dialogs/http-response-dialog/http-response-dialog.component';
 import { PreviewExportComponent } from './components/dialogs/preview-export/preview-export.component';
 import { PreviewImageComponent } from './components/dialogs/preview-image/preview-image.component';
 import { SaveDrawingComponent } from './components/dialogs/save-drawing/save-drawing.component';
@@ -31,6 +32,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
         PreviewExportComponent,
         DrawingGalleryComponent,
         SafeUrlPipe,
+        HttpResponseDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -52,6 +54,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
         ExportDrawingComponent,
         PreviewExportComponent,
         DrawingGalleryComponent,
+        HttpResponseDialogComponent
     ],
     bootstrap: [AppComponent],
 })
