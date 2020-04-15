@@ -1,8 +1,8 @@
 <h1 mat-dialog-title>Galeries des dessins</h1>
-    <div class = "action-button">
+    <div class = "action-button-right">
         Supprimer: <i class="fas fa-trash" (click)=toggleTrashColor() [style.color] = 'galleryState.trashColor' title = 'Supprimer un dessin'></i>
-    </div><br>
-    <div class = "action-button">
+    </div>
+    <div class = "action-button-left">
         Charger: <i class="fas fa-download" (click)=toggleLoadColor() [style.color] = 'galleryState.loadColor' title = 'Charger un dessin'></i>
     </div><br><br>
 <form [formGroup]='filterDrawingForm'>
@@ -10,7 +10,7 @@
         <div class = 'etiquettes'>
             Ajouter un filtre:
             <i class="fas fa-plus" (click)='addTag()' title='Ajouter une étiquette'></i>
-            <div class = "action-button">
+            <div class = "action-button-right">
                 Filtrer: 
                 <i class="fas fa-filter" title = 'Filtrer les dessins'
                 [ngStyle]="{'color': tags.length > 0? '#ff8c00' : 'grey'}"
