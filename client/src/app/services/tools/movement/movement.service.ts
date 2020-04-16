@@ -52,12 +52,15 @@ export class MovementService extends Tool {
     }
     moveSvgs(dX: number, dY: number): void {
         for (const svg of this.state.selectionBox.svgs) {
-            const translation = Tool.getTranslation(svg);
-
-            this.renderer.setAttribute(svg, 'transform', `translate(${dX + translation[0]},${dY + translation[1]})`);
-            this.state.selectionBox.update();
+            let translation = Tool.getTranslation(svg);
+            let rotation = Tool.getRotation(svg);
+            this.renderer.setAttribute(
+                svg,
+                'transform',
+                `translate(${dX + translation[0]},${dY + translation[1]}) rotate(${rotation[0]} ${rotation[1]} ${rotation[2]})`,
+            );
         }
-        this.store.automaticSave();
+        this.state.selectionBox.move(dX, dY);
     }
 
     stop(): void {
@@ -67,6 +70,7 @@ export class MovementService extends Tool {
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
         this.state.svgState.drawSvg.removeEventListener('mouseleave', this.mouseUpListener);
+        this.store.automaticSave();
         this.stopSignal();
     }
 

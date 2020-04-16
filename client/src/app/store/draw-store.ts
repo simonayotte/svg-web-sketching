@@ -65,6 +65,7 @@ export class DrawStore extends Store<DrawState> {
         this.state.selectionBox.svgs = []; // update selection box
     }
 
+
     // undoRedo
     undo(): void {
         if (this.state.undoRedoState.undoState.length === 0) {

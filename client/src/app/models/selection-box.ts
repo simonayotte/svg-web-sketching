@@ -1,6 +1,5 @@
 const PANEL_WIDTH = 252;
 const SIDEBAR_WIDTH = 52;
-
 export class SelectionBox {
     display: boolean;
     isPanelOpen: boolean;
@@ -9,7 +8,6 @@ export class SelectionBox {
     isMoving: boolean;
     width: number;
     height: number;
-
     private selectedSvgs: SVGGraphicsElement[] = [];
 
     constructor(x: number = 0, y: number = 0, width: number = 0, height: number = 0) {
@@ -62,6 +60,10 @@ export class SelectionBox {
     get svgs(): SVGGraphicsElement[] {
         return this.selectedSvgs;
     }
+    move(dX: number, dY: number): void {
+        this.x += dX;
+        this.y += dY;
+    }
 
     push(svg: SVGGraphicsElement): void {
         this.svgs = this.selectedSvgs.concat(svg);
@@ -69,9 +71,5 @@ export class SelectionBox {
 
     delete(svgToDelete: SVGGraphicsElement): void {
         this.svgs = this.svgs.filter((svg: SVGGraphicsElement) => svg !== svgToDelete);
-    }
-
-    update(): void {
-        this.svgs = this.svgs;
     }
 }

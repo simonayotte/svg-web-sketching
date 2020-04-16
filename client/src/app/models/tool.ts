@@ -14,8 +14,12 @@ export abstract class Tool {
         const newSvgs = [];
         for (const svg of svgs) {
             const clone = svg.cloneNode(false) as SVGGraphicsElement;
-            const translation = this.getTranslation(svg);
-            clone.setAttribute('transform', `translate(${offset + translation[0]},${offset + translation[1]})`);
+            let translation = this.getTranslation(svg);
+            let rotation = this.getRotation(svg);
+            clone.setAttribute(
+                'transform',
+                `translate(${offset + translation[0]},${offset + translation[1]}) rotate(${rotation[0]},${rotation[1]},${rotation[2]})`,
+            );
             newSvgs.push(clone);
         }
         return newSvgs;
@@ -27,12 +31,26 @@ export abstract class Tool {
             return [0, 0];
         }
 
-        const matches = str.match(/(?!translate)[+-]?\d+/g);
+        let matches = str.match(/-?\d+\.?\d*/g);
 
         if (!matches) {
             return [0, 0];
         }
-        return [parseInt(matches[0], 10), parseInt(matches[1], 10)];
+        return [parseFloat(matches[0]), parseFloat(matches[1])];
+    }
+    // Returns current angle on selection box
+    static getRotation(svg: SVGGraphicsElement): number[] {
+        let str = svg.getAttribute('transform');
+        if (!str) {
+            return [0, 0, 0];
+        }
+
+        let matches = str.match(/-?\d+\.?\d*/g);
+
+        if (!matches) {
+            return [0, 0, 0];
+        }
+        return [parseFloat(matches[2]), parseFloat(matches[3]), parseFloat(matches[4])];
     }
     start(event: MouseEvent): void {
         return;
