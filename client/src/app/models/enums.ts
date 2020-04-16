@@ -10,6 +10,7 @@ export enum Tools {
     Eraser = 'Efface',
     Aerosol = 'Aérosol',
     Applicator = 'Applicateur',
+    Bucket = 'Sceau',
     None = 'None',
 }
 
@@ -25,6 +26,7 @@ export enum ToolButtons {
     E = 'e',
     A = 'a',
     R = 'r',
+    B = 'b',
 }
 
 export enum OtherButtons {

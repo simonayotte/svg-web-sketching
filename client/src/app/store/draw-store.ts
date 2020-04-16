@@ -396,6 +396,13 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
+    // Fill-Bucket
+    setTolerance(value: number): void {
+        this.setState({
+            ...this.state,
+            tolerance: value,
+        });
+    }
     automaticSave(): void {
         const svgsHTML: string[] = [];
         if (this.state.svgState.svgs.length > 0) {

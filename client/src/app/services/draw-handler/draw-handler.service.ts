@@ -14,6 +14,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { ApplicatorService } from '../tools/applicator/applicator.service';
 import { BrushService } from '../tools/brush/brush.service';
+import { BucketService } from '../tools/bucket/bucket.service';
 import { EraserService } from '../tools/eraser/eraser.service';
 import { LineService } from '../tools/line/line.service';
 import { PencilService } from '../tools/pencil/pencil.service';
@@ -45,6 +46,7 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
         this.servicesMap.set(Tools.Aerosol, injector.get(AerosolService));
         this.servicesMap.set(Tools.Applicator, injector.get(ApplicatorService));
+        this.servicesMap.set(Tools.Bucket, injector.get(BucketService));
 
         this.keyMap.set(ToolButtons.One, Tools.Rectangle);
         this.keyMap.set(ToolButtons.C, Tools.Pencil);
@@ -57,6 +59,8 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.E, Tools.Eraser);
         this.keyMap.set(ToolButtons.A, Tools.Aerosol);
         this.keyMap.set(ToolButtons.R, Tools.Applicator);
+        this.keyMap.set(ToolButtons.B, Tools.Bucket);
+
     }
 
     startTool(event: MouseEvent): void {
