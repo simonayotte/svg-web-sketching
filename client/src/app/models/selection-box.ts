@@ -22,8 +22,7 @@ export class SelectionBox {
 
     set svgs(svgs: SVGGraphicsElement[]) {
         this.selectedSvgs = svgs;
-
-        if (this.selectedSvgs.length === 0) {
+        if (!this.selectedSvgs || this.selectedSvgs.length === 0) {
             this.display = false;
             return;
         }
@@ -35,7 +34,10 @@ export class SelectionBox {
         let bottom = 0;
 
         for (const svg of this.selectedSvgs) {
-            const thickness = parseInt(<string>svg.getAttribute('stroke-width')) / 2;
+            let thickness = 0;
+            if (svg.getAttribute('stroke-width')) {
+                thickness = parseInt(svg.getAttribute('stroke-width') as string, 10) / 2;
+            }
 
             const domRect = svg.getBoundingClientRect();
             const rectLeft = domRect.left - thickness - (this.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);

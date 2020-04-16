@@ -31,9 +31,9 @@ export class SidebarComponent {
     @Input('canUndo') canUndo: boolean;
     @Input('canRedo') canRedo: boolean;
 
-    //clipboard
+    // clipboard
     @Input('isSelection') isSelection: boolean;
-    @Input('clipboard') clipboard: SVGGraphicsElement[];
+    @Input('isClipboardEmpty') isClipboardEmpty: boolean;
     @Output() copy: EventEmitter<void>;
     @Output() cut: EventEmitter<void>;
     @Output() paste: EventEmitter<void>;

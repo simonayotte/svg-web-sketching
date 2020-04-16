@@ -8,19 +8,19 @@ export class SelectionDirective {
     constructor(private movementService: MovementService, private rotationService: RotationService) {}
 
     @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         this.movementService.start(event);
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         event.preventDefault();
         this.movementService.handleKeyDown(event.key);
         this.rotationService.handleKeyDown(event.key);
     }
 
     @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         this.movementService.handleKeyUp(event.key);
         this.rotationService.handleKeyUp(event.key);
     }

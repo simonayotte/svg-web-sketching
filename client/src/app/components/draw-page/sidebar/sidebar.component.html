@@ -1,19 +1,39 @@
 <div class="sidebar">
-    <i class="sidebar-option fas fa-mouse-pointer" (click)="changeTool('Selection')" [ngClass]="{ active: tool == 'Selection' }"></i>
+    <i
+        class="sidebar-option fas fa-mouse-pointer"
+        title="Selection"
+        (click)="changeTool('Selection')"
+        [ngClass]="{ active: tool == 'Selection' }"
+    ></i>
     <!-- Undo Redo -->
-    <i class="sidebar-option fas fa-undo" (click)="triggerUndo()" [ngClass]="{ disabled: !canUndo }"></i>
-    <i class="sidebar-option fas fa-redo" (click)="triggerRedo()" [ngClass]="{ disabled: !canRedo }"></i>
-    <i class="sidebar-option fas fa-border-all" (click)="displayGridChange()" [ngClass]="{ active: isDisplayGrid }"></i>
+    <i class="sidebar-option fas fa-undo" title="Undo" (click)="triggerUndo()" [ngClass]="{ disabled: !canUndo }"></i>
+    <i class="sidebar-option fas fa-redo" title="Redo" (click)="triggerRedo()" [ngClass]="{ disabled: !canRedo }"></i>
+    <i class="sidebar-option fas fa-border-all" title="Grille" (click)="displayGridChange()" [ngClass]="{ active: isDisplayGrid }"></i>
 
     <div class="sidebar-option" (click)="toogleDrawOptions()">
         <i class=" fas fa-pencil-ruler"></i>
         <i class="fas fa-sort-down"></i>
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowDrawOptions == true }">
-        <i class="sidebar-dropdown-option fas fa-pencil-alt" (click)="changeTool('Crayon')" [ngClass]="{ active: tool == 'Crayon' }"></i>
-        <i class="sidebar-dropdown-option fas fa-paint-brush" (click)="changeTool('Pinceau')" [ngClass]="{ active: tool == 'Pinceau' }"></i>
-        <i class="sidebar-dropdown-option fas fa-spray-can" (click)="changeTool('Aérosol')" [ngClass]="{ active: tool == 'Aérosol' }"></i>
-        <i class="sidebar-dropdown-option fas fa-fill" (click)="changeTool('Sceau')" [ngClass]="{ active: tool == 'Sceau' }"></i>
+        <i
+            class="sidebar-dropdown-option fas fa-pencil-alt"
+            title="Crayon"
+            (click)="changeTool('Crayon')"
+            [ngClass]="{ active: tool == 'Crayon' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-paint-brush"
+            title="Pinceau"
+            (click)="changeTool('Pinceau')"
+            [ngClass]="{ active: tool == 'Pinceau' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-spray-can"
+            title="Aerosol"
+            (click)="changeTool('Aérosol')"
+            [ngClass]="{ active: tool == 'Aérosol' }"
+        ></i>
+        <i class="sidebar-dropdown-option fas fa-fill" title="Sceau" (click)="changeTool('Sceau')" [ngClass]="{ active: tool == 'Sceau' }"></i>
     </div>
 
     <div class="sidebar-option" (click)="toggleFormOptions()">
@@ -21,10 +41,25 @@
         <i class="fas fa-sort-down"></i>
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowFormOptions == true }">
-        <i class="sidebar-dropdown-option fas fa-grip-lines" (click)="changeTool('Ligne')" [ngClass]="{ active: tool == 'Ligne' }"></i>
-        <i class="sidebar-dropdown-option fas fa-stop" (click)="changeTool('Rectangle')" [ngClass]="{ active: tool == 'Rectangle' }"></i>
-        <i class="sidebar-dropdown-option fas fa-circle" (click)="changeTool('Ellipse')" [ngClass]="{ active: tool == 'Ellipse' }"></i>
-        <i class="sidebar-dropdown-option fas fa-draw-polygon" (click)="changeTool('Polygone')" [ngClass]="{ active: tool == 'Polygone' }"></i>
+        <i class="sidebar-dropdown-option fas fa-grip-lines" title="Ligne" (click)="changeTool('Ligne')" [ngClass]="{ active: tool == 'Ligne' }"></i>
+        <i
+            class="sidebar-dropdown-option fas fa-stop"
+            title="Rectangle"
+            (click)="changeTool('Rectangle')"
+            [ngClass]="{ active: tool == 'Rectangle' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-circle"
+            title="Ellipse"
+            (click)="changeTool('Ellipse')"
+            [ngClass]="{ active: tool == 'Ellipse' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-draw-polygon"
+            title="Polygone"
+            (click)="changeTool('Polygone')"
+            [ngClass]="{ active: tool == 'Polygone' }"
+        ></i>
     </div>
 
     <div class="sidebar-option" (click)="toggleToolOptions()">
@@ -33,8 +68,19 @@
     </div>
 
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowToolOptions == true }">
-        <i class="sidebar-dropdown-option fas fa-eye-dropper" (click)="changeTool('Pipette')" [ngClass]="{ active: tool == 'Pipette' }"></i>
-        <i class="sidebar-dropdown-option fas fa-eraser" (click)="changeTool('Efface')" [ngClass]="{ active: tool == 'Efface' }"></i>
+        <i
+            class="sidebar-dropdown-option fas fa-palette"
+            title="Applicateur"
+            (click)="changeTool('Applicateur')"
+            [ngClass]="{ active: tool == 'Applicateur' }"
+        ></i>
+        <i
+            class="sidebar-dropdown-option fas fa-eye-dropper"
+            title="Pipette"
+            (click)="changeTool('Pipette')"
+            [ngClass]="{ active: tool == 'Pipette' }"
+        ></i>
+        <i class="sidebar-dropdown-option fas fa-eraser" title="Efface" (click)="changeTool('Efface')" [ngClass]="{ active: tool == 'Efface' }"></i>
     </div>
 
     <div class="sidebar-option" (click)="toggleEditOptions()">
@@ -42,15 +88,18 @@
         <i class="fas fa-sort-down"></i>
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowEditOptions == true }">
-        <i class="sidebar-dropdown-option fas fa-sync-alt" (click)="setSelectionAction('Rotate')" [ngClass]="{ disabled: !isSelection }"></i>
-        <i class="sidebar-dropdown-option fas fa-copy" (click)="triggerCopy()" [ngClass]="{ disabled: !isSelection }"></i>
-        <i class="sidebar-dropdown-option fas fa-paste" (click)="triggerPaste()" [ngClass]="{ disabled: clipboard.length === 0 }"></i>
-        <i class="sidebar-dropdown-option fas fa-cut" (click)="triggerCut()" [ngClass]="{ disabled: !isSelection }"></i>
-        <i class="sidebar-dropdown-option fas fa-clone" (click)="triggerDuplicate()" [ngClass]="{ disabled: !isSelection }"></i>
-        <i class="sidebar-dropdown-option fas fa-trash" (click)="triggerDelete()" [ngClass]="{ disabled: !isSelection }"></i>
+        <i
+            class="sidebar-dropdown-option fas fa-sync-alt"
+            title="Rotation"
+            (click)="setSelectionAction('Rotate')"
+            [ngClass]="{ disabled: !isSelection }"
+        ></i>
+        <i class="sidebar-dropdown-option fas fa-copy" title="Copier" (click)="triggerCopy()" [ngClass]="{ disabled: !isSelection }"></i>
+        <i class="sidebar-dropdown-option fas fa-paste" title="Coller" (click)="triggerPaste()" [ngClass]="{ disabled: isClipboardEmpty }"></i>
+        <i class="sidebar-dropdown-option fas fa-cut" title="Couper" (click)="triggerCut()" [ngClass]="{ disabled: !isSelection }"></i>
+        <i class="sidebar-dropdown-option fas fa-clone" title="Dupliquer" (click)="triggerDuplicate()" [ngClass]="{ disabled: !isSelection }"></i>
+        <i class="sidebar-dropdown-option fas fa-trash" title="Supprimer" (click)="triggerDelete()" [ngClass]="{ disabled: !isSelection }"></i>
     </div>
-
-    <i class="sidebar-option fas fa-palette" (click)="changeTool('Applicateur')" [ngClass]="{ active: tool == 'Applicateur' }"></i>
 
     <!--Will contain actions like file saving ...-->
     <div class="sidebar-option" (click)="toggleSettingOptions()">
@@ -58,13 +107,13 @@
         <i class="fas fa-sort-down"></i>
     </div>
     <div class="sidebar-dropdown" [ngClass]="{ active: isShowSettingOptions == true }">
-        <i class="sidebar-dropdown-option fas fa-plus" (click)="openCreateDrawing()"></i>
-        <i class="sidebar-dropdown-option fas fa-save" (click)="openSaveDrawing()"></i>
-        <i class="sidebar-dropdown-option fas fa-file-export" (click)="openExportDrawing()"></i>
-        <i class="sidebar-dropdown-option fas fas fa-images" (click)="openGallery()"></i>
+        <i class="sidebar-dropdown-option fas fa-plus" title="Créer" (click)="openCreateDrawing()"></i>
+        <i class="sidebar-dropdown-option fas fa-save" title="Sauvegarder" (click)="openSaveDrawing()"></i>
+        <i class="sidebar-dropdown-option fas fa-file-export" title="Exporter" (click)="openExportDrawing()"></i>
+        <i class="sidebar-dropdown-option fas fas fa-images" title="Gallery" (click)="openGallery()"></i>
     </div>
 
-    <div class="sidebar-option" data-toggle="modal" data-target="#userGuide">
+    <div class="sidebar-option" data-toggle="modal" title="Guide" data-target="#userGuide">
         <i class="far fa-question-circle"></i>
     </div>
 </div>

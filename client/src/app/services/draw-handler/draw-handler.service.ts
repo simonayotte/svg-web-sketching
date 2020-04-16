@@ -75,6 +75,7 @@ export class DrawHandlerService {
 
     onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
+        event.preventDefault();
 
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
@@ -91,24 +92,20 @@ export class DrawHandlerService {
                 switch (key) {
                     case OtherButtons.O:
                         // mat dialog display
-                        event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
                     case OtherButtons.S:
-                        event.preventDefault();
                         event.stopPropagation();
                         this.matDialog.open(SaveDrawingComponent);
                         break;
 
                     case OtherButtons.E:
-                        event.preventDefault();
                         this.matDialog.open(ExportDrawingComponent);
                         break;
 
                     case OtherButtons.G:
-                        event.preventDefault();
                         this.matDialog.open(DrawingGalleryComponent);
                         break;
 
