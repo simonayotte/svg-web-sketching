@@ -7,6 +7,6 @@
          [style.height.px] = "previewHeight"/>
     </div>
     <p>Êtes vous certain de vouloir sauvegarder l'image?</p>
-    <button (click) = 'saveDrawing()' [disabled] = 'buttonDisabled'>Confirmer</button>
-    <button mat-dialog-close [disabled] = 'buttonDisabled'>Annuler</button>
+    <button class = "mat-button" (click) = 'saveDrawing()' [disabled] = 'buttonDisabled'>Confirmer</button>
+    <button class = "mat-button" mat-dialog-close [disabled] = 'buttonDisabled'>Annuler</button>
 </div>

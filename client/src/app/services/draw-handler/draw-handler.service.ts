@@ -14,6 +14,7 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { ApplicatorService } from '../tools/applicator/applicator.service';
 import { BrushService } from '../tools/brush/brush.service';
+import { BucketService } from '../tools/bucket/bucket.service';
 import { EraserService } from '../tools/eraser/eraser.service';
 import { LineService } from '../tools/line/line.service';
 import { PencilService } from '../tools/pencil/pencil.service';
@@ -45,6 +46,7 @@ export class DrawHandlerService {
         this.servicesMap.set(Tools.Eraser, injector.get(EraserService));
         this.servicesMap.set(Tools.Aerosol, injector.get(AerosolService));
         this.servicesMap.set(Tools.Applicator, injector.get(ApplicatorService));
+        this.servicesMap.set(Tools.Bucket, injector.get(BucketService));
 
         this.keyMap.set(ToolButtons.One, Tools.Rectangle);
         this.keyMap.set(ToolButtons.C, Tools.Pencil);
@@ -57,6 +59,8 @@ export class DrawHandlerService {
         this.keyMap.set(ToolButtons.E, Tools.Eraser);
         this.keyMap.set(ToolButtons.A, Tools.Aerosol);
         this.keyMap.set(ToolButtons.R, Tools.Applicator);
+        this.keyMap.set(ToolButtons.B, Tools.Bucket);
+
     }
 
     startTool(event: MouseEvent): void {
@@ -75,7 +79,6 @@ export class DrawHandlerService {
 
     onKeyDown(event: KeyboardEvent): void {
         const key = event.key;
-        event.preventDefault();
 
         if (this.state.globalState.isKeyHandlerActive) {
             const keyEnum = key as ToolButtons;
@@ -86,33 +89,38 @@ export class DrawHandlerService {
             }
             // handle tool selection keyboard events
             if (this.keyMap.has(keyEnum) && !event.ctrlKey) {
+                event.preventDefault();
                 const tool = this.keyMap.get(keyEnum) as Tools;
                 this.store.setTool(tool);
             } else if (event.ctrlKey) {
                 switch (key) {
                     case OtherButtons.O:
-                        // mat dialog display
+                        event.preventDefault();
                         this.state.svgState.svgs.length > 0
                             ? this.matDialog.open(DrawingStartedDialogComponent)
                             : this.matDialog.open(CreateDrawingComponent);
                         break;
                     case OtherButtons.S:
-                        event.stopPropagation();
+                        event.preventDefault();
                         this.matDialog.open(SaveDrawingComponent);
                         break;
 
                     case OtherButtons.E:
+                        event.preventDefault();
                         this.matDialog.open(ExportDrawingComponent);
                         break;
 
                     case OtherButtons.G:
+                        event.preventDefault();
                         this.matDialog.open(DrawingGalleryComponent);
                         break;
 
                     case OtherButtons.Z:
+                        event.preventDefault();
                         this.store.undo();
                         break;
                     case OtherButtons.ShiftZ:
+                        event.preventDefault();
                         this.store.redo();
                         break;
                 }

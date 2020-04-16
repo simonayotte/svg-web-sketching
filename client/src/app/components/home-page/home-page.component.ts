@@ -1,6 +1,8 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { CreateDrawingComponent } from 'src/app/components/dialogs/create-drawing-dialog/create-drawing.component';
+import { ContinueDrawingService } from 'src/app/services/continue-drawing/continue-drawing.service';
+import { DrawStore } from 'src/app/store/draw-store';
 import { DrawingGalleryComponent } from '../dialogs/drawing-gallery/drawing-gallery.component';
 
 @Component({
@@ -8,17 +10,19 @@ import { DrawingGalleryComponent } from '../dialogs/drawing-gallery/drawing-gall
     templateUrl: './home-page.component.html',
     styleUrls: ['./home-page.component.scss'],
 })
-export class HomePageComponent implements OnInit {
-    private isCreateDrawingOpen = false;
-    private isGalleryOpen = false;
-    constructor(private dialog: MatDialog) {}
-    ngOnInit() {
-        /* Nothing needed in ngOnInit() */
+export class HomePageComponent {
+    private isCreateDrawingOpen: boolean;
+    private isGalleryOpen: boolean;
+    localStorageLength: number;
+    constructor(private dialog: MatDialog, public store: DrawStore, private continueDrawingService: ContinueDrawingService) {
+        this.localStorageLength = localStorage.length;
+        this.isCreateDrawingOpen = false;
+        this.isGalleryOpen = false;
     }
+
     openCreateDrawingDialog(): void {
         const dialogRef = this.dialog.open(CreateDrawingComponent);
         this.isCreateDrawingOpen = true;
-
         dialogRef.afterClosed().subscribe((result) => {
             this.isCreateDrawingOpen = false;
         });
@@ -34,7 +38,7 @@ export class HomePageComponent implements OnInit {
     }
 
     @HostListener('document:keydown', ['$event'])
-    openModal(event: KeyboardEvent) {
+    openModal(event: KeyboardEvent): void {
         if (event.code === 'KeyO' && event.ctrlKey) {
             event.preventDefault();
             event.stopPropagation();
@@ -48,5 +52,9 @@ export class HomePageComponent implements OnInit {
                 this.openGalleryDialog();
             }
         }
+    }
+
+    continueDrawing(): void {
+       this.continueDrawingService.setIsContinueDrawing(true);
     }
 }

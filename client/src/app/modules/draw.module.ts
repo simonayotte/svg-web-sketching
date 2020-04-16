@@ -7,6 +7,7 @@ import { GridPanelComponent } from '../components/draw-page/grid-panel/grid-pane
 import { SidebarComponent } from '../components/draw-page/sidebar/sidebar.component';
 import { GuideComponent } from '../components/guide/guide.component';
 import { BrushComponent } from '../components/tools/brush/brush.component';
+import { BucketComponent } from '../components/tools/bucket/bucket.component';
 import { ColorComponent } from '../components/tools/color/color.component';
 import { EllipsisComponent } from '../components/tools/ellipsis/ellipsis.component';
 import { EraserComponent } from '../components/tools/eraser/eraser.component';
@@ -38,6 +39,7 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         EllipsisComponent,
         AerosolComponent,
         EraserComponent,
+        BucketComponent,
         DrawDirective,
         SvgDirective,
         SelectionDirective,
@@ -59,6 +61,7 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         PolygonComponent,
         EllipsisComponent,
         EraserComponent,
+        BucketComponent,
         AerosolComponent,
         DrawDirective,
         SvgDirective,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material';
 import { PreviewImageComponent } from 'src/app/components/dialogs/preview-image/preview-image.component';
 import { FileTypes, FormValuesName, Tools } from 'src/app/models/enums';
@@ -15,9 +15,9 @@ import { DrawStore } from 'src/app/store/draw-store';
 })
 export class SaveDrawingComponent implements OnInit {
     tagStringArray: string[] = [];
-    isPreviewWindowOpened = false;
+    isPreviewWindowOpened: boolean;
     state: DrawState;
-
+    saveDrawingForm: FormGroup;
     constructor(
         private fb: FormBuilder,
         private saveDrawingService: SaveDrawingService,
@@ -28,25 +28,26 @@ export class SaveDrawingComponent implements OnInit {
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
+        this.isPreviewWindowOpened = false;
+        this.saveDrawingForm = this.fb.group({
+            name: ['', Validators.required],
+            tags: this.fb.array([]),
+        });
     }
 
-    saveDrawingForm = this.fb.group({
-        name: ['', Validators.required],
-        tags: this.fb.array([]),
-    });
-    get name() {
-        return this.saveDrawingForm.get(FormValuesName.Name);
+    get name(): AbstractControl {
+        return this.saveDrawingForm.get(FormValuesName.Name) as AbstractControl;
     }
-    get tags() {
+    get tags(): FormArray {
         return this.saveDrawingForm.get(FormValuesName.Tags) as FormArray;
     }
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.store.setIsKeyHandlerActive(false);
         setTimeout(() => this.store.setTool(Tools.None));
     }
 
-    ngOnDestroy() {
+    ngOnDestroy(): void {
         this.store.setIsKeyHandlerActive(true);
     }
 

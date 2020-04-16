@@ -61,6 +61,7 @@ export class MovementService extends Tool {
             );
         }
         this.state.selectionBox.move(dX, dY);
+        this.store.automaticSave();
     }
 
     stop(): void {

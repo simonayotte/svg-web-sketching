@@ -12,7 +12,7 @@ export abstract class Tool {
 
     static cloneSvgs(svgs: SVGGraphicsElement[], offset: number = 0): SVGGraphicsElement[] {
         const newSvgs = [];
-        for (let svg of svgs) {
+        for (const svg of svgs) {
             const clone = svg.cloneNode(false) as SVGGraphicsElement;
             let translation = this.getTranslation(svg);
             let rotation = this.getRotation(svg);

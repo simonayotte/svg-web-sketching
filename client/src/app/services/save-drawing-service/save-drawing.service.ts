@@ -6,8 +6,6 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class SaveDrawingService {
 
-  constructor() { }
-
   private imgName: BehaviorSubject<string> = new BehaviorSubject<string>('');
   imgNameObs: Observable<string> = this.imgName.asObservable();
 
