@@ -1,11 +1,17 @@
+import axios from 'axios';
+import { FileHandler } from '../services/file-handler.service';
 import * as FormData from 'form-data';
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
-import { FileHandler } from '../services/file-handler.service';
-import axios from 'axios';
 import Types from '../types';
 
-//require('dotenv').config();
+const error400 = '400';
+const error403 = '403';
+const error422 = '422';
+const error429 = '429';
+const error500 = '500';
+
+// require('dotenv').config();
 const API_KEY = '736a0365-3b0e-4b8e-9598-2f6c73fdb290';
 
 @injectable()
@@ -24,25 +30,18 @@ export class ExportDrawingController {
                 try {
                     this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
                 }
-                catch (e) {
-                    const errorMsg = { status: '400', message: e.message };
-                    res.json(errorMsg);
-                }
+                    catch (e) {
+                        const errorMsg = { status: '400', message: e.message };
+                        res.json(errorMsg);
+                    }
                 const succesMsg = { status: '200', message: 'Image exportée avec succès!' };
                 res.json(succesMsg);
             }
             if (req.body.option === 'two') {
-                console.log("CONTROLLER OPTION=2");
-
                 // verify req.body.to
                 const exportReturn = await this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
-                console.log('exportReturn', exportReturn);
                 const formData = new FormData();
-                console.log('REQ BODY TYPE', req.body.type);
-                console.log(formData);
                 formData.append('to', req.body.to);
-                console.log('REQ BODY TYPE APRES APPEND', req.body.type);
-                console.log(exportReturn.stream, req.body.name);
                 switch (req.body.type) {
                     case 'png':
                         formData.append('payload', exportReturn.stream, {
@@ -61,8 +60,7 @@ export class ExportDrawingController {
                             filename: req.body.name + '.svg',
                             contentType: 'image/svg+xml',
                         });
-                        break;
-                    
+                        break;    
                     default:
                         formData.append('payload', exportReturn.stream, {
                             filename: req.body.name + '.jpeg',
@@ -83,50 +81,50 @@ export class ExportDrawingController {
                 })
                     .then(() => {
                         console.log('ALLO.then');
-                        let succesMsg = { status: '200', message: 'Email envoyé avec succès!' };
+                        const succesMsg = { status: '200', message: 'Email envoyé avec succès!' };
                         res.json(succesMsg);
                     })
                     .catch((err) => {
-                        console.log('ALLO', err.response.status);
                         switch (err.response.status) {
-                            case 400:
+                            case error400:
                                 res.json({
                                     status: '400',
                                     message: 'Email invalide. API(email) narrive pas à joindre cette adresse courriel',
                                 });
                                 break;
 
-                            case 403:
+                            case error403:
                                 res.json({
                                     status: '403',
                                     message: 'Votre requête ne comporte pas le header HTTP valide X-Team-Key.',
-                                })
+                                });
                                 break;
 
-                            case 422:
+                            case error422:
                                 res.json({
                                     status: '422',
-                                    message: 'Votre requête ne passe pas la validation de base (vous nenvoyez probablement pas le bon type de données,'
-                                        + 'regardez que votre adresse courriel est bien présent, regardez que le payload est bel et bien un fichier)',
-                                })
+                                    message: 'Votre requête ne passe pas la validation de base '
+                                    + ' (vous nenvoyez probablement pas le bon type de données,'
+                                    + ' regardez que votre adresse courriel est bien présent,'
+                                    + ' regardez que le payload est bel et bien un fichier)',
+                                });
                                 break;
 
-                            case 429:
+                            case error429:
                                 res.json({
                                     status: '429',
                                     message: 'Vous avez dépassé votre quota de courriel alloué par heure.',
                                 });
                                 break;
 
-                            case 500:
+                            case error500:
                                 res.json({
                                     status: '500',
                                     message: ' Le mail API éprouve des difficultés à envoyer le courriel',
-                                })
-                                break;
+                                });
+                            break;
                         }
-                    }); console.log('APRES CATCH DE AXIOS');
-            }
-        });
+        }); 
+    }});
     }
 }

@@ -23,9 +23,9 @@ export class SaveDrawingController {
             let drawing = new Drawing(req.body.name,req.body.tags, req.body.dataURL, req.body.svgsHTML, req.body.width, req.body.height, req.body.RGBA);
             try{
                 this.dbService.addDrawingDb(drawing)
-                await wait(100);
+                await wait(1000);
                 let drawing_id:Array<string> = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
-                await wait(100);
+                await wait(1000);
                 this.fileHandler.saveDrawing(drawing_id, drawing.dataURL);
             }
             catch(error){
