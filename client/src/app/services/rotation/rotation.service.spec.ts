@@ -1,35 +1,31 @@
-import { Tool } from 'src/app/models/tool';
-import { Coordinate } from 'src/app/models/coordinate';
-//import { SelectionDirective } from './../../directives/selection.directive';
-import { DrawStore } from 'src/app/store/draw-store';
 import { TestBed } from '@angular/core/testing';
+import { Coordinate } from 'src/app/models/coordinate';
+import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
-import { RotationService, ALT_ROTATION, DEFAULT_ROTATION } from './rotation.service';
-
-
+import { DrawStore } from 'src/app/store/draw-store';
+import { ALT_ROTATION, DEFAULT_ROTATION, RotationService } from './rotation.service';
+/* tslint:disable:no-magic-numbers */
 describe('RotationService', () => {
   let service: RotationService;
   let store: DrawStore;
-  //let directive: SelectionDirective;
 
   beforeEach(() => {
-      TestBed.configureTestingModule({
-        providers: [RotationService, DrawStore],
+    TestBed.configureTestingModule({
+      providers: [RotationService, DrawStore],
     });
     store = TestBed.get(DrawStore);
-    //directive = TestBed.get(SelectionDirective);
     service = TestBed.get(RotationService);
 
     store.setDrawSvg(service.renderer.createElement('svg', 'svg'));
 
     store.stateObs.subscribe((value: DrawState) => {
-        service.state = value;
+      service.state = value;
     });
   });
 
   it('should be created', () => {
-    const service: RotationService = TestBed.get(RotationService);
-    expect(service).toBeTruthy();
+    const rotation: RotationService = TestBed.get(RotationService);
+    expect(rotation).toBeTruthy();
   });
 
   it('#start() should call #multipleRotation()', (done: DoneFn) => {
@@ -39,7 +35,6 @@ describe('RotationService', () => {
     done();
   });
 
-  // Testing for the handle keys
   it('#handleKeyDown should change #isShiftDown', () => {
     const eventMock = new KeyboardEvent('keydown', { key: 'Shift'});
     service.handleKeyDown(eventMock.key);
@@ -69,7 +64,7 @@ describe('RotationService', () => {
     service.renderer.setAttribute(svg, 'width', '20');
     service.renderer.setAttribute(svg, 'height', '20');
     const coord = service.findSVGCenter(svg);
-    expect(coord).toEqual(new Coordinate(52,0));
+    expect(coord).toEqual(new Coordinate(52, 0) );
   });
 
   it('#rotate() should set the correct attributes on rotation', () => {
@@ -98,7 +93,7 @@ describe('RotationService', () => {
     service.rotate(svg, 20, 20);
     expect(spy).toHaveBeenCalled();
   });
-  
+
   it('#multipleRotation() should call #rotate()', () => {
     const svg = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
     service.state.selectionBox.svgs.push(svg);
@@ -115,10 +110,4 @@ describe('RotationService', () => {
     service.multipleRotation();
     expect(spy).toHaveBeenCalled();
   });
-
-
-  
-
-
-
 });

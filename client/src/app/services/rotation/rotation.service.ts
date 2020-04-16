@@ -1,13 +1,13 @@
-import { Coordinate } from './../../models/coordinate';
 import { Injectable, RendererFactory2 } from '@angular/core';
+import { SelectionButtons } from 'src/app/models/enums';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { SelectionButtons } from 'src/app/models/enums';
+import { Coordinate } from './../../models/coordinate';
 
 export const DEFAULT_ROTATION = 15;
 export const ALT_ROTATION = 1;
-
+export const MAX_ANGLE = 360;
 const PANEL_WIDTH = 252;
 const SIDEBAR_WIDTH = 52;
 @Injectable({
@@ -16,7 +16,7 @@ const SIDEBAR_WIDTH = 52;
 export class RotationService extends Tool {
     isShiftDown: boolean;
     angle: number;
-    svgsBeforeRotation: SVGGraphicsElement[] = [];
+    svgsBeforeRotation: SVGGraphicsElement[];
 
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
@@ -25,6 +25,7 @@ export class RotationService extends Tool {
         });
         this.angle = DEFAULT_ROTATION;
         this.renderer = rendererFactory.createRenderer(null, null);
+        this.svgsBeforeRotation = [];
     }
 
     start(): void {
@@ -34,12 +35,12 @@ export class RotationService extends Tool {
     }
 
     multipleRotation(): void {
-        let selectionCenterX: number = parseFloat((this.state.selectionBox.x + this.state.selectionBox.width / 2).toFixed(2));
-        let selectionCenterY: number = parseFloat((this.state.selectionBox.y + this.state.selectionBox.height / 2).toFixed(2));
+        const selectionCenterX: number = parseFloat((this.state.selectionBox.x + this.state.selectionBox.width / 2).toFixed(2));
+        const selectionCenterY: number = parseFloat((this.state.selectionBox.y + this.state.selectionBox.height / 2).toFixed(2));
 
         for (const svg of this.state.selectionBox.svgs) {
             if (this.isShiftDown) {
-                let svgCenter = this.findSVGCenter(svg);
+                const svgCenter = this.findSVGCenter(svg);
                 this.rotate(svg, svgCenter.pointX, svgCenter.pointY);
             } else {
                 this.rotate(svg, selectionCenterX, selectionCenterY);
@@ -48,24 +49,24 @@ export class RotationService extends Tool {
     }
 
     rotate(svg: SVGGraphicsElement, x: number, y: number): void {
-        let rotation = Tool.getRotation(svg);
-        let translation = Tool.getTranslation(svg);
+        const rotation = Tool.getRotation(svg);
+        const translation = Tool.getTranslation(svg);
 
         this.renderer.setAttribute(
             svg,
             'transform',
-            `translate(${translation[0]},${translation[1]}) rotate(${(this.angle + rotation[0]) % 360} ${x - translation[0]} ${y - translation[1]})`,
+            `translate(${translation[0]},${translation[1]}) rotate(${(this.angle + rotation[0]) % MAX_ANGLE}
+            ${x - translation[0]} ${y - translation[1]})`,
         );
     }
 
     findSVGCenter(svg: SVGGraphicsElement): Coordinate {
         const svgBox = svg.getBoundingClientRect();
 
-        let rectLeft = svgBox.left - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
-
-        let rectTop = svgBox.top;
-        let rectRight = svgBox.right - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
-        let rectBottom = svgBox.bottom;
+        const rectLeft = svgBox.left - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+        const rectTop = svgBox.top;
+        const rectRight = svgBox.right - (this.state.selectionBox.isPanelOpen ? PANEL_WIDTH : SIDEBAR_WIDTH);
+        const rectBottom = svgBox.bottom;
         const centerX = Math.abs((rectRight - rectLeft) / 2 + rectLeft);
         const centerY = Math.abs((rectBottom - rectTop) / 2 + rectTop);
         return new Coordinate(parseFloat(centerX.toFixed(2)), parseFloat(centerY.toFixed(2)));
