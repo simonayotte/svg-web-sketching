@@ -7,7 +7,7 @@
         "start": "nodemon",
         "format": "prettier --config ../.prettierrc.yaml --write \"app/**/*\"",
         "lint": "tslint --project tsconfig.json \"./app/**/*.ts\" --format stylish",
-        "test": "mocha --exit", 
+        "test": "mocha --exit",
         "coverage": "nyc mocha --exit"
     },
     "nyc": {
