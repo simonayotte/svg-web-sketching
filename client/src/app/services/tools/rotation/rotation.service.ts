@@ -51,6 +51,7 @@ export class RotationService extends Tool {
                 this.rotate(svg, selectionCenterX, selectionCenterY);
             }
         }
+        this.store.automaticSave();
     }
 
     rotate(svg: SVGGraphicsElement, x: number, y: number): void {

@@ -61,7 +61,6 @@ export class MovementService extends Tool {
             );
         }
         this.state.selectionBox.move(dX, dY);
-        this.store.automaticSave();
     }
 
     stop(): void {
@@ -71,6 +70,7 @@ export class MovementService extends Tool {
         this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);
         this.state.svgState.drawSvg.removeEventListener('mouseleave', this.mouseUpListener);
+        this.store.automaticSave();
         this.stopSignal();
     }
 
