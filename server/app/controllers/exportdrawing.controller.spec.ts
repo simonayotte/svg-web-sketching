@@ -41,7 +41,7 @@ describe('exportDrawingController', () => {
                 name:'title',
                 type: 'jpeg',
                 option:'one',
-                email:''
+                to:''
             })
             .expect(HTTP_STATUS_OK)
             .then((response: any) => {
@@ -58,12 +58,12 @@ describe('exportDrawingController', () => {
                 name:'title',
                 type: 'jpeg',
                 option:'one',
-                email:''
+                to:''
             })
             .expect(200) 
     });
     
-    it('should return error 400 on service fail ', async () => {
+    it('should return message on valid email post with jpeg ', async () => {
         mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(200); 
         expect(filehandler.exportDrawing().called);
         return supertest(app)
@@ -80,7 +80,7 @@ describe('exportDrawingController', () => {
             });
     });
 
-    it('should return error 400 on service fail ', async () => {
+    it('should return message on valid email post with png ', async () => {
         mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(200); 
         expect(filehandler.exportDrawing().called);
         return supertest(app)
@@ -97,7 +97,7 @@ describe('exportDrawingController', () => {
             });
     });
 
-    it('should return error 400 on service fail ', async () => {
+    it('should return message on valid email post with svg ', async () => {
         mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(200); 
         expect(filehandler.exportDrawing().called);
         return supertest(app)
@@ -115,8 +115,8 @@ describe('exportDrawingController', () => {
     });
 
     it('should return error 400 on service fail ', async () => {
-        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(400); 
-        expect(filehandler.exportDrawing().called);
+        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply('400'); 
+        expect(filehandler.exportDrawingEmail().called);
         return supertest(app)
             .post('/exportdrawing')
             .send({
@@ -132,8 +132,8 @@ describe('exportDrawingController', () => {
     });
     
     it('should return error 403 on service fail ', async () => {
-        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(403); 
-        expect(filehandler.exportDrawing().called);
+        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply('403'); 
+        expect(filehandler.exportDrawingEmail().called);
         return supertest(app)
             .post('/exportdrawing')
             .send({
@@ -149,8 +149,8 @@ describe('exportDrawingController', () => {
     });
 
     it('should return error 422 on service fail ', async () => {
-        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(422); 
-        expect(filehandler.exportDrawing().called);
+        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply('422'); 
+        expect(filehandler.exportDrawingEmail().called);
         return supertest(app)
             .post('/exportdrawing')
             .send({
@@ -166,8 +166,8 @@ describe('exportDrawingController', () => {
     });
 
     it('should return error 429 on service fail ', async () => {
-        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(429); 
-        expect(filehandler.exportDrawing().called);
+        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply('429'); 
+        expect(filehandler.exportDrawingEmail().called);
         return supertest(app)
             .post('/exportdrawing')
             .send({
@@ -183,8 +183,8 @@ describe('exportDrawingController', () => {
     });
 
     it('should return error 500 on service fail ', async () => {
-        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply(500); 
-        expect(filehandler.exportDrawing().called);
+        mock.onPost("https://log2990.step.polymtl.ca/email?address_validation=true").reply('500'); 
+        expect(filehandler.exportDrawingEmail().called);
         return supertest(app)
             .post('/exportdrawing')
             .send({
