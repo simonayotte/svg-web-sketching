@@ -11,6 +11,7 @@ export class RectangleService extends FormService {
     lastX: number;
     lastY: number;
     isShift: boolean;
+    isSelection: boolean;
 
     constructor(protected store: DrawStore, rendererFactory: RendererFactory2) {
         super(store, rendererFactory);
@@ -19,6 +20,7 @@ export class RectangleService extends FormService {
         this.lastX = 0;
         this.lastY = 0;
         this.isShift = false;
+        this.isSelection = false;
     }
 
     start(event: MouseEvent): void {
@@ -30,6 +32,14 @@ export class RectangleService extends FormService {
         this.renderer.setAttribute(this.svg, 'stroke-width', this.state.globalState.thickness.toString());
 
         this.setColors(this.state.rectangleType);
+
+        if (this.isSelection) {
+            this.renderer.setAttribute(this.svg, 'stroke', `#${this.state.colorState.gridColor.colorHex()}`);
+            this.renderer.setAttribute(this.svg, 'stroke-dasharray', '10');
+            this.renderer.setAttribute(this.svg, 'stroke-width', '3');
+            this.renderer.setAttribute(this.svg, 'fill', `#${this.state.colorState.firstColor.colorHex()}`);
+            this.renderer.setAttribute(this.svg, 'fill-opacity', '0.2');
+        }
         this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
         this.state.svgState.drawSvg.addEventListener('mousemove', this.mouseMoveListener);
         this.state.svgState.drawSvg.addEventListener('mouseup', this.mouseUpListener);
@@ -95,7 +105,9 @@ export class RectangleService extends FormService {
 
     stop(): void {
         if (this.isDrawing) {
-            this.store.pushSvg(this.svg);
+            if (!this.isSelection) {
+                this.store.pushSvg(this.svg);
+            }
             this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
             this.state.svgState.drawSvg.removeEventListener('mousemove', this.mouseMoveListener);
             this.state.svgState.drawSvg.removeEventListener('mouseup', this.mouseUpListener);

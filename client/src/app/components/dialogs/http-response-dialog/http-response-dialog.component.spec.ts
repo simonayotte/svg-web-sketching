@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SelectionComponent } from './selection.component';
+import { HttpResponseDialogComponent } from './http-response-dialog.component';
 
-describe('SelectionComponent', () => {
-  let component: SelectionComponent;
-  let fixture: ComponentFixture<SelectionComponent>;
+describe('HttpResponseDialogComponent', () => {
+  let component: HttpResponseDialogComponent;
+  let fixture: ComponentFixture<HttpResponseDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectionComponent ]
+      declarations: [ HttpResponseDialogComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(SelectionComponent);
+    fixture = TestBed.createComponent(HttpResponseDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

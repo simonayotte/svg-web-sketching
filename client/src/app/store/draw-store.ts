@@ -1,14 +1,68 @@
 import { Injectable } from '@angular/core';
-import { Color } from '../models/color';
-import { BrushTextures, SelectedColors, Tools, Types } from '../models/enums';
-import { DrawState } from '../state/draw-state';
-import { Store } from './store';
+import { Color } from 'src/app/models/color';
+import { Coordinate } from 'src/app/models/coordinate';
+import { DrawingJson } from 'src/app/models/drawing-json';
+import { BrushTextures, SelectedColors, Tools, Types } from 'src/app/models/enums';
+import { Tool } from 'src/app/models/tool';
+import { DrawState } from 'src/app/state/draw-state';
+import { Store } from 'src/app/store/store';
+
+const OFFSET = 10;
+// tslint:disable:max-file-line-count
+
 @Injectable({
     providedIn: 'root',
 })
 export class DrawStore extends Store<DrawState> {
     constructor() {
         super(new DrawState());
+    }
+
+    // clipboard
+    copy(): void {
+        this.setState({
+            ...this.state,
+            clipboardState: {
+                ...this.state.clipboardState,
+                copiedSvgs: Tool.cloneSvgs(this.state.selectionBox.svgs),
+                offset: OFFSET,
+                copiedSvgsCoord: new Coordinate(this.state.selectionBox.x, this.state.selectionBox.y),
+            },
+        });
+    }
+    paste(): void {
+        let offset = this.state.clipboardState.offset;
+        const copiedSvgsCoord = this.state.clipboardState.copiedSvgsCoord;
+        const newSvgs = Tool.cloneSvgs(this.state.clipboardState.copiedSvgs, offset); // clone with offset
+        this.pushSvgs(newSvgs);
+
+        offset += OFFSET;
+        if (offset + copiedSvgsCoord.pointX >= this.state.svgState.width || offset + copiedSvgsCoord.pointY >= this.state.svgState.height) {
+            offset = OFFSET;
+        }
+
+        this.setState({
+            ...this.state,
+            clipboardState: { ...this.state.clipboardState, offset },
+        });
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); // update selection box
+    }
+
+    cut(): void {
+        this.copy();
+        this.deleteSvgs(this.state.selectionBox.svgs);
+        this.state.selectionBox.svgs = []; // update selection box
+    }
+
+    duplicate(): void {
+        const newSvgs = Tool.cloneSvgs(this.state.selectionBox.svgs, OFFSET); // clone with offset
+        this.pushSvgs(newSvgs);
+        setTimeout(() => (this.state.selectionBox.svgs = newSvgs)); // update selection box
+    }
+
+    delete(): void {
+        this.deleteSvgs(this.state.selectionBox.svgs);
+        this.state.selectionBox.svgs = []; // update selection box
     }
 
     // undoRedo
@@ -26,6 +80,8 @@ export class DrawStore extends Store<DrawState> {
                 redoState: this.state.undoRedoState.redoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.state.selectionBox.svgs = [];
+        this.automaticSave();
     }
     redo(): void {
         if (this.state.undoRedoState.redoState.length === 0) {
@@ -42,6 +98,7 @@ export class DrawStore extends Store<DrawState> {
                 undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
             },
         });
+        this.automaticSave();
     }
 
     resetUndoRedo(): void {
@@ -91,6 +148,27 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        this.automaticSave();
+    }
+
+    setSvgArray(value: SVGGraphicsElement[]): void {
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: value },
+        });
+        this.automaticSave();
+    }
+    pushSvgs(value: SVGGraphicsElement[]): void {
+        const newState = this.state.svgState.svgs.concat(value);
+        this.setState({
+            ...this.state,
+            svgState: { ...this.state.svgState, svgs: newState },
+            undoRedoState: {
+                ...this.state.undoRedoState,
+                undoState: this.state.undoRedoState.undoState.concat([this.state.svgState.svgs]),
+                redoState: [],
+            },
+        });
     }
 
     deleteSvgs(value: SVGGraphicsElement[]): void {
@@ -103,13 +181,17 @@ export class DrawStore extends Store<DrawState> {
                 redoState: [],
             },
         });
+        this.automaticSave();
     }
 
-    emptySvg(): void {
+    emptySvg(save: boolean): void {
         this.setState({
             ...this.state,
             svgState: { ...this.state.svgState, svgs: [] },
         });
+        if (save) {
+            this.automaticSave();
+        }
     }
 
     saveSvgsState(value: SVGGraphicsElement[]): void {
@@ -123,12 +205,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    popSvg(): void {
-        this.setState({
-            ...this.state,
-            svgState: { ...this.state.svgState, svgs: this.state.svgState.svgs.slice(0, this.state.svgState.svgs.length - 1) },
-        });
-    }
     // Global
 
     setThickness(value: number): void {
@@ -150,6 +226,7 @@ export class DrawStore extends Store<DrawState> {
             ...this.state,
             globalState: { ...this.state.globalState, tool: value, isPanelOpen },
         });
+        this.state.selectionBox.isPanelOpen = isPanelOpen;
     }
     toggleGrid(): void {
         this.setState({
@@ -170,12 +247,6 @@ export class DrawStore extends Store<DrawState> {
         });
     }
 
-    setMousePosition(x: number, y: number): void {
-        this.setState({
-            ...this.state,
-            globalState: { ...this.state.globalState, cursorX: x, cursorY: y },
-        });
-    }
     // Color
     setFirstColor(value: Color, isAddLastColor?: boolean): void {
         this.setState({
@@ -205,6 +276,7 @@ export class DrawStore extends Store<DrawState> {
         if (isAddLastColor) {
             this.addLastColor(value);
         }
+        this.automaticSave();
     }
 
     setWorkspaceColor(value: Color): void {
@@ -331,4 +403,20 @@ export class DrawStore extends Store<DrawState> {
             tolerance: value,
         });
     }
+    automaticSave(): void {
+        const svgsHTML: string[] = [];
+        if (this.state.svgState.svgs.length > 0) {
+            for (const svg of this.state.svgState.svgs) {
+                svgsHTML.push(svg.outerHTML);
+            }
+        }
+        const jsonState: DrawingJson = {
+            width : this.state.svgState.width,
+            height : this.state.svgState.height,
+            svgsHTML,
+            canvasColor : this.state.colorState.canvasColor.rgba()
+        };
+        localStorage.setItem('Drawing', JSON.stringify(jsonState));
+    }
+
 }

@@ -4,6 +4,7 @@ import { Color } from 'src/app/models/color';
 import { SelectedColors } from 'src/app/models/enums';
 import { ColorPanelComponent } from './color-panel.component';
 
+/* tslint:disable:no-magic-numbers */
 describe('ColorPanelComponent', () => {
     let component: ColorPanelComponent;
     let fixture: ComponentFixture<ColorPanelComponent>;

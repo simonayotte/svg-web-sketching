@@ -1,38 +1,48 @@
 import { Directive, ElementRef, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import { ContinueDrawingService } from '../services/continue-drawing/continue-drawing.service';
 import { DrawHandlerService } from '../services/draw-handler/draw-handler.service';
+
 @Directive({
     selector: '[draw]',
 })
 export class DrawDirective implements OnInit {
-    constructor(private el: ElementRef, private drawHandler: DrawHandlerService) {}
+    private isContinueDrawing: boolean;
+    constructor(private el: ElementRef, private drawHandler: DrawHandlerService, private continueDrawingService: ContinueDrawingService) {
+        this.continueDrawingService.isContinueDrawingObs.subscribe((value: boolean) => {
+            this.isContinueDrawing = value;
+        });
+    }
 
-    @Output() drawSvgChange = new EventEmitter();
+    @Output() drawSvgChange: EventEmitter<SVGSVGElement> = new EventEmitter();
 
-    ngOnInit() {
+    ngOnInit(): void {
         this.drawSvgChange.emit(this.el.nativeElement);
+        if (this.isContinueDrawing) {
+            this.continueDrawingService.loadSavedDrawing();
+        }
     }
 
     @HostListener('document:keydown', ['$event'])
-    onKeyDown(event: KeyboardEvent) {
+    onKeyDown(event: KeyboardEvent): void {
         this.drawHandler.onKeyDown(event);
     }
     @HostListener('document:keyup', ['$event'])
-    onKeyUp(event: KeyboardEvent) {
+    onKeyUp(event: KeyboardEvent): void {
         this.drawHandler.onKeyUp(event);
     }
 
     @HostListener('mousedown', ['$event'])
-    onMouseDown(event: MouseEvent) {
+    onMouseDown(event: MouseEvent): void {
         this.drawHandler.startTool(event);
     }
 
     @HostListener('mouseleave')
-    onMouseleave() {
+    onMouseleave(): void {
         this.drawHandler.stopTool();
     }
 
     @HostListener('mousemove', ['$event'])
-    onMouseMove(event: MouseEvent) {
+    onMouseMove(event: MouseEvent): void {
         this.drawHandler.onMouseMove(event);
     }
 }

@@ -1,4 +1,6 @@
 import { BrushTextures, Types } from '../models/enums';
+import { SelectionBox } from '../models/selection-box';
+import { ClipboardState } from './clipboard-state';
 import { ColorState } from './color-state';
 import { GlobalState } from './global-state';
 import { SvgState } from './svg-state';
@@ -30,10 +32,15 @@ export class DrawState {
     // fill
     tolerance: number = TOLERANCE_DEFAULT;
 
+    // selection
+    selectionBox: SelectionBox;
+
     colorState: ColorState;
     globalState: GlobalState;
     svgState: SvgState;
     undoRedoState: UndoRedoState;
+    clipboardState: ClipboardState;
+
     constructor() {
         this.lineHasJunction = false;
         this.emissionRate = EMISSION_RATE_DEFAULT;
@@ -41,5 +48,7 @@ export class DrawState {
         this.colorState = new ColorState();
         this.svgState = new SvgState();
         this.undoRedoState = new UndoRedoState();
+        this.clipboardState = new ClipboardState();
+        this.selectionBox = new SelectionBox();
     }
 }

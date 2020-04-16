@@ -6,14 +6,19 @@ import { Component } from '@angular/core';
   styleUrls: ['./guide.component.scss']
 })
 export class GuideComponent {
-  currentText = 'bienvenue';
-  currentCategory = '';
+  currentText: string;
+  currentCategory: string;
 
-  displayCategory(category: string) {
+  constructor() {
+    this.currentText = 'bienvenue';
+    this.currentCategory = '';
+  }
+
+  displayCategory(category: string): void {
     this.currentCategory = category;
   }
 
-  displayTextSubject(subject: string) {
+  displayTextSubject(subject: string): void {
     this.currentText = subject;
     switch (this.currentText) {
       case 'crayon':

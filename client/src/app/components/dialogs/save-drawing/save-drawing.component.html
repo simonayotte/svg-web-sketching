@@ -14,7 +14,7 @@
         <div class = 'etiquettes'>
             Étiquettes:
             <i class="fas fa-plus" (click)='addTag()' title='Ajouter une étiquette'></i>
-            <div class="alert alert-warning">
+            <br><div class="alert alert-warning">
                 Les caractères spéciaux et les espaces ne sont pas acceptés
               </div>
         </div>
@@ -30,8 +30,8 @@
     </div>
 
     <br>
-    <button type='submit' mat-dialog-close [disabled] = '!saveDrawingForm.valid'(click)='submit()'>Sauvegarder</button>
-    <button mat-dialog-close (click)='Cancel()'>Fermer</button>
+    <button class = "mat-button" type='submit' mat-dialog-close [disabled] = '!saveDrawingForm.valid'(click)='submit()'>Sauvegarder</button>
+    <button class = "mat-button" id = 'close' mat-dialog-close (click)='Cancel()'>Fermer</button>
   </form>
 </div>
 

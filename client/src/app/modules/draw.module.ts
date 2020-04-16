@@ -15,9 +15,9 @@ import { LineComponent } from '../components/tools/line/line.component';
 import { PencilComponent } from '../components/tools/pencil/pencil.component';
 import { PolygonComponent } from '../components/tools/polygon/polygon.component';
 import { RectangleComponent } from '../components/tools/rectangle/rectangle.component';
-import { SelectionComponent } from '../components/tools/selection/selection.component';
 import { CanvasGridDirective } from '../directives/canvas-grid.directive';
 import { DrawDirective } from '../directives/draw.directive';
+import { SelectionDirective } from '../directives/selection.directive';
 import { SvgDirective } from '../directives/svg.directive';
 import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.component';
 
@@ -37,12 +37,12 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         CanvasGridDirective,
         PolygonComponent,
         EllipsisComponent,
-        SelectionComponent,
         AerosolComponent,
         EraserComponent,
         BucketComponent,
         DrawDirective,
         SvgDirective,
+        SelectionDirective,
     ],
     imports: [CommonModule, FormsModule],
     exports: [
@@ -60,12 +60,12 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         CanvasGridDirective,
         PolygonComponent,
         EllipsisComponent,
-        SelectionComponent,
         EraserComponent,
         BucketComponent,
         AerosolComponent,
         DrawDirective,
         SvgDirective,
+        SelectionDirective,
     ],
 })
 export class DrawModule {}

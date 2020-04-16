@@ -1,20 +1,21 @@
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogTitle } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogTitle } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { defer } from 'rxjs';
+import { defer, Observable } from 'rxjs';
+import { HttpResponse } from 'src/app/models/http-response';
 import { HttpService } from 'src/app/services/http-service/http.service';
 import { SaveDrawingService } from 'src/app/services/save-drawing-service/save-drawing.service';
 import { DrawStore } from 'src/app/store/draw-store';
 import { PreviewImageComponent } from './preview-image.component';
 
-export function fakeAsyncResponse<T>(data: T) {
+const fakeAsyncResponse = (data: HttpResponse) => {
     return defer(() => Promise.resolve(data));
-}
+};
 
 const httpServiceStub = {
-    saveDrawing() {
+    saveDrawing(): Observable<HttpResponse> {
         return fakeAsyncResponse({ status: '200', message: 'Image sauvegardée avec succès!' });
     },
 };
@@ -26,9 +27,12 @@ describe('PreviewImageComponent', () => {
   let saveDrawingService: SaveDrawingService;
   const dialogMock = {
     close: () => {
-        /*empty function*/
+        return;
     },
-  };
+    open: () => {
+        return;
+    },
+};
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -39,6 +43,7 @@ describe('PreviewImageComponent', () => {
               {provide: MatDialogRef, useValue: dialogMock},
               {provide: MAT_DIALOG_DATA, useValue: []},
               {provide: HttpService, useValue: httpServiceStub},
+              {provide: MatDialog, useValue: dialogMock},
             DrawStore,
             SaveDrawingService,
         ],
@@ -106,18 +111,6 @@ describe('PreviewImageComponent', () => {
   it('#saveDrawing() should set #buttonDisabled to false in the promise', (done: DoneFn) => {
     component.saveDrawing().then(() => {
       expect(component.buttonDisabled).toEqual(false);
-      done();
-    });
-  });
-
-  it('#saveDrawing() should call #window.alert in the promise', (done: DoneFn) => {
-    let message: string;
-    httpServiceStub.saveDrawing().subscribe((data) => {
-      message = data.message;
-    });
-    spyOn(window, 'alert');
-    component.saveDrawing().then(() => {
-      expect(window.alert).toHaveBeenCalledWith(message);
       done();
     });
   });
