@@ -5,6 +5,7 @@ import { MovementService } from './movement.service';
 import { SelectionButtons } from 'src/app/models/enums';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
+import { Tool } from 'src/app/models/tool';
 /* tslint:disable:no-magic-numbers */
 describe('MovementService', () => {
     let service: MovementService;
@@ -23,7 +24,6 @@ describe('MovementService', () => {
         store.setDrawSvg(svg);
 
         rect = service.renderer.createElement('rect', 'svg') as SVGGraphicsElement;
-
         service.renderer.setAttribute(rect, 'stroke-width', '5');
         service.renderer.setAttribute(rect, 'stroke', '#000000ff');
         service.renderer.setAttribute(rect, 'transform', 'translate(125,150)');
@@ -58,10 +58,12 @@ describe('MovementService', () => {
     it('#moveSvgs() should call renderer #setAttribute with old translation and current move', () => {
         const dX = 75;
         const dY = 50;
+        spyOn(Tool, 'getRotation').and.returnValue([0, 0, 0]);
+
         service.state.selectionBox.svgs = [rect];
         const spy = spyOn(service.renderer, 'setAttribute');
         service.moveSvgs(dX, dY);
-        expect(spy).toHaveBeenCalledWith(rect, 'transform', 'translate(200,200)');
+        expect(spy).toHaveBeenCalledWith(rect, 'transform', 'translate(200,200) rotate(0 0 0)');
     });
 
     it('#handleKeyDown() should call renderer #moveSvgs with correct params if ArrowLeft pressed ', () => {

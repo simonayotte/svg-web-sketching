@@ -3,7 +3,7 @@ import { SelectionButtons } from 'src/app/models/enums';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { Coordinate } from './../../models/coordinate';
+import { Coordinate } from '../../../models/coordinate';
 
 export const DEFAULT_ROTATION = 15;
 export const ALT_ROTATION = 1;
@@ -16,22 +16,27 @@ const SIDEBAR_WIDTH = 52;
 export class RotationService extends Tool {
     isShiftDown: boolean;
     angle: number;
-    svgsBeforeRotation: SVGGraphicsElement[];
-
+    isLastModeShift: boolean;
+    lastRotatedSvgs: SVGGraphicsElement[];
     constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
         super();
         this.store.stateObs.subscribe((value: DrawState) => {
             this.state = value;
         });
         this.angle = DEFAULT_ROTATION;
+        this.isLastModeShift = false;
         this.renderer = rendererFactory.createRenderer(null, null);
-        this.svgsBeforeRotation = [];
     }
 
     start(): void {
-        this.svgsBeforeRotation = Tool.cloneSvgs(this.state.svgState.svgs);
+        this.store.saveSvgsState(Tool.cloneSvgs(this.state.svgState.svgs));
+        if (this.isLastModeShift !== this.isShiftDown || this.lastRotatedSvgs !== this.state.selectionBox.svgs) {
+            //Rotation mode changed
+            this.resetRotation();
+        }
         this.multipleRotation();
-        this.store.saveSvgsState(this.svgsBeforeRotation);
+        this.isLastModeShift = this.isShiftDown;
+        this.lastRotatedSvgs = this.state.selectionBox.svgs;
     }
 
     multipleRotation(): void {
@@ -55,8 +60,8 @@ export class RotationService extends Tool {
         this.renderer.setAttribute(
             svg,
             'transform',
-            `translate(${translation[0]},${translation[1]}) rotate(${(this.angle + rotation[0]) % MAX_ANGLE}
-            ${x - translation[0]} ${y - translation[1]})`,
+            `translate(${translation[0]},${translation[1]}) rotate(${(this.angle + rotation[0]) % MAX_ANGLE} ${x - translation[0]} ${y -
+                translation[1]})`,
         );
     }
 
@@ -70,6 +75,20 @@ export class RotationService extends Tool {
         const centerX = Math.abs((rectRight - rectLeft) / 2 + rectLeft);
         const centerY = Math.abs((rectBottom - rectTop) / 2 + rectTop);
         return new Coordinate(parseFloat(centerX.toFixed(2)), parseFloat(centerY.toFixed(2)));
+    }
+    resetRotation() {
+        for (const svg of this.state.selectionBox.svgs) {
+            const rotation = Tool.getRotation(svg);
+            const translation = Tool.getTranslation(svg);
+
+            if (rotation[0] > 0) {
+                this.renderer.setAttribute(
+                    svg,
+                    'transform',
+                    `translate(${translation[0]},${translation[1]}) rotate(0 ${rotation[1]} ${rotation[2]})`,
+                );
+            }
+        }
     }
 
     handleKeyDown(key: string): void {

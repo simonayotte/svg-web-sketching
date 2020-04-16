@@ -1,6 +1,6 @@
 import { Directive, HostListener } from '@angular/core';
 import { MovementService } from '../services/tools/movement/movement.service';
-import { RotationService } from './../services/rotation/rotation.service';
+import { RotationService } from '../services/tools/rotation/rotation.service';
 @Directive({
     selector: '[selection]',
 })
