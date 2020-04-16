@@ -1,11 +1,13 @@
 import { Injectable, RendererFactory2 } from '@angular/core';
 import { Color } from 'src/app/models/color';
+import { Coordinate } from 'src/app/models/coordinate';
 import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
-import { Coordinate } from 'src/app/models/coordinate';
 
 const MAXIMUM_TOLERANCE = 100;
+const MAXIMUM_PIXEL_COLOR_VALUE = 255;
+const PIXEL_SIZE = 4;
 @Injectable({
   providedIn: 'root'
 })
@@ -35,27 +37,28 @@ export class BucketService extends Tool {
   }
 
   colorArea(mouseX: number, mouseY: number): void {
-    if (this.state.tolerance == MAXIMUM_TOLERANCE) {
+    if (this.state.tolerance === MAXIMUM_TOLERANCE) {
       this.fillEntireSVG();
     } else {
       this.createPath();
-      const SVGWidth = this.state.svgState.width;
-      const SVGHeight = this.state.svgState.height;
+      const svgWidth = this.state.svgState.width;
+      const svgHeight = this.state.svgState.height;
       const unverifiedPixels: Coordinate[] = [];
-      const verifiedPixels = new Uint8Array(SVGWidth*SVGHeight);
-      const pixelsToColor = new Uint8Array(SVGWidth*SVGHeight);
+      const verifiedPixels = new Uint8Array(svgWidth * svgHeight);
+      const pixelsToColor = new Uint8Array(svgWidth * svgHeight);
       unverifiedPixels.push(new Coordinate(mouseX, mouseY));
-      const imageData = this.ctx.getImageData(0,0,SVGWidth,SVGHeight);
+      const imageData = this.ctx.getImageData(0, 0, svgWidth, svgHeight);
       const color = this.getPixelColor(mouseX, mouseY, imageData);
 
       while (unverifiedPixels.length > 0) {
         const currentPixel = unverifiedPixels.pop();
-        
+
         if (currentPixel !== undefined) {
-          if (currentPixel.pointX >= 0 && currentPixel.pointX <= SVGWidth && currentPixel.pointY >= 0 && currentPixel.pointY <= SVGHeight) {
+          if (currentPixel.pointX >= 0 && currentPixel.pointX <= svgWidth && currentPixel.pointY >= 0 && currentPixel.pointY <= svgHeight) {
             const currentPixelColor = this.getPixelColor(currentPixel.pointX, currentPixel.pointY, imageData);
-            if (!verifiedPixels[currentPixel.pointY * SVGWidth + currentPixel.pointX] && this.checkColor(currentPixelColor, color, this.state.tolerance)) {
-              pixelsToColor[currentPixel.pointY * SVGWidth + currentPixel.pointX] = 1;
+            if (!verifiedPixels[currentPixel.pointY * svgWidth + currentPixel.pointX] &&
+                this.checkColor(currentPixelColor, color, this.state.tolerance)) {
+              pixelsToColor[currentPixel.pointY * svgWidth + currentPixel.pointX] = 1;
 
               unverifiedPixels.push(new Coordinate(currentPixel.pointX + 1, currentPixel.pointY));
               unverifiedPixels.push(new Coordinate(currentPixel.pointX - 1, currentPixel.pointY));
@@ -63,11 +66,11 @@ export class BucketService extends Tool {
               unverifiedPixels.push(new Coordinate(currentPixel.pointX, currentPixel.pointY - 1));
             }
           }
-          verifiedPixels[currentPixel.pointY * SVGWidth + currentPixel.pointX] = 1;
+          verifiedPixels[currentPixel.pointY * svgWidth + currentPixel.pointX] = 1;
         }
       }
 
-      this.renderer.setAttribute(this.svg, 'd', this.pointsToString(pixelsToColor, SVGWidth, SVGHeight));
+      this.renderer.setAttribute(this.svg, 'd', this.pointsToString(pixelsToColor, svgWidth, svgHeight));
     }
     this.stop();
   }
@@ -102,12 +105,14 @@ export class BucketService extends Tool {
   }
 
   getPixelColor(posX: number, posY: number, imageData: ImageData): Color {
-    const data: Uint8ClampedArray = imageData.data.slice((posY * imageData.width + posX)*4, (posY * imageData.width + posX)*4 + 4);
+    const data: Uint8ClampedArray = imageData.data.slice((posY * imageData.width + posX) * PIXEL_SIZE,
+                                                         (posY * imageData.width + posX) * PIXEL_SIZE + PIXEL_SIZE);
+    // tslint:disable-next-line:no-magic-numbers
     return new Color(data[0], data[1], data[2], data[3]);
   }
 
   checkColor(pixelColor: Color, primaryColor: Color, tolerance: number): boolean {
-    const diff = (255 * tolerance) / 100;
+    const diff = (MAXIMUM_PIXEL_COLOR_VALUE * tolerance) / MAXIMUM_TOLERANCE;
     const isRedOk = (primaryColor.r >= pixelColor.r - diff) && (primaryColor.r <= pixelColor.r + diff);
     const isGreenOk = (primaryColor.g >= pixelColor.g - diff) && (primaryColor.g <= pixelColor.g + diff);
     const isBlueOk = (primaryColor.b >= pixelColor.b - diff) && (primaryColor.b <= pixelColor.b + diff);

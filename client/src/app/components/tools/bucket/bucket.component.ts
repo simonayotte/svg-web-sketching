@@ -10,11 +10,11 @@ export class BucketComponent {
   constructor() {
     this.toleranceChange = new EventEmitter();
    }
- 
+
    @Input('tolerance') tolerance: string;
- 
+
    @Output() toleranceChange: EventEmitter<unknown>;
- 
+
    /* tslint:disable:no-any */
    setTolerance(event: any): void {
      this.toleranceChange.emit(event.target.value);

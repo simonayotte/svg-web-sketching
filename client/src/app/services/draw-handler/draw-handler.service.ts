@@ -14,13 +14,13 @@ import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from 'src/app/store/draw-store';
 import { ApplicatorService } from '../tools/applicator/applicator.service';
 import { BrushService } from '../tools/brush/brush.service';
+import { BucketService } from '../tools/bucket/bucket.service';
 import { EraserService } from '../tools/eraser/eraser.service';
 import { LineService } from '../tools/line/line.service';
 import { PencilService } from '../tools/pencil/pencil.service';
 import { RectangleService } from '../tools/rectangle/rectangle.service';
 import { SelectionService } from '../tools/selection/selection.service';
 import { AerosolService } from './../tools/aerosol/aerosol.service';
-import { BucketService } from '../tools/bucket/bucket.service';
 
 @Injectable({
     providedIn: 'root',

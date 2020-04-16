@@ -30,7 +30,7 @@ export abstract class Tool {
 
     copyState(svgs: SVGGraphicsElement[]): SVGGraphicsElement[] {
         const newSvgs = [];
-        for (let svg of svgs) {
+        for (const svg of svgs) {
             const clone = svg.cloneNode(true) as SVGGraphicsElement;
             newSvgs.push(clone);
         }

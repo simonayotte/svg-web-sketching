@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
-import { BucketService } from './bucket.service';
 import { Color } from 'src/app/models/color';
+import { BucketService } from './bucket.service';
 
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
-
+/* tslint:disable:no-magic-numbers */
 describe('BucketService', () => {
     let service: BucketService;
     let store: DrawStore;
@@ -31,11 +31,11 @@ describe('BucketService', () => {
             clientX: 50,
             clientY: 75,
         });
-      const spy = spyOn(service, 'createHTMLCanvas');
-      const spy1 = spyOn(service, 'fillCanvas');
-      service.start(mouseDown);
-      expect(spy).toHaveBeenCalled();
-      expect(spy1).toHaveBeenCalled();
+        const spy = spyOn(service, 'createHTMLCanvas');
+        const spy1 = spyOn(service, 'fillCanvas');
+        service.start(mouseDown);
+        expect(spy).toHaveBeenCalled();
+        expect(spy1).toHaveBeenCalled();
     });
 
     it('#stop() should call pushSvg when svg exists', () => {
@@ -46,49 +46,48 @@ describe('BucketService', () => {
         expect(spy).toHaveBeenCalled();
       });
 
-      it('#colorArea() should call #fillEntireSVG() when the tolerance is 100', () => {
+    it('#colorArea() should call #fillEntireSVG() when the tolerance is 100', () => {
         service.state.tolerance = 100;
         const spy = spyOn(service, 'fillEntireSVG');
-        service.colorArea(0,0);
+        service.colorArea(0, 0);
         expect(spy).toHaveBeenCalled();
       });
 
-      it('#createHTMLCanvas() should create and return the canvas element', () => {
+    it('#createHTMLCanvas() should create and return the canvas element', () => {
         const ctx = service.createHTMLCanvas(500, 500);
         expect(ctx).toBeTruthy();
         expect(ctx.canvas.width).toEqual(500);
         expect(ctx.canvas.height).toEqual(500);
       });
-    
-      it('#getPixelColor() should return the color of a pixel at given position', () => {
-        const ctx = service.createHTMLCanvas(5,5);
-        const imageData = ctx.getImageData(0,0,4,4);
-        expect(service.getPixelColor(0,0,imageData).rgbHex).toEqual('000000');
+
+    it('#getPixelColor() should return the color of a pixel at given position', () => {
+        const ctx = service.createHTMLCanvas(5, 5);
+        const imageData = ctx.getImageData(0, 0, 4, 4);
+        expect(service.getPixelColor(0, 0, imageData).rgbHex).toEqual('000000');
       });
 
-      it('#checkColor() should check if the given color is within tolerance', () => {
-        const blue = new Color(0,0,255,0);
-        const testTrueColor = new Color(0,0,250,0);
-        const testFalseColor = new Color(0,40,0,0);
+    it('#checkColor() should check if the given color is within tolerance', () => {
+        const blue = new Color(0, 0, 255, 0);
+        const testTrueColor = new Color(0, 0, 250, 0);
+        const testFalseColor = new Color(0, 40, 0, 0);
 
-        expect(service.checkColor(blue,testTrueColor,10)).toBeTruthy();
-        expect(service.checkColor(blue,testFalseColor,10)).toBeFalsy();
+        expect(service.checkColor(blue, testTrueColor, 10)).toBeTruthy();
+        expect(service.checkColor(blue, testFalseColor, 10)).toBeFalsy();
       });
 
-      it('#fillEntireSVG() should create a rectangle element the size of drawSVG', () => {
+    it('#fillEntireSVG() should create a rectangle element the size of drawSVG', () => {
         service.fillEntireSVG();
         expect(service.svg.getAttribute('width')).toEqual(service.state.svgState.width.toString());
         expect(service.svg.getAttribute('height')).toEqual(service.state.svgState.height.toString());
       });
 
-      it('#createPath() should create a path element', () => {
+    it('#createPath() should create a path element', () => {
         service.createPath();
         expect(service.svg.tagName).toEqual('path');
       });
 
-      it('#pointsToString()', () => {
+    it('#pointsToString()', () => {
         // TODO
       });
-
 
 });
