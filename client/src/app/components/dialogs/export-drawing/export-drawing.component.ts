@@ -14,31 +14,32 @@ import { PreviewExportComponent } from '../preview-export/preview-export.compone
     styleUrls: ['./export-drawing.component.scss'],
 })
 export class ExportDrawingComponent implements OnInit {
-    constructor(
-        private drawingHandler: DrawingHandler,
-        private store: DrawStore,
-        public dialogRef: MatDialogRef<ExportDrawingComponent>,
-        private fb: FormBuilder,
-        public dialog: MatDialog,
-        private exportDrawingService: ExportDrawingService,
-    ) {
-        this.store.stateObs.subscribe((value: DrawState) => {
-            this.state = value;
-        });
-        this.exportDrawingForm = this.fb.group({
-            name: ['', Validators.required],
-            type: ['', Validators.required],
-            filter: [''],
-        });
-    }
+  constructor(
+     private drawingHandler: DrawingHandler,
+     private store: DrawStore,
+     public dialogRef: MatDialogRef<ExportDrawingComponent>,
+     private fb: FormBuilder,
+     public dialog: MatDialog,
+     private exportDrawingService: ExportDrawingService) {
+    this.store.stateObs.subscribe((value: DrawState) => {
+      this.state = value;
+    });
+    this.exportDrawingForm = this.fb.group({
+      name : ['', Validators.required],
+      type : ['', Validators.required],
+      option: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      filter: [''],
+      
+     });
+  }
 
-    get name(): AbstractControl | null {
-        return this.exportDrawingForm.get(FormValuesName.Name);
-    }
-    get type(): AbstractControl | null {
-        return this.exportDrawingForm.get(FormValuesName.Type);
-    }
-    state: DrawState;
+   get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
+   get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
+   get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
+   get option() : AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Option) ; }
+
+  state: DrawState;
 
     exportDrawingForm: FormGroup;
     ngOnInit(): void {

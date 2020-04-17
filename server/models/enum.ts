@@ -5,11 +5,16 @@ export enum FileTypes {
     SvgXml = 'svg+xml'
 }
 
+export enum ExportOption{
+    One = 'one',
+    two = 'two',
+    Three = 'three'
+}
+
 export enum FilePaths {
     ImageStorage = '/image-storage/',
     ServerPath = '\\server\\app\\services',
-    LocalPath = '\\client\\local-images\\'
-
+    LocalPath = '\\client\\local-images\\',
 }
 
 export enum Encoding {

@@ -12,6 +12,14 @@ export class ExportDrawingService {
   private type: BehaviorSubject<string> = new BehaviorSubject<string>('');
   typeObs: Observable<string> = this.type.asObservable();
 
+  private email: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  emailObs: Observable<string> = this.email.asObservable();
+
+  private option: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  optionObs:Observable<string> = this.option.asObservable();
+
+  constructor() { }
+
   setExportName(exportName: string): void {
     this.exportName.next(exportName);
   }
@@ -20,6 +28,15 @@ export class ExportDrawingService {
     this.type.next(type);
   }
 
+  setEmail(email: string): void {
+    this.email.next(email);
+  }
+
+  setOption(option: string):void {
+    this.option.next(option);
+  }
+
+
   getExportName(): string {
     return this.exportName.value;
   }
@@ -27,4 +44,14 @@ export class ExportDrawingService {
   getType(): string {
     return this.type.value;
   }
+
+  getEmail(): string{
+    return this.email.value;
+  }
+
+  getOption():string {
+   return this.option.value;
+  }
+
+  
 }
