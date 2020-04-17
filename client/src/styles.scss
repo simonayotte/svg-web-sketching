@@ -51,11 +51,9 @@ i {
     background-color: #363636;
   }
 
-<<<<<<< HEAD
   @function rem($value){
     @return unquote(($value/apx)/16+"rem")
 }
-=======
 .mat-dialog-container{
     background: #363636;
     color: white;
@@ -81,4 +79,3 @@ i {
 input:focus, button:focus{
     outline: none;
 }
->>>>>>> master
