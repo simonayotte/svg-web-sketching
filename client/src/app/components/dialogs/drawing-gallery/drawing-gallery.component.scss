@@ -1,17 +1,19 @@
 img{
     width : 100px;
     height : 100px;
-    border: 1px solid black;
     cursor: pointer;
 }
 
-.fa-trash{
+i{
+    margin-left: 5px;
+}
+
+.action-button-right{
     float:right;
 }
 
-.fa-download{
-    float:right;
-    margin-right:15px;
+.action-button-left{
+    float:left;
 }
 
 .no-drawing{
@@ -22,9 +24,7 @@ img{
     margin:auto;
 }
 
-h1{
-    text-align: center;
-}
+
 
 .container{
     display:flex;
@@ -32,6 +32,9 @@ h1{
     width: 800px;
     justify-content: flex-start;
     align-items: flex-start;
+    border-top:1px solid #ff8c00;
+    border-bottom:1px solid #ff8c00;
+    margin-top:5px;
 }
 
 .drawing{
@@ -41,17 +44,17 @@ h1{
 }
 
 .fa-plus{
-    color:green;
+    color:#ff8c00;
 }
 
 
 .fa-times{
-    color:red;
+    color:#ff8c00;
     margin-left:5px;
 }
 
 .fa-exclamation-triangle{
-    color:orange;
+    color:#ff8c00;
     margin-left:5px;
 }
 

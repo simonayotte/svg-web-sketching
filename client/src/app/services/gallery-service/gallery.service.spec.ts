@@ -1,44 +1,29 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { Color } from 'src/app/models/color';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawStore } from 'src/app/store/draw-store';
+import { ContinueDrawingService } from '../continue-drawing/continue-drawing.service';
 import { DrawingHandler } from '../drawing-handler/drawing-handler.service';
 import { GalleryService } from './gallery.service';
+
+// tslint:disable:no-magic-numbers
 
 describe('GalleryService', () => {
   let service: GalleryService;
   let store: DrawStore;
   let drawingHandler: DrawingHandler;
+  let continueDrawingService: ContinueDrawingService;
   beforeEach(() => {
       TestBed.configureTestingModule({});
       service = TestBed.get(GalleryService);
       store = TestBed.get(DrawStore);
       drawingHandler = TestBed.get(DrawingHandler);
+      continueDrawingService = TestBed.get(ContinueDrawingService);
       store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
     });
   it('should be created', () => {
     expect(service).toBeTruthy();
-  });
-
-  it('convertHtmlToSvgElement() should take an array of html, convert them into an SVGGraphicsElement an push then in the svg array', () => {
-    const svg1: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svg2: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svg3: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svgHTML = [svg1.outerHTML, svg2.outerHTML, svg3.outerHTML];
-    const svgs = [svg1, svg2, svg3];
-    service.convertHtmlToSvgElement(svgHTML);
-    expect(svgs).toEqual(service.state.svgState.svgs);
-  });
-
-  it('convertHtmlToSvgElement() should call #pushSvg of store', () => {
-    spyOn(store, 'pushSvg');
-    const svg1: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svg2: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svg3: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svgHTML = [svg1.innerHTML, svg2.innerHTML, svg3.innerHTML];
-    service.convertHtmlToSvgElement(svgHTML);
-    expect(store.pushSvg).toHaveBeenCalled();
   });
 
   it('#loadDrawing() should call #setDrawHeight() of the store', () => {
@@ -78,16 +63,20 @@ describe('GalleryService', () => {
     expect(drawingHandler.clearCanvas).toHaveBeenCalled();
   });
 
-  it('#loadDrawing() should call #convertHtmlToSvgElement()', () => {
-    spyOn(service, 'convertHtmlToSvgElement');
-    const svg1: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svg2: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svg3: SVGGraphicsElement = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    const svgHTML = [svg1.innerHTML, svg2.innerHTML, svg3.innerHTML];
-    const drawing: SavedDrawing = new SavedDrawing('testdrawing', [], 'url', svgHTML, 1, 1, [0, 0, 0, 0]);
+  it('#loadDrawing() should call #setIsContinueDrawing() of continueDrawingService', () => {
+    spyOn(continueDrawingService, 'setIsContinueDrawing');
+    const drawing: SavedDrawing = new SavedDrawing('testdrawing', [], 'url', [], 1, 1, [0, 0, 0, 0]);
     service.loadDrawing(drawing);
-    expect(service.convertHtmlToSvgElement).toHaveBeenCalledWith(drawing.svgsHTML);
+    expect(continueDrawingService.setIsContinueDrawing).toHaveBeenCalledWith(false);
   });
+
+  it('#loadSavedDrawing() should call #setSvgArray() of the store', fakeAsync(() => {
+    spyOn(store, 'setSvgArray');
+    const drawing: SavedDrawing = new SavedDrawing('testdrawing', [], 'url', [], 1, 1, [0, 0, 0, 0]);
+    service.loadDrawing(drawing);
+    tick(0);
+    expect(store.setSvgArray).toHaveBeenCalled();
+  }));
 
   it('#filterDrawings(tags, drawings) should return all the drawings that contains at least one of the tags passed as a parameter', () => {
     const drawing1: SavedDrawing = new SavedDrawing('testdrawing', ['blue', 'sea', 'beach'], 'url', [], 1, 1, [0, 0, 0, 0]);

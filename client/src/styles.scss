@@ -6,6 +6,11 @@ html,
 body {
     height: 100%;
 }
+
+h1{
+    text-align: center;
+}
+
 body {
     margin: 0;
     font-family: Roboto, 'Helvetica Neue', sans-serif;
@@ -46,6 +51,34 @@ i {
     background-color: #363636;
   }
 
+<<<<<<< HEAD
   @function rem($value){
     @return unquote(($value/apx)/16+"rem")
 }
+=======
+.mat-dialog-container{
+    background: #363636;
+    color: white;
+}
+
+.mat-button{
+    border:none;
+    color: #363636;
+    background-color: white;
+    font-weight: normal;
+    text-align: center;
+    vertical-align: center;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    border-radius: 3px;
+}
+
+.mat-button:hover:enabled {
+    color: white;
+    background-color: #ff8c00;
+}
+
+input:focus, button:focus{
+    outline: none;
+}
+>>>>>>> master

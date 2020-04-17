@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Color } from 'src/app/models/color';
 import { SelectedColors } from 'src/app/models/enums';
 @Component({
@@ -6,25 +6,21 @@ import { SelectedColors } from 'src/app/models/enums';
     templateUrl: './color-panel.component.html',
     styleUrls: ['./color-panel.component.scss'],
 })
-export class ColorPanelComponent implements OnInit {
-    constructor() {}
-
+export class ColorPanelComponent {
     @Input('firstColor') firstColor: Color;
     @Input('secondColor') secondColor: Color;
     @Input('canvasColor') canvasColor: Color;
 
-    @Output() openColor = new EventEmitter();
-    @Output() selectedColorChange = new EventEmitter();
-    @Output() swapColor = new EventEmitter();
+    @Output() openColor: EventEmitter<void> = new EventEmitter();
+    @Output() selectedColorChange: EventEmitter<SelectedColors> = new EventEmitter();
+    @Output() swapColor: EventEmitter<void> = new EventEmitter();
 
-    openColorWindow(color: SelectedColors) {
+    openColorWindow(color: SelectedColors): void {
         this.openColor.emit();
         this.selectedColorChange.emit(color);
     }
 
-    swap() {
+    swap(): void {
         this.swapColor.emit();
     }
-
-    ngOnInit() {}
 }

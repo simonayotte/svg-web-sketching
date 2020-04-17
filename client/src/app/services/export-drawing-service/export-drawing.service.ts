@@ -5,6 +5,10 @@ import { BehaviorSubject, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ExportDrawingService {
+<<<<<<< HEAD
+=======
+
+>>>>>>> master
   private exportName: BehaviorSubject<string> = new BehaviorSubject<string>('');
   exportNameObs: Observable<string> = this.exportName.asObservable();
 

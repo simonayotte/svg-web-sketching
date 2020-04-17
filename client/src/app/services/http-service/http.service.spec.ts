@@ -2,10 +2,14 @@ import { TestBed } from '@angular/core/testing';
 
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ExportedDrawing } from 'src/app/models/exported-drawing';
-import { HttpResponse } from 'src/app/models/httpResponse';
+import { HttpResponse } from 'src/app/models/http-response';
 import { SavedDrawing } from 'src/app/models/saved-drawing';
 import { DrawStore } from 'src/app/store/draw-store';
 import { HttpService } from './http.service';
+
+// tslint:disable:max-line-length
+// Pour les fail
+// tslint:disable:no-unused-expression
 
 describe('HttpService', () => {
   let service: HttpService;
@@ -22,7 +26,6 @@ describe('HttpService', () => {
   });
 
   it('should be created', () => {
-    const service: HttpService = TestBed.get(HttpService);
     expect(service).toBeTruthy();
   });
 

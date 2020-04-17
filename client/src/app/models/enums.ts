@@ -10,6 +10,7 @@ export enum Tools {
     Eraser = 'Efface',
     Aerosol = 'Aérosol',
     Applicator = 'Applicateur',
+    Bucket = 'Sceau',
     None = 'None',
 }
 
@@ -25,6 +26,7 @@ export enum ToolButtons {
     E = 'e',
     A = 'a',
     R = 'r',
+    B = 'b',
 }
 
 export enum OtherButtons {
@@ -39,11 +41,19 @@ export enum OtherButtons {
 export enum SelectionButtons {
     Control = 'Control',
     A = 'a',
+    C = 'c',
+    X = 'x',
+    V = 'v',
+    D = 'd',
+    Delete = 'Delete',
     ArrowLeft = 'ArrowLeft',
     ArrowRight = 'ArrowRight',
     ArrowUp = 'ArrowUp',
     ArrowDown = 'ArrowDown',
+    Shift = 'Shift',
+    Alt = 'Alt'
 }
+
 export enum SelectedColors {
     First = 'First',
     Second = 'Second',
@@ -67,6 +77,7 @@ export enum BrushTextures {
 }
 
 export enum FormValuesName {
+<<<<<<< HEAD
   Width = 'width',
   Height = 'height',
   Tags = 'tags',
@@ -77,15 +88,30 @@ export enum FormValuesName {
   Filter = 'filter',
   
  
+=======
+    Width = 'width',
+    Height = 'height',
+    Tags = 'tags',
+    Name = 'name',
+    Type = 'type',
+    Filter = 'filter',
+>>>>>>> master
 }
 
 export enum FileTypes {
     Png = 'png',
     Jpeg = 'jpeg',
-    Svg = 'svg+xml'
+    Svg = 'svg+xml',
 }
 
 export enum GalleryButtonColors {
-    Black = 'black',
-    Orange = '#ff8c00'
+    White = 'white',
+    Orange = '#ff8c00',
 }
+
+export enum CanvasColorIndex {
+    One = 0,
+    Two = 1,
+    Three = 2,
+    Four = 3
+  }

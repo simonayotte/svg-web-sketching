@@ -4,7 +4,7 @@
         <div class="action shadow" (click)="openCreateDrawingDialog()">Créer Dessin</div>
         <div class="action shadow" (click)="openGalleryDialog()">Ouvrir Galerie</div>
         <div class="action shadow" data-toggle="modal" data-target="#userGuide">Afficher Guide</div>
-        <div class="action shadow">Continuer Dessin</div>
+        <div class="action shadow" *ngIf = 'localStorageLength > 0'(click)="continueDrawing()" routerLink = '/draw'>Continuer Dessin</div>
     </div>
     <!-- Modal -->
     <div id="userGuide" class="modal fade" role="dialog">

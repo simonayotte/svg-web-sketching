@@ -33,6 +33,7 @@
             
       </label><br>
 
+      
        <!--Option 2: Exporter et envoyer par Email -->
       <label>
         <input type="radio" value="two" formControlName="option">
@@ -56,10 +57,8 @@
             <option value = '5'>Eroder</option>
           </select>
         </label><br>
-        
-        <!--<button (click) = 'submit()'>Confirmer</button> -->
-        <button (click) = 'submit()' [disabled] = '!exportDrawingForm.valid'>Confirmer</button>
-        <button mat-dialog-close>Annuler</button>
+        <button class = "mat-button" (click) = 'submit()' [disabled] = '!exportDrawingForm.valid'>Confirmer</button>
+        <button class = "mat-button" id = "close" mat-dialog-close>Annuler</button>
      </form>
 </div>
 
