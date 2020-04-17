@@ -1,4 +1,3 @@
-
 <h1 mat-dialog-title>Exporter un dessin</h1>
 <div mat-dialog-content>
   
@@ -41,7 +40,7 @@
           <div class="reveal-if-active">
             <label for="option 2">Entrer un email valide</label>
             <input type="email" pattern="^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{2,4}|[0-9]{1,3})(\]?)$" formControlName="email" id="email" name="email" class="require-if-active" data-require-pair="#email" placeholder="email@exemple.com" > 
-            <i *ngIf = 'email.errors?.required' class="fas fa-exclamation-triangle" title = "Le courriel est requis!"></i>
+           // <i *ngIf = 'email.errors?.required' class="fas fa-exclamation-triangle" title = "Le courriel est requis!"></i>
             <i *ngIf = 'email.errors?.pattern' class="fas fa-exclamation-triangle" title = "Un courriel du type email@exemple.com est requis!"></i><br>
           </div>
       </label><br>

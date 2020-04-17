@@ -28,7 +28,7 @@ export class ExportDrawingComponent implements OnInit {
       name : ['', Validators.required],
       type : ['', Validators.required],
       option: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
+      email: ['',[Validators.required, Validators.email]],
       filter: [''],
       
      });
@@ -36,8 +36,8 @@ export class ExportDrawingComponent implements OnInit {
 
    get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
    get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
-   get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
    get option() : AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Option) ; }
+   get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
 
   state: DrawState;
 
@@ -58,6 +58,8 @@ export class ExportDrawingComponent implements OnInit {
         );
         this.exportDrawingService.setExportName(this.exportDrawingForm.controls[FormValuesName.Name].value);
         this.exportDrawingService.setType(this.exportDrawingForm.controls[FormValuesName.Type].value);
+        this.exportDrawingService.setOption(this.exportDrawingForm.controls[FormValuesName.Option].value);
+        this.exportDrawingService.setEmail(this.exportDrawingForm.controls[FormValuesName.Email].value);
         this.dialogRef.close();
         this.dialog.open(PreviewExportComponent);
     }

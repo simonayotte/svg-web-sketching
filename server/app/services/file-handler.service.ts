@@ -13,26 +13,26 @@ export interface ExportReturn {
 export class FileHandler {
     constructor() {}
 
-    saveDrawing(ids: string[], dataURL: string): void {
-      const base64DataURL: string = dataURL.replace( ` ${Encoding.DataImage}${FileTypes.Png};${Encoding.Base64},`, '' );
-      const data = Buffer.from(base64DataURL, 'base64');
-      let i = 0;
-      let path = `${__dirname}${FilePaths.ImageStorage}${ids[0]}.${FileTypes.Png}`;
-      // this is necessary to be able so save drawings with identical name and/or tags
-      while (fs.existsSync(path) && i < ids.length ) {
+    saveDrawing(ids:Array<string>, dataURL:string ): void{
+      let base64DataURL:string = dataURL.replace(`${Encoding.DataImage}${FileTypes.Png};${Encoding.Base64},`,'');
+      let data = Buffer.from(base64DataURL,'base64');
+      let i:number = 0;
+      let path: string = `${__dirname}${FilePaths.ImageStorage}${ids[0]}.${FileTypes.Png}`
+      //this is necessary to be able so save drawings with identical name and/or tags
+      while(fs.existsSync(path) && i<ids.length ){
         i++;
-        path = `${__dirname}${FilePaths.ImageStorage}${ids[i]}.${FileTypes.Png}`;
+        path = `${__dirname}${FilePaths.ImageStorage}${ids[i]}.${FileTypes.Png}`
       }
-      fs.writeFileSync(path, data, ` ${Encoding.Utf8} `) ;
+      fs.writeFileSync(path,data,`${Encoding.Utf8}`); 
     }
 
-    exportDrawing(name: string, type: string, dataURL: string): void {
-      const base64DataURL: string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`, '');
-      const data = Buffer.from(base64DataURL, 'base64');
-      let filename: string;
-      type === FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}` : filename = `${name}.${type}`;
-      const localPath: string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
-      fs.writeFileSync(localPath, data, `${Encoding.Utf8}` );
+    exportDrawing(name:string, type:string, dataURL:string): void{
+      let base64DataURL:string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`,'');
+      let data = Buffer.from(base64DataURL,'base64');
+      let filename:string;
+      type == FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}`: filename = `${name}.${type}`;
+      let localPath:string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
+      fs.writeFileSync(localPath,data,`${Encoding.Utf8}`); 
     }
 
     async exportDrawingEmail(name: string, type: string, dataURL: string): Promise <ExportReturn> {
@@ -42,7 +42,7 @@ export class FileHandler {
       let filename: string;
       type === FileTypes.SvgXml ? filename = ` ${name}.${FileTypes.Svg} ` : filename = ` ${name}.${type} ` ;
       const localPath: string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
-      fs.writeFileSync(localPath, data, ` ${Encoding.Utf8} ` );
+      fs.writeFileSync(localPath, data, `${Encoding.Utf8}` );
       resolve({
         name: filename,
         stream: fs.createReadStream(localPath),

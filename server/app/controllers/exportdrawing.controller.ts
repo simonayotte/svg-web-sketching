@@ -68,7 +68,6 @@ export class ExportDrawingController {
                         });
                         break;
                 }
-                console.log('ALLO AVANT AXIOS');
                 axios({
                     method: 'post',
                     url: 'https://log2990.step.polymtl.ca/email?address_validation=true',
@@ -80,7 +79,6 @@ export class ExportDrawingController {
                     }
                 })
                     .then(() => {
-                        console.log('ALLO.then');
                         const succesMsg = { status: '200', message: 'Email envoyé avec succès!' };
                         res.json(succesMsg);
                     })
