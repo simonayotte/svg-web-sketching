@@ -54,7 +54,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
         ExportDrawingComponent,
         PreviewExportComponent,
         DrawingGalleryComponent,
-        HttpResponseDialogComponent
+        HttpResponseDialogComponent,
     ],
     bootstrap: [AppComponent],
 })

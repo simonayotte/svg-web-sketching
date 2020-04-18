@@ -45,4 +45,9 @@ export class DrawDirective implements OnInit {
     onMouseMove(event: MouseEvent): void {
         this.drawHandler.onMouseMove(event);
     }
+
+    @HostListener('contextmenu', ['$event'])
+    onContextMenu(event: MouseEvent): void {
+        event.preventDefault();
+    }
 }
