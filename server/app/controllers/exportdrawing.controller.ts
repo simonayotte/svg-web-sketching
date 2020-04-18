@@ -7,6 +7,9 @@ import Types from '../types';
 
 require('dotenv').config();
 const API_KEY = process.env.API_KEY;
+// Pour avoir accès au API_KEY: 
+// 1) Créer un ficher nommé ".env" dans le dossier 'server'
+// 2) Dans ce fichier écrivez: API_KEY=' Clé ici ' En remplaçant (Clé ici) par le API_KEY en laissant les ' '.  
 const error400 = '400';
 const error403 = '403';
 const error422 = '422';
