@@ -3,6 +3,7 @@ import { Color } from 'src/app/models/color';
 
 /* tslint:disable:no-magic-numbers */
 
+const FULL_COLOR = 255;
 @Component({
     selector: 'app-color',
     templateUrl: './color.component.html',
@@ -32,13 +33,13 @@ export class ColorComponent implements OnInit {
         this.fillSquare(this.color);
         this.fillBar();
     }
-    /* tslint:disable:no-any */
+    // tslint:disable:no-any
     onRGBChange(event: any, type: string): void {
         const value: number = event.target.value;
         if (value < 0 || value == null) {
             event.target.value = 0;
-        } else if (value > 255) {
-            event.target.value = 255;
+        } else if (value > FULL_COLOR) {
+            event.target.value = FULL_COLOR;
         }
         this.color.synchronizeHex(type);
         this.fillSquare(this.color);
@@ -82,6 +83,7 @@ export class ColorComponent implements OnInit {
         } else if (event.button === 2) {
             this.setSecondColor.emit(color);
         }
+        this.close();
     }
     fillSquare(color: Color): void {
         const width: number = this.squareRef.nativeElement.width;

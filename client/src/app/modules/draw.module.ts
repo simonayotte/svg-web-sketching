@@ -20,6 +20,8 @@ import { DrawDirective } from '../directives/draw.directive';
 import { SelectionDirective } from '../directives/selection.directive';
 import { SvgDirective } from '../directives/svg.directive';
 import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.component';
+import { RouterModule } from '@angular/router';
+import { routes } from '../../environments/routes';
 
 @NgModule({
     declarations: [
@@ -44,7 +46,7 @@ import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.
         SvgDirective,
         SelectionDirective,
     ],
-    imports: [CommonModule, FormsModule],
+    imports: [CommonModule, FormsModule, RouterModule.forRoot(routes)],
     exports: [
         DrawPageComponent,
         SidebarComponent,
