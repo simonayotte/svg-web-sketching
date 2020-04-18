@@ -1,15 +1,15 @@
 import axios from 'axios';
-import { FileHandler } from '../services/file-handler.service';
-import * as FormData from 'form-data';
 import { NextFunction, Request, Response, Router } from 'express';
+import * as FormData from 'form-data';
 import { inject, injectable } from 'inversify';
+import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 
 require('dotenv').config();
 const API_KEY = process.env.API_KEY;
-// Pour avoir accès au API_KEY: 
+// Pour avoir accès au API_KEY:
 // 1) Créer un ficher nommé ".env" dans le dossier 'server'
-// 2) Dans ce fichier écrivez: API_KEY=' Clé ici ' En remplaçant (Clé ici) par le API_KEY en laissant les ' '.  
+// 2) Dans ce fichier écrivez: API_KEY=' Clé ici ' En remplaçant (Clé ici) par le API_KEY en laissant les ' '.
 const error400 = '400';
 const error403 = '403';
 const error422 = '422';
@@ -32,20 +32,20 @@ export class ExportDrawingController {
                 try {
                     this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
                 }
-                    catch (e) {
+                catch (e) {
                         const errorMsg = { status: '400', message: e.message };
                         res.json(errorMsg);
-                    }
+                }
                 const succesMsg = { status: '200', message: 'Image exportée avec succès!' };
                 res.json(succesMsg);
             }
             if (req.body.option === 'two') {
                 // verify req.body.to
-                if(req.body.to === ""){
+                if (req.body.to === '') {
                     const emptyEmail = { status: '400', message: 'Adresse courriel manquante!' };
                     res.json(emptyEmail);
-                    throw new Error("adresse courriel vide");
-                };
+                    throw new Error('adresse courriel vide');
+                }
                 const exportReturn = await this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
                 const formData = new FormData();
                 formData.append('to', req.body.to);
@@ -67,7 +67,7 @@ export class ExportDrawingController {
                             filename: req.body.name + '.svg',
                             contentType: 'image/svg+xml',
                         });
-                        break;    
+                        break;
                     default:
                         formData.append('payload', exportReturn.stream, {
                             filename: req.body.name + '.jpeg',
@@ -127,15 +127,14 @@ export class ExportDrawingController {
                                     status: '500',
                                     message: ' Le mail API éprouve des difficultés à envoyer le courriel',
                                 });
-                            break;
+                                break;
 
                             default:
                                 res.json({
-                                    
                                     message: ' message par defaut',
                                 });
                         }
-        }); 
+        });
     }});
     }
 }

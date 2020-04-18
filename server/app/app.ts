@@ -2,12 +2,12 @@ import * as bodyParser from 'body-parser';
 import * as cookieParser from 'cookie-parser';
 import * as cors from 'cors';
 import * as express from 'express';
+import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
 import { DateController } from './controllers/date.controller';
 import { ExportDrawingController } from './controllers/exportdrawing.controller';
-import { IndexController } from './controllers/index.controller';
-import { inject,injectable } from 'inversify';
 import { GalleryController } from './controllers/gallery.controller';
+import { IndexController } from './controllers/index.controller';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
 import Types from './types';
 
@@ -35,7 +35,7 @@ export class Application {
         // Middlewares configuration
         this.app.use(logger('dev'));
         this.app.use(bodyParser.json({limit: '50mb'}));
-        this.app.use(bodyParser.urlencoded({extended: true, limit : '50mb'},));
+        this.app.use(bodyParser.urlencoded({extended: true, limit : '50mb'}, ));
         this.app.use(cookieParser());
         this.app.use(cors());
     }
