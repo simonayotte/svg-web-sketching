@@ -5,14 +5,13 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import Types from '../types';
 
+require('dotenv').config();
+const API_KEY = process.env.API_KEY;
 const error400 = '400';
 const error403 = '403';
 const error422 = '422';
 const error429 = '429';
 const error500 = '500';
-
-// require('dotenv').config();
-const API_KEY = '736a0365-3b0e-4b8e-9598-2f6c73fdb290';
 
 @injectable()
 export class ExportDrawingController {
@@ -79,7 +78,7 @@ export class ExportDrawingController {
                     data: formData,
                     headers: {
                         'Content-Type': 'multipart/form-data',
-                        'X-Team-Key': API_KEY,   // x-team-key utiliser dotenv!!!!!
+                        'X-Team-Key': API_KEY,   // x-team-key utiliser dotenv!
                         ...formData.getHeaders(),
                     }
                 })
@@ -126,6 +125,12 @@ export class ExportDrawingController {
                                     message: ' Le mail API éprouve des difficultés à envoyer le courriel',
                                 });
                             break;
+
+                            default:
+                                res.json({
+                                    
+                                    message: ' message par defaut',
+                                });
                         }
         }); 
     }});
