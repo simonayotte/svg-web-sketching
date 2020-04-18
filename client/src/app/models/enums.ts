@@ -81,12 +81,11 @@ export enum FormValuesName {
   Height = 'height',
   Tags = 'tags',
   Name = 'name',
-  Type = 'type', 
+  Type = 'type',
   Option = 'option',
   Email = 'email',
   Filter = 'filter',
-  
- 
+
 }
 
 export enum FileTypes {
