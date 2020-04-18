@@ -26,7 +26,7 @@ export class SelectionDirective {
     }
 
     @HostListener('wheel', ['$event'])
-    onMouseWheel(event: WheelEvent) {
+    onMouseWheel(event: WheelEvent): void {
         event.preventDefault();
         this.rotationService.start();
     }

@@ -20,6 +20,7 @@ export class SelectionBox {
         this.height = height;
     }
 
+    // Selection box dimensions are updated everytime selected svgs change
     set svgs(svgs: SVGGraphicsElement[]) {
         this.selectedSvgs = svgs;
         if (!this.selectedSvgs || this.selectedSvgs.length === 0) {

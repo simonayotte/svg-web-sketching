@@ -31,7 +31,7 @@ export class RotationService extends Tool {
     start(): void {
         this.store.saveSvgsState(Tool.cloneSvgs(this.state.svgState.svgs));
         if (this.isLastModeShift !== this.isShiftDown || this.lastRotatedSvgs !== this.state.selectionBox.svgs) {
-            //Rotation mode changed
+            // Rotation mode changed
             this.resetRotation();
         }
         this.multipleRotation();
@@ -77,18 +77,12 @@ export class RotationService extends Tool {
         const centerY = Math.abs((rectBottom - rectTop) / 2 + rectTop);
         return new Coordinate(parseFloat(centerX.toFixed(2)), parseFloat(centerY.toFixed(2)));
     }
-    resetRotation() {
+    resetRotation(): void {
         for (const svg of this.state.selectionBox.svgs) {
             const rotation = Tool.getRotation(svg);
             const translation = Tool.getTranslation(svg);
 
-            if (rotation[0] > 0) {
-                this.renderer.setAttribute(
-                    svg,
-                    'transform',
-                    `translate(${translation[0]},${translation[1]}) rotate(0 ${rotation[1]} ${rotation[2]})`,
-                );
-            }
+            this.renderer.setAttribute(svg, 'transform', `translate(${translation[0]},${translation[1]}) rotate(0 ${rotation[1]} ${rotation[2]})`);
         }
     }
 

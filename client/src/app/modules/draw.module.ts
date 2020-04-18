@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { routes } from '../../environments/routes';
 import { ColorPanelComponent } from '../components/draw-page/color-panel/color-panel.component';
 import { DrawPageComponent } from '../components/draw-page/draw-page.component';
 import { GridPanelComponent } from '../components/draw-page/grid-panel/grid-panel.component';
@@ -20,8 +22,6 @@ import { DrawDirective } from '../directives/draw.directive';
 import { SelectionDirective } from '../directives/selection.directive';
 import { SvgDirective } from '../directives/svg.directive';
 import { AerosolComponent } from './../components/tools/aerosol/aerosol/aerosol.component';
-import { RouterModule } from '@angular/router';
-import { routes } from '../../environments/routes';
 
 @NgModule({
     declarations: [

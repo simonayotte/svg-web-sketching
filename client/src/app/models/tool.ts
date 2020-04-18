@@ -14,8 +14,8 @@ export abstract class Tool {
         const newSvgs = [];
         for (const svg of svgs) {
             const clone = svg.cloneNode(false) as SVGGraphicsElement;
-            let translation = this.getTranslation(svg);
-            let rotation = this.getRotation(svg);
+            const translation = this.getTranslation(svg);
+            const rotation = this.getRotation(svg);
             clone.setAttribute(
                 'transform',
                 `translate(${offset + translation[0]},${offset + translation[1]}) rotate(${rotation[0]},${rotation[1]},${rotation[2]})`,
@@ -31,26 +31,27 @@ export abstract class Tool {
             return [0, 0];
         }
 
-        let matches = str.match(/-?\d+\.?\d*/g);
+        const matches = str.match(/-?\d+\.?\d*/g);
 
         if (!matches) {
             return [0, 0];
         }
-        return [parseFloat(matches[0]), parseFloat(matches[1])];
+        return [parseFloat(matches[0]), parseFloat(matches[1])]; // returns first 2 numbers of transform
     }
     // Returns current angle on selection box
     static getRotation(svg: SVGGraphicsElement): number[] {
-        let str = svg.getAttribute('transform');
+        const str = svg.getAttribute('transform');
         if (!str) {
             return [0, 0, 0];
         }
 
-        let matches = str.match(/-?\d+\.?\d*/g);
+        const matches = str.match(/-?\d+\.?\d*/g);
 
         if (!matches) {
             return [0, 0, 0];
         }
-        return [parseFloat(matches[2]), parseFloat(matches[3]), parseFloat(matches[4])];
+        // tslint:disable:no-magic-numbers
+        return [parseFloat(matches[2]), parseFloat(matches[3]), parseFloat(matches[4])]; // returns last 3 numbers of transform
     }
     start(event: MouseEvent): void {
         return;
