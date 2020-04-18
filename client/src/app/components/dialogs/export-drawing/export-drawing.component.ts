@@ -28,7 +28,7 @@ export class ExportDrawingComponent implements OnInit {
       name : ['', Validators.required],
       type : ['', Validators.required],
       option: ['', Validators.required],
-      email: ['',[Validators.required, Validators.email]],
+      email: ['',[Validators.email]],
       filter: [''],
       
      });

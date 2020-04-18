@@ -39,6 +39,11 @@ export class ExportDrawingController {
             }
             if (req.body.option === 'two') {
                 // verify req.body.to
+                if(req.body.to === ""){
+                    const emptyEmail = { status: '400', message: 'Adresse courriel manquante!' };
+                    res.json(emptyEmail);
+                    throw new Error("adresse courriel vide");
+                };
                 const exportReturn = await this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
                 const formData = new FormData();
                 formData.append('to', req.body.to);
