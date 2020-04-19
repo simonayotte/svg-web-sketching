@@ -61,10 +61,6 @@ describe('BucketService', () => {
         expect(ctx.canvas.height).toEqual(500);
       });
 
-    it('#fillCanvas() should call #colorArea() after loading the SVGs as canvas', () => {
-        // TODO
-      });
-
     it('#getPixelColor() should return the color of a pixel at given position', () => {
         const ctx = service.createHTMLCanvas(5, 5);
         const imageData = ctx.getImageData(0, 0, 4, 4);
