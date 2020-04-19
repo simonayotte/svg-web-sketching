@@ -49,6 +49,9 @@
                 <div class="item">
                     <div class="subject" id="selection" (click)="displayTextSubject('selection')" [ngClass]="{ active: currentText == 'selection'}">Sélection</div>
                 </div>
+                <div class="item">
+                    <div class="subject" id="selection" (click)="displayTextSubject('sceau')" [ngClass]="{ active: currentText == 'sceau'}">Sceau</div>
+                </div>
             </div>
             <div class="item">
                 <div class="category" id="param" (click)="displayCategory('param')">Paramètres de dessin</div>
@@ -87,10 +90,11 @@
          </div>
          <div class="subject-text" id="page-dessin" *ngSwitchCase="'dessin'">
             <h1>Créer un dessin</h1>
-            <p>Il est possible de créer un nouveau dessin en appuyant sur le bouton "Créer un dessin" sur la page principale.<br />
+            <p>Il est possible de créer un nouveau dessin en appuyant sur le bouton "Créer Dessin" sur la page principale.<br />
             Pour créer un dessin, il suffit de remplir le formulaire qui permet de modifier les dimensions et la couleur d'arrière plan du dessin.<br />
             Compléter le formulaire emmène sur la page de dessin. Les outils de dessin se trouvent dans la partie gauche de la vue de dessin.<br />
-            Il est possible d'ouvrir le modal de création de dessin avec le raccourci "CTRL + O".
+            Il est possible d'ouvrir le modal de création de dessin avec le raccourci "CTRL + O".<br />
+            Il est possible de récupérer le dernier dessin sauvegardé automatiquement avec le bouton "Continuer Dessin".
             </p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('bienvenue')"><span>Précédent</span></button>
@@ -274,8 +278,33 @@
             <p>Il est possible de déplacer une sélection en faisant un glisser déposer en partant de l'intérieur de la boîte englobante des objets sélectionnés.
             <br />Il est possible de déplacer une sélection en pesant sur les flèches directionelles du clavier.
             </p>
+            <h4>Rotation</h4>
+            <p>Il est possible de pivoter une sélection autour de son centre avec la molette de la souris.
+            <br />Il est possible de faire pivoter les objets d'une sélection par rapport a leur propre centre en pesant sur la touche "Shift".
+            <br />L'angle de rotation de base est de 15 degrés mais laisser la touche "Alt" pesée permet de changer l'angle de rotation a 1 degré.
+            </p>
+            <h4>Presse-papier</h4>
+            <p>Il est possible de copier une sélection en pesant sur "Ctrl + C".
+            <br />Il est possible de couper une sélection en pesant sur "Ctrl + X".
+            <br />Il est possible de coller une sélection en pesant sur "Ctrl + V".
+            <br />Il est possible de dupliquer une sélection en pesant sur "Ctrl + D".
+            <br />Il est possible de supprimer une sélection en pesant sur "Delete".
+            </p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('applicateur')"><span>Précédent</span></button>
+                <button class="button right" (click)="displayTextSubject('sceau')"><span>Suivant</span></button>
+            </div>
+        </div>
+        <div class="subject-text" id="page-sceau" *ngSwitchCase="'sceau'">
+            <h1>Sceau</h1>
+            <p>L'outils sceau permet de remplir une région avec la couleur principale.
+            <br />Pour ce faire, séléctionnez l'option sceau dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-fill"></i>) ou pesez sur la touche "B".
+            <br />Une fois l'outils séléctionné, appuyer sur le clic gauche sur la surface de dessin permet de remplir la région.
+            <br />Le sceau crée alors un objet manipulable couvrant la région.
+            <br />Il est possible de définir l'étendue de la région a remplir avec la glissière "tolérance".
+            </p>
+            <div class="footer">
+                <button class="button left" (click)="displayTextSubject('selection')"><span>Précédent</span></button>
                 <button class="button right" (click)="displayTextSubject('sauvegarder')"><span>Suivant</span></button>
             </div>
         </div>
@@ -284,18 +313,20 @@
             <p>Il est possible de sauvegarder un dessin.
             <br />Pour ce faire, séléctionnez l'option sauvegarder dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-save"></i>) ou pesez sur les touches "Ctrl + S".
             <br />Il est ensuite possible de rentrer un nom ainsi que plusieurs étiquettes, ces dernières sont optionelles.
+            <br />Un dessin en cours est sauvegardé automatiquement après toute modification.
             </p>
             <div class="footer">
-                <button class="button left" (click)="displayTextSubject('selection')"><span>Précédent</span></button>
+                <button class="button left" (click)="displayTextSubject('sceau')"><span>Précédent</span></button>
                 <button class="button right" (click)="displayTextSubject('exporter')"><span>Suivant</span></button>
             </div>
         </div>
         <div class="subject-text" id="page-exporter" *ngSwitchCase="'exporter'">
             <h1>Exporter</h1>
-            <p>Il est possible d'exporter localement un dessin.
+            <p>Il est possible d'exporter localement ou par mail un dessin.
             <br />Pour ce faire, séléctionnez l'option exporter dans la barre d'outils (<i class="sidebar-dropdown-option fas fa-file-export"></i>) ou pesez sur les touches "Ctrl + E".
             <br />Il est possible d'exporter l'image dans les formats JPG, PNG et SVG.
             <br />Il est possible de rentrer le nom du fichier ainsi que d'appliquer un filtre au dessin avant de l'exporter.
+            <br />Cocher l'option "Envoyer par email" permet de rentrer l'adresse mail de destination.
             </p>
             <div class="footer">
                 <button class="button left" (click)="displayTextSubject('sauvegarder')"><span>Précédent</span></button>
