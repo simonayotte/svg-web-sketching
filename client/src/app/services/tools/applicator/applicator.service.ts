@@ -22,6 +22,7 @@ export class ApplicatorService extends Tool {
         if (this.state.svgState.svgs.includes(svg)) {
             this.applyColor(svg, event.button);
         }
+        this.store.automaticSave();
     }
 
     applyColor(svg: SVGGraphicsElement, button: number): void {
