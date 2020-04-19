@@ -1,16 +1,15 @@
 import { expect } from 'chai';
 import * as supertest from 'supertest';
+import { Drawing} from '../../models/drawing';
 import { Stubbed, testingContainer } from '../../test/test-utils';
 import { Application } from '../app';
+import { DatabaseService } from '../services/DB.service';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
-//import { DatabaseService } from '../services/DB.service';
-import { Drawing} from '../../models/drawing';
-import { DatabaseService } from '../services/DB.service';
 
 // tslint:disable:no-any
 const HTTP_STATUS_OK = 200;
-let array = [new Drawing('name',['1','2'],'allo',['','',],1,1,[1,1,1])];
+const array = [new Drawing('name', ['1', '2'], 'allo', ['', '', ], 1, 1, [1, 1, 1])];
 describe('galleryController', () => {
     let filehandler: Stubbed<FileHandler>;
     let database: Stubbed<DatabaseService>;
@@ -21,7 +20,6 @@ describe('galleryController', () => {
         container.unbind(Types.FileHandler);
         container.bind(Types.FileHandler).toConstantValue({
             checkAllDrawingsAreInServer: sandbox.stub().resolves(undefined),
-            //exportDrawing:sandbox.stub(undefined),
             deleteDrawing: sandbox.stub(undefined),
         });
         filehandler = container.get(Types.FileHandler);
@@ -46,8 +44,4 @@ describe('galleryController', () => {
                 expect('Content-Type', 'Array <Drawing>');
             });
     });
-
-    
-
-    
 });

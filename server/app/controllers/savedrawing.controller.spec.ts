@@ -1,29 +1,22 @@
 
 import { expect } from 'chai';
-import * as supertest from 'supertest';
-import { Stubbed, testingContainer } from '../../../server/test/test-utils';//Stubbed,Stubbed,
-import { Application } from '../app';
-import { FileHandler } from '../services/file-handler.service';
-import {DatabaseService} from '../services/DB.service';
-import Types from '../types';
-//import {Drawing} from '../../models/drawing'
 import { ObjectID } from 'mongodb';
-//import { Message } from '../../../common/communication/message';
-//import { SaveDrawingController } from './savedrawing.controller';
-//import { request } from 'express';
-//import { ObjectId } from 'mongodb';
-
+import * as supertest from 'supertest';
+import { Stubbed, testingContainer } from '../../../server/test/test-utils';
+import { Application } from '../app';
+import { DatabaseService } from '../services/DB.service';
+import { FileHandler } from '../services/file-handler.service';
+import Types from '../types';
 
 // tslint:disable:no-any
 const HTTP_STATUS_OK = 200;
-const array = [new ObjectID(12345)];
+const num = 12345;
+const array = [new ObjectID(num)];
 
 describe('saveDrawingController', () => {
-    //const baseMessage = { title: 'Image sauvegardée avec succès!', body: '' } as Message;
     let filehandlerService: Stubbed<FileHandler>;
     let dbService: Stubbed <DatabaseService>;
     let app: Express.Application;
-    // spy comme sur cote client sur savedrawing
     beforeEach(async () => {
         const [container, sandbox] = await testingContainer();
 
@@ -45,8 +38,6 @@ describe('saveDrawingController', () => {
     });
 
     it('should return message from saveDrawing service on valid post request ', async () => {
-
-        //const aboutMessage = {baseMessage};
         expect(dbService.addDrawingDb().called);
         expect(filehandlerService.saveDrawing().called);
         return supertest(app)
@@ -55,9 +46,6 @@ describe('saveDrawingController', () => {
             .then((response: any) => {
                 console.log(response.body);
                 expect(response.body.status).to.equal('200');
-                
             });
     });
-
-    
 });
