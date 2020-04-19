@@ -1,13 +1,14 @@
 .category:hover, .subject:hover {
-    color: red;
+    color: #ff8c00;
 }
 
 .toolbar { 
-    background: lightgrey;
+    background: #363636;
     width: 15%;
     height: 90vh;
     float: left;
     overflow: auto;
+    border-right:1px solid #ff8c00;
 }
 
 .content-table {
@@ -17,13 +18,13 @@
 }
 
 .item {
-    background: lightgrey;
+    background: #363636;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: left;
-    border-bottom: grey 1px solid;
+    border-bottom: #ff8c00 0.5px solid;
     cursor: pointer;
-    color: grayscale($color: #000000);
     width: auto;
     min-height: 30px;
     padding: 5px;
@@ -36,7 +37,7 @@
     justify-content: left;
     min-height: 30px;
     width: auto;
-    color: black;
+    color: white;
     cursor: pointer;
     font-weight: bold;
 }
@@ -52,17 +53,19 @@
 }
 
 .subject {
+    height: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: left;
     min-height: 30px;
     width: auto;
-    color: #454545;
+    color: white;
     cursor: pointer;
 }
 
 .subject.active {
-    color: red;
+    color: #ff8c00;
 }
 
 .subject-text {
@@ -71,12 +74,12 @@
 
 .header {
     color: white;
+    background: #363636;
     height: 40px;
     line-height: 40px;
     font-size: 1.25rem;
     top: 0px;
     z-index: 10;
-    background: linear-gradient(0deg, rgb(104, 102, 129), rgb(126, 120, 172));
     font-family: myriad-pro,'Myriad Pro',sans-serif;
     border-bottom: 1px solid rgb(48, 46, 64);
     padding: 0px 0px 0px 1em;
@@ -84,13 +87,16 @@
 }
 
 .main-body {
+    border-top: 0.5px solid #ff8c00;
     height: auto;
     font-family: 'Source Sans Pro', sans-serif;
 }
 
 .text-area {
+    background-color: #363636;
+    color:white;
     float: right;
-    width: 83%;
+    width: 85%;
     height: 90vh;
     max-height: 90vh;
     overflow: auto;
@@ -101,9 +107,9 @@
 }
 
 .button {
-    color: black; 
-    border: 2px solid #008CBA;
-    color: #008CBA;
+    color: #363636; 
+    border: 2px solid #363636;
+    background-color: white;
     padding: 16px 32px;
     text-align: center;
     text-decoration: none;
@@ -116,7 +122,7 @@
   }
   
   .button:hover {
-    background-color: #008CBA;
+    background-color: #ff8c00;
     color: white;
   }
 

@@ -82,7 +82,10 @@ export class RotationService extends Tool {
             const rotation = Tool.getRotation(svg);
             const translation = Tool.getTranslation(svg);
 
-            this.renderer.setAttribute(svg, 'transform', `translate(${translation[0]},${translation[1]}) rotate(0 ${rotation[1]} ${rotation[2]})`);
+            this.renderer.setAttribute(
+                svg,
+                'transform',
+                `translate(${translation[0]},${translation[1]}) rotate(0 ${rotation[1]} ${rotation[2]})`);
         }
     }
 

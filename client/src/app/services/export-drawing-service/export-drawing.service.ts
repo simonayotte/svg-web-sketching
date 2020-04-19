@@ -18,8 +18,6 @@ export class ExportDrawingService {
   private option: BehaviorSubject<string> = new BehaviorSubject<string>('');
   optionObs: Observable<string> = this.option.asObservable();
 
-  constructor() { }
-
   setExportName(exportName: string): void {
     this.exportName.next(exportName);
   }
