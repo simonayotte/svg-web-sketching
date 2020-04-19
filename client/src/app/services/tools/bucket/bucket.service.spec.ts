@@ -6,7 +6,7 @@ import { BucketService } from './bucket.service';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
 /* tslint:disable:no-magic-numbers */
-fdescribe('BucketService', () => {
+describe('BucketService', () => {
     let service: BucketService;
     let store: DrawStore;
 

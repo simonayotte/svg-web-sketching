@@ -151,7 +151,7 @@ export class BucketService extends Tool {
       for (let j = 0; j <= width; j++) {
         if (points[i * width + j]) {
           result = result.concat(`M ${j} ${i}`);
-          let endOfLine = this.nextPixel(points, i, j, width);
+          let endOfLine = this.nextPixel(points, j, i, width);
           // Find the position of the rightmost connected pixel
           while (endOfLine !== this.nextPixel(points, endOfLine, i, width)) {
             endOfLine = this.nextPixel(points, endOfLine, i, width);
