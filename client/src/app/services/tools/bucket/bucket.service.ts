@@ -96,12 +96,12 @@ export class BucketService extends Tool {
     const b64Start = 'data:image/svg+xml;base64,';
 
     const image64 = b64Start + svg64;
-
+    
     img.onload = () => {
         if (this.ctx) {
             this.ctx.drawImage(img, 0, 0);
             this.colorArea(event.offsetX, event.offsetY, this.state.svgState.width, this.state.svgState.height);
-        }
+          }
     };
 
     img.src = image64;
