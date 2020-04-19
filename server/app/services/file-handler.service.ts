@@ -58,12 +58,12 @@ export class FileHandler {
     checkAllDrawingsAreInServer(drawings: Drawing[]): Drawing[] {
       let path: string;
       const filteredDrawings: Drawing[] = [];
-      for (let i = 0 ; i < drawings.length ; i++ ) {
-        path = `${__dirname}${FilePaths.ImageStorage}${drawings[i]._id.valueOf()}.${FileTypes.Png}`;
+      drawings.forEach((drawing) => {
+        path = `${__dirname}${FilePaths.ImageStorage}${drawing._id.valueOf()}.${FileTypes.Png}`;
         if (fs.existsSync(path)) {
-          filteredDrawings.push(drawings[i]);
+          filteredDrawings.push(drawing);
         }
-      }
+      });
       return filteredDrawings;
     }
 

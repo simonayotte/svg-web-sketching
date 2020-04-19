@@ -4,10 +4,8 @@ import * as cors from 'cors';
 import * as express from 'express';
 import { inject, injectable } from 'inversify';
 import * as logger from 'morgan';
-import { DateController } from './controllers/date.controller';
 import { ExportDrawingController } from './controllers/exportdrawing.controller';
 import { GalleryController } from './controllers/gallery.controller';
-import { IndexController } from './controllers/index.controller';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
 import Types from './types';
 
@@ -17,8 +15,6 @@ export class Application {
     app: express.Application;
 
     constructor(
-        @inject(Types.IndexController) private indexController: IndexController,
-        @inject(Types.DateController) private dateController: DateController,
         @inject(Types.SaveDrawingController) private saveDrawingController: SaveDrawingController,
         @inject(Types.ExportDrawingController) private exportDrawingController: ExportDrawingController,
         @inject(Types.GalleryController) private galleryController: GalleryController
@@ -42,8 +38,6 @@ export class Application {
 
     bindRoutes(): void {
         // Notre application utilise le routeur de notre API `Index`
-        this.app.use('/api/index', this.indexController.router);
-        this.app.use('/api/date', this.dateController.router);
         this.app.use('/savedrawing', this.saveDrawingController.router);
         this.app.use('/exportdrawing', this.exportDrawingController.router);
         this.app.use('/gallery', this.galleryController.router);

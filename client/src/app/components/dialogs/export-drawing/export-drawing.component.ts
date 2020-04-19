@@ -14,34 +14,36 @@ import { PreviewExportComponent } from '../preview-export/preview-export.compone
     styleUrls: ['./export-drawing.component.scss'],
 })
 export class ExportDrawingComponent implements OnInit {
-  constructor(
-     private drawingHandler: DrawingHandler,
-     private store: DrawStore,
-     public dialogRef: MatDialogRef<ExportDrawingComponent>,
-     private fb: FormBuilder,
-     public dialog: MatDialog,
-     private exportDrawingService: ExportDrawingService) {
-    this.store.stateObs.subscribe((value: DrawState) => {
-      this.state = value;
-    });
-    this.exportDrawingForm = this.fb.group({
-      name : ['', Validators.required],
-      type : ['', Validators.required],
-      option: ['', Validators.required],
-      email: ['', [Validators.email]],
-      filter: [''],
 
-     });
-  }
-
-   get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
-   get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
-   get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
-   get option(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Option) ; }
-
-  state: DrawState;
-
+    state: DrawState;
     exportDrawingForm: FormGroup;
+    isEmail: boolean;
+
+    constructor(
+    private drawingHandler: DrawingHandler,
+    private store: DrawStore,
+    public dialogRef: MatDialogRef<ExportDrawingComponent>,
+    private fb: FormBuilder,
+    public dialog: MatDialog,
+    private exportDrawingService: ExportDrawingService) {
+        this.store.stateObs.subscribe((value: DrawState) => {
+            this.state = value;
+        });
+        this.exportDrawingForm = this.fb.group({
+            name : ['', Validators.required],
+            type : ['', Validators.required],
+            option: ['', Validators.required],
+            email: [''],
+            filter: [''],
+         });
+        this.isEmail = false;
+    }
+
+    get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
+    get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
+    get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
+    get option(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Option) ; }
+
     ngOnInit(): void {
         this.store.setIsKeyHandlerActive(false);
         setTimeout(() => this.store.setTool(Tools.None));
@@ -49,6 +51,14 @@ export class ExportDrawingComponent implements OnInit {
 
     ngOnDestroy(): void {
         this.store.setIsKeyHandlerActive(true);
+    }
+
+    setIsEmail(value: boolean): void {
+        this.isEmail = value;
+        this.isEmail ?
+        this.exportDrawingForm.controls[FormValuesName.Email].setValidators([Validators.email, Validators.required]) :
+        this.exportDrawingForm.controls[FormValuesName.Email].setValidators(null);
+        this.exportDrawingForm.controls[FormValuesName.Email].updateValueAndValidity();
     }
 
     submit(): void {

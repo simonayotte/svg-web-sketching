@@ -1,7 +1,7 @@
 // Structure pour sauvegarder un dessin
-// _id doit avoir le _ car il correspond au _id d'un objet sauvegarder dans la db
-// tslint:disable:variable-name
 export class SavedDrawing {
+// _id doit avoir le _ car il correspond au _id d'un objet sauvegarder dans la db
+// tslint:disable-next-line:variable-name
     _id: string;
     name: string;
     tags: string[];
