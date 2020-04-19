@@ -31,6 +31,7 @@ export class GuideComponent {
       case 'selection':
       case 'efface':
       case 'applicateur':
+      case 'sceau':
       case 'rectangle': {
         this.displayCategory('outils');
         break;
