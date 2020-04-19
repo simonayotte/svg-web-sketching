@@ -3,9 +3,9 @@ import { TestBed } from '@angular/core/testing';
 import { MovementService } from './movement.service';
 
 import { SelectionButtons } from 'src/app/models/enums';
+import { Tool } from 'src/app/models/tool';
 import { DrawState } from 'src/app/state/draw-state';
 import { DrawStore } from '../../../store/draw-store';
-import { Tool } from 'src/app/models/tool';
 /* tslint:disable:no-magic-numbers */
 describe('MovementService', () => {
     let service: MovementService;

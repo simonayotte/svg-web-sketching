@@ -30,14 +30,14 @@ export class ExportDrawingComponent implements OnInit {
       option: ['', Validators.required],
       email: ['',[Validators.email]],
       filter: [''],
-      
+
      });
   }
 
    get name(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Name); }
    get type(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Type) ; }
-   get option() : AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Option) ; }
    get email(): AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Email) ; }
+   get option() : AbstractControl | null { return this.exportDrawingForm.get(FormValuesName.Option) ; }
 
   state: DrawState;
 

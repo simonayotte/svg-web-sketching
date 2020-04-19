@@ -85,7 +85,7 @@ describe('HttpService', () => {
 
   it('#exportDrawing(drawing) should return a successful httpResponse', () => {
     const expectedResponse: HttpResponse = {status: '200', message: 'Image exportée avec succès!'};
-    const drawing: ExportedDrawing = new ExportedDrawing('TestImage', 'jpeg', 'abc@polymtl.ca','one', 'dataurl');
+    const drawing: ExportedDrawing = new ExportedDrawing('TestImage', 'jpeg', 'abc@polymtl.ca', 'one', 'dataurl');
     service.exportDrawing(drawing).subscribe((response) => {
       expect(response).toEqual(expectedResponse)
     , fail; });
@@ -95,7 +95,7 @@ describe('HttpService', () => {
   });
 
   it('#exportDrawing(drawing) should handle errors correctly', () => {
-    const drawing: ExportedDrawing = new ExportedDrawing('TestImage', 'jpeg', 'abc@polymtl.ca','one', 'dataurl');
+    const drawing: ExportedDrawing = new ExportedDrawing('TestImage', 'jpeg', 'abc@polymtl.ca', 'one', 'dataurl');
     service.exportDrawing(drawing).subscribe((err) => {
       expect(err).toBeUndefined()
     , fail; });
