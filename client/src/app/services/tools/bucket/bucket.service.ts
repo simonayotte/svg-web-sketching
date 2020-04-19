@@ -13,9 +13,12 @@ const PIXEL_SIZE = 4;
 })
 export class BucketService extends Tool {
   ctx: CanvasRenderingContext2D;
+  isFilling: boolean;
 
   constructor(private store: DrawStore, rendererFactory: RendererFactory2) {
     super();
+    this.isFilling = false;
+
     this.store.stateObs.subscribe((value: DrawState) => {
         this.state = value;
     });
@@ -25,24 +28,24 @@ export class BucketService extends Tool {
 
   start(event: MouseEvent): void {
     this.ctx = this.createHTMLCanvas(this.state.svgState.width, this.state.svgState.height);
+    this.isFilling = true;
     this.fillCanvas(this.state.svgState.drawSvg, event);
   }
 
   stop(): void {
-    if (this.svg) {
+    if (this.isFilling) {
       this.store.pushSvg(this.svg);
       this.renderer.removeChild(this.state.svgState.drawSvg, this.svg);
+      this.isFilling = false;
     }
     this.stopSignal();
   }
 
-  colorArea(mouseX: number, mouseY: number): void {
+  colorArea(mouseX: number, mouseY: number, svgWidth: number, svgHeight: number): void {
     if (this.state.tolerance === MAXIMUM_TOLERANCE) {
       this.fillEntireSVG();
     } else {
       this.createPath();
-      const svgWidth = this.state.svgState.width;
-      const svgHeight = this.state.svgState.height;
       const unverifiedPixels: Coordinate[] = [];
       const verifiedPixels = new Uint8Array(svgWidth * svgHeight);
       const pixelsToColor = new Uint8Array(svgWidth * svgHeight);
@@ -97,7 +100,7 @@ export class BucketService extends Tool {
     img.onload = () => {
         if (this.ctx) {
             this.ctx.drawImage(img, 0, 0);
-            this.colorArea(event.offsetX, event.offsetY);
+            this.colorArea(event.offsetX, event.offsetY, this.state.svgState.width, this.state.svgState.height);
         }
     };
 
@@ -133,7 +136,7 @@ export class BucketService extends Tool {
 
   createPath(): void {
     this.svg = this.renderer.createElement('path', 'svg');
-    this.renderer.setAttribute(this.svg, 'stroke-width', '1');
+    this.renderer.setAttribute(this.svg, 'stroke-width', '3');
     this.renderer.setAttribute(this.svg, 'fill', this.state.colorState.firstColor.hex());
     this.renderer.setAttribute(this.svg, 'stroke', this.state.colorState.firstColor.hex());
     this.renderer.setAttribute(this.svg, 'stroke-linecap', 'square');
@@ -141,15 +144,32 @@ export class BucketService extends Tool {
     this.renderer.appendChild(this.state.svgState.drawSvg, this.svg);
   }
 
+  // Translate the array of points to color into a SVG path element
   pointsToString(points: Uint8Array, width: number, height: number): string {
     let result = '';
-    for (let i = 0; i < height; i++) {
-      for (let j = 0; j < width; j++) {
+    for (let i = 0; i <= height; i++) {
+      for (let j = 0; j <= width; j++) {
         if (points[i * width + j]) {
-          result = result.concat(`M ${j} ${i} v 1`);
+          result = result.concat(`M ${j} ${i}`);
+          let endOfLine = this.nextPixel(points, j, i, width);
+          // Find the position of the rightmost connected pixel
+          while (endOfLine !== this.nextPixel(points, endOfLine, i, width)) {
+            endOfLine = this.nextPixel(points, endOfLine, i, width);
+          }
+          result = result.concat(`L ${endOfLine + 1} ${i}`);
+          j = endOfLine;
         }
       }
     }
     return result;
+  }
+
+  // return the position of the next right pixel to color
+  nextPixel(points: Uint8Array, x: number, y: number, width: number): number {
+    if (x + 1 < width) {
+      return points[y * width + x + 1] ? x + 1 : x;
+    } else {
+      return x;
+    }
   }
 }

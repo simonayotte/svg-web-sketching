@@ -38,9 +38,10 @@ describe('BucketService', () => {
         expect(spy1).toHaveBeenCalled();
     });
 
-    it('#stop() should call pushSvg when svg exists', () => {
+    it('#stop() should call pushSvg when isFilling is true', () => {
 
         service.createPath();
+        service.isFilling = true;
         const spy = spyOn(store, 'pushSvg');
         service.stop();
         expect(spy).toHaveBeenCalled();
@@ -49,7 +50,7 @@ describe('BucketService', () => {
     it('#colorArea() should call #fillEntireSVG() when the tolerance is 100', () => {
         service.state.tolerance = 100;
         const spy = spyOn(service, 'fillEntireSVG');
-        service.colorArea(0, 0);
+        service.colorArea(0, 0, 1, 1);
         expect(spy).toHaveBeenCalled();
       });
 
@@ -86,8 +87,18 @@ describe('BucketService', () => {
         expect(service.svg.tagName).toEqual('path');
       });
 
-    it('#pointsToString()', () => {
-        // TODO
+    it('#pointsToString() should return a string defining the corresponding SVG element', () => {
+      const testPoints = new Uint8Array(2 * 1);
+      testPoints[0] = 1;
+      testPoints[1] = 1;
+      expect(service.pointsToString(testPoints, 2, 1)).toEqual('M 0 0L 2 0');
       });
 
+    it('#nextPixel() should check if the next pixel is connected', () => {
+        const testPoints = new Uint8Array(2 * 1);
+        testPoints[0] = 1;
+        expect(service.nextPixel(testPoints, 0, 0, 2)).toEqual(0);
+        testPoints[1] = 1;
+        expect(service.nextPixel(testPoints, 0, 0, 2)).toEqual(1);
+      });
 });
