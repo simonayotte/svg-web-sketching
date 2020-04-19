@@ -54,10 +54,10 @@ describe('BucketService', () => {
         expect(spy).toHaveBeenCalled();
       });
 
-    it('#colorArea() should call #checkColor on the given pixels', (done:DoneFn) => {
+    it('#colorArea() should call #checkColor on the given pixels', (done: DoneFn) => {
         const spy = spyOn(service, 'checkColor');
         service.ctx = service.createHTMLCanvas(1, 1);
-        service.ctx.fillStyle = "red";
+        service.ctx.fillStyle = 'red';
         service.ctx.fillRect(0, 0, 1, 1);
         service.state.tolerance = 1;
         service.colorArea(1, 1, 1, 1);
@@ -74,7 +74,7 @@ describe('BucketService', () => {
         expect(ctx.canvas.height).toEqual(500);
       });
 
-    it('#fillCanvas() should call drawImage after delay', (done:DoneFn) => {
+    it('#fillCanvas() should call drawImage after delay', (done: DoneFn) => {
         const mouseDown: MouseEvent = new MouseEvent('mousedown', {
           clientX: 50,
           clientY: 75,
