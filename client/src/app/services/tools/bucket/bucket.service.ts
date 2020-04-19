@@ -101,7 +101,7 @@ export class BucketService extends Tool {
         if (this.ctx) {
             this.ctx.drawImage(img, 0, 0);
             this.colorArea(event.offsetX, event.offsetY, this.state.svgState.width, this.state.svgState.height);
-        }
+          }
     };
 
     img.src = image64;
