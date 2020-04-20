@@ -1,0 +1,1 @@
+Dossier contenant les images sauvegardee sur le serveur
