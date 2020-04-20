@@ -28,6 +28,17 @@ describe('ContinueDrawingService', () => {
         service = TestBed.get(ContinueDrawingService);
         drawingHandler = TestBed.get(DrawingHandler);
     });
+    store = TestBed.get(DrawStore);
+    store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
+    store.setSvgArray([]);
+    store.automaticSave();
+    service = TestBed.get(ContinueDrawingService);
+    drawingHandler = TestBed.get(DrawingHandler);
+    drawingJSONString = localStorage.getItem('Drawing');
+    if (drawingJSONString) {
+        drawingJSON = JSON.parse(drawingJSONString);
+    }
+  });
 
     it('should be created', () => {
         expect(service).toBeTruthy();
