@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { Drawing } from '../../models/drawing';
-import { DatabaseService } from '../services/DB.service';
+import { DatabaseService } from '../services/db-service';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 
-const  wait =  ((ms: number) => new  Promise ( res => setTimeout(res, ms)));
+const wait =  async (ms: number) => new Promise ( (res) =>  setTimeout(res, ms));
 const MILLE = 1000;
 @injectable()
 export class SaveDrawingController {
@@ -28,9 +28,8 @@ export class SaveDrawingController {
                 const DRAWIND_ID: string[] = await this.dbService.getIdsOfDrawing(req.body.name, req.body.tags);
                 await wait(MILLE);
                 this.fileHandler.saveDrawing(DRAWIND_ID, drawing.dataURL);
-            }
-            catch (error) {
-                const errorMsg = {status: '400', message: error.message};
+            } catch (e) {
+                const errorMsg = {status: '400', message: e.message};
                 res.json(errorMsg);
             }
             const succesMsg = {status: '200', message: 'Image sauvegardée avec succès!'};

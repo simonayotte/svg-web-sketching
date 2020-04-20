@@ -4,7 +4,7 @@ import { ExportDrawingController } from './controllers/exportdrawing.controller'
 import { GalleryController } from './controllers/gallery.controller';
 import { SaveDrawingController } from './controllers/savedrawing.controller';
 import { Server } from './server';
-import { DatabaseService } from './services/DB.service';
+import { DatabaseService } from './services/db-service';
 import { FileHandler } from './services/file-handler.service';
 import Types from './types';
 
