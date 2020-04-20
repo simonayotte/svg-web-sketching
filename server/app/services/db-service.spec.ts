@@ -4,6 +4,7 @@ import Types from '../types';
 import { DatabaseService } from './db-service';
 
 /* tslint:disable:no-any */
+/* tslint:disable-next-line */
 const mongodb = require('mongo-mock');
 
 mongodb.max_delay = 0; // you can choose to NOT pretend to be async (default is 400ms)
