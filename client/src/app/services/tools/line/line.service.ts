@@ -220,9 +220,6 @@ export class LineService extends Tool {
         for (const point of points) {
             tempString += `${point.pointX},${point.pointY} `;
         }
-        // for (let i = 0; i < points.length; i++) {
-        //     tempString += `${points[i].pointX},${points[i].pointY} `;
-        // }
         this.renderer.setAttribute(this.svg, 'points', tempString);
     }
 
