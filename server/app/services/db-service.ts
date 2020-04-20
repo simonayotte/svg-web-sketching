@@ -30,15 +30,12 @@ export class DatabaseService {
     }
 
     async addDrawingDb(drawing: Drawing): Promise<void> {
-        if (!this.validateName(drawing.name)) {
-            throw new Error('Erreur:Le nom est requis. Image non sauvegardée');
-          }
-        if (!this.validateTags(drawing.tags)) {
-            throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée");
-          }
+        
+        if(this.validateName(drawing.name) && this.validateTags(drawing.tags)){
         this.collection.insertOne(drawing).catch((error: Error) => {
             throw new Error(`Erreur: Le dessin n'a pas pu être sauvegardé: \n ${error}`);
             });
+        }
     }
     async deleteDrawingDb(id: string): Promise<void> {
         this.collection.findOneAndDelete({_id :  new ObjectId(id)})
