@@ -18,6 +18,7 @@ const error500 = 500;
 
 // This sets the mock adapter on the default instance
 const mock = new mockAdapter(axios);
+fs.writeFileSync('title', '');
 const exportdrawingemail: ExportReturn = {name: 'title', stream: fs.createReadStream('title') };
 
 describe('exportDrawingController', () => {
@@ -218,4 +219,5 @@ describe('exportDrawingController', () => {
             });
     });
 
+    fs.unlinkSync('title');
 });

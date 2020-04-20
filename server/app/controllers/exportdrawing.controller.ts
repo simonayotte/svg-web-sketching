@@ -16,7 +16,7 @@ const API_KEY = process.env.API_KEY;
 const error400 = 400;
 const error403 = 403;
 const error422 = 422;
-const error429 = 429 ;
+const error429 = 429;
 const error500 = 500;
 
 @injectable()
@@ -42,12 +42,6 @@ export class ExportDrawingController {
                 res.json(succesMsg);
             }
             if (req.body.option === 'two') {
-                // verify req.body.to
-               /* if (req.body.to === '') {
-                    const emptyEmail = { status: '400', message: 'Adresse courriel manquante!' };
-                    res.json(emptyEmail);
-                    throw new Error('adresse courriel vide');
-                }*/
                 const exportReturn = await this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
                 const formData = new FormData();
                 formData.append('to', req.body.to);
