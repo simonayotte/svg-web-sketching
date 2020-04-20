@@ -41,7 +41,7 @@
             <label for="option 2">Entrer un email valide</label><br>
             <input type="email" formControlName="email" placeholder="email@exemple.com" > 
             <i *ngIf = 'email.errors?.required' class="fas fa-exclamation-triangle" title = "Le courriel est requis!"></i>
-            <i *ngIf = 'email.errors?.pattern' class="fas fa-exclamation-triangle" title = "Un courriel du type email@exemple.com est requis!"></i><br>
+            <i *ngIf = 'email.errors?.email' class="fas fa-exclamation-triangle" title = "Un courriel du type email@exemple.com est requis!"></i><br>
           </div>
       </label><br>
 
