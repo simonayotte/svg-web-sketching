@@ -258,34 +258,34 @@ export class LineService extends Tool {
             if (angle >= 0 && angle < Math.PI / 6) {
                 // Retourner point avec alignement 0deg
                 return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
-            } else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+            } else if (angle <= Math.PI / 3) {
                 return this.calculateAngledLineEndPoint(Math.PI / 4, hypothenuseLineLength);
-            } else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+            } else if (angle <= Math.PI / 2) {
                 return this.calculateAngledLineEndPoint(Math.PI / 2, hypothenuseLineLength);
             }
         } else if (positionX - lastX < 0 && positionY - lastY >= 0) {
             if (angle >= 0 && angle < Math.PI / 6) {
                 return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
-            } else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+            } else if (angle <= Math.PI / 3) {
                 return this.calculateAngledLineEndPoint(-Math.PI / 4, -hypothenuseLineLength);
-            } else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+            } else if (angle <= Math.PI / 2) {
                 return this.calculateAngledLineEndPoint(Math.PI / 2, hypothenuseLineLength);
             }
         } else if (positionX - lastX >= 0 && positionY - lastY < 0) {
             if (angle >= 0 && angle < Math.PI / 6) {
                 return this.calculateAngledLineEndPoint(0, hypothenuseLineLength);
-            } else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+            } else if (angle <= Math.PI / 3) {
                 return this.calculateAngledLineEndPoint(-Math.PI / 4, hypothenuseLineLength);
-            } else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+            } else if (angle <= Math.PI / 2) {
                 return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
             }
         } else if (positionX - lastX < 0 && positionY - lastY < 0) {
             if (angle >= 0 && angle < Math.PI / 6) {
                 // Retourner point avec alignement 0deg
                 return this.calculateAngledLineEndPoint(0, -hypothenuseLineLength);
-            } else if (angle > Math.PI / 6 && angle <= Math.PI / 3) {
+            } else if (angle <= Math.PI / 3) {
                 return this.calculateAngledLineEndPoint(Math.PI / 4, -hypothenuseLineLength);
-            } else if (angle > Math.PI / 3 && angle <= Math.PI / 2) {
+            } else if (angle <= Math.PI / 2) {
                 return this.calculateAngledLineEndPoint(Math.PI / 2, -hypothenuseLineLength);
             }
         }
