@@ -3,7 +3,7 @@ import * as supertest from 'supertest';
 import { Drawing} from '../../models/drawing';
 import { Stubbed, testingContainer } from '../../test/test-utils';
 import { Application } from '../app';
-import { DatabaseService } from '../services/DB.service';
+import { DatabaseService } from '../services/db-service';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 

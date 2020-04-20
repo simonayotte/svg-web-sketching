@@ -11,8 +11,7 @@ export interface ExportReturn {
 
 @injectable()
 export class FileHandler {
-    constructor() {}
-
+    // constructor() {}
     saveDrawing(ids: string[], dataURL: string ): void {
       const base64DataURL: string = dataURL.replace(`${Encoding.DataImage}${FileTypes.Png};${Encoding.Base64},`, '');
       const data = Buffer.from(base64DataURL, 'base64');

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response, Router } from 'express';
 import { inject, injectable } from 'inversify';
 import { Drawing } from '../../models/drawing';
-import { DatabaseService } from '../services/DB.service';
+import { DatabaseService } from '../services/db-service';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 

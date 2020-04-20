@@ -5,16 +5,19 @@ import { inject, injectable } from 'inversify';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 
-require('dotenv').config();
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 const API_KEY = process.env.API_KEY;
 // Pour avoir accès au API_KEY:
 // 1) Créer un ficher nommé ".env" dans le dossier 'server'
 // 2) Dans ce fichier écrivez: API_KEY=' Clé ici ' En remplaçant (Clé ici) par le API_KEY en laissant les ' '.
-const error400 = '400';
-const error403 = '403';
-const error422 = '422';
-const error429 = '429';
-const error500 = '500';
+
+const error400 = 400;
+const error403 = 403;
+const error422 = 422;
+const error429 = 429 ;
+const error500 = 500;
 
 @injectable()
 export class ExportDrawingController {
@@ -31,8 +34,7 @@ export class ExportDrawingController {
             if (req.body.option === 'one') {
                 try {
                     this.fileHandler.exportDrawing(req.body.name, req.body.type, req.body.dataURL);
-                }
-                catch (e) {
+                } catch (e) {
                         const errorMsg = { status: '400', message: e.message };
                         res.json(errorMsg);
                 }
@@ -41,11 +43,11 @@ export class ExportDrawingController {
             }
             if (req.body.option === 'two') {
                 // verify req.body.to
-                if (req.body.to === '') {
+               /* if (req.body.to === '') {
                     const emptyEmail = { status: '400', message: 'Adresse courriel manquante!' };
                     res.json(emptyEmail);
                     throw new Error('adresse courriel vide');
-                }
+                }*/
                 const exportReturn = await this.fileHandler.exportDrawingEmail(req.body.name, req.body.type, req.body.dataURL);
                 const formData = new FormData();
                 formData.append('to', req.body.to);
@@ -131,6 +133,7 @@ export class ExportDrawingController {
 
                             default:
                                 res.json({
+                                    status: '0',
                                     message: ' message par defaut',
                                 });
                         }
