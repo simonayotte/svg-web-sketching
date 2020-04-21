@@ -30,7 +30,7 @@ describe('ContinueDrawingService', () => {
             drawingJSON = JSON.parse(drawingJSONString);
         }
     });
-    
+
     it('should be created', () => {
         expect(service).toBeTruthy();
     });
