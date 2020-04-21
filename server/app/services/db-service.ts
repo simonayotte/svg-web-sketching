@@ -30,8 +30,7 @@ export class DatabaseService {
     }
 
     async addDrawingDb(drawing: Drawing): Promise<void> {
-        
-        if(this.validateName(drawing.name) && this.validateTags(drawing.tags)){
+        if (this.validateName(drawing.name) && this.validateTags(drawing.tags)) {
         this.collection.insertOne(drawing).catch((error: Error) => {
             throw new Error(`Erreur: Le dessin n'a pas pu être sauvegardé: \n ${error}`);
             });
