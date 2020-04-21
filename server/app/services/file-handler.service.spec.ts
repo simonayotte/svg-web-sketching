@@ -85,20 +85,19 @@ describe('File Handler', () => {
 
   it('#exportDrawingEmail(png) should export to be able to send the file by email as a svg file', async () => {
     const result = await fileHandler.exportDrawingEmail('name', 'png', 'data:image/svg+xml;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH');
-    expect(result.name).to.equals(' name.png ');
+    expect(result.name).to.equals('name.png');
     expect(result.stream.readable).to.equal(true);
   });
 
   it('#exportDrawingEmail(jpeg) should export to be able to send the file by email as a svg file', async () => {
     const result = await fileHandler.exportDrawingEmail('name', 'jpeg', 'data:image/svg+xml;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH');
-    expect(result.name).to.equals(' name.jpeg ');
+    expect(result.name).to.equals('name.jpeg');
     expect(result.stream.readable).to.equal(true);
   });
 
   it('#exportDrawingEmail(svg) should export to be able to send the file by email as a svg file', async () => {
     const result = await fileHandler.exportDrawingEmail('name', 'svg+xml', 'data:image/svg+xml;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAH');
-    //console.log('ICIIITEE', result.)
-    expect(result.name).to.equals(' name.svg ');
+    expect(result.name).to.equals('name.svg');
     expect(result.stream.readable).to.equal(true);
   });
 
@@ -154,6 +153,5 @@ describe('File Handler', () => {
     const drawingsInServer: Drawing[] = fileHandler.checkAllDrawingsAreInServer([drawing1, drawing2, drawing3]);
     expect(!drawingsInServer.includes(drawing1) && !drawingsInServer.includes(drawing2) && !drawingsInServer.includes(drawing3));
   });
-
 
 });

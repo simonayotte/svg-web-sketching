@@ -1,9 +1,10 @@
-import {Drawing} from '../../models/drawing';
+import { Drawing } from '../../models/drawing';
 import { Stubbed, testingContainer } from '../../test/test-utils';
 import Types from '../types';
-import { DatabaseService } from './DB.service';
+import { DatabaseService } from './db-service';
 
 /* tslint:disable:no-any */
+/* tslint:disable-next-line */
 const mongodb = require('mongo-mock');
 
 mongodb.max_delay = 0; // you can choose to NOT pretend to be async (default is 400ms)

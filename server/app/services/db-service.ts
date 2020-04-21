@@ -1,8 +1,9 @@
-import {injectable} from 'inversify';
+import { injectable } from 'inversify';
 import { Collection, MongoClient, MongoClientOptions, ObjectId } from 'mongodb';
 import 'reflect-metadata';
-import {Drawing} from '../../models/drawing';
+import { Drawing } from '../../models/drawing';
 
+// tslint:disable:no-any
 const DATABASE_URL = 'mongodb+srv://Tarik:log2990@cluster0-pgvib.mongodb.net/test?retryWrites=true&w=majority';
 const DATABASE_NAME = 'Drawings-LOG2990-106';
 const DATABASE_COLLECTION = 'drawings';
@@ -29,18 +30,14 @@ export class DatabaseService {
     }
 
     async addDrawingDb(drawing: Drawing): Promise<void> {
-        if (!this.validateName(drawing.name)) {
-            throw new Error('Erreur:Le nom est requis. Image non sauvegardée');
-          }
-        if (!this.validateTags(drawing.tags)) {
-            throw new Error("Erreur:Les étiquettes ne doivent pas contenir de caractères spéciaux ou d'espaces. Image non sauvegardée");
-          }
+        if (this.validateName(drawing.name) && this.validateTags(drawing.tags)) {
         this.collection.insertOne(drawing).catch((error: Error) => {
             throw new Error(`Erreur: Le dessin n'a pas pu être sauvegardé: \n ${error}`);
             });
+        }
     }
-    async deleteDrawingDb(id: string) {
-        return this.collection.findOneAndDelete({_id :  new ObjectId(id)})
+    async deleteDrawingDb(id: string): Promise<void> {
+        this.collection.findOneAndDelete({_id :  new ObjectId(id)})
         .catch((error: Error) => {
             throw new Error(`Failed to delete course: \n ${error}`);
         });
@@ -56,9 +53,9 @@ export class DatabaseService {
                 });
     }
 
-    async getIdsOfDrawing(name: string, tags: string[]) {
+    async getIdsOfDrawing(nom: string, etiquette: string[]): Promise<string[]> {
         const ids: string[] = [];
-        return this.collection.find({name: name, tags: tags}).toArray().then((drawings: Drawing[]) => {
+        return this.collection.find({name: nom, tags: etiquette}).toArray().then((drawings: Drawing[]) => {
             for (const drawing of drawings) {
                 ids.push(drawing._id.toHexString());
             }

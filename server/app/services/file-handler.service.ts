@@ -11,8 +11,7 @@ export interface ExportReturn {
 
 @injectable()
 export class FileHandler {
-    constructor() {}
-
+    // constructor() {}
     saveDrawing(ids: string[], dataURL: string ): void {
       const base64DataURL: string = dataURL.replace(`${Encoding.DataImage}${FileTypes.Png};${Encoding.Base64},`, '');
       const data = Buffer.from(base64DataURL, 'base64');
@@ -30,7 +29,7 @@ export class FileHandler {
       const base64DataURL: string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`, '');
       const data = Buffer.from(base64DataURL, 'base64');
       let filename: string;
-      type === FileTypes.SvgXml ? filename = `${name}.${FileTypes.Svg}` : filename = `${name}.${type}`;
+      filename = type === FileTypes.SvgXml ? `${name}.${FileTypes.Svg}` : `${name}.${type}`;
       const localPath: string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
       fs.writeFileSync(localPath, data, `${Encoding.Utf8}`);
     }
@@ -40,7 +39,7 @@ export class FileHandler {
       const base64DataURL: string = dataURL.replace(`${Encoding.DataImage}${type};${Encoding.Base64},`, '');
       const data = Buffer.from(base64DataURL, 'base64');
       let filename: string;
-      type === FileTypes.SvgXml ? filename = ` ${name}.${FileTypes.Svg} ` : filename = ` ${name}.${type} ` ;
+      filename = type === FileTypes.SvgXml ? `${name}.${FileTypes.Svg}` : `${name}.${type}`;
       const localPath: string = __dirname.replace(FilePaths.ServerPath, `${FilePaths.LocalPath}${filename}`);
       fs.writeFileSync(localPath, data, `${Encoding.Utf8}` );
       resolve({

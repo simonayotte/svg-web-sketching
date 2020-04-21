@@ -4,7 +4,7 @@ import { ObjectID } from 'mongodb';
 import * as supertest from 'supertest';
 import { Stubbed, testingContainer } from '../../../server/test/test-utils';
 import { Application } from '../app';
-import { DatabaseService } from '../services/DB.service';
+import { DatabaseService } from '../services/db-service';
 import { FileHandler } from '../services/file-handler.service';
 import Types from '../types';
 
