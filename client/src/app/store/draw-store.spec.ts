@@ -400,6 +400,14 @@ describe('DrawStore', () => {
         });
     });
 
+    it('#setTolerance() should only change #tolerance ', (done: DoneFn) => {
+        store.setTolerance(69);
+        store.stateObs.subscribe((value: DrawState) => {
+            expect(value.tolerance).toEqual(69);
+            done();
+        });
+    });
+
     it('#addLastColor() should add color to #lastColors and increment #lastColorsIndex ', (done: DoneFn) => {
         const color1 = new Color(1, 2, 3, 4);
         const color2 = new Color(5, 6, 7, 8);
@@ -499,5 +507,4 @@ describe('DrawStore', () => {
         }
         expect(drawingJSON.svgsHTML).toEqual(svgsHTML);
     });
-
 });
