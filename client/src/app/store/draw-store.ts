@@ -405,9 +405,11 @@ export class DrawStore extends Store<DrawState> {
     }
     automaticSave(): void {
         const svgsHTML: string[] = [];
-        if (this.state.svgState.svgs.length > 0) {
-            for (const svg of this.state.svgState.svgs) {
-                svgsHTML.push(svg.outerHTML);
+        if (this.state.svgState.svgs) {
+            if (this.state.svgState.svgs.length > 0) {
+                for (const svg of this.state.svgState.svgs) {
+                    svgsHTML.push(svg.outerHTML);
+                }
             }
         }
         const jsonState: DrawingJson = {
@@ -417,6 +419,5 @@ export class DrawStore extends Store<DrawState> {
             canvasColor : this.state.colorState.canvasColor.rgba()
         };
         localStorage.setItem('Drawing', JSON.stringify(jsonState));
-    }
-
+        }
 }

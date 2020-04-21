@@ -14,6 +14,7 @@ describe('ContinueDrawingService', () => {
     let drawingHandler: DrawingHandler;
     let drawingJSONString: string | null;
     let drawingJSON: DrawingJson;
+    let rect: SVGGraphicsElement;
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [DrawStore, DrawingHandler],
@@ -21,7 +22,8 @@ describe('ContinueDrawingService', () => {
         });
         store = TestBed.get(DrawStore);
         store.setDrawSvg(document.createElementNS('http://www.w3.org/2000/svg', 'svg'));
-        store.setSvgArray([]);
+        rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        store.pushSvg(rect);
         store.automaticSave();
         service = TestBed.get(ContinueDrawingService);
         drawingHandler = TestBed.get(DrawingHandler);
