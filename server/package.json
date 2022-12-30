@@ -71,7 +71,7 @@
         "axios": "^0.19.2",
         "axios-mock-adapter": "^1.18.1",
         "chai": "~4.2.0",
-        "mocha": "^6.2.2",
+        "mocha": "^10.2.0",
         "nodemon": "^2.0.2",
         "nyc": "^14.1.1",
         "rimraf": "3.0.0",
